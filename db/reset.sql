@@ -48,5 +48,6 @@ CREATE TABLE "thematics" (
 
 CREATE TABLE "sessions" (
   session_id varchar(40) UNIQUE PRIMARY KEY,
-  owner varchar(40) REFERENCES users
+  owner varchar(40) REFERENCES users,
+  created timestamp
 );
