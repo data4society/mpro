@@ -1,0 +1,32 @@
+{
+  "name": "mpro",
+  "repository": "data4society/mpro",
+  "description": "Monitoring system",
+  "license": "",
+  "dependencies": {
+    "config": "^1.20.1",
+    "express": "^4.13.4",
+    "lodash": "^4.12.0",
+    "massive": "^2.2.0",
+    "substance": "git://github.com/substance/substance.git#a116ba96976f9307c694bd3d7a1aa1c168530c2c",
+    "ws": "^1.1.0"
+  },
+  "devDependencies": {
+    "chai": "^3.5.0",
+    "gulp": "^3.9.1",
+    "gulp-istanbul": "^0.10.4",
+    "gulp-mocha": "^2.2.0",
+    "jshint": "^2.9.2",
+    "mocha": "^2.4.5",
+    "mocha-jshint": "^2.3.1"
+  },
+  "browserify": {},
+  "scripts": {
+    "seed": "node seed",
+    "test": "mocha --recursive"
+  },
+  "engines": {
+    "node": "4.4.4"
+  },
+  "version": "0.0.1"
+}

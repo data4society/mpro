@@ -1,0 +1,4 @@
+{
+  "app_url": "https://localhost:5000",
+  "db_url": "postgres://donate_user:donate_pw@localhost:5432/mpro"
+}
