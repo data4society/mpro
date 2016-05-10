@@ -7,7 +7,10 @@ drop table if exists "sessions";
 drop table if exists "users";
 
 CREATE TABLE "users" (
-  user_id varchar(40) UNIQUE PRIMARY KEY
+  user_id varchar(40) UNIQUE PRIMARY KEY,
+  email varchar(255) UNIQUE,
+  name varchar(255),
+  password varchar(255)
 );
 
 CREATE TABLE "documents" (
