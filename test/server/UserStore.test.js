@@ -9,6 +9,24 @@ describe('Donor Store', function() {
 
   var userStore = new UserStore({db: db});
 
+  // we have to shutdown db connection and establish it again one time
+  // so massive will have all methods attached to it's DB object
+  // if we will not do it massive will not have methods atatched to table
+  // because there was no tables when we started first unit test
+  before(function(done) {
+    db.reset()
+      .then(function() {
+        var userStore = new UserStore({ db: db });
+        return userStore.seed();
+      }).then(function(){
+        db.connection.end();
+        db = new Database();
+        userStore = new UserStore({db: db});
+        
+        done();
+      });
+  });
+
   beforeEach(function(done) {
     db.reset()
       .then(function() {
