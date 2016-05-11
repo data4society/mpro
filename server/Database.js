@@ -3,6 +3,7 @@
 var oo = require('substance/util/oo');
 var massive = require('massive');
 var config = require('config');
+var Promise = require("bluebird");
 
 /*
   Implements Database Conection API.
@@ -25,18 +26,21 @@ Database.Prototype = function() {
   };
 
   /*
-    Wipe DB and run lagtest migartion
+    Wipes DB and create tables
+    Be careful with running this in production
 
-    @param {Function} cb callback
+    @returns {Promise}
   */
-  this.reset = function(cb) {
-    this.connection.reset(function(err){
-      if (err) {
-        console.log(err.stack);
-        process.exit(1);
-      }
-      cb(null);
-    });
+  this.reset = function() {
+    return new Promise(function(resolve, reject) {
+      this.connection.reset(function(err){
+        if (err) {
+          console.log(err.stack);
+          process.exit(1);
+        }
+        resolve();
+      });
+    }.bind(this));
   };
 
 };
