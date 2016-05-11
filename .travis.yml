@@ -8,3 +8,5 @@ before_script:
   - psql -c 'create database mpro;' -U postgres
   - 'export NODE_ENV=test'
   - 'npm install'
+notifications:
+  slack: ovdinfo:pC2a1JMfPsjs3hKPAzz7yPUB
