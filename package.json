@@ -26,8 +26,5 @@
     "seed": "node seed",
     "test": "mocha --recursive"
   },
-  "engines": {
-    "node": "4.4.4"
-  },
   "version": "0.0.1"
 }
