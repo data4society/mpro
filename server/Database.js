@@ -32,7 +32,7 @@ Database.Prototype = function() {
     @returns {Promise}
   */
   this.reset = function() {
-    return new Promise(function(resolve, reject) {
+    return new Promise(function(resolve) {
       this.connection.reset(function(err){
         if (err) {
           console.log(err.stack);
