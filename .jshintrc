@@ -11,6 +11,7 @@
     "WebSocket",
     "window",
     "document",
-    "i18n"
+    "i18n",
+    "-Promise"
   ]
 }

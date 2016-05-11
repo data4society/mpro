@@ -15,6 +15,31 @@ function UserStore(config) {
 UserStore.Prototype = function() {
 
   /*
+    Get user record for a given userId
+
+    @param {String} userId user id
+  */
+  this.getUser = function(userId) {
+    return new Promise(function(resolve) {
+      this.db.users.findOne({user_id: userId}, function(err, user) {
+        if (err) {
+          throw new Err('UserStore.ReadError', {
+            cause: err
+          });
+        }
+
+        if (!user) {
+          throw new Err('UserStore.ReadError', {
+            message: 'No user found for userId ' + userId
+          });
+        }
+
+        resolve(user);
+      });
+    }.bind(this));
+  };
+
+  /*
     Loads seed objects from sql query
     Be careful with running this in production
 
