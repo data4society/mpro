@@ -10,6 +10,7 @@ CREATE TABLE "users" (
   user_id varchar(40) UNIQUE PRIMARY KEY,
   email varchar(255) UNIQUE,
   name varchar(255),
+  created timestamp,
   password varchar(255)
 );
 
