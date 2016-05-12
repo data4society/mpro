@@ -157,14 +157,15 @@ describe('User Store', function() {
       var userId = 'testuser';
       var data = {
         name: 'Test user'
-      }
+      };
+
       return userStore.updateUser(userId, data)
         .then(function(user) {
           should.exist(user);
           user.should.be.an('object');
           assert.equal(user.user_id, userId);
           assert.equal(user.name, data.name);
-          return userStore.getUser(userId)
+          return userStore.getUser(userId);
         })
         .then(function(user) {
           should.exist(user);
@@ -180,7 +181,8 @@ describe('User Store', function() {
       var email = 'test@example.com';
       var data = {
         email: 'new-email@example.com'
-      }
+      };
+
       return userStore.getUserByEmail(email)
         .then(function(user) {
           should.exist(user);
@@ -214,7 +216,7 @@ describe('User Store', function() {
           should.exist(user);
           user.should.be.an('object');
           assert.equal(user.user_id, userId);
-          return userStore.getUser(userId)
+          return userStore.getUser(userId);
         })
         .catch(function(err) {
           should.exist(err);
