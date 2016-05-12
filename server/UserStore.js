@@ -23,8 +23,6 @@ UserStore.Prototype = function() {
     @returns {Promise}
   */
   this.createUser = function(userData) {
-    var self = this;
-
     // Generate a user_id if not provided
     if (!userData.user_id) {
       userData.user_id = uuid();
@@ -34,7 +32,7 @@ UserStore.Prototype = function() {
       userData.name = '';
     }
 
-    return this.userExists(userData.user_id)
+    return this.userExists(userData.user_id).bind(this)
       .then(function(exists) {
         if (exists) {
           throw new Err('UserStore.CreateError', {
@@ -42,11 +40,7 @@ UserStore.Prototype = function() {
           });
         }
 
-        return self._createUser(userData);
-      }).catch(function(err) {
-        throw new Err('UserStore.CreateError', {
-          cause: err
-        });
+        return this._createUser(userData);
       });
   };
 
@@ -60,13 +54,13 @@ UserStore.Prototype = function() {
     return new Promise(function(resolve, reject) {
       this.db.users.findOne({user_id: userId}, function(err, user) {
         if (err) {
-          return reject(new Err('UserStore.ReadError', {
+          reject(new Err('UserStore.ReadError', {
             cause: err
           }));
         }
 
         if (!user) {
-          return reject(new Err('UserStore.ReadError', {
+          reject(new Err('UserStore.ReadError', {
             message: 'No user found for user_id ' + userId
           }));
         }
@@ -86,13 +80,13 @@ UserStore.Prototype = function() {
     return new Promise(function(resolve, reject) {
       this.db.users.findOne({email: email}, function(err, user) {
         if (err) {
-          return reject(new Err('UserStore.ReadError', {
+          reject(new Err('UserStore.ReadError', {
             cause: err
           }));
         }
 
         if (!user) {
-          return reject(new Err('UserStore.ReadError', {
+          reject(new Err('UserStore.ReadError', {
             message: 'No user found with email ' + email
           }));
         }
@@ -124,7 +118,7 @@ UserStore.Prototype = function() {
 
           this.db.users.save(userData, function(err, user) {
             if (err) {
-              return reject(new Err('UserStore.UpdateError', {
+              reject(new Err('UserStore.UpdateError', {
                 cause: err
               }));
             }
@@ -132,10 +126,6 @@ UserStore.Prototype = function() {
             resolve(user);
           });
         }.bind(this));
-      }).catch(function(err) {
-        throw new Err('UserStore.UpdateError', {
-          cause: err
-        });
       });
   };
 
@@ -157,7 +147,7 @@ UserStore.Prototype = function() {
         return new Promise(function(resolve, reject) {
           this.db.users.destroy({user_id: userId}, function(err, user) {
             if (err) {
-              return reject(new Err('UserStore.DeleteError', {
+              reject(new Err('UserStore.DeleteError', {
                 cause: err
               }));
             }
@@ -165,10 +155,6 @@ UserStore.Prototype = function() {
             resolve(user);
           });
         }.bind(this));
-      }).catch(function(err) {
-        throw new Err('UserStore.DeleteError', {
-          cause: err
-        });
       });
   };
 
@@ -184,17 +170,17 @@ UserStore.Prototype = function() {
     var password = uuid();
 
     var record = {
-      user_id: userData.userId,
+      user_id: userData.user_id,
       name: userData.name,
       email: userData.email,
-      created: Date.now(),
+      created: new Date(),
       password: password
     };
 
     return new Promise(function(resolve, reject) {
       this.db.users.insert(record, function(err, user) {
         if (err) {
-          return reject(new Err('UserStore.CreateError', {
+          reject(new Err('UserStore.CreateError', {
             cause: err
           }));
         }
@@ -214,7 +200,7 @@ UserStore.Prototype = function() {
     return new Promise(function(resolve, reject) {
       this.db.users.findOne({user_id: userId}, function(err, user) {
         if (err) {
-          return reject(new Err('UserStore.ReadError', {
+          reject(new Err('UserStore.ReadError', {
             cause: err
           }));
         }
@@ -233,7 +219,7 @@ UserStore.Prototype = function() {
     return new Promise(function(resolve, reject) {
       this.db.seed.userSeed(function(err) {
         if (err) {
-          return reject(new Err('UserStore.SeedError', {
+          reject(new Err('UserStore.SeedError', {
             cause: err
           }));
         }
