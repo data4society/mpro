@@ -104,7 +104,7 @@ UserStore.Prototype = function() {
     @returns {Promise}
   */
   this.updateUser = function(userId, props) {
-    return this.userExists(userId)
+    return this.userExists(userId).bind(this)
       .then(function(exists) {
         if (!exists) {
           throw new Err('UserStore.UpdateError', {
@@ -136,7 +136,7 @@ UserStore.Prototype = function() {
     @returns {Promise}
   */
   this.deleteUser = function(userId) {
-    return this.userExists(userId)
+    return this.userExists(userId).bind(this)
       .then(function(exists) {
         if (!exists) {
           throw new Err('UserStore.DeleteError', {
