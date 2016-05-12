@@ -45,6 +45,7 @@ CREATE TABLE "entities" (
 CREATE TABLE "thematics" (
   thematic_id varchar(40) UNIQUE PRIMARY KEY,
   title varchar(255),
+  created timestamp,
   parent_id varchar(40) REFERENCES thematics
 );
 
