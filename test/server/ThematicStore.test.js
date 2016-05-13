@@ -182,7 +182,7 @@ describe('Thematic Store', function() {
         });
     });
 
-    it('should return false in case of existed record', function(done) {
+    it('should return false in case of non-existed record', function(done) {
       var thematicId = 'non-existing-thematic';
 
       return thematicStore.thematicExists(thematicId)

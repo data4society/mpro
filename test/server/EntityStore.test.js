@@ -203,7 +203,7 @@ describe('Entity Store', function() {
         });
     });
 
-    it('should return false in case of existed record', function(done) {
+    it('should return false in case of non-existed record', function(done) {
       var entityId = 'non-existing-entity';
 
       return entityStore.entityExists(entityId)

@@ -248,7 +248,7 @@ describe('User Store', function() {
         });
     });
 
-    it('should return false in case of existed record', function(done) {
+    it('should return false in case of non-existed record', function(done) {
       var userId = 'non-existing-user';
 
       return userStore.userExists(userId)
