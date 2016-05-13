@@ -1,6 +1,6 @@
 -- seed sessions:
 
-insert into sessions(session_id, owner, created)
-values ('1', 'testuser', NOW()),
-('2', 'testuser2', NOW()),
-('3', 'testuser3', NOW());
+insert into sessions(session_token, owner, created)
+values ('testusertoken', 'testuser', NOW()),
+('testuser2token', 'testuser2', NOW()),
+('testuser3token', 'testuser3', NOW());

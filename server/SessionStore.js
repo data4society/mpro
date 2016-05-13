@@ -24,13 +24,13 @@ SessionStore.Prototype = function() {
   */
   this.createSession = function(session) {
     var newSession = {
-      session_token: session.session_token || uuid(),
+      session_token: uuid(),
       created: new Date(),
       owner: session.owner
     };
 
     return new Promise(function(resolve, reject) {
-      this.db.sessions.save(newSession, function(err, session) {
+      this.db.sessions.insert(newSession, function(err, session) {
         if (err) {
           reject(new Err('SessionStore.CreateError', {
             cause: err
@@ -126,7 +126,7 @@ SessionStore.Prototype = function() {
     return new Promise(function(resolve, reject) {
       this.db.seed.sessionSeed(function(err) {
         if (err) {
-          return reject(new Err('SessionStore.SeedError', {
+          reject(new Err('SessionStore.SeedError', {
             cause: err
           }));
         }
