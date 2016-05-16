@@ -23,7 +23,7 @@ EntityStore.Prototype = function() {
     @returns {Promise}
   */
   this.createEntity = function(entityData) {
-    // Generate a entity_id if not provided
+    // Generate an entity_id if not provided
     if (!entityData.entity_id) {
       entityData.entity_id = uuid();
     }
@@ -75,7 +75,7 @@ EntityStore.Prototype = function() {
   };
 
   /*
-    Update a entity record with given props
+    Update an entity record with given props
 
     @param {String} entityId entity id
     @param {Object} props properties to update
@@ -110,7 +110,7 @@ EntityStore.Prototype = function() {
   };
 
   /*
-    Remove a entity from the db
+    Remove an entity from the db
 
     @param {String} entityId entity id
     @returns {Promise}
@@ -139,7 +139,7 @@ EntityStore.Prototype = function() {
   };
 
   /*
-    Internal method to create a entity entry
+    Internal method to create an entity entry
 
     @param {Object} entityData JSON object
     @returns {Promise}
