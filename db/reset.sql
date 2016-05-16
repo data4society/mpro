@@ -28,6 +28,7 @@ CREATE TABLE "documents" (
   stripped text,
   content json,
   meta json,
+  info json,
   tsv tsvector
 );
 
