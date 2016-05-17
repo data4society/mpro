@@ -124,7 +124,7 @@ describe('Entity Store', function() {
         });
     });
 
-    it('should return error if entityId with given id does not exist', function(done) {
+    it('should return error if entity with given id does not exist', function(done) {
       var entityId = 'non-existing-entity';
       return entityStore.getEntity(entityId)
         .then(function(entity) {
