@@ -33,13 +33,17 @@ DocumentStore.Prototype = function() {
     // could be stored when we create document from configurator
     if(props.info) {
       if(props.info.title) props.title = props.info.title;
+      if(props.info.schema_name) props.schema_name = props.info.schema_name;
+      if(props.info.schema_version) props.schema_version = props.info.schema_version;
     }
 
     var record = {
       document_id: props.document_id,
       guid: props.guid,
       title: props.title,
-      type: props.type,
+      schema_name: props.schema_name,
+      schema_version: props.schema_version,
+      version: props.version || 1,
       issue_date: props.issue_date,
       created: new Date(),
       state: props.state,
@@ -50,17 +54,26 @@ DocumentStore.Prototype = function() {
       info: props.info
     };
 
-    return new Promise(function(resolve, reject) {
-      this.db.documents.insert(record, function(err, doc) {
-        if (err) {
-          reject(new Err('DocumentStore.CreateError', {
-            cause: err
-          }));
+    return this.documentExists(props.document_id).bind(this)
+      .then(function(exists) {
+        if (exists) {
+          throw new Err('DocumentStore.UpdateError', {
+            message: 'Document ' + props.document_id + ' already exists.'
+          });
         }
 
-        resolve(doc);
+        return new Promise(function(resolve, reject) {
+          this.db.documents.insert(record, function(err, doc) {
+            if (err) {
+              reject(new Err('DocumentStore.CreateError', {
+                cause: err
+              }));
+            }
+
+            resolve(doc);
+          });
+        }.bind(this));
       });
-    }.bind(this));
   };
 
   /*
@@ -128,35 +141,6 @@ DocumentStore.Prototype = function() {
           });
         }.bind(this));
       });
-  };
-
-  /*
-    Remove a document record from the db
-
-    @param {String} documentId document id
-    @param {Function} cb callback
-  */
-  this.deleteDocument = function(documentId, cb) {
-    var query = this.db('documents')
-                .where('documentId', documentId)
-                .del();
-    
-    this.getDocument(documentId, function(err, doc) {
-      if (err) {
-        return cb(new Err('DocumentStore.DeleteError', {
-          cause: err
-        }));
-      }
-
-      query.asCallback(function(err) {
-        if (err) {
-          return cb(new Err('DocumentStore.DeleteError', {
-            cause: err
-          }));          
-        }
-        cb(null, doc);
-      });
-    });
   };
 
   /*

@@ -1,11 +1,13 @@
 -- seed documents:
 
-insert into documents(document_id, guid, title, type, issue_date, created, validated, validated_by, state, source, stripped, content, meta)
+insert into documents(document_id, guid, title, schema_name, schema_version, version, issue_date, created, validated, validated_by, state, source, stripped, content, meta)
 values (
   '1',
   'http://www.nytimes.com/1993/12/09/arts/jim-morrison-s-fans-keep-his-fire-alight-in-a-birthday-homage.html',
   E'Jim Morrison\\''s Fans Keep His Fire Alight In a Birthday Homage',
-  'article',
+  'mpro-article',
+  '1.0.0',
+  1,
   '1993-12-09T08:00:00.000Z',
   NOW(),
   NOW(),
@@ -59,7 +61,9 @@ Photo: Hundreds of mourners yesterday passed the grave of Jim Morrison at the Pe
   '2',
   'http://www.theguardian.com/world/2013/sep/26/nsa-surveillance-anti-vietnam-muhammad-ali-mlk',
   E'Declassified NSA files show agency spied on Muhammad Ali and MLK',
-  'article',
+  'mpro-article',
+  '1.0.0',
+  1,
   '2013-09-26T14:19:00.000Z',
   NOW(),
   NOW(),
@@ -125,11 +129,13 @@ A year earlier, the NSA similarly picked up early warning signals that indicated
   '3',
   'https://www.thestar.com/entertainment/books/2016/04/16/rob-spillman-looks-back-at-the-fall-of-the-berlin-wall.html',
   E'Rob Spillman looks back at the fall of the Berlin Wall',
-  'article',
+  'mpro-article',
+  '1.0.0',
+  1,
   '2016-04-16T14:19:00.000Z',
   NOW(),
   NOW(),
-  'testuser3',
+  'testuser2',
   'inbox',
   E'<div data-reactid=".pp1fyy2bcw.9.1.4.8.1.0.0.0.3:$articleComponent0"><p itemprop="articleBody">Recently, a new museum opened in Germany, dedicated to those who lived under the shadow of the Berlin Wall. The first 1,000 visitors to the Wall Museum received a small souvenir chunk from the concrete structure, a kitschy token of the 155-kilometre-long barrier that physically divided the city from its construction in 1961 to its eventual fall in 1989.</p><p itemprop="articleBody">The Berlin Wall is more than just a Cold War relic or tourist destination for Rob Spillman. The co-founding editor of influential New York literary magazine Tin House spent much of his formative years in West Berlin. Restless and filled with romantic idealism, 25-year-old Spillman returned to the city just months after the Wall came down, seeking adventure, writerly purpose and bohemian camaraderie. He shares his youthful experiences in his new memoir, <strong>All Tomorrow’s Parties</strong>, a captivating coming-of-age story and snapshot of a city in flux.</p><p itemprop="articleBody">Spillman, the German-born son of divorced American opera musicians, did not have a typical upbringing. Instead of Little League or Boy Scout camp, he spent his youth immersed in theatre, hanging out at his father’s rehearsals and performances. Young Spillman knew he wanted an artistic life — and even performed in operas as a kid — but struggled with his own identity and dark feelings of being an outsider amongst free spirits, only finding solace among his books. “I knew I wanted to be creative,” he says, “being surrounded by creative people all my life, but I didn’t feel creative. Growing up surrounded by musicians and people who were living for their art definitely shaped the way I look at the world.” </p><p itemprop="articleBody">Spillman was, at the time of the Wall’s fall, back in the U.S. working as a freelance writer along with his new wife, fellow author Elissa Schappell. Questioning whether his idealized artistic life could include marriage and a steady job, he convinced Schappell to move to Germany, and that’s when <em>All Tomorrow’s Parties</em> becomes a Hunter S. Thompson-esque journey. Fuelled on absinthe from a Portuguese dive bar, the two eventually settle in East Berlin, a city still in limbo — as riot police battle with both skinheads and anarchist settlers. Laundromats don’t exist yet, soup kitchens double as bars, and the streets are filled with old furniture, abandoned for newly available Western goods. </p><p itemprop="articleBody">Despite his journalist credentials, Spillman didn’t write about this unique experience at the time. “I had this delusional notion that if I didn’t write about it, it would keep going, the magic would not go away,” he says. “Not the most logical thought I had, but that was the feeling when I was there.” Spillman calls writing <em>All Tomorrow’s Parties</em> a “10-year odyssey” in which he tried to be as “honest and empathetic as possible.” He imagined his audience to be his teenage self, or someone struggling with the same internal battles. </p></div>',
   'Recently, a new museum opened in Germany, dedicated to those who lived under the shadow of the Berlin Wall. The first 1,000 visitors to the Wall Museum received a small souvenir chunk from the concrete structure, a kitschy token of the 155-kilometre-long barrier that physically divided the city from its construction in 1961 to its eventual fall in 1989.
