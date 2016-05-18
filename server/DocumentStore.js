@@ -7,7 +7,7 @@ var isUndefined = require('lodash/isUndefined');
 var Promise = require("bluebird");
 
 /*
-  Implements the DocumentStore API.
+  Implements the Document Store API.
 */
 function DocumentStore(config) {
   this.config = config;
