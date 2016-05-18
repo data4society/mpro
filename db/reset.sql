@@ -1,5 +1,6 @@
 -- Reset database:
 
+drop table if exists "changes";
 drop table if exists "documents";
 drop table if exists "entities";
 drop table if exists "thematics";
@@ -32,6 +33,15 @@ CREATE TABLE "documents" (
   meta json,
   info json,
   tsv tsvector
+);
+
+CREATE TABLE "changes" (
+  document_id varchar(40) REFERENCES documents,
+  version integer,
+  data json,
+  created timestamp,
+  owner varchar(40) REFERENCES users,
+  PRIMARY KEY(document_id, version)
 );
 
 CREATE TABLE "entities" (
