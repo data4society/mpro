@@ -2,7 +2,6 @@
 
 var oo = require('substance/util/oo');
 var Err = require('substance/util/Error');
-var each = require('lodash/each');
 var has = require('lodash/has');
 var Promise = require("bluebird");
 
@@ -25,24 +24,31 @@ ChangeStore.Prototype = function() {
     @returns {Promise}
   */
   this.addChange = function(args) {
-    var version;
+    return new Promise(function(resolve, reject) {
+      var version;
 
-    var owner = null;
-    if(args.change.info) {
-      owner = args.change.info.owner;
-    }
+      if(!has(args, 'documentId')) {
+        return reject(new Err('ChangeStore.CreateError', {
+          message: 'documentId is mandatory'
+        }));
+      }
 
-    return this.getVersion(args.documentId)
-      .then(function(headVersion) {
-        version = headVersion + 1;
-        var record = {
-          document_id: args.documentId,
-          version: version,
-          data: args.change,
-          created: args.created || new Date(),
-          owner: owner
-        };
-        return new Promise(function(resolve, reject) {
+      var owner = null;
+      if(args.change.info) {
+        owner = args.change.info.owner;
+      }
+
+      return this.getVersion(args.documentId).bind(this)
+        .then(function(headVersion) {
+          version = headVersion + 1;
+          var record = {
+            document_id: args.documentId,
+            version: version,
+            data: args.change,
+            created: args.created || new Date(),
+            owner: owner
+          };
+          
           this.db.changes.insert(record, function(err, change) {
             if (err) {
               reject(new Err('ChangeStore.CreateError', {
@@ -52,8 +58,9 @@ ChangeStore.Prototype = function() {
 
             resolve(change.version);
           });
-        }.bind(this));
-      });
+          
+        });
+    }.bind(this));
   };
 
   /*
@@ -71,7 +78,7 @@ ChangeStore.Prototype = function() {
           }));
         }
 
-        resolve(count);
+        resolve(parseInt(count));
       });
     }.bind(this));
   };
@@ -84,40 +91,40 @@ ChangeStore.Prototype = function() {
     @param {String} args.sinceVersion changes since version (0 = all changes, 1 all except first change)
     @returns {Promise}
   */
-  this.getChanges = function(args, cb) {
-    if(args.sinceVersion < 0) {
-      return cb(new Err('ChangeStore.ReadError', {
-        message: 'sinceVersion should be grater or equal then 0'
-      }));
-    }
-
-    if(args.toVersion < 0) {
-      return cb(new Err('ChangeStore.ReadError', {
-        message: 'toVersion should be grater then 0'
-      }));
-    }
-
-    if(args.sinceVersion >= args.toVersion) {
-      return cb(new Err('ChangeStore.ReadError', {
-        message: 'toVersion should be greater then sinceVersion'
-      }));
-    }
-
-    if(!has(args, 'sinceVersion')) args.sinceVersion = 0;
-
-    var query = {
-      'document_id': args.documentId,
-      'version >': args.sinceVersion
-    };
-
-    if(args.toVersion) query['version <='] = args.toVersion;
-
-    var options = {
-      order: 'version asc',
-      columns: ["data"]
-    };
-
+  this.getChanges = function(args) {
     return new Promise(function(resolve, reject) {
+      if(args.sinceVersion < 0) {
+        return reject(new Err('ChangeStore.ReadError', {
+          message: 'sinceVersion should be grater or equal then 0'
+        }));
+      }
+
+      if(args.toVersion < 0) {
+        return reject(new Err('ChangeStore.ReadError', {
+          message: 'toVersion should be grater then 0'
+        }));
+      }
+
+      if(args.sinceVersion >= args.toVersion) {
+        return reject(new Err('ChangeStore.ReadError', {
+          message: 'toVersion should be greater then sinceVersion'
+        }));
+      }
+
+      if(!has(args, 'sinceVersion')) args.sinceVersion = 0;
+
+      var query = {
+        'document_id': args.documentId,
+        'version >': args.sinceVersion
+      };
+
+      if(args.toVersion) query['version <='] = args.toVersion;
+
+      var options = {
+        order: 'version asc',
+        columns: ["data"]
+      };
+
       this.db.changes.find(query, options, function(err, changes) {
         if (err) {
           reject(new Err('ChangeStore.ReadError', {
@@ -158,34 +165,23 @@ ChangeStore.Prototype = function() {
   };
 
   /*
-    Loads a given seed object
-
+    Loads seed objects from sql query
     Be careful with running this in production
 
-    @param {Object} seed JSON object
-    @param {Function} cb callback
+    @returns {Promise}
   */
 
-  this.seed = function(changesets) {
-    var self = this;
-    var changes = [];
-
-    each(changesets, function(set, docId) {
-      each(set, function(change) {
-        var args = {
-          documentId: docId,
-          change: change
-        };
-        changes.push(args);
+  this.seed = function() {
+    return new Promise(function(resolve, reject) {
+      this.db.seed.changeSeed(function(err) {
+        if (err) {
+          return reject(new Err('ChangeStore.SeedError', {
+            cause: err
+          }));
+        }
+        resolve();
       });
-    });
-
-    // Seed changes in sequence
-    return changes.reduce(function(promise, change) {
-      return promise.then(function() {
-        return self._addChange(change);
-      });
-    }, Promise.resolve());
+    }.bind(this));
   };
 };
 
