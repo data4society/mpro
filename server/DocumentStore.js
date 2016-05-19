@@ -24,9 +24,11 @@ DocumentStore.Prototype = function() {
   */
   this.createDocument = function(props) {
 
-    if (!props.document_id) {
+    if (!props.documentId) {
       // We generate a document_id ourselves
       props.document_id = uuid();
+    } else {
+      props.document_id = props.documentId;
     }
 
     // TODO: pass here all meta properties which
@@ -54,7 +56,7 @@ DocumentStore.Prototype = function() {
       info: props.info
     };
 
-    return this.documentExists(props.document_id).bind(this)
+    return this.documentExists(props.documentId).bind(this)
       .then(function(exists) {
         if (exists) {
           throw new Err('DocumentStore.UpdateError', {

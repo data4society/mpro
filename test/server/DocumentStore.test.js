@@ -91,7 +91,7 @@ describe('Document Store', function() {
 
     it('should not allow to create a new document with already existing id', function(done) {
       var newDoc = {
-        document_id: '1',
+        documentId: '1',
         title: 'test document',
         schema_name: 'mpro-article',
         schema_version: '1.0.0',

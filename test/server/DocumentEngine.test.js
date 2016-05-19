@@ -34,23 +34,17 @@ describe('Document Engine', function() {
   before(function(done) {
     db.reset()
       .then(function() {
-        var userStore = new UserStore({db: db});
+        userStore = new UserStore({db: db});
         return userStore.seed();
       }).then(function() {
-        var documentStore = new DocumentStore({ db: db });
+        documentStore = new DocumentStore({ db: db });
         return documentStore.seed();
       }).then(function() {
-        var changeStore = new ChangeStore({ db: db });
+        changeStore = new ChangeStore({ db: db });
         return changeStore.seed();
       }).then(function(){
         db.connection.end();
         db = new Database();
-        changeStore = new ChangeStore({db: db});
-        
-        // documentEngine = new DocumentEngine({
-        //   changeStore: changeStore,
-        //   documentStore: documentStore
-        // });
 
         done();
       });
@@ -59,21 +53,28 @@ describe('Document Engine', function() {
   beforeEach(function(done) {
     db.reset()
       .then(function() {
-        var userStore = new UserStore({db: db});
+        userStore = new UserStore({db: db});
         return userStore.seed();
       })
       .then(function() {
-        var documentStore = new DocumentStore({ db: db });
+        documentStore = new DocumentStore({ db: db });
         return documentStore.seed();
       })
       .then(function() {
-        var changeStore = new ChangeStore({ db: db });
+        changeStore = new ChangeStore({ db: db });
         return changeStore.seed();
-      }).then(function() {
-        // documentEngine = new DocumentEngine({
-        //   changeStore: changeStore,
-        //   documentStore: documentStore
-        // });
+      }).then(function(){
+        documentEngine = new DocumentEngine({
+          changeStore: changeStore,
+          documentStore: documentStore,
+          schemas: {
+            'mpro-article': {
+              name: 'mpro-article',
+              version: '1.0.0',
+              documentFactory: newArticle
+            }
+          }
+        });
       }).then(done);
   });
 
@@ -87,6 +88,7 @@ describe('Document Engine', function() {
       documentEngine.createDocument(args, function(err, doc) {
         should.not.exist(err);
         doc.should.be.an('object');
+        assert.equal(doc.documentId, args.documentId);
         should.exist(doc.data);
         done();
       });

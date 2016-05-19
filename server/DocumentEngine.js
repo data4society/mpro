@@ -66,7 +66,7 @@ DocumentEngine.Prototype = function() {
       return this.changeStore.addChange({
         documentId: docRecord.documentId,
         change: change
-      }).bind(this);
+      });
     }).then(function() {
       var converter = new JSONConverter();
       return cb(null, {
@@ -75,6 +75,7 @@ DocumentEngine.Prototype = function() {
         version: 1
       });
     }).catch(function(err) {
+      console.log(err);
       return cb(new Err('CreateError', {
         cause: err
       }));
