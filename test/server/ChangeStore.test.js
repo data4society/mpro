@@ -22,8 +22,7 @@ describe('Change Store', function() {
       .then(function() {
         var userStore = new UserStore({db: db});
         return userStore.seed();
-      })
-      .then(function() {
+      }).then(function() {
         var documentStore = new DocumentStore({ db: db });
         return documentStore.seed();
       }).then(function() {
