@@ -33,8 +33,8 @@ DocumentStore.Prototype = function() {
     // could be stored when we create document from configurator
     if(props.info) {
       if(props.info.title) props.title = props.info.title;
-      if(props.info.schema_name) props.schema_name = props.info.schema_name;
-      if(props.info.schema_version) props.schema_version = props.info.schema_version;
+      if(props.info.schemaName) props.schema_name = props.info.schemaName;
+      if(props.info.schemaVersion) props.schema_version = props.info.schemaVersion;
     }
 
     var record = {
@@ -70,6 +70,9 @@ DocumentStore.Prototype = function() {
               }));
             }
 
+            // Set documentId explictly as it will be used by engine
+            doc.documentId = doc.document_id;
+            
             resolve(doc);
           });
         }.bind(this));
