@@ -44,8 +44,8 @@ DocumentStore.Prototype = function() {
       document_id: props.document_id,
       guid: props.guid,
       title: props.title,
-      schema_name: props.schema_name,
-      schema_version: props.schema_version,
+      schema_name: props.schema_name || props.schemaName,
+      schema_version: props.schema_version || props.schemaVersion,
       version: props.version || 1,
       issue_date: props.issue_date,
       created: new Date(),
@@ -77,8 +77,11 @@ DocumentStore.Prototype = function() {
           }));
         }
 
-        // Set documentId explictly as it will be used by engine
+        // Set documentId explictly as it will be used by Document Engine
         doc.documentId = doc.document_id;
+        // Set schemaName and schemaVersion explictly as it will be used by Snapshot Engine
+        doc.schemaName = doc.schema_name;
+        doc.schemaVersion = doc.schema_version;
 
         cb(null, doc);
       });
@@ -105,6 +108,12 @@ DocumentStore.Prototype = function() {
           message: 'No document found for documentId ' + documentId
         }));
       }
+
+      // Set documentId explictly as it will be used by Document Engine
+      doc.documentId = doc.document_id;
+      // Set schemaName and schemaVersion explictly as it will be used by Snapshot Engine
+      doc.schemaName = doc.schema_name;
+      doc.schemaVersion = doc.schema_version;
 
       cb(null, doc);
     });
@@ -150,6 +159,12 @@ DocumentStore.Prototype = function() {
           }));
         }
 
+        // Set documentId explictly as it will be used by Document Engine
+        doc.documentId = doc.document_id;
+        // Set schemaName and schemaVersion explictly as it will be used by Snapshot Engine
+        doc.schemaName = doc.schema_name;
+        doc.schemaVersion = doc.schema_version;
+
         cb(null, doc);
       });
     }.bind(this));
@@ -183,8 +198,13 @@ DocumentStore.Prototype = function() {
           }));
         }
         doc = doc[0];
-        // Set documentId explictly as it will be used by engine
+        
+        // Set documentId explictly as it will be used by Document Engine
         doc.documentId = doc.document_id;
+        // Set schemaName and schemaVersion explictly as it will be used by Snapshot Engine
+        doc.schemaName = doc.schema_name;
+        doc.schemaVersion = doc.schema_version;
+
         cb(null, doc);
       });
     }.bind(this));
