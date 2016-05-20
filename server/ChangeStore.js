@@ -21,45 +21,47 @@ ChangeStore.Prototype = function() {
     @param {Object} args arguments
     @param {String} args.documentId document id
     @param {Object} args.change JSON object
-    @returns {Promise}
+    @param {Callback} cb callback
+    @returns {Callback}
   */
-  this.addChange = function(args) {
-    return new Promise(function(resolve, reject) {
-      var version;
+  this.addChange = function(args, cb) {
+    if(!has(args, 'documentId')) {
+      return cb(new Err('ChangeStore.CreateError', {
+        message: 'documentId is mandatory'
+      }));
+    }
 
-      if(!has(args, 'documentId')) {
-        return reject(new Err('ChangeStore.CreateError', {
-          message: 'documentId is mandatory'
+    var owner = null;
+    if(args.change.info) {
+      owner = args.change.info.owner;
+    }
+
+    this.getVersion(args.documentId, function(err, headVersion) {
+      if (err) {
+        return cb(new Err('ChangeStore.CreateError', {
+          cause: err
         }));
       }
 
-      var owner = null;
-      if(args.change.info) {
-        owner = args.change.info.owner;
-      }
+      var version = headVersion + 1;
+      var record = {
+        document_id: args.documentId,
+        version: version,
+        data: args.change,
+        created: args.created || new Date(),
+        owner: owner
+      };
+        
+      this.db.changes.insert(record, function(err, change) {
+        if (err) {
+          return cb(new Err('ChangeStore.CreateError', {
+            cause: err
+          }));
+        }
 
-      return this.getVersion(args.documentId).bind(this)
-        .then(function(headVersion) {
-          version = headVersion + 1;
-          var record = {
-            document_id: args.documentId,
-            version: version,
-            data: args.change,
-            created: args.created || new Date(),
-            owner: owner
-          };
-          
-          this.db.changes.insert(record, function(err, change) {
-            if (err) {
-              reject(new Err('ChangeStore.CreateError', {
-                cause: err
-              }));
-            }
-
-            resolve(change.version);
-          });
-          
-        });
+        cb(null, change.version);
+      });
+        
     }.bind(this));
   };
 
@@ -67,20 +69,19 @@ ChangeStore.Prototype = function() {
     Get the version number for a document
 
     @param {String} documentId document id
-    @returns {Promise}
+    @param {Callback} cb callback
+    @returns {Callback}
   */
-  this.getVersion = function(documentId) {
-    return new Promise(function(resolve, reject) {
-      this.db.changes.count({document_id: documentId}, function(err, count) {
-        if (err) {
-          reject(new Err('ChangeStore.GetVersionError', {
-            cause: err
-          }));
-        }
+  this.getVersion = function(documentId, cb) {
+    this.db.changes.count({document_id: documentId}, function(err, count) {
+      if (err) {
+        return cb(new Err('ChangeStore.GetVersionError', {
+          cause: err
+        }));
+      }
 
-        resolve(parseInt(count));
-      });
-    }.bind(this));
+      cb(null, parseInt(count));
+    });
   };
 
   /*
@@ -89,59 +90,63 @@ ChangeStore.Prototype = function() {
     @param {Object} args arguments
     @param {String} args.documentId document id
     @param {String} args.sinceVersion changes since version (0 = all changes, 1 all except first change)
-    @returns {Promise}
+    @param {Callback} cb callback
+    @returns {Callback}
   */
-  this.getChanges = function(args) {
-    return new Promise(function(resolve, reject) {
-      if(args.sinceVersion < 0) {
-        return reject(new Err('ChangeStore.ReadError', {
-          message: 'sinceVersion should be grater or equal then 0'
+  this.getChanges = function(args, cb) {
+    if(args.sinceVersion < 0) {
+      return cb(new Err('ChangeStore.ReadError', {
+        message: 'sinceVersion should be grater or equal then 0'
+      }));
+    }
+
+    if(args.toVersion < 0) {
+      return cb(new Err('ChangeStore.ReadError', {
+        message: 'toVersion should be grater then 0'
+      }));
+    }
+
+    if(args.sinceVersion >= args.toVersion) {
+      return cb(new Err('ChangeStore.ReadError', {
+        message: 'toVersion should be greater then sinceVersion'
+      }));
+    }
+
+    if(!has(args, 'sinceVersion')) args.sinceVersion = 0;
+
+    var query = {
+      'document_id': args.documentId,
+      'version >': args.sinceVersion
+    };
+
+    if(args.toVersion) query['version <='] = args.toVersion;
+
+    var options = {
+      order: 'version asc',
+      columns: ["data"]
+    };
+
+    this.db.changes.find(query, options, function(err, changes) {
+      if (err) {
+        return cb(new Err('ChangeStore.ReadError', {
+          cause: err
         }));
       }
 
-      if(args.toVersion < 0) {
-        return reject(new Err('ChangeStore.ReadError', {
-          message: 'toVersion should be grater then 0'
-        }));
-      }
-
-      if(args.sinceVersion >= args.toVersion) {
-        return reject(new Err('ChangeStore.ReadError', {
-          message: 'toVersion should be greater then sinceVersion'
-        }));
-      }
-
-      if(!has(args, 'sinceVersion')) args.sinceVersion = 0;
-
-      var query = {
-        'document_id': args.documentId,
-        'version >': args.sinceVersion
-      };
-
-      if(args.toVersion) query['version <='] = args.toVersion;
-
-      var options = {
-        order: 'version asc',
-        columns: ["data"]
-      };
-
-      this.db.changes.find(query, options, function(err, changes) {
+      this.getVersion(args.documentId, function(err, headVersion) {
         if (err) {
-          reject(new Err('ChangeStore.ReadError', {
+          return cb(new Err('ChangeStore.ReadError', {
             cause: err
           }));
         }
 
-        this.getVersion(args.documentId)
-          .then(function(headVersion) {
-            var res = {
-              version: headVersion,
-              changes: changes
-            };
+        var res = {
+          version: headVersion,
+          changes: changes
+        };
 
-            resolve(res);
-          });
-      }.bind(this));
+        cb(null, res);
+      });
     }.bind(this));
   };
 
@@ -149,19 +154,18 @@ ChangeStore.Prototype = function() {
     Remove all changes of a document
 
     @param {String} id document id
-    @returns {Promise}
+    @param {Callback} cb callback
+    @returns {Callback}
   */
-  this.deleteChanges = function(documentId) {
-    return new Promise(function(resolve, reject) {
-      this.db.changes.destroy({document_id: documentId}, function(err, changes) {
-        if (err) {
-          reject(new Err('ChangeStore.DeleteError', {
-            cause: err
-          }));
-        }
-        resolve(changes.length);
-      });
-    }.bind(this));
+  this.deleteChanges = function(documentId, cb) {
+    this.db.changes.destroy({document_id: documentId}, function(err, changes) {
+      if (err) {
+        return cb(new Err('ChangeStore.DeleteError', {
+          cause: err
+        }));
+      }
+      cb(null, changes.length);
+    });
   };
 
   /*

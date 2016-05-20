@@ -48,27 +48,28 @@ describe('Document Store', function() {
   describe('Create document', function() {
     it('should сreate and return a new document', function(done) {
       var newDoc = {
-        document_id: 'new-doc',
+        documentId: 'new-doc',
         title: 'test document',
-        schema_name: 'mpro-article',
         schema_version: '1.0.0',
         info: {
-          custom: 'some custom data'
+          custom: 'some custom data',
+          schemaName: 'mpro-article',
         }
       };
 
-      return documentStore.createDocument(newDoc)
-        .then(function(doc) {
-          doc.should.be.an('object');
-          should.exist(doc.document_id);
-          assert.equal(doc.document_id, newDoc.document_id);
-          assert.equal(doc.title, newDoc.title);
-          assert.equal(doc.schema_name, newDoc.schema_name);
-          assert.equal(doc.schema_version, newDoc.schema_version);
-          assert.equal(doc.version, 1);
-          assert.deepEqual(doc.info, newDoc.info);
-          done();
-        });
+      documentStore.createDocument(newDoc, function(err, doc) {
+        should.not.exist(err);
+        should.exist(doc);
+        doc.should.be.an('object');
+        should.exist(doc.documentId);
+        assert.equal(doc.documentId, newDoc.document_id);
+        assert.equal(doc.title, newDoc.title);
+        assert.equal(doc.schema_name, newDoc.info.schemaName);
+        assert.equal(doc.schema_version, newDoc.schema_version);
+        assert.equal(doc.version, 1);
+        assert.deepEqual(doc.info, newDoc.info);
+        done();
+      });
     });
 
     it('should create and return a new document without providing a documentId', function(done) {
@@ -81,12 +82,13 @@ describe('Document Store', function() {
         }
       };
 
-      return documentStore.createDocument(newDoc)
-        .then(function(doc) {
-          doc.should.be.an('object');
-          should.exist(doc.document_id);
-          done();
-        });
+      documentStore.createDocument(newDoc, function(err, doc) {
+        should.not.exist(err);
+        should.exist(doc);
+        doc.should.be.an('object');
+        should.exist(doc.documentId);
+        done();
+      });
     });
 
     it('should not allow to create a new document with already existing id', function(done) {
@@ -100,40 +102,37 @@ describe('Document Store', function() {
         }
       };
 
-      return documentStore.createDocument(newDoc)
-        .then(function(doc) {
-          should.not.exist(doc);
-        }).catch(function(err) {
-          should.exist(err);
-          assert.equal(err.message, 'Document ' + newDoc.document_id + ' already exists.');
-          done();
-        });
+      documentStore.createDocument(newDoc, function(err, doc) {
+        should.exist(err);
+        should.not.exist(doc);
+        assert.equal(err.message, 'Document ' + newDoc.documentId + ' already exists.');
+        done();
+      });
     });
   });
 
   describe('Get document', function() {
     it('should return document record with given id', function(done) {
       var documentId = '1';
-      
-      return documentStore.getDocument(documentId)
-        .then(function(doc) {
-          doc.should.be.an('object');
-          assert.equal(doc.document_id, documentId);
-          done();
-        });
+
+      documentStore.getDocument(documentId, function(err, doc) {
+        should.not.exist(err);
+        should.exist(doc);
+        doc.should.be.an('object');
+        assert.equal(doc.document_id, documentId);
+        done();
+      });
     });
 
     it('should return error if document with given id does not exist', function(done) {
       var documentId = 'non-existing-doc';
 
-      return documentStore.getDocument(documentId)
-        .then(function(doc) {
-          should.not.exist(doc);
-        }).catch(function(err) {
-          should.exist(err);
-          assert.equal(err.message, 'No document found for document_id ' + documentId);
-          done();
-        });
+      documentStore.getDocument(documentId, function(err, doc) {
+        should.exist(err);
+        should.not.exist(doc);
+        assert.equal(err.message, 'No document found for documentId ' + documentId);
+        done();
+      });
     });
   });
 
@@ -148,17 +147,17 @@ describe('Document Store', function() {
         }
       };
 
-      return documentStore.updateDocument(documentId, data)
-        .then(function(doc) {
-          should.exist(doc);
-          doc.should.be.an('object');
-          assert.equal(doc.document_id, documentId);
-          assert.equal(doc.title, data.info.title);
-          assert.equal(doc.schema_name, data.schema_name);
-          assert.equal(doc.schema_version, data.schema_version);
-          assert.deepEqual(doc.info, data.info);
-          done();
-        });
+      documentStore.updateDocument(documentId, data, function(err, doc) {
+        should.not.exist(err);
+        should.exist(doc);
+        doc.should.be.an('object');
+        assert.equal(doc.document_id, documentId);
+        assert.equal(doc.title, data.info.title);
+        assert.equal(doc.schema_name, data.schema_name);
+        assert.equal(doc.schema_version, data.schema_version);
+        assert.deepEqual(doc.info, data.info);
+        done();
+      });
     });
 
     it('should return error if document with given id does not exist', function(done) {
@@ -171,45 +170,43 @@ describe('Document Store', function() {
         }
       };
 
-      return documentStore.updateDocument(documentId, data)
-        .then(function(doc) {
-          should.not.exist(doc);
-        }).catch(function(err) {
-          should.exist(err);
-          assert.equal(err.message, 'Document with document_id ' + documentId + ' does not exists');
-          done();
-        });
+      documentStore.updateDocument(documentId, data, function(err, doc) {
+        should.exist(err);
+        should.not.exist(doc);
+        assert.equal(err.message, 'Document with documentId ' + documentId + ' does not exists');
+        done();
+      });
     });
   });
 
   describe('Delete document', function() {
     it('should delete entity and return deleted record for a last time', function(done) {
       var documentId = '1';
-      
-      return documentStore.deleteDocument(documentId)
-        .then(function(doc) {
-          doc.should.be.an('object');
-          assert.equal(doc.document_id, documentId);
-          return documentStore.getDocument(documentId);
-        })
-        .catch(function(err) {
+
+      documentStore.deleteDocument(documentId, function(err, doc) {
+        should.not.exist(err);
+        should.exist(doc);
+        doc.should.be.an('object');
+        assert.equal(doc.document_id, documentId);
+
+        documentStore.getDocument(documentId, function(err, doc) {
           should.exist(err);
-          assert.equal(err.message, 'No document found for document_id ' + documentId);
+          should.not.exist(doc);
+          assert.equal(err.message, 'No document found for documentId ' + documentId);
           done();
         });
+      });
     });
 
     it('should return error if document with given id does not exist', function(done) {
       var documentId = 'non-existing-doc';
 
-      return documentStore.deleteDocument(documentId)
-        .then(function(doc) {
-          should.not.exist(doc);
-        }).catch(function(err) {
-          should.exist(err);
-          assert.equal(err.message, 'Document with document_id ' + documentId + ' does not exists');
-          done();
-        });
+      documentStore.deleteDocument(documentId, function(err, doc) {
+        should.exist(err);
+        should.not.exist(doc);
+        assert.equal(err.message, 'Document with documentId ' + documentId + ' does not exists');
+        done();
+      });
     });
   });
 
@@ -217,35 +214,40 @@ describe('Document Store', function() {
     it('should return true if document is existing', function(done) {
       var documentId = '1';
 
-      return documentStore.documentExists(documentId)
-        .then(function(exist) {
-          assert.equal(exist, true);
-          done();
-        });
+      documentStore.documentExists(documentId, function(err, exist) {
+        should.not.exist(err);
+        should.exist(exist);
+        exist.should.be.a('boolean');
+        assert.equal(exist, true);
+        done();
+      });
     });
 
     it('should return false if document is not existing ', function(done) {
       var documentId = 'non-existing-doc';
 
-      return documentStore.documentExists(documentId)
-        .then(function(exist) {
-          assert.equal(exist, false);
-          done();
-        });
+      documentStore.documentExists(documentId, function(err, exist) {
+        should.not.exist(err);
+        should.exist(exist);
+        exist.should.be.a('boolean');
+        assert.equal(exist, false);
+        done();
+      });
     });
   });
 
   describe('Document listing', function() {
     it('should return list of documents', function(done) {
-      return documentStore.listDocuments({},{})
-        .then(function(results) {
-          results.should.be.an('object');
-          results.records.should.be.an('array');
-          assert.equal(results.total, 3);
-          assert.equal(results.records[0].schema_name, 'mpro-article');
-          assert.equal(results.records[0].schema_version, '1.0.0');
-          done();
-        });
+      documentStore.listDocuments({}, {}, function(err, results) {
+        should.not.exist(err);
+        should.exist(results);
+        results.should.be.an('object');
+        results.records.should.be.an('array');
+        assert.equal(results.total, 3);
+        assert.equal(results.records[0].schema_name, 'mpro-article');
+        assert.equal(results.records[0].schema_version, '1.0.0');
+        done();
+      });
     });
 
     it('should return list of documents with matching filters', function(done) {
@@ -253,14 +255,15 @@ describe('Document Store', function() {
         validated_by: 'testuser2'
       }; 
 
-      return documentStore.listDocuments(filters, {})
-        .then(function(results) {
-          results.should.be.an('object');
-          results.records.should.be.an('array');
-          assert.equal(results.total, 2);
-          assert.equal(results.records[0].validated_by, filters.validated_by);
-          done();
-        });
+      documentStore.listDocuments(filters, {}, function(err, results) {
+        should.not.exist(err);
+        should.exist(results);
+        results.should.be.an('object');
+        results.records.should.be.an('array');
+        assert.equal(results.total, 2);
+        assert.equal(results.records[0].validated_by, filters.validated_by);
+        done();
+      });
     });
 
     it('should return list of documents with applied options', function(done) {
@@ -272,15 +275,16 @@ describe('Document Store', function() {
         limit: 1
       };
 
-      return documentStore.listDocuments(filters, options)
-        .then(function(results) {
-          results.should.be.an('object');
-          results.records.should.be.an('array');
-          assert.equal(results.total, 2);
-          assert.equal(results.records.length, 1);
-          assert.equal(results.records[0].validated_by, filters.validated_by);
-          done();
-        });
+      documentStore.listDocuments(filters, options, function(err, results) {
+        should.not.exist(err);
+        should.exist(results);
+        results.should.be.an('object');
+        results.records.should.be.an('array');
+        assert.equal(results.total, 2);
+        assert.equal(results.records.length, 1);
+        assert.equal(results.records[0].validated_by, filters.validated_by);
+        done();
+      });
     });
 
     it('should return empty list of documents with filters that does not match', function(done) {
@@ -288,14 +292,15 @@ describe('Document Store', function() {
         validated_by: 'non-existing-user'
       };
 
-      return documentStore.listDocuments(filters, {})
-        .then(function(results) {
-          results.should.be.an('object');
-          results.records.should.be.an('array');
-          assert.equal(results.total, 0);
-          assert.equal(results.records.length, 0);
-          done();
-        });
+      documentStore.listDocuments(filters, {}, function(err, results) {
+        should.not.exist(err);
+        should.exist(results);
+        results.should.be.an('object');
+        results.records.should.be.an('array');
+        assert.equal(results.total, 0);
+        assert.equal(results.records.length, 0);
+        done();
+      });
     });
   });
 });

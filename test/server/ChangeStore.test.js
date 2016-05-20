@@ -66,20 +66,26 @@ describe('Change Store', function() {
         }
       };
 
-      return changeStore.addChange(args)
-        .then(function(version) {
-          assert.equal(version, 1);
-          return changeStore.getChanges({
-            documentId: '2',
-            sinceVersion: 0
-          });
-        }).then(function(result) {
+      changeStore.addChange(args, function(err, version) {
+        should.not.exist(err);
+        should.exist(version);
+        version.should.be.an('number');
+        assert.equal(version, 1);
+
+        changeStore.getChanges({
+          documentId: '2',
+          sinceVersion: 0
+        }, function(err, result) {
+          should.not.exist(err);
+          should.exist(result);
+          result.should.be.an('object');
           assert.equal(result.changes.length, 1);
           assert.equal(result.version, 1);
           //TODO: test info object values
           //assert.equal(result.changes[1].info.owner, 'testuser');
           done();
         });
+      });
     });
 
     it('should only create changes associated with a documentId', function(done) {
@@ -93,14 +99,12 @@ describe('Change Store', function() {
         }
       };
 
-      return changeStore.addChange(args)
-        .then(function(version) {
-          should.not.exist(version);
-        }).catch(function(err) {
-          should.exist(err);
-          assert.equal(err.name, 'ChangeStore.CreateError');
-          done();
-        });
+      changeStore.addChange(args, function(err, version) {
+        should.exist(err);
+        should.not.exist(version);
+        assert.equal(err.name, 'ChangeStore.CreateError');
+        done();
+      });
     });
   });
 
@@ -111,12 +115,14 @@ describe('Change Store', function() {
         sinceVersion: 0
       };
 
-      return changeStore.getChanges(args)
-        .then(function(result) {
-          assert.equal(result.changes.length, 4);
-          assert.equal(result.version, 4);
-          done();
-        });
+      changeStore.getChanges(args, function(err, result) {
+        should.not.exist(err);
+        should.exist(result);
+        result.should.be.an('object');
+        assert.equal(result.changes.length, 4);
+        assert.equal(result.version, 4);
+        done();
+      });
     });
 
     it('should return all changes of a document by not specifying sinceVersion', function(done) {
@@ -124,12 +130,14 @@ describe('Change Store', function() {
         documentId: '1'
       };
 
-      return changeStore.getChanges(args)
-        .then(function(result) {
-          assert.equal(result.changes.length, 4);
-          assert.equal(result.version, 4);
-          done();
-        });
+      changeStore.getChanges(args, function(err, result) {
+        should.not.exist(err);
+        should.exist(result);
+        result.should.be.an('object');
+        assert.equal(result.changes.length, 4);
+        assert.equal(result.version, 4);
+        done();
+      });
     });
 
     it('should return no changes if sinceVersion equals actual version', function(done) {
@@ -138,12 +146,14 @@ describe('Change Store', function() {
         sinceVersion: 4
       };
 
-      return changeStore.getChanges(args)
-        .then(function(result) {
-          assert.equal(result.changes.length, 0);
-          assert.equal(result.version, 4);
-          done();
-        });
+      changeStore.getChanges(args, function(err, result) {
+        should.not.exist(err);
+        should.exist(result);
+        result.should.be.an('object');
+        assert.equal(result.changes.length, 0);
+        assert.equal(result.version, 4);
+        done();
+      });
     });
 
     it('should return changes of a document between version 1 and version 2', function(done) {
@@ -153,12 +163,14 @@ describe('Change Store', function() {
         toVersion: 2
       };
 
-      return changeStore.getChanges(args)
-        .then(function(result) {
-          assert.equal(result.changes.length, 1);
-          assert.equal(result.version, 4);
-          done();
-        });
+      changeStore.getChanges(args, function(err, result) {
+        should.not.exist(err);
+        should.exist(result);
+        result.should.be.an('object');
+        assert.equal(result.changes.length, 1);
+        assert.equal(result.version, 4);
+        done();
+      });
     });
 
     it('should return error in case of invalid use of getChanges sinceVersion argument', function(done) {
@@ -167,14 +179,12 @@ describe('Change Store', function() {
         sinceVersion: -5
       };
 
-      return changeStore.getChanges(args)
-        .then(function(version) {
-          should.not.exist(version);
-        }).catch(function(err) {
-          should.exist(err);
-          assert.equal(err.name, 'ChangeStore.ReadError');
-          done();
-        });
+      changeStore.getChanges(args, function(err, result) {
+        should.exist(err);
+        should.not.exist(result);
+        assert.equal(err.name, 'ChangeStore.ReadError');
+        done();
+      });
     });
 
     it('should return error in case of invalid use of getChanges toVersion argument', function(done) {
@@ -183,14 +193,12 @@ describe('Change Store', function() {
         toVersion: -3
       };
 
-      return changeStore.getChanges(args)
-        .then(function(version) {
-          should.not.exist(version);
-        }).catch(function(err) {
-          should.exist(err);
-          assert.equal(err.name, 'ChangeStore.ReadError');
-          done();
-        });
+      changeStore.getChanges(args, function(err, result) {
+        should.exist(err);
+        should.not.exist(result);
+        assert.equal(err.name, 'ChangeStore.ReadError');
+        done();
+      });
     });
 
     it('should return error in case of invalid use of getChanges version arguments', function(done) {
@@ -200,14 +208,12 @@ describe('Change Store', function() {
         toVersion: 1
       };
 
-      return changeStore.getChanges(args)
-        .then(function(version) {
-          should.not.exist(version);
-        }).catch(function(err) {
-          should.exist(err);
-          assert.equal(err.name, 'ChangeStore.ReadError');
-          done();
-        });
+      changeStore.getChanges(args, function(err, result) {
+        should.exist(err);
+        should.not.exist(result);
+        assert.equal(err.name, 'ChangeStore.ReadError');
+        done();
+      });
     });
   });
 
@@ -215,51 +221,62 @@ describe('Change Store', function() {
     it('should return version of a document', function(done) {
       var documentId = 1;
 
-      return changeStore.getVersion(documentId)
-        .then(function(version) {
-          assert.equal(version, 4);
-          done();
-        });
+      changeStore.getVersion(documentId, function(err, version) {
+        should.not.exist(err);
+        should.exist(version);
+        version.should.be.an('number');
+        assert.equal(version, 4);
+        done();
+      });
     });
 
     it('should return version 0 if no changes are found', function(done) {
       var documentId = 'non-existing-doc';
 
-      return changeStore.getVersion(documentId)
-        .then(function(version) {
-          assert.equal(version, 0);
-          done();
-        });
+      changeStore.getVersion(documentId, function(err, version) {
+        should.not.exist(err);
+        should.exist(version);
+        version.should.be.an('number');
+        assert.equal(version, 0);
+        done();
+      });
     });
   });
 
-  describe('Get version', function() {
+  describe('Delete changes', function() {
     it('should delete all changes of a document', function(done) {
       var documentId = 1;
 
-      return changeStore.deleteChanges(documentId)
-        .then(function(changeCount) {
-          assert.equal(changeCount, 4);
-          
-          return changeStore.getChanges({
-            documentId: documentId,
-            sinceVersion: 0
-          });
-        }).then(function(result) {
+      changeStore.deleteChanges(documentId, function(err, count) {
+        should.not.exist(err);
+        should.exist(count);
+        count.should.be.an('number');
+        assert.equal(count, 4);
+
+        changeStore.getChanges({
+          documentId: documentId,
+          sinceVersion: 0
+        }, function(err, result) {
+          should.not.exist(err);
+          should.exist(result);
+          result.should.be.an('object');
           assert.equal(result.changes.length, 0);
           assert.equal(result.version, 0);
           done();
         });
+      });
     });
 
     it('counter of deleted changes should equals 0 if no changes are found', function(done) {
       var documentId = 'non-existing-doc';
 
-      return changeStore.deleteChanges(documentId)
-        .then(function(changeCount) {
-          assert.equal(changeCount, 0);
-          done();
-        });
+      changeStore.deleteChanges(documentId, function(err, count) {
+        should.not.exist(err);
+        should.exist(count);
+        count.should.be.an('number');
+        assert.equal(count, 0);
+        done();
+      });
     });
   });
 });

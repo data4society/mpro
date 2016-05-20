@@ -20,9 +20,10 @@ DocumentStore.Prototype = function() {
     Create a new document record
 
     @param {Object} documentData JSON object
-    @returns {Promise}
+    @param {Callback} cb callback
+    @returns {Callback}
   */
-  this.createDocument = function(props) {
+  this.createDocument = function(props, cb) {
 
     if (!props.documentId) {
       // We generate a document_id ourselves
@@ -56,55 +57,57 @@ DocumentStore.Prototype = function() {
       info: props.info
     };
 
-    return this.documentExists(props.documentId).bind(this)
-      .then(function(exists) {
-        if (exists) {
-          throw new Err('DocumentStore.UpdateError', {
-            message: 'Document ' + props.document_id + ' already exists.'
-          });
+    this.documentExists(record.document_id, function(err, exists) {
+      if (err) {
+        return cb(new Err('DocumentStore.CreateError', {
+          cause: err
+        }));
+      }
+
+      if (exists) {
+        return cb(new Err('DocumentStore.CreateError', {
+          message: 'Document ' + props.document_id + ' already exists.'
+        }));
+      }
+
+      this.db.documents.insert(record, function(err, doc) {
+        if (err) {
+          return cb(new Err('DocumentStore.CreateError', {
+            cause: err
+          }));
         }
 
-        return new Promise(function(resolve, reject) {
-          this.db.documents.insert(record, function(err, doc) {
-            if (err) {
-              reject(new Err('DocumentStore.CreateError', {
-                cause: err
-              }));
-            }
+        // Set documentId explictly as it will be used by engine
+        doc.documentId = doc.document_id;
 
-            // Set documentId explictly as it will be used by engine
-            doc.documentId = doc.document_id;
-            
-            resolve(doc);
-          });
-        }.bind(this));
+        cb(null, doc);
       });
+    }.bind(this));
   };
 
   /*
     Get document record for a given documentId
 
     @param {String} documentId document id
-    @returns {Promise}
+    @param {Callback} cb callback
+    @returns {Callback}
   */
-  this.getDocument = function(documentId) {
-    return new Promise(function(resolve, reject) {
-      this.db.documents.findOne({document_id: documentId}, function(err, doc) {
-        if (err) {
-          reject(new Err('DocumentStore.ReadError', {
-            cause: err
-          }));
-        }
+  this.getDocument = function(documentId, cb) {
+    this.db.documents.findOne({document_id: documentId}, function(err, doc) {
+      if (err) {
+        return cb(new Err('DocumentStore.ReadError', {
+          cause: err
+        }));
+      }
 
-        if (!doc) {
-          reject(new Err('DocumentStore.ReadError', {
-            message: 'No document found for document_id ' + documentId
-          }));
-        }
+      if (!doc) {
+        return cb(new Err('DocumentStore.ReadError', {
+          message: 'No document found for documentId ' + documentId
+        }));
+      }
 
-        resolve(doc);
-      });
-    }.bind(this));
+      cb(null, doc);
+    });
   };
 
   /*
@@ -112,9 +115,10 @@ DocumentStore.Prototype = function() {
 
     @param {String} documentId document id
     @param {Object} props properties to update
-    @returns {Promise}
+    @param {Callback} cb callback
+    @returns {Callback}
   */
-  this.updateDocument = function(documentId, props) {
+  this.updateDocument = function(documentId, props, cb) {
     
     if(props.info) {
       // TODO: update here all meta properties from document 
@@ -123,77 +127,87 @@ DocumentStore.Prototype = function() {
       if(props.info.meta) props.meta = props.info.meta;
     }
 
-    return this.documentExists(documentId).bind(this)
-      .then(function(exists) {
-        if (!exists) {
-          throw new Err('DocumentStore.UpdateError', {
-            message: 'Document with document_id ' + documentId + ' does not exists'
-          });
+    this.documentExists(documentId, function(err, exists) {
+      if (err) {
+        return cb(new Err('DocumentStore.UpdateError', {
+          cause: err
+        }));
+      }
+
+      if (!exists) {
+        return cb(new Err('DocumentStore.UpdateError', {
+          message: 'Document with documentId ' + documentId + ' does not exists'
+        }));
+      }
+
+      var documentData = props;
+      documentData.document_id = documentId;
+
+      this.db.documents.save(documentData, function(err, doc) {
+        if (err) {
+          return cb(new Err('DocumentStore.UpdateError', {
+            cause: err
+          }));
         }
 
-        return new Promise(function(resolve, reject) {
-          var documentData = props;
-          documentData.document_id = documentId;
-
-          this.db.documents.save(documentData, function(err, doc) {
-            if (err) {
-              reject(new Err('DocumentStore.UpdateError', {
-                cause: err
-              }));
-            }
-
-            resolve(doc);
-          });
-        }.bind(this));
+        cb(null, doc);
       });
+    }.bind(this));
   };
 
   /*
     Remove a document from the db
 
     @param {String} documentId document id
-    @returns {Promise}
+    @param {Callback} cb callback
+    @returns {Callback}
   */
-  this.deleteDocument = function(documentId) {
-    return this.documentExists(documentId).bind(this)
-      .then(function(exists) {
-        if (!exists) {
-          throw new Err('DocumentStore.DeleteError', {
-            message: 'Document with document_id ' + documentId + ' does not exists'
-          });
-        }
+  this.deleteDocument = function(documentId, cb) {
+    this.documentExists(documentId, function(err, exists) {
+      if (err) {
+        return cb(new Err('DocumentStore.DeleteError', {
+          cause: err
+        }));
+      }
 
-        return new Promise(function(resolve, reject) {
-          this.db.documents.destroy({document_id: documentId}, function(err, doc) {
-            if (err) {
-              reject(new Err('DocumentStore.DeleteError', {
-                cause: err
-              }));
-            }
-            doc = doc[0];
-            resolve(doc);
-          });
-        }.bind(this));
+      if (!exists) {
+        return cb(new Err('DocumentStore.DeleteError', {
+          message: 'Document with documentId ' + documentId + ' does not exists'
+        }));
+      }
+
+      this.db.documents.destroy({document_id: documentId}, function(err, doc) {
+        if (err) {
+          return cb(new Err('DocumentStore.DeleteError', {
+            cause: err
+          }));
+        }
+        doc = doc[0];
+        // Set documentId explictly as it will be used by engine
+        doc.documentId = doc.document_id;
+        cb(null, doc);
       });
+    }.bind(this));
   };
 
   /*
     Check if document exists
 
     @param {String} documentId document id
-    @returns {Promise}
+    @param {Callback} cb callback
+    @returns {Callback}
   */
-  this.documentExists = function(documentId) {
-    return new Promise(function(resolve, reject) {
-      this.db.documents.findOne({document_id: documentId}, function(err, doc) {
-        if (err) {
-          reject(new Err('DocumentStore.ReadError', {
-            cause: err
-          }));
-        }
-        resolve(!isUndefined(doc));
-      });
-    }.bind(this));
+  this.documentExists = function(documentId, cb) {
+    this.db.documents.findOne({document_id: documentId}, function(err, doc) {
+      if (err) {
+        return cb(new Err('DocumentStore.ReadError', {
+          cause: err,
+          info: 'Happened within documentExists.'
+        }));
+      }
+
+      cb(null, !isUndefined(doc));
+    });
   };
 
   /*
@@ -201,34 +215,33 @@ DocumentStore.Prototype = function() {
 
     @param {Object} filters filters
     @param {Object} options options
-    @returns {Promise}
+    @param {Callback} cb callback
+    @returns {Callback}
   */
-  this.listDocuments = function(filters, options) {
+  this.listDocuments = function(filters, options, cb) {
     var output = {};
 
     // Default limit for number of returned records
     if(!options.limit) options.limit = 100;
 
-    return new Promise(function(resolve, reject) {
-      this.db.documents.count(filters, function(err, count) {
+    this.db.documents.count(filters, function(err, count) {
+      if (err) {
+        return cb(new Err('DocumentStore.ListError', {
+          cause: err
+        }));
+      }
+      output.total = count;
+      
+      this.db.documents.find(filters, options, function(err, docs) {
         if (err) {
-          reject(new Err('DocumentStore.ListError', {
+          return cb(new Err('DocumentStore.ListError', {
             cause: err
           }));
         }
-        output.total = count;
-        
-        this.db.documents.find(filters, options, function(err, docs) {
-          if (err) {
-            reject(new Err('DocumentStore.ListError', {
-              cause: err
-            }));
-          }
 
-          output.records = docs;
-          resolve(output);
-        });
-      }.bind(this));
+        output.records = docs;
+        cb(null, output);
+      });
     }.bind(this));
   };
 
