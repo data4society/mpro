@@ -14,6 +14,10 @@ MproDocumentEngine.Prototype = function() {
 
   /*
     Delete document by documentId
+
+    @param {String} documentId document id
+    @param {Callback} cb callback
+    @returns {Callback}
   */
   this.deleteDocument = function(documentId, cb) {
     this.changeStore.deleteChanges(documentId, function(err) {
@@ -33,6 +37,18 @@ MproDocumentEngine.Prototype = function() {
         cb(null, doc);
       });
     }.bind(this));
+  };
+
+  /*
+    List documents with given filters and options
+
+    @param {Object} filters filters
+    @param {Object} options options
+    @param {Callback} cb callback
+    @returns {Callback}
+  */
+  this.listDocuments = function(filters, options, cb) {
+    this.documentStore.listDocuments(filters, options, cb);
   };
 };
 
