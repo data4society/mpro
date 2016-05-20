@@ -4,13 +4,13 @@ var Err = require('substance/util/Error');
 /*
   MPro Document Engine API.
 */
-function MproDocumentEngine(config) {
+function MproDocumentEngine() {
   MproDocumentEngine.super.apply(this, arguments);
 }
 
 MproDocumentEngine.Prototype = function() {
 
-  var _super = MproDocumentEngine.super.prototype;
+  //var _super = MproDocumentEngine.super.prototype;
 
   /*
     Delete document by documentId
