@@ -1,4 +1,9 @@
 {
-  "app_url": "https://localhost:5000",
+  "server": {
+    "port": 5000,
+    "host": "localhost",
+    "wsUrl": "ws://localhost:5000",
+    "appUrl": "http://localhost:5000"
+  },
   "db_url": "postgres://mpro_user:mpro_pw@localhost:5432/mpro"
 }
