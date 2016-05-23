@@ -6,6 +6,18 @@ $fa-font-path:  "./fonts" !default;
 @import './node_modules/substance/styles/components/_all';
 @import './node_modules/substance/packages/_all';
 
+// Client modules
+@import './styles/_mpro'; // app styles
+@import './styles/_shared'; // buttons etc.
+@import './styles/_feed'; // feed
+@import './styles/_feed-item';
+@import './styles/_document-viewer';
+@import './styles/_filters';
+@import './styles/_header';
+@import './styles/_login-status'; 
+@import './styles/_request-login';
+@import './styles/_welcome'; 
+
 /* Shared demo styles */
 
 body.sm-fixed-layout {

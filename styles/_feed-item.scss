@@ -1,0 +1,60 @@
+/* Used in Dashboard */
+
+.sc-feed-item {
+
+  &.active {
+    background: #2473DA;
+    color: #fff;
+    margin-right: 0px;
+    margin-top: -1px;
+
+    .se-abstract {
+      color: rgba(253, 253, 253, 0.75);
+    }
+
+    .se-source-url {
+      color: inherit;
+    }
+  }
+
+  .se-source-info {
+    font-size: 14px;
+    height: 20px;
+
+    .se-source-name {
+      text-align: left;
+      float: left;
+      width: 33.3%;
+    }
+
+    .se-source-url {
+      text-align: center;
+      float: left;
+      width: 33.3%;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .se-source-date {
+      text-align: right;
+      float: left;
+      width: 33.3%;
+      font-size: 12px;
+      line-height: 23px;
+    }
+  }
+
+  .se-title {
+    font-size: 17px;
+    line-height: 20px;
+    padding: 10px 0px;
+  }
+
+  .se-abstract {
+    color: rgba(0,0,0,0.75);
+    font-size: 12px;
+    border-bottom: 1px rgba(90, 95, 101, 0.5) solid;
+    padding-bottom: 15px;
+  }
+}

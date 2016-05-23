@@ -3,6 +3,7 @@
 var oo = require('substance/util/oo');
 var Err = require('substance/util/Error');
 var uuid = require('substance/util/uuid');
+var each = require('lodash/each');
 var isUndefined = require('lodash/isUndefined');
 var Promise = require("bluebird");
 
@@ -258,6 +259,14 @@ DocumentStore.Prototype = function() {
             cause: err
           }));
         }
+
+        each(docs, function(doc) {
+          // Set documentId explictly as it will be used by Document Engine
+          doc.documentId = doc.document_id;
+          // Set schemaName and schemaVersion explictly as it will be used by Snapshot Engine
+          doc.schemaName = doc.schema_name;
+          doc.schemaVersion = doc.schema_version;
+        });
 
         output.records = docs;
         cb(null, output);

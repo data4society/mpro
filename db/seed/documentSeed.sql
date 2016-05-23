@@ -4,10 +4,10 @@ insert into documents(document_id, guid, title, schema_name, schema_version, ver
 values (
   '1',
   'http://www.nytimes.com/1993/12/09/arts/jim-morrison-s-fans-keep-his-fire-alight-in-a-birthday-homage.html',
-  E'Jim Morrison\\''s Fans Keep His Fire Alight In a Birthday Homage',
+  E'Jim Morrison\'s Fans Keep His Fire Alight In a Birthday Homage',
   'mpro-article',
   '1.0.0',
-  1,
+  4,
   '1993-12-09T08:00:00.000Z',
   NOW(),
   NOW(),

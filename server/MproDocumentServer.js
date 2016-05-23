@@ -17,7 +17,7 @@ MproDocumentServer.Prototype = function() {
     _super.bind.apply(this, arguments);
 
     // MPro document specific routes
-    app.get(this.path + '/documents', this._listDocuments.bind(this));
+    app.get(this.path, this._listDocuments.bind(this));
   };
 
   /*

@@ -12,9 +12,9 @@ function MproDocumentClient() {
 
 MproDocumentClient.Prototype = function() {
 
-  this.listUserDashboard = function(cb) {
+  this.listDocuments = function(cb) {
     // TODO: send filters and options to server
-    this._request('GET', '/api/mpro/documents', null, cb);
+    this._request('GET', '/api/documents', null, cb);
   };
 
 };

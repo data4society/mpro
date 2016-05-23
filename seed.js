@@ -1,3 +1,4 @@
+var ChangeStore = require('./server/ChangeStore');
 var DocumentStore = require('./server/DocumentStore');
 var EntityStore = require('./server/EntityStore');
 var SessionStore = require('./server/SessionStore');
@@ -22,6 +23,9 @@ db.reset() // Clear the database, set up the schema
   }).then(function() {
   var documentStore = new DocumentStore({ db: db });
     return documentStore.seed();
+  }).then(function() {
+  var changeStore = new ChangeStore({ db: db });
+    return changeStore.seed();
   }).then(function() {
     console.log('Done seeding.');
     db.connection.end();

@@ -3,6 +3,7 @@ var express = require('express');
 var http = require('http');
 var path = require('path');
 var app = express();
+var bodyParser = require('body-parser');
 var WebSocketServer = require('ws').Server;
 
 // Development server 
@@ -73,6 +74,12 @@ var authenticationEngine = new AuthenticationEngine({
   sessionStore: sessionStore,
   emailService: null // TODO
 });
+
+/*
+  Express body-parser configureation 
+*/
+app.use(bodyParser.json({limit: '3mb'}));
+app.use(bodyParser.urlencoded({ extended: true, limit: '3mb', parameterLimit: 3000 }));
 
 /*
   Serve app
@@ -177,7 +184,6 @@ var authenticationServer = new AuthenticationServer({
 });
 
 authenticationServer.bind(app);
-
 
 // Error handling
 // We send JSON to the client so they can display messages in the UI.

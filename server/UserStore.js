@@ -71,6 +71,35 @@ UserStore.Prototype = function() {
   };
 
   /*
+    Get user record for a given loginKey
+
+    @param {String} loginKey login key
+    @returns {Promise}
+  */
+  this.getUserByLoginKey = function(loginKey) {
+    return new Promise(function(resolve, reject) {
+      this.db.users.findOne({login_key: loginKey}, function(err, user) {
+        if (err) {
+          reject(new Err('UserStore.ReadError', {
+            cause: err
+          }));
+        }
+
+        if (!user) {
+          reject(new Err('UserStore.ReadError', {
+            message: 'No user found for provided loginKey'
+          }));
+        }
+
+        // map user_id to userId
+        user.userId = user.user_id;
+
+        resolve(user);
+      });
+    }.bind(this));
+  };
+
+  /*
     Get user record for a given email
 
     @param {String} email user email
@@ -168,12 +197,14 @@ UserStore.Prototype = function() {
     // TODO: at some point we should make this more secure
     // e.g. generate a hash-like-thing in separate method and store it
     var password = uuid();
+    var loginKey = userData.loginKey || uuid();
 
     var record = {
       user_id: userData.user_id,
       name: userData.name,
       email: userData.email,
       created: new Date(),
+      login_key: loginKey,
       password: password
     };
 

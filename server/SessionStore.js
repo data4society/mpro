@@ -23,6 +23,9 @@ SessionStore.Prototype = function() {
     @returns {Promise}
   */
   this.createSession = function(session) {
+    // map userId to session owner
+    if(session.userId) session.owner = session.userId;
+
     var newSession = {
       session_token: uuid(),
       created: new Date(),
@@ -36,6 +39,10 @@ SessionStore.Prototype = function() {
             cause: err
           }));
         }
+        // map session owner to userId,
+        // session_token to sessionToken
+        session.userId = session.owner;
+        session.sessionToken = session.session_token;
 
         resolve(session);
       });
@@ -52,16 +59,21 @@ SessionStore.Prototype = function() {
     return new Promise(function(resolve, reject) {
       this.db.sessions.findOne({session_token: sessionToken}, function(err, session) {
         if (err) {
-          reject(new Err('SessionStore.ReadError', {
+          return reject(new Err('SessionStore.ReadError', {
             cause: err
           }));
         }
 
         if (!session) {
-          reject(new Err('SessionStore.ReadError', {
+          return reject(new Err('SessionStore.ReadError', {
             message: 'No session found for session_token ' + sessionToken
           }));
         }
+
+        // map session owner to userId,
+        // session_token to sessionToken
+        session.userId = session.owner;
+        session.sessionToken = session.session_token;
 
         resolve(session);
       });

@@ -1,0 +1,14 @@
+.sc-view-document {
+  position: fixed;
+  top: 60px;
+  bottom: 0px;
+  left: 50%;
+  width: 50%;
+  background: #fff;
+  z-index: 10;
+
+  .no-document {
+    text-align: center;
+    padding-top: 60px;
+  }
+}
