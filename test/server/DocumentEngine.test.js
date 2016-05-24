@@ -163,7 +163,7 @@ describe('Document Engine', function() {
         doc.should.be.an('object');
         should.exist(doc.data);
         should.exist(doc.documentId);
-        assert.equal(doc.version, 1);
+        assert.equal(doc.version, 4);
         done();
       });
     });

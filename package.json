@@ -12,7 +12,7 @@
     "lodash": "^4.12.0",
     "massive": "^2.2.0",
     "moment": "^2.13.0",
-    "substance": "git://github.com/substance/substance.git#a116ba96976f9307c694bd3d7a1aa1c168530c2c",
+    "substance": "git://github.com/substance/substance.git#4953e1fcf81febaa33562ad2c9d6e232a5466862",
     "ws": "^1.1.0"
   },
   "devDependencies": {

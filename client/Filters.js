@@ -2,7 +2,6 @@
 
 var DocumentClient = require('./MproDocumentClient');
 var Err = require('substance/util/Error');
-
 var Component = require('substance/ui/Component');
 
 function Filters() {

@@ -80,9 +80,10 @@ describe('Change Store', function() {
           should.exist(result);
           result.should.be.an('object');
           assert.equal(result.changes.length, 1);
+          should.exist(result.changes[0].ops, 'changes most contain array of change objects');
           assert.equal(result.version, 1);
-          //TODO: test info object values
-          //assert.equal(result.changes[1].info.owner, 'testuser');
+          // TODO: test info object values
+          // assert.equal(result.changes[1].info.owner, 'testuser');
           done();
         });
       });

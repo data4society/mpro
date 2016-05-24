@@ -14,6 +14,7 @@ var server = require('substance/util/server');
   Stores
 */
 var DocumentStore = require('./server/DocumentStore');
+var SnapshotStore = require('./server/SnapshotStore');
 var ChangeStore = require('./server/ChangeStore');
 var SessionStore = require('./server/SessionStore');
 var UserStore = require('./server/UserStore');
@@ -23,6 +24,7 @@ var UserStore = require('./server/UserStore');
 */
 var DocumentEngine = require('./server/MproDocumentEngine');
 var AuthenticationEngine = require('./server/AuthenticationEngine');
+var SnapshotEngine = require('substance/collab/SnapshotEngine');
 
 /*
   Servers
@@ -53,13 +55,30 @@ var sessionStore = new SessionStore({ db: db });
 var changeStore = new ChangeStore({db: db});
 var documentStore = new DocumentStore({db: db});
 
+var snapshotStore = new SnapshotStore({db: db});
+
 /*
   Engines setup
 */
+var snapshotEngine = new SnapshotEngine({
+  db: db,
+  documentStore: documentStore,
+  changeStore: changeStore,
+  snapshotStore: snapshotStore,
+  schemas: {
+    'mpro-article': {
+      name: 'mpro-article',
+      version: '1.0.0',
+      documentFactory: newArticle
+    }
+  }
+});
+
 var documentEngine = new DocumentEngine({
   db: db,
   documentStore: documentStore,
   changeStore: changeStore,
+  snapshotEngine: snapshotEngine,
   schemas: {
     'mpro-article': {
       name: 'mpro-article',

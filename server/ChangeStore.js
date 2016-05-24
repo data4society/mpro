@@ -2,6 +2,7 @@
 
 var oo = require('substance/util/oo');
 var Err = require('substance/util/Error');
+var map = require('lodash/map');
 var has = require('lodash/has');
 var Promise = require("bluebird");
 
@@ -132,6 +133,9 @@ ChangeStore.Prototype = function() {
           cause: err
         }));
       }
+
+      // transform results to an array of changes 
+      changes = map(changes, function(c) {return c.data; });
 
       this.getVersion(args.documentId, function(err, headVersion) {
         if (err) {
