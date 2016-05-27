@@ -22,6 +22,26 @@ Seed the db
 npm run seed
 ```
 
+# Run application
+
+If you run tests before, tehn you should seed the db again
+
+```bash
+npm run seed
+```
+
+Start application
+
+```bash
+npm run start
+```
+
+Open page in your browser:
+
+```bash
+http://localhost:5000
+```
+
 # Run tests
 
 ```bash
