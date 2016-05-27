@@ -5,6 +5,8 @@ var JSONConverter = require('substance/model/JSONConverter');
 var CollabClient = require('substance/collab/CollabClient');
 var WebSocketConnection = require('substance/collab/WebSocketConnection');
 var Component = require('substance/ui/Component');
+var Err = require('substance/util/Error');
+var Thematic = require('../model/Thematic');
 var Article = require('../model/Article');
 var DocumentInfo = require('./DocumentInfo');
 var converter = new JSONConverter();
@@ -112,6 +114,7 @@ RealtimeDocument.Prototype = function() {
 
       var doc = new Article();
       doc = converter.importDocument(doc, docRecord.data);
+      this._loadThematics();
       var session = new CollabSession(doc, {
         documentId: documentId,
         version: docRecord.version,
@@ -130,6 +133,29 @@ RealtimeDocument.Prototype = function() {
         documentInfo: new DocumentInfo(docRecord),
         session: session
       });
+    }.bind(this));
+  };
+
+  this._loadThematics = function() {
+    var documentClient = this.context.documentClient;
+
+    documentClient.listThematics({}, {}, function(err, result) {
+      if (err) {
+        this.setState({
+          error: new Err('Feed.LoadingError', {
+            message: 'Thematics could not be loaded.',
+            cause: err
+          })
+        });
+        console.error('ERROR', err);
+        return;
+      }
+
+      var thematics = new Thematic(false, result.records);
+      this.extendState({
+        thematics: thematics.tree
+      });
+      return thematics;
     }.bind(this));
   };
 };

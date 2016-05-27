@@ -1,9 +1,6 @@
 'use strict';
 
-var Notification = require('./Notification');
-var Layout = require('substance/ui/Layout');
-var Button = require('substance/ui/Button');
-var Icon = require('substance/ui/FontAwesomeIcon');
+//var Notification = require('./Notification');
 var DocumentLoader = require('./DocumentLoader');
 var DocumentViewer = require('./DocumentViewer');
 //var RequestEditAccess = require('./RequestEditAccess');
@@ -25,7 +22,6 @@ ViewDocument.Prototype = function() {
   };
 
   this.render = function($$) {
-    var userSession = this.props.userSession;
     var el = $$('div').addClass('sc-view-document');
 
     // var layout = $$(Layout, {
@@ -50,8 +46,9 @@ ViewDocument.Prototype = function() {
         $$(DocumentViewer, {
           mobile: this.props.mobile,
           documentInfo: this.state.documentInfo,
-          documentSession: this.state.session
-        }).ref('noteReader')
+          documentSession: this.state.session,
+          thematics: this.state.thematics
+        }).ref('documentViewer')
       );
     }
 

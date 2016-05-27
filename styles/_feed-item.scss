@@ -1,5 +1,3 @@
-/* Used in Dashboard */
-
 .sc-feed-item {
 
   &.active {
@@ -54,6 +52,9 @@
   .se-abstract {
     color: rgba(0,0,0,0.75);
     font-size: 12px;
+  }
+
+  .se-separator {
     border-bottom: 1px rgba(90, 95, 101, 0.5) solid;
     padding-bottom: 15px;
   }

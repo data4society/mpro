@@ -18,13 +18,15 @@ var SnapshotStore = require('./server/SnapshotStore');
 var ChangeStore = require('./server/ChangeStore');
 var SessionStore = require('./server/SessionStore');
 var UserStore = require('./server/UserStore');
+var ThematicStore = require('./server/ThematicStore');
 
 /*
   Engines
 */
 var DocumentEngine = require('./server/MproDocumentEngine');
 var AuthenticationEngine = require('./server/AuthenticationEngine');
-var SnapshotEngine = require('substance/collab/SnapshotEngine');
+var SnapshotEngine = require('./server/MproSnapshotEngine');
+var MproEngine = require('./server/MproEngine');
 
 /*
   Servers
@@ -32,6 +34,7 @@ var SnapshotEngine = require('substance/collab/SnapshotEngine');
 var CollabServer = require('substance/collab/CollabServer');
 var AuthenticationServer = require('./server/AuthenticationServer');
 var DocumentServer = require('./server/MproDocumentServer');
+var MproServer = require('./server/MproServer');
 
 /*
   Models
@@ -56,6 +59,7 @@ var changeStore = new ChangeStore({db: db});
 var documentStore = new DocumentStore({db: db});
 
 var snapshotStore = new SnapshotStore({db: db});
+var thematicStore = new ThematicStore({db: db});
 
 /*
   Engines setup
@@ -92,6 +96,10 @@ var authenticationEngine = new AuthenticationEngine({
   userStore: userStore,
   sessionStore: sessionStore,
   emailService: null // TODO
+});
+
+var mproEngine = new MproEngine({
+  thematicStore: thematicStore
 });
 
 /*
@@ -159,6 +167,7 @@ var collabServer = new CollabServer({
       documentStore.getDocument(message.documentId, function(err, docRecord) {
         var updatedAt = new Date();
         var title = docRecord.title;
+        var categories = docRecord.meta.categories;
 
         if (message.change) {
           // Update the title if necessary
@@ -166,6 +175,12 @@ var collabServer = new CollabServer({
           change.ops.forEach(function(op) {
             if(op.path[0] == 'meta' && op.path[1] == 'title') {
               title = op.diff.apply(title);
+            }
+          });
+
+          change.ops.forEach(function(op) {
+            if(op.path[0] == 'meta' && op.path[1] == 'categories') {
+              categories = op.val;
             }
           });
 
@@ -183,7 +198,8 @@ var collabServer = new CollabServer({
         message.documentInfo = {
           updatedAt: updatedAt,
           updatedBy: req.session.userId,
-          title: title
+          title: title,
+          meta: {title: title, categories: categories}
         };
         cb(null);
       });
@@ -203,6 +219,14 @@ var authenticationServer = new AuthenticationServer({
 });
 
 authenticationServer.bind(app);
+
+// MPro Server
+var mproServer = new MproServer({
+  mproEngine: mproEngine,
+  path: '/api'
+});
+
+mproServer.bind(app);
 
 // Error handling
 // We send JSON to the client so they can display messages in the UI.

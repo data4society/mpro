@@ -1,9 +1,11 @@
 'use strict';
 
 var Component = require('substance/ui/Component');
+var Icon = require('substance/ui/FontAwesomeIcon');
+var each = require('lodash/each');
 var moment = require('moment');
 
-function FeedItem() {
+function ListItem() {
   Component.apply(this, arguments);
 
   if (!this.context.urlHelper) {
@@ -11,34 +13,48 @@ function FeedItem() {
   }
 }
 
-FeedItem.Prototype = function() {
+ListItem.Prototype = function() {
 
   this.render = function($$) {
     var document = this.props.document;
-    var el = $$('div').addClass('sc-feed-item')
+    var el = $$('div').addClass('sc-list-item')
       .on('click', this.send.bind(this, 'openDocument', document.documentId));
 
     var isActive = this.props.active === true;
+
+    var thematics = this.props.thematics;
+    var meta = document.meta;
+    var categories = meta.categories;
 
     if(isActive) {
       el.addClass('active');
     }
 
-    var meta = document.meta;
+    var categoriesList = [];
+
+    if(thematics) {
+      each(categories, function(category) {
+        var item = thematics.get(category);
+        categoriesList.push(item.title);
+      }.bind(this));
+    }
+
+    var categoriesEl = $$('div').addClass('se-categories');
+
+    categoriesEl.append($$(Icon, {icon: 'fa-tags'}));
+
+    if(categoriesList.length > 0) {
+      categoriesEl.append(categoriesList.join(', '));
+    } else {
+      categoriesEl.append('No categories assigned');
+    }
 
     // Title
     el.append(
-      this.renderSourceInfo($$),
       $$('div').addClass('se-title')
         .append(document.title),
-      $$('div').addClass('se-abstract')
-        .append(meta.abstract),
+      categoriesEl,
       $$('div').addClass('se-separator')
-        // .append(
-        //   $$('a')
-        //     .attr({href: url})
-        //     .append(this.props.title)
-        // )
     );
 
     // TODO: Add HTML preview here
@@ -98,6 +114,6 @@ FeedItem.Prototype = function() {
   };
 };
 
-Component.extend(FeedItem);
+Component.extend(ListItem);
 
-module.exports = FeedItem;
+module.exports = ListItem;

@@ -4,6 +4,7 @@ var appConfig = require('config');
 var uuid = require('substance/util/uuid');
 var oo = require('substance/util/oo');
 var Err = require('substance/util/Error');
+var Promise = require("bluebird");
 
 /*
   Implements authentication logic
@@ -74,7 +75,7 @@ AuthenticationEngine.Prototype = function() {
   */
   this._sendLoginLink = function(user, documentId) {
     var url = appConfig.get('server.appUrl');
-    var subject = "Your login key!";
+    //var subject = "Your login key!";
     var msg;
 
     if (documentId) {

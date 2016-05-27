@@ -39,23 +39,29 @@ Cover.Prototype = function() {
           editing: this.props.editing || 'full'
         }).addClass('se-title'),
         $$('div').addClass('se-separator'),
-        $$('div').addClass('se-authors').append(authors.join(', ')),
-        $$(NoteSummary, {
+        // $$('div').addClass('se-authors').append(authors.join(', ')),
+        $$(DocumentSummary, {
           mobile: this.props.mobile,
-          documentInfo: this.props.documentInfo
+          documentInfo: this.props.documentInfo,
+          thematics: this.props.thematics,
+          editing: this.props.editing || 'full'
         })
       );
   };
 
   this._onDocumentChanged = function(change) {
-    // Only rerender if changed happened outside of the title surface.
-    // Otherwise we would destroy the current selection
+    var doc = this.props.doc;
+    var meta = doc.get('meta');
+    var documentInfo = this.props.documentInfo;
+    var documentId = documentInfo.props.documentId;
     
     // HACK: update the updatedAt property
-    this.props.documentInfo.props.updatedAt = new Date();
+    documentInfo.props.updatedAt = new Date();
+    documentInfo.props.meta = {title: meta.title, categories: meta.categories};
 
-    if (change.after && change.after.surfaceId !== 'title') {
-      this.rerender();
+    if (change.after.surfaceId == 'title') {
+      var title = doc.get(['meta', 'title']);
+      this.send('updateListTitle', documentId, title);
     }
   };
 

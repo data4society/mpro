@@ -70,7 +70,7 @@ describe('Change Store', function() {
         should.not.exist(err);
         should.exist(version);
         version.should.be.an('number');
-        assert.equal(version, 1);
+        assert.equal(version, 2);
 
         changeStore.getChanges({
           documentId: '2',
@@ -79,9 +79,9 @@ describe('Change Store', function() {
           should.not.exist(err);
           should.exist(result);
           result.should.be.an('object');
-          assert.equal(result.changes.length, 1);
+          assert.equal(result.changes.length, 2);
           should.exist(result.changes[0].ops, 'changes most contain array of change objects');
-          assert.equal(result.version, 1);
+          assert.equal(result.version, 2);
           // TODO: test info object values
           // assert.equal(result.changes[1].info.owner, 'testuser');
           done();

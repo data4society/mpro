@@ -4,9 +4,12 @@ var each = require('lodash/each');
 var inBrowser = require('substance/util/inBrowser');
 var DefaultDOMElement = require('substance/ui/DefaultDOMElement');
 var Component = require('substance/ui/Component');
-var DocumentClient = require('substance/collab/DocumentClient');
+var DocumentClient = require('./MproDocumentClient');
 var AuthenticationClient = require('./AuthenticationClient');
-var IndexSection = require('./IndexSection');
+var InboxSection = require('./InboxSection');
+var ConfiguratorSection = require('./ConfiguratorSection');
+var EnterName = require('./EnterName');
+var Welcome = require('./Welcome');
 var SettingsSection = require('./SettingsSection');
 var MproRouter = require('./MproRouter');
 
@@ -47,8 +50,10 @@ function MproApp() {
   this.handleActions({
     'navigate': this.navigate,
     'newDocument': this._newDocument,
+    'newTrainingDocument': this._newTrainingDocument,
     'home': this._home,
     'settings': this._settings,
+    'configurator': this._configurator,
     'deleteDocument': this._deleteDocument,
     'logout': this._logout,
     'userSessionUpdated': this._userSessionUpdated
@@ -212,12 +217,30 @@ MproApp.Prototype = function() {
       return el;
     }
 
+    // Login section
+    if (!this.state.userSession) {
+      el.append($$(Welcome).ref('welcome'));
+      return el;
+    }
+
+    // Complete registration
+    if (!this.state.userSession.user.name) {
+      el.append($$(EnterName, this.props).ref('enterName'));
+      return el;
+    }
+
     switch (this.state.route.section) {
       case 'settings':
         el.append($$(SettingsSection, this.state).ref('settingsSection'));
         break;
+      case 'inbox':
+        el.append($$(InboxSection, this.state).ref('inbox'));
+        break;
+      case 'configurator':
+        el.append($$(ConfiguratorSection, this.state).ref('configurator'));
+        break;
       default: // !section || section === index
-        el.append($$(IndexSection, this.state).ref('indexSection'));
+        el.append($$(InboxSection, this.state).ref('inbox'));
         break;
     }
     return el;
@@ -228,7 +251,13 @@ MproApp.Prototype = function() {
 
   this._home = function() {
     this.navigate({
-      section: 'index'
+      section: 'inbox'
+    });
+  };
+
+  this._inbox = function() {
+    this.navigate({
+      section: 'inbox'
     });
   };
 
@@ -238,8 +267,14 @@ MproApp.Prototype = function() {
     });
   };
 
+  this._configurator = function() {
+    this.navigate({
+      section: 'configurator'
+    });
+  };
+
   /*
-    Create a new note
+    Create a new document
   */
   this._newDocument = function() {
     var userId = this.state.userSession.user.userId;
@@ -255,6 +290,30 @@ MproApp.Prototype = function() {
     }, function(err, result) {
       this.navigate({
         section: 'document',
+        documentId: result.documentId
+      });
+    }.bind(this));
+  };
+
+  /*
+    Create a new training document
+  */
+  this._newTrainingDocument = function() {
+    var userId = this.state.userSession.user.userId;
+
+    this.documentClient.createDocument({
+      schemaName: 'mpro-article',
+      // TODO: Find a way not to do this statically
+      // Actually we should not provide the userId
+      // from the client here.
+      info: {
+        title: 'Untitled',
+        userId: userId,
+        training: true
+      }
+    }, function(err, result) {
+      this.navigate({
+        section: 'configurator',
         documentId: result.documentId
       });
     }.bind(this));

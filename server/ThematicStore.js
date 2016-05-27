@@ -182,6 +182,43 @@ ThematicStore.Prototype = function() {
   };
 
   /*
+    List available thematics with given filters and options
+
+    @param {Object} filters filters
+    @param {Object} options options
+    @returns {Promise}
+  */
+  this.listThematics = function(filters, options) {
+    var output = {};
+
+    // Default limit for number of returned records
+    if(!options.limit) options.limit = 100;
+
+    return new Promise(function(resolve, reject) {
+
+      this.db.thematics.count(filters, function(err, count) {
+        if (err) {
+          reject(new Err('ThematicStore.ListError', {
+            cause: err
+          }));
+        }
+        output.total = count;
+        
+        this.db.thematics.find(filters, options, function(err, thematics) {
+          if (err) {
+            reject(new Err('ThematicStore.ListError', {
+              cause: err
+            }));
+          }
+
+          output.records = thematics;
+          resolve(output);
+        });
+      }.bind(this));
+    }.bind(this));
+  };
+
+  /*
     Loads seed objects from sql query
     Be careful with running this in production
 

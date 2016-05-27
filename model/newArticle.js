@@ -9,7 +9,8 @@ module.exports = createDocumentFactory(Article, function(tx) {
   tx.create({
     id: 'meta',
     type: 'meta',
-    title: 'Untitled Article'
+    title: 'Untitled',
+    categories: []
   });
 
   tx.create({

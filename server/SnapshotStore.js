@@ -2,6 +2,7 @@
 
 var oo = require('substance/util/oo');
 var Err = require('substance/util/Error');
+var isNull = require('lodash/isNull');
 
 /*
   Implements Substance SnapshotStore API.
@@ -48,6 +49,8 @@ SnapshotStore.Prototype = function() {
         data: doc.content,
         createdAt: doc.created
       };
+
+      if(isNull(snapshot.data)) snapshot.version = 0;
 
       cb(null, snapshot);
     });

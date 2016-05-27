@@ -28,6 +28,7 @@ CREATE TABLE "documents" (
   validated timestamp,
   validated_by varchar(40) REFERENCES users,
   state varchar(40),
+  training boolean,
   source text,
   stripped text,
   content json,

@@ -1,0 +1,40 @@
+.sc-thematic-editor {
+
+  .se-prompt {
+    padding: 10px 15px;
+
+    background: white;
+    @include shadow;
+    @include border;
+    
+    position: absolute;
+    right: 100px;
+    top: 180px;
+    z-index: 50000;
+    width: 300px;
+
+    .se-prompt-title {
+      font-size: 16px;
+      font-weight: bold;
+    }
+
+    .se-prompt-close {
+      float: right;
+      cursor: pointer;
+    }
+
+
+  }
+
+  .se-tree-node {
+    cursor: pointer;
+
+    .name {
+      padding-left: 10px;
+    }
+
+    .se-tree-node {
+      padding-left: 15px;
+    }
+  }
+}

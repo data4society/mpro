@@ -37,6 +37,8 @@ DocumentStore.Prototype = function() {
     // could be stored when we create document from configurator
     if(props.info) {
       if(props.info.title) props.title = props.info.title;
+      if(props.info.training) props.training = props.info.training;
+      if(props.info.meta) props.meta = props.info.meta;
       if(props.info.schemaName) props.schema_name = props.info.schemaName;
       if(props.info.schemaVersion) props.schema_version = props.info.schemaVersion;
     }
@@ -44,6 +46,7 @@ DocumentStore.Prototype = function() {
     var record = {
       document_id: props.document_id,
       guid: props.guid,
+      training: props.training || false,
       title: props.title,
       schema_name: props.schema_name || props.schemaName,
       schema_version: props.schema_version || props.schemaVersion,
@@ -53,7 +56,7 @@ DocumentStore.Prototype = function() {
       state: props.state,
       source: props.source,
       stripped: props.stripped,
-      meta: props.meta,
+      meta: props.meta || {title: props.title, categories: []},
       content: props.content,
       info: props.info
     };

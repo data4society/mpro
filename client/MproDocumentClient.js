@@ -12,9 +12,18 @@ function MproDocumentClient() {
 
 MproDocumentClient.Prototype = function() {
 
-  this.listDocuments = function(cb) {
+  this.listDocuments = function(filters, options, cb) {
     // TODO: send filters and options to server
-    this._request('GET', '/api/documents', null, cb);
+    var filtersRequest = encodeURIComponent(JSON.stringify(filters));
+    var optionsRequest = encodeURIComponent(JSON.stringify(options));
+    this._request('GET', '/api/documents?filters=' + filtersRequest + '&options=' + optionsRequest, null, cb);
+  };
+
+  this.listThematics = function(filters, options, cb) {
+    // TODO: send filters and options to server
+    var filtersRequest = encodeURIComponent(JSON.stringify(filters));
+    var optionsRequest = encodeURIComponent(JSON.stringify(options));
+    this._request('GET', '/api/thematics?filters=' + filtersRequest + '&options=' + optionsRequest, null, cb);
   };
 
 };

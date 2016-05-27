@@ -34,7 +34,7 @@ ChangeStore.Prototype = function() {
 
     var owner = null;
     if(args.change.info) {
-      owner = args.change.info.owner;
+      owner = args.change.info.userId;
     }
 
     this.getVersion(args.documentId, function(err, headVersion) {

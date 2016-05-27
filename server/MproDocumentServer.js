@@ -1,4 +1,5 @@
 var DocumentServer = require('substance/collab/DocumentServer');
+var isEmpty = require('lodash/isEmpty');
 
 /*
   MPro Document Server module. Bound to an express instance.
@@ -24,10 +25,11 @@ MproDocumentServer.Prototype = function() {
     App specific methods
   */
   this._listDocuments = function(req, res, next) {
+    var filters = req.query.filters || {};
+    var options = req.query.options || {};
 
-    // TODO: get filters and options from url query
-    var filters = {};
-    var options = {};
+    if(!isEmpty(filters)) filters = JSON.parse(filters);
+    if(!isEmpty(options)) options = JSON.parse(options);
 
     this.engine.listDocuments(filters, options, function(err, result) {
       if (err) return next(err);

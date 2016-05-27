@@ -1,0 +1,33 @@
+.sc-list-item {
+  color: #5F6773;
+  padding: 10px 25px 0px;
+  background: #d5d7da;
+  margin-right: 10px;
+  cursor: pointer;
+
+  &.active {
+    background: #2473DA;
+    color: #fff;
+    margin-right: 0px;
+    margin-top: -1px;
+  }
+
+  .se-title {
+    font-size: 17px;
+    line-height: 20px;
+    padding: 10px 0px;
+  }
+
+  .se-categories {
+    font-size: 12px;
+
+    i {
+      padding-right: 5px;
+    }
+  }
+
+  .se-separator {
+    border-bottom: 1px rgba(90, 95, 101, 0.5) solid;
+    padding-bottom: 15px;
+  }
+}

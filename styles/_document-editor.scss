@@ -1,4 +1,4 @@
-.sc-view-document {
+.sc-edit-document {
   position: fixed;
   top: 40px;
   bottom: 0px;
@@ -12,8 +12,10 @@
     padding-top: 60px;
   }
 
-  .se-document-content {
-    padding: 40px;
-    width: 100%;
+  .sc-document-writer {
+    > .sc-split-pane {
+      padding-left: 40px;
+      width: 100%;
+    }
   }
 }

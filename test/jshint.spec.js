@@ -1,5 +1,8 @@
 require('mocha-jshint')({
   paths: [
-    './server'
+    './server',
+    './seed.js',
+    './server.js',
+    './client'
   ]
 });

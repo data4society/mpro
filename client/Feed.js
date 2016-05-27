@@ -2,8 +2,6 @@
 
 var DocumentClient = require('./MproDocumentClient');
 var Err = require('substance/util/Error');
-var Header = require('./Header');
-var Button = require('substance/ui/Button');
 var Component = require('substance/ui/Component');
 var FeedItem = require('./FeedItem');
 
@@ -15,7 +13,7 @@ function Feed() {
     httpUrl: config.documentServerUrl || 'http://'+config.host+':'+config.port+'/api/documents/'
   });
 
-  this.activeItem = '';
+  this.activeItem = this.props.route.documentId;
 }
 
 Feed.Prototype = function() {
@@ -36,11 +34,27 @@ Feed.Prototype = function() {
       return el;
     }
 
+    el.append(this.renderIntro($$));
+
     if (documentItems.length > 0) {
       el.append(this.renderFull($$));
     } else {
       el.append(this.renderEmpty($$));
     }
+    return el;
+  };
+
+  this.renderIntro = function($$) {
+    var totalItems = this.state.totalItems;
+    var el = $$('div').addClass('se-intro');
+
+    el.append(
+      $$('div').addClass('se-document-count').append(
+        totalItems,
+        ' documents found'
+      )
+    );
+
     return el;
   };
 
@@ -61,23 +75,16 @@ Feed.Prototype = function() {
     var documentItems = this.state.documentItems;
     var el = $$('div').addClass('se-feed-not-empty');
 
-    el.append(
-      $$('div').addClass('se-intro').append(
-        $$('div').addClass('se-document-count').append(
-          documentItems.length.toString(),
-          ' documents found'
-        ),
-        $$(Button).addClass('se-new-document-button').append('New Note')
-          .on('click', this.send.bind(this, 'newDocument'))
-      )
-    );
-
     if (documentItems) {
       documentItems.forEach(function(documentItem) {
+        var active = false;
+        if(documentItem.documentId === this.activeItem) {
+          active = true;
+        }
         el.append(
-          $$(FeedItem, documentItem).ref(documentItem.documentId)
+          $$(FeedItem, {document: documentItem, active: active}).ref(documentItem.documentId)
         );
-      });
+      }.bind(this));
     }
     return el;
   };
@@ -85,17 +92,26 @@ Feed.Prototype = function() {
   this.setActiveItem = function(documentId) {
     var currentActive = this.activeItem;
 
+    this.updateUrl(documentId);
+
     if(currentActive) {
       this.refs[currentActive].extendProps({
         'active': false
       });
     }
 
-    this.refs[documentId].extendProps({
-      'active': true
-    });
+    if(this.refs[documentId]) {
+      this.refs[documentId].extendProps({
+        'active': true
+      });
+    }
 
     this.activeItem = documentId;
+  };
+
+  this.updateUrl = function(documentId) {
+    var urlHelper = this.context.urlHelper;
+    urlHelper.writeRoute({section: 'inbox', documentId: documentId});
   };
 
   this._getUserId = function() {
@@ -118,7 +134,7 @@ Feed.Prototype = function() {
     var documentClient = this.documentClient;
     //var userId = this._getUserId();
 
-    documentClient.listDocuments(function(err, documents) {
+    documentClient.listDocuments({'training': false}, {}, function(err, documents) {
       if (err) {
         this.setState({
           error: new Err('Feed.LoadingError', {

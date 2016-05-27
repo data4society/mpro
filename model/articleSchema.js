@@ -18,7 +18,8 @@ DocumentNode.extend(Meta);
 Meta.static.name = 'meta';
 
 Meta.static.defineSchema({
-  title: { type: 'string', default: 'Untitled article'}
+  title: { type: 'string', default: 'Untitled article'},
+  categories: { type: ["id"], defaut: [] }
 });
 
 /**

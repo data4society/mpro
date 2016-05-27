@@ -13,14 +13,15 @@ DocumentViewer.Prototype = function() {
   // Custom Render method for your editor
   this.render = function($$) {
     var config = this.getConfig();
-    return $$('div').addClass('sc-document-viewer').append(
-      $$('div').addClass('se-document-content').append(
-        // $$(Cover, {
-        //   doc: this.doc,
-        //   mobile: this.props.mobile,
-        //   editing: 'readonly',
-        //   documentInfo: this.props.documentInfo
-        // }).ref('cover'),
+    return $$('div').addClass('sc-document-viewer sc-scroll-pane').append(
+      $$('div').addClass('se-document-content se-scrollable').append(
+        $$(Cover, {
+          doc: this.doc,
+          mobile: this.props.mobile,
+          editing: 'readonly',
+          documentInfo: this.props.documentInfo,
+          thematics: this.props.thematics
+        }).ref('cover'),
         $$(ContainerEditor, {
           doc: this.props.documentSession.doc,
           containerId: 'body',
