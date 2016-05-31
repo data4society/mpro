@@ -21,15 +21,21 @@
     "gulp": "^3.9.1",
     "gulp-istanbul": "^0.10.4",
     "gulp-mocha": "^2.2.0",
+    "gulp-rename": "^1.2.2",
+    "gulp-replace": "^0.5.4",
+    "gulp-sass": "^2.3.1",
+    "gulp-uglify": "^1.5.3",
     "jshint": "^2.9.2",
     "mocha": "^2.4.5",
     "mocha-jshint": "^2.3.1",
-    "node-sass": "^3.7.0"
+    "node-sass": "^3.7.0",
+    "through2": "^2.0.1"
   },
   "browserify": {},
   "scripts": {
     "seed": "node seed",
-    "test": "mocha --recursive"
+    "test": "mocha --recursive",
+    "bundle": "gulp bundle"
   },
   "version": "0.0.1"
 }

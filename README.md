@@ -51,3 +51,11 @@ npm test
 You have to run PostgreSQL locally or provide external connection url (keep in mind that test will reset your db).
 
 By default application will expect database `mpro` with user `mpro_user` and password `mpro_pw` running on `localhost:5432`. However you can change connection string in property `db_url` of configuration file `config/default.json`
+
+# Bundling
+
+Server will serve bundled version of app in production mode. To compile bundle you should run:
+
+```bash
+npm run bundle
+```
