@@ -1,3 +1,5 @@
+"use strict";
+
 var DocumentEngine = require('substance/collab/DocumentEngine');
 var Err = require('substance/util/Error');
 

@@ -1,3 +1,5 @@
+"use strict";
+
 var SnapshotEngine = require('substance/collab/SnapshotEngine');
 var JSONConverter = require('substance/model/JSONConverter');
 var Err = require('substance/util/Error');
