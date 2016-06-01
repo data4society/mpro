@@ -13,6 +13,7 @@ var server = require('substance/util/server');
 /*
   Stores
 */
+var SourceStore = require('./server/SourceStore');
 var DocumentStore = require('./server/DocumentStore');
 var SnapshotStore = require('./server/SnapshotStore');
 var ChangeStore = require('./server/ChangeStore');
@@ -27,6 +28,7 @@ var DocumentEngine = require('./server/MproDocumentEngine');
 var AuthenticationEngine = require('./server/AuthenticationEngine');
 var SnapshotEngine = require('./server/MproSnapshotEngine');
 var MproEngine = require('./server/MproEngine');
+var SourceEngine = require('./server/SourceEngine');
 
 /*
   Servers
@@ -57,6 +59,8 @@ var sessionStore = new SessionStore({ db: db });
 // each time.
 var changeStore = new ChangeStore({db: db});
 var documentStore = new DocumentStore({db: db});
+var sourceStore = new SourceStore({db: db});
+
 
 var snapshotStore = new SnapshotStore({db: db});
 var rubricStore = new RubricStore({db: db});
@@ -96,6 +100,11 @@ var authenticationEngine = new AuthenticationEngine({
   userStore: userStore,
   sessionStore: sessionStore,
   emailService: null // TODO
+});
+
+var sourceEngine = new SourceEngine({
+  documentStore: documentStore,
+  sourceStore: sourceStore
 });
 
 var mproEngine = new MproEngine({
