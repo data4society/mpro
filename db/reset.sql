@@ -18,7 +18,17 @@ CREATE TABLE "users" (
 );
 
 CREATE TABLE "documents" (
-  doc_id varchar(40) UNIQUE PRIMARY KEY
+  doc_id varchar(40) UNIQUE PRIMARY KEY,
+  guid varchar(255) UNIQUE,
+  doc_source text,
+  stripped text,
+  status integer,
+  title varchar(255),
+  published_date timestamp,
+  created timestamp,
+  meta json,
+  rubrics_ref varchar(40)[],
+  type varchar(255)
 );
 
 CREATE TABLE "records" (
