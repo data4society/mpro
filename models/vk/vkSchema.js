@@ -16,14 +16,17 @@ DocumentNode.extend(Meta);
 Meta.static.name = 'meta';
 
 Meta.static.defineSchema({
-  title: { type: 'string', default: 'Untitled article'},
-  categories: { type: ['id'], defaut: [] }
+  title: { type: 'string', default: '' },
+  post_type: { type: 'string', default: '' },
+  author: { type: 'object', default: {} },
+  attachments: { type: 'object', default: {} },
+  rubrics: { type: ['id'], defaut: [] }
 });
 
 /**
   Schema instance
 */
-var schema = new DocumentSchema('mpro-article', '1.0.0');
+var schema = new DocumentSchema('mpro-vk', '1.0.0');
 schema.getDefaultTextType = function() {
   return 'paragraph';
 };
