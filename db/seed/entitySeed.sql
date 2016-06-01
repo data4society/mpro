@@ -1,6 +1,6 @@
 -- seed entities:
 
-insert into entities(entity_id, title, created, edited, author, class, data)
+insert into entities(entity_id, name, created, edited, author, entity_class, data)
 values ('1', 'Martin Luther King, Jr', NOW(), NOW(), 'testuser', 'Person', '{"firstname": "Martin Luther", "lastname": "King", "occupation": ["Baptist minister", "social activist"], "organization": "African-American Civil Rights Movement"}'),
 ('2', 'Jim Morrison', NOW(), NOW(), 'testuser', 'Person', '{"firstname": "Jim", "lastname": "Morisson", "occupation": ["musician", "poet"], "organization": "The Doors"}'),
 ('3', 'Amnesty International', NOW(), NOW(), 'testuser2', 'Organization', '{"type": "NGO", "founded": "1961", "location": "London"}'),

@@ -38,14 +38,14 @@ describe('Rubric Store', function() {
   describe('Create rubric', function() {
     it('should return new rubric record with given data', function(done) {
       var rubricData = {
-        title: 'Test',
+        name: 'Test',
         parent_id: '3'
       };
       return rubricStore.createRubric(rubricData)
         .then(function(rubric) {
           rubric.should.be.an('object');
           should.exist(rubric.rubric_id);
-          assert.equal(rubric.title, rubricData.title);
+          assert.equal(rubric.name, rubricData.name);
           assert.equal(rubric.parent_id, rubricData.parent_id);
           done();
         });
@@ -64,7 +64,7 @@ describe('Rubric Store', function() {
         });
     });
 
-    it('should return empty title in new rubric record if it wasn\'t provided', function(done) {
+    it('should return empty name in new rubric record if it wasn\'t provided', function(done) {
       var rubricData = {
         parent_id: "4"
       };
@@ -72,7 +72,7 @@ describe('Rubric Store', function() {
         .then(function(rubric) {
           rubric.should.be.an('object');
           should.exist(rubric.rubric_id);
-          assert.equal(rubric.title, '');
+          assert.equal(rubric.name, '');
           done();
         });
     });
@@ -120,7 +120,7 @@ describe('Rubric Store', function() {
     it('should update rubric and return updated record', function(done) {
       var rubricId = '1';
       var data = {
-        title: 'Test rubric'
+        name: 'Test rubric'
       };
 
       return rubricStore.updateRubric(rubricId, data)
@@ -128,14 +128,14 @@ describe('Rubric Store', function() {
           should.exist(rubric);
           rubric.should.be.an('object');
           assert.equal(rubric.rubric_id, rubricId);
-          assert.equal(rubric.title, data.title);
+          assert.equal(rubric.name, data.name);
           return rubricStore.getRubric(rubricId);
         })
         .then(function(rubric) {
           should.exist(rubric);
           rubric.should.be.an('object');
           assert.equal(rubric.rubric_id, rubricId);
-          assert.equal(rubric.title, data.title);
+          assert.equal(rubric.name, data.name);
           done();
         });
     });

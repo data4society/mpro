@@ -1,8 +1,9 @@
 -- Reset database:
 
 drop table if exists "changes";
-drop table if exists "documents";
 drop table if exists "entities";
+drop table if exists "records";
+drop table if exists "documents";
 drop table if exists "rubrics";
 drop table if exists "sessions";
 drop table if exists "users";
@@ -17,20 +18,23 @@ CREATE TABLE "users" (
 );
 
 CREATE TABLE "documents" (
+  doc_id varchar(40) UNIQUE PRIMARY KEY
+);
+
+CREATE TABLE "records" (
   document_id varchar(40) UNIQUE PRIMARY KEY,
   guid varchar(255) UNIQUE,
   title varchar(255),
   schema_name varchar(40),
   schema_version varchar(40),
   version integer,
-  issue_date timestamp,
+  published_date timestamp,
   created timestamp,
-  validated timestamp,
-  validated_by varchar(40) REFERENCES users,
-  state varchar(40),
+  edited timestamp,
+  edited_by varchar(40) REFERENCES users,
   training boolean,
-  source text,
-  stripped text,
+  rubrics varchar(40)[],
+  source varchar(40) REFERENCES documents,
   content json,
   meta json,
   info json,
@@ -38,7 +42,7 @@ CREATE TABLE "documents" (
 );
 
 CREATE TABLE "changes" (
-  document_id varchar(40) REFERENCES documents,
+  document_id varchar(40) REFERENCES records,
   version integer,
   data json,
   created timestamp,
@@ -48,18 +52,18 @@ CREATE TABLE "changes" (
 
 CREATE TABLE "entities" (
   entity_id varchar(40) UNIQUE PRIMARY KEY,
-  title varchar(255),
+  name varchar(255),
   created timestamp,
   edited timestamp,
   author varchar(40) REFERENCES users,
-  class varchar(255),
+  entity_class varchar(255),
   data json,
   tsv tsvector
 );
 
 CREATE TABLE "rubrics" (
   rubric_id varchar(40) UNIQUE PRIMARY KEY,
-  title varchar(255),
+  name varchar(255),
   created timestamp,
   parent_id varchar(40) REFERENCES rubrics
 );

@@ -28,8 +28,8 @@ RubricStore.Prototype = function() {
       rubricData.rubric_id = uuid();
     }
 
-    if (isUndefined(rubricData.title)) {
-      rubricData.title = '';
+    if (isUndefined(rubricData.name)) {
+      rubricData.name = '';
     }
 
     return this.rubricExists(rubricData.rubric_id).bind(this)
@@ -144,7 +144,7 @@ RubricStore.Prototype = function() {
 
     var record = {
       rubric_id: rubricData.rubric_id,
-      title: rubricData.title,
+      name: rubricData.name,
       created: new Date(),
       parent_id: rubricData.parent_id
     };

@@ -28,8 +28,8 @@ EntityStore.Prototype = function() {
       entityData.entity_id = uuid();
     }
 
-    if (isUndefined(entityData.title)) {
-      entityData.title = '';
+    if (isUndefined(entityData.name)) {
+      entityData.name = '';
     }
 
     if (isUndefined(entityData.data)) {
@@ -148,11 +148,11 @@ EntityStore.Prototype = function() {
 
     var record = {
       entity_id: entityData.entity_id,
-      title: entityData.title,
+      name: entityData.name,
       created: new Date(),
       edited: new Date(),
       author: entityData.author,
-      class: entityData.class,
+      entity_class: entityData.entity_class,
       data: entityData.data
     };
 

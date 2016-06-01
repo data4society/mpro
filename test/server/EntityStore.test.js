@@ -48,13 +48,13 @@ describe('Entity Store', function() {
   describe('Create entity', function() {
     it('should return new entity record with given data', function(done) {
       var entityData = {
-        title: 'Test'
+        name: 'Test'
       };
       return entityStore.createEntity(entityData)
         .then(function(entity) {
           entity.should.be.an('object');
           should.exist(entity.entity_id);
-          assert.equal(entity.title, entityData.title);
+          assert.equal(entity.name, entityData.name);
           done();
         });
     });
@@ -72,7 +72,7 @@ describe('Entity Store', function() {
         });
     });
 
-    it('should return empty title in new entity record if it wasn\'t provided', function(done) {
+    it('should return empty name in new entity record if it wasn\'t provided', function(done) {
       var entityData = {
         data: {'a': 'b'}
       };
@@ -80,14 +80,14 @@ describe('Entity Store', function() {
         .then(function(entity) {
           entity.should.be.an('object');
           should.exist(entity.entity_id);
-          assert.equal(entity.title, '');
+          assert.equal(entity.name, '');
           done();
         });
     });
 
     it('should return empty data object in new entity record if it wasn\'t provided', function(done) {
       var entityData = {
-        title: 'Test'
+        name: 'Test'
       };
       return entityStore.createEntity(entityData)
         .then(function(entity) {
@@ -141,7 +141,7 @@ describe('Entity Store', function() {
     it('should update entity and return updated record', function(done) {
       var entityId = '1';
       var data = {
-        title: 'Test entity'
+        name: 'Test entity'
       };
 
       return entityStore.updateEntity(entityId, data)
@@ -149,14 +149,14 @@ describe('Entity Store', function() {
           should.exist(entity);
           entity.should.be.an('object');
           assert.equal(entity.entity_id, entityId);
-          assert.equal(entity.title, data.title);
+          assert.equal(entity.name, data.name);
           return entityStore.getEntity(entityId);
         })
         .then(function(entity) {
           should.exist(entity);
           entity.should.be.an('object');
           assert.equal(entity.entity_id, entityId);
-          assert.equal(entity.title, data.title);
+          assert.equal(entity.name, data.name);
           done();
         });
     });
