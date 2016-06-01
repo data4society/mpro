@@ -2,7 +2,7 @@ var ChangeStore = require('./server/ChangeStore');
 var DocumentStore = require('./server/DocumentStore');
 var EntityStore = require('./server/EntityStore');
 var SessionStore = require('./server/SessionStore');
-var ThematicStore = require('./server/ThematicStore');
+var RubricStore = require('./server/RubricStore');
 var UserStore = require('./server/UserStore');
 var Database = require('./server/Database');
 var db = new Database();
@@ -18,7 +18,7 @@ db.reset() // Clear the database, set up the schema
     var entityStore = new EntityStore({ db: db });
     return entityStore.seed();
   }).then(function() {
-    var thematicStore = new ThematicStore({ db: db });
+    var thematicStore = new RubricStore({ db: db });
     return thematicStore.seed();
   }).then(function() {
   var documentStore = new DocumentStore({ db: db });

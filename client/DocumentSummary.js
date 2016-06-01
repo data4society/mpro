@@ -2,7 +2,7 @@
 
 var Component = require('substance/ui/Component');
 var CategoriesList = require('./CategoriesList');
-var ThematicEditor = require('./ThematicEditor');
+var RubricEditor = require('./RubricEditor');
 
 var DocumentSummary = function() {
   DocumentSummary.super.apply(this, arguments);
@@ -12,7 +12,7 @@ DocumentSummary.Prototype = function() {
 
   this.render = function($$) {
     //var documentInfo = this.props.documentInfo.props;
-    var thematics = this.props.thematics;
+    var rubrics = this.props.rubrics;
     //var updatedAt = moment(documentInfo.updatedAt).fromNow();
 
     var el = $$('div').addClass('sc-document-summary');
@@ -21,14 +21,14 @@ DocumentSummary.Prototype = function() {
     }
    
     el.append($$(CategoriesList, {
-      thematics: thematics,
+      rubrics: rubrics,
       editing: this.props.editing
     }).ref('categoriesList'));
 
     el.append(
-      $$(ThematicEditor, {
-        thematics: thematics
-      }).ref('thematics')
+      $$(RubricEditor, {
+        rubrics: rubrics
+      }).ref('rubrics')
     );
 
 
@@ -44,7 +44,7 @@ DocumentSummary.Prototype = function() {
   };
 
   this._openThematicEditor = function() {
-    this.refs.thematics.togglePrompt();
+    this.refs.rubrics.togglePrompt();
   };
 };
 

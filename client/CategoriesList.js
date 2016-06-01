@@ -13,15 +13,15 @@ CategoriesList.Prototype = function() {
   this.render = function($$) {
     var doc = this.context.controller.getDocument();
     var categories = doc.get(['meta','categories']);
-    var thematics = this.props.thematics;
+    var rubrics = this.props.rubrics;
     var categoriesList = [];
 
     var el = $$('div').addClass('sc-categories-list');
 
-    if(thematics) {
+    if(rubrics) {
       each(categories, function(category) {
-        var item = thematics.get(category);
-        thematics.nodes[category].selected = true;
+        var item = rubrics.get(category);
+        rubrics.nodes[category].selected = true;
         categoriesList.push(item.title);
       }.bind(this));
     }
@@ -54,7 +54,7 @@ CategoriesList.Prototype = function() {
   };
 
   this._openThematicEditor = function() {
-    this.parent.refs.thematics.togglePrompt();
+    this.parent.refs.rubrics.togglePrompt();
   };
 };
 

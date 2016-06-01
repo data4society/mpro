@@ -18,7 +18,7 @@ var SnapshotStore = require('./server/SnapshotStore');
 var ChangeStore = require('./server/ChangeStore');
 var SessionStore = require('./server/SessionStore');
 var UserStore = require('./server/UserStore');
-var ThematicStore = require('./server/ThematicStore');
+var RubricStore = require('./server/RubricStore');
 
 /*
   Engines
@@ -39,7 +39,7 @@ var MproServer = require('./server/MproServer');
 /*
   Models
 */
-var newArticle = require('./model/newArticle');
+var newArticle = require('./models/article/newArticle');
 var DocumentChange = require('substance/model/DocumentChange');
 
 var Database = require('./server/Database');
@@ -59,7 +59,7 @@ var changeStore = new ChangeStore({db: db});
 var documentStore = new DocumentStore({db: db});
 
 var snapshotStore = new SnapshotStore({db: db});
-var thematicStore = new ThematicStore({db: db});
+var rubricStore = new RubricStore({db: db});
 
 /*
   Engines setup
@@ -99,7 +99,7 @@ var authenticationEngine = new AuthenticationEngine({
 });
 
 var mproEngine = new MproEngine({
-  thematicStore: thematicStore
+  rubricStore: rubricStore
 });
 
 /*

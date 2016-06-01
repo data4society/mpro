@@ -22,7 +22,7 @@ ListItem.Prototype = function() {
 
     var isActive = this.props.active === true;
 
-    var thematics = this.props.thematics;
+    var rubrics = this.props.rubrics;
     var meta = document.meta;
     var categories = meta.categories;
 
@@ -32,9 +32,9 @@ ListItem.Prototype = function() {
 
     var categoriesList = [];
 
-    if(thematics) {
+    if(rubrics) {
       each(categories, function(category) {
-        var item = thematics.get(category);
+        var item = rubrics.get(category);
         categoriesList.push(item.title);
       }.bind(this));
     }

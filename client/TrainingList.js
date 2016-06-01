@@ -2,7 +2,7 @@
 
 var Err = require('substance/util/Error');
 var Button = require('substance/ui/Button');
-var Thematic = require('../model/Thematic');
+var Rubric = require('../models/rubric/Rubric');
 var Feed = require('./Feed');
 var ListItem = require('./ListItem');
 
@@ -41,7 +41,7 @@ TrainingList.Prototype = function() {
           $$(ListItem, {
             document: documentItem,
             active: active,
-            thematics: this.state.thematics
+            rubrics: this.state.rubrics
           }).ref(documentItem.documentId)
         );
       }.bind(this));
@@ -81,7 +81,7 @@ TrainingList.Prototype = function() {
     var self = this;
     var documentClient = this.documentClient;
     //var userId = this._getUserId();
-    this._loadThematics();
+    this._loadRubrics();
     documentClient.listDocuments({'training': true}, {}, function(err, documents) {
       if (err) {
         this.setState({
@@ -101,14 +101,14 @@ TrainingList.Prototype = function() {
     }.bind(this));
   };
 
-  this._loadThematics = function() {
+  this._loadRubrics = function() {
     var documentClient = this.context.documentClient;
 
-    documentClient.listThematics({}, {}, function(err, result) {
+    documentClient.listRubrics({}, {}, function(err, result) {
       if (err) {
         this.setState({
           error: new Err('Feed.LoadingError', {
-            message: 'Thematics could not be loaded.',
+            message: 'Rubrics could not be loaded.',
             cause: err
           })
         });
@@ -116,9 +116,9 @@ TrainingList.Prototype = function() {
         return;
       }
 
-      var thematics = new Thematic(false, result.records);
+      var rubrics = new Rubric(false, result.records);
       this.extendState({
-        thematics: thematics.tree
+        rubrics: rubrics.tree
       });
     }.bind(this));
   };

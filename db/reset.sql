@@ -3,7 +3,7 @@
 drop table if exists "changes";
 drop table if exists "documents";
 drop table if exists "entities";
-drop table if exists "thematics";
+drop table if exists "rubrics";
 drop table if exists "sessions";
 drop table if exists "users";
 
@@ -57,11 +57,11 @@ CREATE TABLE "entities" (
   tsv tsvector
 );
 
-CREATE TABLE "thematics" (
-  thematic_id varchar(40) UNIQUE PRIMARY KEY,
+CREATE TABLE "rubrics" (
+  rubric_id varchar(40) UNIQUE PRIMARY KEY,
   title varchar(255),
   created timestamp,
-  parent_id varchar(40) REFERENCES thematics
+  parent_id varchar(40) REFERENCES rubrics
 );
 
 CREATE TABLE "sessions" (

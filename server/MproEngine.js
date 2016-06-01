@@ -7,24 +7,24 @@ var Promise = require("bluebird");
 */
 function MproEngine(config) {
   this.config = config;
-  this.thematicStore = config.thematicStore;
+  this.rubricStore = config.rubricStore;
 }
 
 MproEngine.Prototype = function() {
 
   /*
-    List thematics with given filters and options
+    List rubrics with given filters and options
 
     @param {Object} filters filters
     @param {Object} options options
     @returns {Promise}
   */
-  this.listThematics = function(filters, options) {
+  this.listRubrics = function(filters, options) {
     return new Promise(function(resolve, reject) {
-      this.thematicStore.listThematics(filters, options).then(function(results) {
+      this.rubricStore.listRubrics(filters, options).then(function(results) {
         resolve(results);
       }).catch(function(err) {
-        reject(new Err('ThematicsListError', {
+        reject(new Err('RubricsListError', {
           cause: err
         }));
       });

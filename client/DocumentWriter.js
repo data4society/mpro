@@ -55,7 +55,7 @@ DocumentWriter.Prototype = function() {
             $$(Cover, {
               doc: this.doc,
               documentInfo: this.props.documentInfo,
-              thematics: this.props.thematics
+              rubrics: this.props.rubrics
             }).ref('cover'),
             $$(ContainerEditor, {
               doc: this.props.documentSession.doc,

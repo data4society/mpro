@@ -13,7 +13,7 @@ TreeItem.Prototype = function() {
     var node = this.props.node;
     var tree = this.props.tree;
     var isSelected = this.props.selected;
-    var childNodes = tree.getChildren(node.thematic_id);
+    var childNodes = tree.getChildren(node.rubric_id);
 
     var childrenEls = [];
     
@@ -25,8 +25,8 @@ TreeItem.Prototype = function() {
       });
     }.bind(this));
 
-    var el = $$('div').addClass('se-tree-node').ref(node.thematic_id)
-      .on('click', this._onNodeSelect.bind(this, node.thematic_id));
+    var el = $$('div').addClass('se-tree-node').ref(node.rubric_id)
+      .on('click', this._onNodeSelect.bind(this, node.rubric_id));
 
     if(isSelected) {
       el.append($$(Icon, {icon: 'fa-check-square-o'}));

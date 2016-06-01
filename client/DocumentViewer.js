@@ -20,7 +20,7 @@ DocumentViewer.Prototype = function() {
           mobile: this.props.mobile,
           editing: 'readonly',
           documentInfo: this.props.documentInfo,
-          thematics: this.props.thematics
+          rubrics: this.props.rubrics
         }).ref('cover'),
         $$(ContainerEditor, {
           doc: this.props.documentSession.doc,
