@@ -20,7 +20,7 @@ RubricEditorPrompt.Prototype = function() {
         $$(Icon, {icon: 'fa-close'})
           .on('click', this._onClose.bind(this))
       ),
-      $$('div').addClass('se-prompt-title').append(this.i18n.t('Pick up categories:'))
+      $$('div').addClass('se-prompt-title').append(this.i18n.t('Pick up rubrics:'))
     );
     
     var childNodes = tree.getChildren("root");
@@ -77,17 +77,17 @@ RubricEditor.Prototype = function() {
 
   this._saveTree = function() {
     var documentSession = this.context.documentSession;
-    var categoriesList = this.parent.refs.categoriesList;
+    var rubricsList = this.parent.refs.rubricsList;
     var nodes = this.props.rubrics.nodes;
-    var categories = [];
+    var rubrics = [];
     each(nodes, function(node) {
-      if(node.selected) categories.push(node.rubric_id);
+      if(node.selected) rubrics.push(node.rubric_id);
     });
     documentSession.transaction(function(tx) {
-      tx.set(['meta', 'categories'], categories);
+      tx.set(['meta', 'rubrics'], rubrics);
     });
-    categoriesList.rerender();
-    this.send('updateListCategories', documentSession.documentId, categories);
+    rubricsList.rerender();
+    this.send('updateListRubrics', documentSession.documentId, rubrics);
   };
 };
 

@@ -74,7 +74,7 @@ VkImporter.Prototype = function() {
       id: 'meta',
       type: 'meta',
       title: '',
-      url: source.guid,
+      source: source.guid,
       published: published.toJSON(),
       rubrics: source.rubric_ids,
       post_type: meta.vk_post_type,

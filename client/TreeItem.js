@@ -36,7 +36,7 @@ TreeItem.Prototype = function() {
 
     el.append(
       $$('span').addClass('name')
-        .html(node.title),
+        .html(node.name),
       $$('div').addClass('children').append(
         childrenEls
       )

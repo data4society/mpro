@@ -24,36 +24,36 @@ ListItem.Prototype = function() {
 
     var rubrics = this.props.rubrics;
     var meta = document.meta;
-    var categories = meta.categories;
+    var rubricsMeta = meta.rubrics;
 
     if(isActive) {
       el.addClass('active');
     }
 
-    var categoriesList = [];
+    var rubricsList = [];
 
     if(rubrics) {
-      each(categories, function(category) {
-        var item = rubrics.get(category);
-        categoriesList.push(item.title);
+      each(rubricsMeta, function(rubric) {
+        var item = rubrics.get(rubric);
+        rubricsList.push(item.name);
       }.bind(this));
     }
 
-    var categoriesEl = $$('div').addClass('se-categories');
+    var rubricsEl = $$('div').addClass('se-rubrics');
 
-    categoriesEl.append($$(Icon, {icon: 'fa-tags'}));
+    rubricsEl.append($$(Icon, {icon: 'fa-tags'}));
 
-    if(categoriesList.length > 0) {
-      categoriesEl.append(categoriesList.join(', '));
+    if(rubricsList.length > 0) {
+      rubricsEl.append(rubricsList.join(', '));
     } else {
-      categoriesEl.append('No categories assigned');
+      rubricsEl.append('No categories assigned');
     }
 
     // Title
     el.append(
       $$('div').addClass('se-title')
         .append(document.title),
-      categoriesEl,
+      rubricsEl,
       $$('div').addClass('se-separator')
     );
 

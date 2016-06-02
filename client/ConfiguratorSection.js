@@ -19,7 +19,7 @@ function Configurator() {
   this.handleActions({
     'openDocument': this._openDocument,
     'updateListTitle': this._updateTitle,
-    'updateListCategories': this._updateCategories,
+    'updateListRubrics': this._updateRubrics,
   });
 }
 
@@ -71,9 +71,9 @@ Configurator.Prototype = function() {
     list.updateTitle(documentId, title);
   };
   
-  this._updateCategories = function(documentId, categories) {
+  this._updateRubrics = function(documentId, rubrics) {
     var list = this.refs.list;
-    list.updateCategories(documentId, categories);
+    list.updateRubrics(documentId, rubrics);
   };
 };
 

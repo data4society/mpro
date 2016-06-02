@@ -30,7 +30,7 @@ SnapshotStore.Prototype = function() {
       }));
     }
     // documentId, data, version, createdAt
-    this.db.documents.findOne({document_id: args.documentId}, function(err, doc) {
+    this.db.records.findOne({document_id: args.documentId}, function(err, doc) {
       if (err) {
         return cb(new Err('SnapshotStore.ReadError', {
           cause: err
@@ -68,7 +68,7 @@ SnapshotStore.Prototype = function() {
       content: args.data
     };
 
-    this.db.documents.save(record, function(err, doc) {
+    this.db.records.save(record, function(err, doc) {
       if (err) {
         return cb(new Err('SnapshotStore.CreateError', {
           cause: err
@@ -112,7 +112,7 @@ SnapshotStore.Prototype = function() {
     Returns true if a snapshot exists for a certain version
   */
   this.snapshotExists = function(documentId, version, cb) {
-    this.db.documents.count({documentId: documentId, version: version}, function(err, snapshots) {
+    this.db.records.count({documentId: documentId, version: version}, function(err, snapshots) {
       if (err) {
         return cb(new Err('SnapshotStore.ReadError', {
           cause: err,

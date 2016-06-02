@@ -30,7 +30,7 @@ MproServer.Prototype = function() {
     if(!isEmpty(filters)) filters = JSON.parse(filters);
     if(!isEmpty(options)) options = JSON.parse(options);
     
-    this.engine._listRubrics(filters, options).then(function(result) {
+    this.engine.listRubrics(filters, options).then(function(result) {
       res.json(result);
     }).catch(function(err) {
       return next(err);

@@ -37,7 +37,7 @@ Rubric.prototype.getNestedTree = function() {
     each(nodes, function(node) {
       var entry = {
         id: node.rubric_id,
-        text: node.title,
+        text: node.name,
         children: getChildren(node.rubric_id) // get children for rubric
       };
       res.push(entry);

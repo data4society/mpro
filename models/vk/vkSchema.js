@@ -18,7 +18,7 @@ Meta.static.name = 'meta';
 Meta.static.defineSchema({
   title: { type: 'string', default: '' },
   rubrics: { type: ['id'], defaut: [] },
-  url: { type: 'string', default: '' },
+  source: { type: 'string', default: '' },
   published: { type: 'string', default: '' },
   created: { type: 'string', default: '' },
   post_type: { type: 'string', default: '' },

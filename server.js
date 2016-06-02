@@ -195,7 +195,7 @@ var collabServer = new CollabServer({
       documentStore.getDocument(message.documentId, function(err, docRecord) {
         var updatedAt = new Date();
         var title = docRecord.title;
-        var categories = docRecord.meta.categories;
+        var rubrics = docRecord.meta.rubrics;
 
         if (message.change) {
           // Update the title if necessary
@@ -207,8 +207,8 @@ var collabServer = new CollabServer({
           });
 
           change.ops.forEach(function(op) {
-            if(op.path[0] == 'meta' && op.path[1] == 'categories') {
-              categories = op.val;
+            if(op.path[0] == 'meta' && op.path[1] == 'rubrics') {
+              rubrics = op.val;
             }
           });
 
@@ -227,7 +227,7 @@ var collabServer = new CollabServer({
           updatedAt: updatedAt,
           updatedBy: req.session.userId,
           title: title,
-          meta: {title: title, categories: categories}
+          meta: {title: title, rubrics: rubrics}
         };
         cb(null);
       });

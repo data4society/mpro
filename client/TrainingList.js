@@ -59,10 +59,10 @@ TrainingList.Prototype = function() {
     }
   };
 
-  this.updateCategories = function(documentId, categories) {
+  this.updateRubrics = function(documentId, rubrics) {
     if(this.refs[documentId]) {
       var document = this.refs[documentId].props.document;
-      document.meta.categories = categories;
+      document.meta.rubrics = rubrics;
       this.refs[documentId].extendProps({
         'document': document
       });

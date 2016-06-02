@@ -43,7 +43,7 @@ Cover.Prototype = function() {
         $$(DocumentSummary, {
           mobile: this.props.mobile,
           documentInfo: this.props.documentInfo,
-          thematics: this.props.thematics,
+          rubrics: this.props.rubrics,
           editing: this.props.editing || 'full'
         })
       );

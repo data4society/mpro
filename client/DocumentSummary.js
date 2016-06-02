@@ -1,7 +1,7 @@
 'use strict';
 
 var Component = require('substance/ui/Component');
-var CategoriesList = require('./CategoriesList');
+var RubricsList = require('./RubricsList');
 var RubricEditor = require('./RubricEditor');
 
 var DocumentSummary = function() {
@@ -20,10 +20,10 @@ DocumentSummary.Prototype = function() {
       el.addClass('sm-mobile');
     }
    
-    el.append($$(CategoriesList, {
+    el.append($$(RubricsList, {
       rubrics: rubrics,
       editing: this.props.editing
-    }).ref('categoriesList'));
+    }).ref('rubricsList'));
 
     el.append(
       $$(RubricEditor, {
@@ -43,7 +43,7 @@ DocumentSummary.Prototype = function() {
     return el;
   };
 
-  this._openThematicEditor = function() {
+  this._openRubricsEditor = function() {
     this.refs.rubrics.togglePrompt();
   };
 };
