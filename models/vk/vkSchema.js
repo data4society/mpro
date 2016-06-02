@@ -17,10 +17,13 @@ Meta.static.name = 'meta';
 
 Meta.static.defineSchema({
   title: { type: 'string', default: '' },
+  rubrics: { type: ['id'], defaut: [] },
+  url: { type: 'string', default: '' },
+  published: { type: 'string', default: '' },
+  created: { type: 'string', default: '' },
   post_type: { type: 'string', default: '' },
   author: { type: 'object', default: {} },
-  attachments: { type: 'object', default: {} },
-  rubrics: { type: ['id'], defaut: [] }
+  attachments: { type: ['object'], default: [] },
 });
 
 /**

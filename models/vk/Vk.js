@@ -7,7 +7,7 @@ var vkSchema = require('./vkSchema');
   Vk class
 */
 var Vk = function(schema) {
-  Document.call(this, schema || articleSchema);
+  Document.call(this, schema || vkSchema);
 
   // Holds a sequence of node ids
   this.create({
@@ -24,6 +24,6 @@ Vk.Prototype = function() {
 };
 
 Document.extend(Vk);
-Vk.schema =vkSchema;
+Vk.schema = vkSchema;
 
 module.exports = Vk;
