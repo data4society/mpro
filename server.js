@@ -42,7 +42,13 @@ var MproServer = require('./server/MproServer');
   Models
 */
 var newArticle = require('./models/article/newArticle');
+var newVk = require('./models/vk/newVk');
 var DocumentChange = require('substance/model/DocumentChange');
+
+/*
+  Importers
+*/
+var vkImporter = require('./models/vk/vkImporter');
 
 var Database = require('./server/Database');
 
@@ -78,6 +84,11 @@ var snapshotEngine = new SnapshotEngine({
       name: 'mpro-article',
       version: '1.0.0',
       documentFactory: newArticle
+    },
+    'mpro-vk': {
+      name: 'mpro-vk',
+      version: '1.0.0',
+      documentFactory: newVk
     }
   }
 });
@@ -92,6 +103,11 @@ var documentEngine = new DocumentEngine({
       name: 'mpro-article',
       version: '1.0.0',
       documentFactory: newArticle
+    },
+    'mpro-vk': {
+      name: 'mpro-vk',
+      version: '1.0.0',
+      documentFactory: newVk
     }
   }
 });
@@ -104,7 +120,10 @@ var authenticationEngine = new AuthenticationEngine({
 
 var sourceEngine = new SourceEngine({
   documentStore: documentStore,
-  sourceStore: sourceStore
+  sourceStore: sourceStore,
+  importers: {
+    'vk': vkImporter
+  }
 });
 
 var mproEngine = new MproEngine({

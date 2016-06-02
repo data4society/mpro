@@ -1,6 +1,6 @@
 -- seed source documents:
 
-insert into documents(doc_id, guid, title, doc_source, stripped, status, published_date, created, meta, rubrics_ref, type)
+insert into documents(doc_id, guid, title, doc_source, stripped, status, published_date, created, meta, rubric_ids, type)
 values (
   '68c14a78-d02b-454d-88ce-6948d27fce09',
   'https://vk.com/wall-66875722_172564',

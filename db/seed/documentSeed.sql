@@ -1,6 +1,6 @@
 -- seed documents:
 
-insert into records(document_id, guid, training, title, schema_name, schema_version, version, published_date, created, edited, edited_by, content, meta)
+insert into records(document_id, guid, training, title, schema_name, schema_version, version, published, created, edited, edited_by, content, meta)
 values (
   '1',
   'http://www.nytimes.com/1993/12/09/arts/jim-morrison-s-fans-keep-his-fire-alight-in-a-birthday-homage.html',
