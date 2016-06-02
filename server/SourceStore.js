@@ -145,7 +145,7 @@ SourceStore.Prototype = function() {
       stripped: sourceData.stripped,
       status: sourceData.status,
       published_date: sourceData.published_date,
-      rubrics_ref: sourceData.rubrics_ref,
+      rubric_ids: sourceData.rubric_ids,
       type: sourceData.type
     };
 
