@@ -26,7 +26,7 @@ CREATE TABLE "documents" (
   title varchar(255),
   published_date timestamp,
   created timestamp,
-  meta json,
+  meta jsonb,
   rubrics_ref varchar(40)[],
   type varchar(255)
 );
@@ -45,16 +45,16 @@ CREATE TABLE "records" (
   training boolean,
   rubrics varchar(40)[],
   source varchar(40) REFERENCES documents,
-  content json,
-  meta json,
-  info json,
+  content jsonb,
+  meta jsonb,
+  info jsonb,
   tsv tsvector
 );
 
 CREATE TABLE "changes" (
   document_id varchar(40) REFERENCES records,
   version integer,
-  data json,
+  data jsonb,
   created timestamp,
   owner varchar(40) REFERENCES users,
   PRIMARY KEY(document_id, version)
@@ -67,7 +67,7 @@ CREATE TABLE "entities" (
   edited timestamp,
   author varchar(40) REFERENCES users,
   entity_class varchar(255),
-  data json,
+  data jsonb,
   tsv tsvector
 );
 
