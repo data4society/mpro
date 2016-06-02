@@ -57,7 +57,7 @@ Cover.Prototype = function() {
     
     // HACK: update the updatedAt property
     documentInfo.props.updatedAt = new Date();
-    documentInfo.props.meta = {title: meta.title, categories: meta.categories};
+    documentInfo.props.meta = {title: meta.title, rubrics: meta.rubrics};
 
     if (change.after.surfaceId == 'title') {
       var title = doc.get(['meta', 'title']);

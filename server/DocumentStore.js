@@ -51,10 +51,11 @@ DocumentStore.Prototype = function() {
       schema_name: props.schema_name || props.schemaName,
       schema_version: props.schema_version || props.schemaVersion,
       version: props.version || 1,
-      published_date: props.published_date,
-      created: new Date(),
+      rubrics: props.rubrics || [],
+      published: props.published,
+      created: props.created || new Date(),
       source: props.source,
-      meta: props.meta || {title: props.title, categories: []},
+      meta: props.meta || {title: props.title, rubrics: []},
       content: props.content,
       info: props.info
     };

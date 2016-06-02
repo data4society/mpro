@@ -27,7 +27,7 @@ CREATE TABLE "documents" (
   published_date timestamp,
   created timestamp,
   meta jsonb,
-  rubrics_ref varchar(40)[],
+  rubric_ids varchar(40)[],
   type varchar(255)
 );
 
@@ -38,7 +38,7 @@ CREATE TABLE "records" (
   schema_name varchar(40),
   schema_version varchar(40),
   version integer,
-  published_date timestamp,
+  published timestamp,
   created timestamp,
   edited timestamp,
   edited_by varchar(40) REFERENCES users,
