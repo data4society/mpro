@@ -8,6 +8,7 @@ var Component = require('substance/ui/Component');
 var Err = require('substance/util/Error');
 var Rubric = require('../models/rubric/Rubric');
 var Article = require('../models/article/Article');
+var Vk = require('../models/vk/Vk');
 var DocumentInfo = require('./DocumentInfo');
 var converter = new JSONConverter();
 
@@ -111,8 +112,15 @@ RealtimeDocument.Prototype = function() {
         this._onError(err);
         return;
       }
+      var schema = docRecord.data.schema;
+      var doc;
 
-      var doc = new Article();
+      if (schema.name == 'mpro-article') {
+        doc = new Article();
+      } else if (schema.name == 'mpro-vk') {
+        doc = new Vk();
+      }
+
       doc = converter.importDocument(doc, docRecord.data);
       this._loadRubrics();
       var session = new CollabSession(doc, {

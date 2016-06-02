@@ -2,7 +2,6 @@
 
 var Err = require('substance/util/Error');
 var Button = require('substance/ui/Button');
-var Rubric = require('../models/rubric/Rubric');
 var Feed = require('./Feed');
 var ListItem = require('./ListItem');
 
@@ -97,28 +96,6 @@ TrainingList.Prototype = function() {
       self.extendState({
         documentItems: documents.records,
         totalItems: documents.total
-      });
-    }.bind(this));
-  };
-
-  this._loadRubrics = function() {
-    var documentClient = this.context.documentClient;
-
-    documentClient.listRubrics({}, {}, function(err, result) {
-      if (err) {
-        this.setState({
-          error: new Err('Feed.LoadingError', {
-            message: 'Rubrics could not be loaded.',
-            cause: err
-          })
-        });
-        console.error('ERROR', err);
-        return;
-      }
-
-      var rubrics = new Rubric(false, result.records);
-      this.extendState({
-        rubrics: rubrics.tree
       });
     }.bind(this));
   };

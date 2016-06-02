@@ -21,6 +21,7 @@ Meta.static.defineSchema({
   source: { type: 'string', default: '' },
   published: { type: 'string', default: '' },
   created: { type: 'string', default: '' },
+  abstract: { type: 'string', default: '' },
   post_type: { type: 'string', default: '' },
   author: { type: 'object', default: {} },
   attachments: { type: ['object'], default: [] },

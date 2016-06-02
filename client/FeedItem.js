@@ -1,6 +1,8 @@
 'use strict';
 
 var Component = require('substance/ui/Component');
+var Icon = require('substance/ui/FontAwesomeIcon');
+var each = require('lodash/each');
 var moment = require('moment');
 
 function FeedItem() {
@@ -26,11 +28,41 @@ FeedItem.Prototype = function() {
 
     var meta = document.meta;
 
-    // Title
+    var rubrics = this.props.rubrics;
+    var rubricsMeta = meta.rubrics;
+
+    var rubricsList = [];
+
+    if(rubrics) {
+      each(rubricsMeta, function(rubric) {
+        var item = rubrics.get(rubric);
+        rubricsList.push(item.name);
+      }.bind(this));
+    }
+
+    var rubricsEl = $$('div').addClass('se-rubrics');
+
+    rubricsEl.append($$(Icon, {icon: 'fa-tags'}));
+
+    if(rubricsList.length > 0) {
+      rubricsEl.append(rubricsList.join(', '));
+    } else {
+      rubricsEl.append('No categories assigned');
+    }
+
     el.append(
-      this.renderSourceInfo($$),
-      $$('div').addClass('se-title')
-        .append(document.title),
+      rubricsEl,
+      this.renderSourceInfo($$)
+    );
+
+    if(document.title !== '') {
+      el.append(
+        $$('div').addClass('se-title')
+          .append(document.title)
+      );
+    }
+
+    el.append(
       $$('div').addClass('se-abstract')
         .append(meta.abstract),
       $$('div').addClass('se-separator')
@@ -75,22 +107,31 @@ FeedItem.Prototype = function() {
   };
 
   this.renderSourceInfo = function($$) {
-    var meta = this.props.document.meta;
-    var issue_date = this.props.document.issue_date;
+    var document = this.props.document;
+    var meta = document.meta;
+    var published = this.props.document.published;
+    var publisher = meta.publisher;
+    var source_name = meta.source.split('/')[2];
+
+    if(document.schema_name == 'mpro-vk') {
+      publisher = meta.author.name;
+      source_name = $$(Icon, {icon: 'fa-vk'});
+    }
+
     var el = $$('div').addClass('se-source-info');
 
     el.append(
-      $$('div').addClass('se-source-name').html(
-        meta.publisher
+      $$('div').addClass('se-source-name').append(
+        publisher
       ),
       $$('a').addClass('se-source-url')
         .setAttribute('href', meta.source)
         .setAttribute('target', '_blank')
         .append(
-          meta.source.split('/')[2]
+          source_name
         ),
       $$('div').addClass('se-source-date').html(
-        moment(issue_date).format('DD.MM.YYYY HH:mm')
+        moment(published).format('DD.MM.YYYY HH:mm')
       )
     );
 

@@ -3,6 +3,7 @@
 var DocumentClient = require('./MproDocumentClient');
 var Err = require('substance/util/Error');
 var Component = require('substance/ui/Component');
+var Rubric = require('../models/rubric/Rubric');
 var FeedItem = require('./FeedItem');
 
 function Feed() {
@@ -82,7 +83,11 @@ Feed.Prototype = function() {
           active = true;
         }
         el.append(
-          $$(FeedItem, {document: documentItem, active: active}).ref(documentItem.documentId)
+          $$(FeedItem, {
+            document: documentItem,
+            active: active,
+            rubrics: this.state.rubrics
+          }).ref(documentItem.documentId)
         );
       }.bind(this));
     }
@@ -134,7 +139,8 @@ Feed.Prototype = function() {
     var documentClient = this.documentClient;
     //var userId = this._getUserId();
 
-    documentClient.listDocuments({'training': false}, {}, function(err, documents) {
+    this._loadRubrics();
+    documentClient.listDocuments({'training': false}, {order: "created asc"}, function(err, documents) {
       if (err) {
         this.setState({
           error: new Err('Feed.LoadingError', {
@@ -149,6 +155,28 @@ Feed.Prototype = function() {
       self.extendState({
         documentItems: documents.records,
         totalItems: documents.total
+      });
+    }.bind(this));
+  };
+
+  this._loadRubrics = function() {
+    var documentClient = this.context.documentClient;
+
+    documentClient.listRubrics({}, {}, function(err, result) {
+      if (err) {
+        this.setState({
+          error: new Err('Feed.LoadingError', {
+            message: 'Rubrics could not be loaded.',
+            cause: err
+          })
+        });
+        console.error('ERROR', err);
+        return;
+      }
+
+      var rubrics = new Rubric(false, result.records);
+      this.extendState({
+        rubrics: rubrics.tree
       });
     }.bind(this));
   };

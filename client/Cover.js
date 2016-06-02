@@ -28,8 +28,11 @@ Cover.Prototype = function() {
 
     authors = authors.concat(documentInfo.collaborators);
     var metaNode = doc.getDocumentMeta();
-    return $$("div").addClass("sc-cover")
-      .append(
+   
+    var el = $$("div").addClass("sc-cover");
+
+    if(metaNode.title !== '' && this.props.editing == 'readonly') {
+      el.append(
         // Editable title
         $$(TextPropertyEditor, {
           name: 'title',
@@ -38,15 +41,19 @@ Cover.Prototype = function() {
           path: [metaNode.id, "title"],
           editing: this.props.editing || 'full'
         }).addClass('se-title'),
-        $$('div').addClass('se-separator'),
-        // $$('div').addClass('se-authors').append(authors.join(', ')),
-        $$(DocumentSummary, {
-          mobile: this.props.mobile,
-          documentInfo: this.props.documentInfo,
-          rubrics: this.props.rubrics,
-          editing: this.props.editing || 'full'
-        })
+        $$('div').addClass('se-separator')
       );
+    }
+    el.append(
+      $$(DocumentSummary, {
+        mobile: this.props.mobile,
+        documentInfo: this.props.documentInfo,
+        rubrics: this.props.rubrics,
+        editing: this.props.editing || 'full'
+      })
+    );
+
+    return el;
   };
 
   this._onDocumentChanged = function(change) {

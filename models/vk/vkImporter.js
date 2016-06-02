@@ -69,6 +69,8 @@ VkImporter.Prototype = function() {
     });
 
     var published = new Date(source.published_date);
+    var abstract = source.doc_source.substr(0, source.doc_source.indexOf('<br>'));
+    abstract = this.truncate(abstract, 200, true);
 
     doc.create({
       id: 'meta',
@@ -77,6 +79,7 @@ VkImporter.Prototype = function() {
       source: source.guid,
       published: published.toJSON(),
       rubrics: source.rubric_ids,
+      abstract: abstract,
       post_type: meta.vk_post_type,
       author: {
         name: author_name,
@@ -84,6 +87,13 @@ VkImporter.Prototype = function() {
       },
       attachments: attachments
     });
+  };
+
+  this.truncate = function(string, n, useWordBoundary) {
+    var isTooLong = string.length > n,
+        s_ = isTooLong ? string.substr(0,n-1) : string;
+        s_ = (useWordBoundary && isTooLong) ? s_.substr(0,s_.lastIndexOf(' ')) : s_;
+    return  isTooLong ? s_ + '&hellip;' : s_;
   };
 };
 

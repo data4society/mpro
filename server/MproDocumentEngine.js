@@ -15,6 +15,24 @@ MproDocumentEngine.Prototype = function() {
   //var _super = MproDocumentEngine.super.prototype;
 
   /*
+    Get version for given documentId
+  */
+  this.getVersion = function(documentId, cb) {
+    this.documentExists(documentId, function(err, exists) {
+      if (err || !exists) {
+        return cb(new Err('ReadError', {
+          message: !exists ? 'Document does not exist' : null,
+          cause: err
+        }));
+      }
+      this.documentStore.getDocument(documentId, function(err, doc){
+        if(err) return cb(err);
+        cb(null, doc.version);
+      });
+    }.bind(this));
+  };
+
+  /*
     Delete document by documentId
 
     @param {String} documentId document id
