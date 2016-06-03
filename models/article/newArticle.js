@@ -10,7 +10,7 @@ module.exports = createDocumentFactory(Article, function(tx) {
     id: 'meta',
     type: 'meta',
     title: 'Untitled',
-    categories: []
+    rubrics: []
   });
 
   tx.create({

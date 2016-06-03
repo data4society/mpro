@@ -252,7 +252,7 @@ describe('Document Store', function() {
 
     it('should return list of documents with matching filters', function(done) {
       var filters = {
-        validated_by: 'testuser2'
+        edited_by: 'testuser2'
       }; 
 
       documentStore.listDocuments(filters, {}, function(err, results) {
@@ -268,7 +268,7 @@ describe('Document Store', function() {
 
     it('should return list of documents with applied options', function(done) {
       var filters = {
-        validated_by: 'testuser2'
+        edited_by: 'testuser2'
       };
 
       var options = {
@@ -289,7 +289,7 @@ describe('Document Store', function() {
 
     it('should return empty list of documents with filters that does not match', function(done) {
       var filters = {
-        validated_by: 'non-existing-user'
+        edited_by: 'non-existing-user'
       };
 
       documentStore.listDocuments(filters, {}, function(err, results) {

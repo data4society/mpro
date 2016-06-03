@@ -51,12 +51,11 @@ DocumentStore.Prototype = function() {
       schema_name: props.schema_name || props.schemaName,
       schema_version: props.schema_version || props.schemaVersion,
       version: props.version || 1,
-      issue_date: props.issue_date,
-      created: new Date(),
-      state: props.state,
+      rubrics: props.rubrics || [],
+      published: props.published,
+      created: props.created || new Date(),
       source: props.source,
-      stripped: props.stripped,
-      meta: props.meta || {title: props.title, categories: []},
+      meta: props.meta || {title: props.title, rubrics: []},
       content: props.content,
       info: props.info
     };
@@ -74,7 +73,7 @@ DocumentStore.Prototype = function() {
         }));
       }
 
-      this.db.documents.insert(record, function(err, doc) {
+      this.db.records.insert(record, function(err, doc) {
         if (err) {
           return cb(new Err('DocumentStore.CreateError', {
             cause: err
@@ -100,7 +99,7 @@ DocumentStore.Prototype = function() {
     @returns {Callback}
   */
   this.getDocument = function(documentId, cb) {
-    this.db.documents.findOne({document_id: documentId}, function(err, doc) {
+    this.db.records.findOne({document_id: documentId}, function(err, doc) {
       if (err) {
         return cb(new Err('DocumentStore.ReadError', {
           cause: err
@@ -156,7 +155,7 @@ DocumentStore.Prototype = function() {
       var documentData = props;
       documentData.document_id = documentId;
 
-      this.db.documents.save(documentData, function(err, doc) {
+      this.db.records.save(documentData, function(err, doc) {
         if (err) {
           return cb(new Err('DocumentStore.UpdateError', {
             cause: err
@@ -195,7 +194,7 @@ DocumentStore.Prototype = function() {
         }));
       }
 
-      this.db.documents.destroy({document_id: documentId}, function(err, doc) {
+      this.db.records.destroy({document_id: documentId}, function(err, doc) {
         if (err) {
           return cb(new Err('DocumentStore.DeleteError', {
             cause: err
@@ -222,7 +221,7 @@ DocumentStore.Prototype = function() {
     @returns {Callback}
   */
   this.documentExists = function(documentId, cb) {
-    this.db.documents.findOne({document_id: documentId}, function(err, doc) {
+    this.db.records.findOne({document_id: documentId}, function(err, doc) {
       if (err) {
         return cb(new Err('DocumentStore.ReadError', {
           cause: err,
@@ -248,7 +247,7 @@ DocumentStore.Prototype = function() {
     // Default limit for number of returned records
     if(!options.limit) options.limit = 100;
 
-    this.db.documents.count(filters, function(err, count) {
+    this.db.records.count(filters, function(err, count) {
       if (err) {
         return cb(new Err('DocumentStore.ListError', {
           cause: err
@@ -256,7 +255,7 @@ DocumentStore.Prototype = function() {
       }
       output.total = count;
       
-      this.db.documents.find(filters, options, function(err, docs) {
+      this.db.records.find(filters, options, function(err, docs) {
         if (err) {
           return cb(new Err('DocumentStore.ListError', {
             cause: err

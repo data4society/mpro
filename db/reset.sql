@@ -1,9 +1,10 @@
 -- Reset database:
 
 drop table if exists "changes";
-drop table if exists "documents";
 drop table if exists "entities";
-drop table if exists "thematics";
+drop table if exists "records";
+drop table if exists "documents";
+drop table if exists "rubrics";
 drop table if exists "sessions";
 drop table if exists "users";
 
@@ -17,30 +18,43 @@ CREATE TABLE "users" (
 );
 
 CREATE TABLE "documents" (
+  doc_id varchar(40) UNIQUE PRIMARY KEY,
+  guid varchar(255) UNIQUE,
+  doc_source text,
+  stripped text,
+  status integer,
+  title varchar(255),
+  published_date timestamp,
+  created timestamp,
+  meta jsonb,
+  rubric_ids varchar(40)[],
+  type varchar(255)
+);
+
+CREATE TABLE "records" (
   document_id varchar(40) UNIQUE PRIMARY KEY,
   guid varchar(255) UNIQUE,
   title varchar(255),
   schema_name varchar(40),
   schema_version varchar(40),
   version integer,
-  issue_date timestamp,
+  published timestamp,
   created timestamp,
-  validated timestamp,
-  validated_by varchar(40) REFERENCES users,
-  state varchar(40),
+  edited timestamp,
+  edited_by varchar(40) REFERENCES users,
   training boolean,
-  source text,
-  stripped text,
-  content json,
-  meta json,
-  info json,
+  rubrics varchar(40)[],
+  source varchar(40) REFERENCES documents,
+  content jsonb,
+  meta jsonb,
+  info jsonb,
   tsv tsvector
 );
 
 CREATE TABLE "changes" (
-  document_id varchar(40) REFERENCES documents,
+  document_id varchar(40) REFERENCES records,
   version integer,
-  data json,
+  data jsonb,
   created timestamp,
   owner varchar(40) REFERENCES users,
   PRIMARY KEY(document_id, version)
@@ -48,20 +62,20 @@ CREATE TABLE "changes" (
 
 CREATE TABLE "entities" (
   entity_id varchar(40) UNIQUE PRIMARY KEY,
-  title varchar(255),
+  name varchar(255),
   created timestamp,
   edited timestamp,
   author varchar(40) REFERENCES users,
-  class varchar(255),
-  data json,
+  entity_class varchar(255),
+  data jsonb,
   tsv tsvector
 );
 
-CREATE TABLE "thematics" (
-  thematic_id varchar(40) UNIQUE PRIMARY KEY,
-  title varchar(255),
+CREATE TABLE "rubrics" (
+  rubric_id varchar(40) UNIQUE PRIMARY KEY,
+  name varchar(255),
   created timestamp,
-  parent_id varchar(40) REFERENCES thematics
+  parent_id varchar(40) REFERENCES rubrics
 );
 
 CREATE TABLE "sessions" (

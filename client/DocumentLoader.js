@@ -6,8 +6,9 @@ var CollabClient = require('substance/collab/CollabClient');
 var WebSocketConnection = require('substance/collab/WebSocketConnection');
 var Component = require('substance/ui/Component');
 var Err = require('substance/util/Error');
-var Thematic = require('../model/Thematic');
-var Article = require('../model/Article');
+var Rubric = require('../models/rubric/Rubric');
+var Article = require('../models/article/Article');
+var Vk = require('../models/vk/Vk');
 var DocumentInfo = require('./DocumentInfo');
 var converter = new JSONConverter();
 
@@ -111,10 +112,17 @@ RealtimeDocument.Prototype = function() {
         this._onError(err);
         return;
       }
+      var schema = docRecord.data.schema;
+      var doc;
 
-      var doc = new Article();
+      if (schema.name == 'mpro-article') {
+        doc = new Article();
+      } else if (schema.name == 'mpro-vk') {
+        doc = new Vk();
+      }
+
       doc = converter.importDocument(doc, docRecord.data);
-      this._loadThematics();
+      this._loadRubrics();
       var session = new CollabSession(doc, {
         documentId: documentId,
         version: docRecord.version,
@@ -136,14 +144,14 @@ RealtimeDocument.Prototype = function() {
     }.bind(this));
   };
 
-  this._loadThematics = function() {
+  this._loadRubrics = function() {
     var documentClient = this.context.documentClient;
 
-    documentClient.listThematics({}, {}, function(err, result) {
+    documentClient.listRubrics({}, {}, function(err, result) {
       if (err) {
         this.setState({
           error: new Err('Feed.LoadingError', {
-            message: 'Thematics could not be loaded.',
+            message: 'Rubrics could not be loaded.',
             cause: err
           })
         });
@@ -151,11 +159,11 @@ RealtimeDocument.Prototype = function() {
         return;
       }
 
-      var thematics = new Thematic(false, result.records);
+      var rubrics = new Rubric(false, result.records);
       this.extendState({
-        thematics: thematics.tree
+        rubrics: rubrics.tree
       });
-      return thematics;
+      return rubrics;
     }.bind(this));
   };
 };

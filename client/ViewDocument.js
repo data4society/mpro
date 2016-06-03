@@ -47,7 +47,7 @@ ViewDocument.Prototype = function() {
           mobile: this.props.mobile,
           documentInfo: this.state.documentInfo,
           documentSession: this.state.session,
-          thematics: this.state.thematics
+          rubrics: this.state.rubrics
         }).ref('documentViewer')
       );
     }

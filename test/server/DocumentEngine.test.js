@@ -7,7 +7,7 @@ var ChangeStore = require('../../server/ChangeStore');
 var DocumentStore = require('../../server/DocumentStore');
 var UserStore = require('../../server/UserStore');
 
-var newArticle = require('../../model/newArticle');
+var newArticle = require('../../models/article/newArticle');
 
 describe('Document Engine', function() {
   var db = new Database();

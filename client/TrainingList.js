@@ -2,7 +2,6 @@
 
 var Err = require('substance/util/Error');
 var Button = require('substance/ui/Button');
-var Thematic = require('../model/Thematic');
 var Feed = require('./Feed');
 var ListItem = require('./ListItem');
 
@@ -41,7 +40,7 @@ TrainingList.Prototype = function() {
           $$(ListItem, {
             document: documentItem,
             active: active,
-            thematics: this.state.thematics
+            rubrics: this.state.rubrics
           }).ref(documentItem.documentId)
         );
       }.bind(this));
@@ -59,10 +58,10 @@ TrainingList.Prototype = function() {
     }
   };
 
-  this.updateCategories = function(documentId, categories) {
+  this.updateRubrics = function(documentId, rubrics) {
     if(this.refs[documentId]) {
       var document = this.refs[documentId].props.document;
-      document.meta.categories = categories;
+      document.meta.rubrics = rubrics;
       this.refs[documentId].extendProps({
         'document': document
       });
@@ -81,7 +80,7 @@ TrainingList.Prototype = function() {
     var self = this;
     var documentClient = this.documentClient;
     //var userId = this._getUserId();
-    this._loadThematics();
+    this._loadRubrics();
     documentClient.listDocuments({'training': true}, {}, function(err, documents) {
       if (err) {
         this.setState({
@@ -97,28 +96,6 @@ TrainingList.Prototype = function() {
       self.extendState({
         documentItems: documents.records,
         totalItems: documents.total
-      });
-    }.bind(this));
-  };
-
-  this._loadThematics = function() {
-    var documentClient = this.context.documentClient;
-
-    documentClient.listThematics({}, {}, function(err, result) {
-      if (err) {
-        this.setState({
-          error: new Err('Feed.LoadingError', {
-            message: 'Thematics could not be loaded.',
-            cause: err
-          })
-        });
-        console.error('ERROR', err);
-        return;
-      }
-
-      var thematics = new Thematic(false, result.records);
-      this.extendState({
-        thematics: thematics.tree
       });
     }.bind(this));
   };

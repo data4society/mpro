@@ -13,12 +13,13 @@ var server = require('substance/util/server');
 /*
   Stores
 */
+var SourceStore = require('./server/SourceStore');
 var DocumentStore = require('./server/DocumentStore');
 var SnapshotStore = require('./server/SnapshotStore');
 var ChangeStore = require('./server/ChangeStore');
 var SessionStore = require('./server/SessionStore');
 var UserStore = require('./server/UserStore');
-var ThematicStore = require('./server/ThematicStore');
+var RubricStore = require('./server/RubricStore');
 
 /*
   Engines
@@ -27,6 +28,7 @@ var DocumentEngine = require('./server/MproDocumentEngine');
 var AuthenticationEngine = require('./server/AuthenticationEngine');
 var SnapshotEngine = require('./server/MproSnapshotEngine');
 var MproEngine = require('./server/MproEngine');
+var SourceEngine = require('./server/SourceEngine');
 
 /*
   Servers
@@ -39,8 +41,14 @@ var MproServer = require('./server/MproServer');
 /*
   Models
 */
-var newArticle = require('./model/newArticle');
+var newArticle = require('./models/article/newArticle');
+var newVk = require('./models/vk/newVk');
 var DocumentChange = require('substance/model/DocumentChange');
+
+/*
+  Importers
+*/
+var vkImporter = require('./models/vk/vkImporter');
 
 var Database = require('./server/Database');
 
@@ -57,9 +65,11 @@ var sessionStore = new SessionStore({ db: db });
 // each time.
 var changeStore = new ChangeStore({db: db});
 var documentStore = new DocumentStore({db: db});
+var sourceStore = new SourceStore({db: db});
+
 
 var snapshotStore = new SnapshotStore({db: db});
-var thematicStore = new ThematicStore({db: db});
+var rubricStore = new RubricStore({db: db});
 
 /*
   Engines setup
@@ -74,6 +84,11 @@ var snapshotEngine = new SnapshotEngine({
       name: 'mpro-article',
       version: '1.0.0',
       documentFactory: newArticle
+    },
+    'mpro-vk': {
+      name: 'mpro-vk',
+      version: '1.0.0',
+      documentFactory: newVk
     }
   }
 });
@@ -88,6 +103,11 @@ var documentEngine = new DocumentEngine({
       name: 'mpro-article',
       version: '1.0.0',
       documentFactory: newArticle
+    },
+    'mpro-vk': {
+      name: 'mpro-vk',
+      version: '1.0.0',
+      documentFactory: newVk
     }
   }
 });
@@ -98,8 +118,16 @@ var authenticationEngine = new AuthenticationEngine({
   emailService: null // TODO
 });
 
+var sourceEngine = new SourceEngine({
+  documentStore: documentStore,
+  sourceStore: sourceStore,
+  importers: {
+    'vk': vkImporter
+  }
+});
+
 var mproEngine = new MproEngine({
-  thematicStore: thematicStore
+  rubricStore: rubricStore
 });
 
 /*
@@ -167,7 +195,7 @@ var collabServer = new CollabServer({
       documentStore.getDocument(message.documentId, function(err, docRecord) {
         var updatedAt = new Date();
         var title = docRecord.title;
-        var categories = docRecord.meta.categories;
+        var rubrics = docRecord.meta.rubrics;
 
         if (message.change) {
           // Update the title if necessary
@@ -179,8 +207,8 @@ var collabServer = new CollabServer({
           });
 
           change.ops.forEach(function(op) {
-            if(op.path[0] == 'meta' && op.path[1] == 'categories') {
-              categories = op.val;
+            if(op.path[0] == 'meta' && op.path[1] == 'rubrics') {
+              rubrics = op.val;
             }
           });
 
@@ -199,7 +227,7 @@ var collabServer = new CollabServer({
           updatedAt: updatedAt,
           updatedBy: req.session.userId,
           title: title,
-          meta: {title: title, categories: categories}
+          meta: {title: title, rubrics: rubrics}
         };
         cb(null);
       });

@@ -1,8 +1,10 @@
 'use strict';
 
 var Component = require('substance/ui/Component');
-var CategoriesList = require('./CategoriesList');
-var ThematicEditor = require('./ThematicEditor');
+var Icon = require('substance/ui/FontAwesomeIcon');
+var RubricsList = require('./RubricsList');
+var RubricEditor = require('./RubricEditor');
+var moment = require('moment');
 
 var DocumentSummary = function() {
   DocumentSummary.super.apply(this, arguments);
@@ -11,8 +13,9 @@ var DocumentSummary = function() {
 DocumentSummary.Prototype = function() {
 
   this.render = function($$) {
+    var document = this.context.doc;
     //var documentInfo = this.props.documentInfo.props;
-    var thematics = this.props.thematics;
+    var rubrics = this.props.rubrics;
     //var updatedAt = moment(documentInfo.updatedAt).fromNow();
 
     var el = $$('div').addClass('sc-document-summary');
@@ -20,17 +23,23 @@ DocumentSummary.Prototype = function() {
       el.addClass('sm-mobile');
     }
    
-    el.append($$(CategoriesList, {
-      thematics: thematics,
+    el.append($$(RubricsList, {
+      rubrics: rubrics,
       editing: this.props.editing
-    }).ref('categoriesList'));
+    }).ref('rubricsList'));
 
     el.append(
-      $$(ThematicEditor, {
-        thematics: thematics
-      }).ref('thematics')
+      $$(RubricEditor, {
+        rubrics: rubrics
+      }).ref('rubrics')
     );
 
+    if(document.schema.name == 'mpro-vk') {
+      el.append(
+        this.renderMeta($$),
+        $$('div').addClass('se-separator')
+      );
+    }
 
     // el.append(
     //   $$('div').addClass('se-item').append(
@@ -43,8 +52,35 @@ DocumentSummary.Prototype = function() {
     return el;
   };
 
-  this._openThematicEditor = function() {
-    this.refs.thematics.togglePrompt();
+  this.renderMeta = function($$) {
+    var document = this.context.doc;
+    var meta = document.get('meta');
+    var el = $$('div').addClass('se-meta-summary');
+    var text = $$('div').addClass('se-published').append(
+      $$(Icon, {icon: 'fa-clock-o'}),
+      'Published by ' + meta.author.name + ' on ' + moment(meta.published).format('DD.MM.YYYY HH:mm')
+    );
+    var source = $$('div').addClass('se-source').append(
+      $$(Icon, {icon: 'fa-chain'}),
+      'Original source: ',
+      $$('a').addClass('se-source-url')
+        .setAttribute('href', meta.source)
+        .setAttribute('target', '_blank')
+        .append(
+          meta.source
+        )
+    );
+
+    el.append(
+      text,
+      source
+    );
+
+    return el;
+  };
+
+  this._openRubricsEditor = function() {
+    this.refs.rubrics.togglePrompt();
   };
 };
 

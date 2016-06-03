@@ -1,6 +1,6 @@
--- seed thematics:
+-- seed rubrics:
 
-insert into thematics(thematic_id, title, parent_id)
+insert into rubrics(rubric_id, name, parent_id)
 values ('1', 'Freedom of Assembley', null),
 ('2', 'Detention', '1'),
 ('3', 'Freedom of Speech', null),

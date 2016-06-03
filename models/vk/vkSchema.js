@@ -2,8 +2,6 @@
 
 var DocumentSchema = require('substance/model/DocumentSchema');
 var DocumentNode = require('substance/model/DocumentNode');
-var TextBlock = require('substance/model/TextBlock');
-var PropertyAnnotation = require('substance/model/PropertyAnnotation');
 
 /**
   Meta
@@ -18,14 +16,21 @@ DocumentNode.extend(Meta);
 Meta.static.name = 'meta';
 
 Meta.static.defineSchema({
-  title: { type: 'string', default: 'Untitled article'},
-  categories: { type: ["id"], defaut: [] }
+  title: { type: 'string', default: '' },
+  rubrics: { type: ['id'], defaut: [] },
+  source: { type: 'string', default: '' },
+  published: { type: 'string', default: '' },
+  created: { type: 'string', default: '' },
+  abstract: { type: 'string', default: '' },
+  post_type: { type: 'string', default: '' },
+  author: { type: 'object', default: {} },
+  attachments: { type: ['object'], default: [] },
 });
 
 /**
   Schema instance
 */
-var schema = new DocumentSchema('mpro-article', '1.0.0');
+var schema = new DocumentSchema('mpro-vk', '1.0.0');
 schema.getDefaultTextType = function() {
   return 'paragraph';
 };

@@ -5,11 +5,11 @@ var Icon = require('substance/ui/FontAwesomeIcon');
 var each = require('lodash/each');
 var TreeItem = require('./TreeItem');
 
-function ThematicEditorPrompt() {
-  ThematicEditorPrompt.super.apply(this, arguments);
+function RubricEditorPrompt() {
+  RubricEditorPrompt.super.apply(this, arguments);
 }
 
-ThematicEditorPrompt.Prototype = function() {
+RubricEditorPrompt.Prototype = function() {
 
   this.render = function($$) {
     var tree = this.props.tree;
@@ -20,7 +20,7 @@ ThematicEditorPrompt.Prototype = function() {
         $$(Icon, {icon: 'fa-close'})
           .on('click', this._onClose.bind(this))
       ),
-      $$('div').addClass('se-prompt-title').append(this.i18n.t('Pick up categories:'))
+      $$('div').addClass('se-prompt-title').append(this.i18n.t('Pick up rubrics:'))
     );
     
     var childNodes = tree.getChildren("root");
@@ -44,18 +44,18 @@ ThematicEditorPrompt.Prototype = function() {
 
 };
 
-Component.extend(ThematicEditorPrompt);
+Component.extend(RubricEditorPrompt);
 
 
-var ThematicEditor = function() {
-  ThematicEditor.super.apply(this, arguments);
+var RubricEditor = function() {
+  RubricEditor.super.apply(this, arguments);
 
   this.handleActions({
     'saveTree': this._saveTree
   });
 };
 
-ThematicEditor.Prototype = function() {
+RubricEditor.Prototype = function() {
 
   this.togglePrompt = function() {
     this.extendState({
@@ -64,11 +64,11 @@ ThematicEditor.Prototype = function() {
   };
 
   this.render = function($$) {
-    var el = $$('div').addClass('sc-thematic-editor');
-    var tree = this.props.thematics;
+    var el = $$('div').addClass('sc-rubric-editor');
+    var tree = this.props.rubrics;
 
     if (tree && this.state.showPrompt) {
-      var prompt = $$(ThematicEditorPrompt, {tree: tree}).ref('tree-editor');
+      var prompt = $$(RubricEditorPrompt, {tree: tree}).ref('tree-editor');
       el.append(prompt);
     }
 
@@ -77,20 +77,20 @@ ThematicEditor.Prototype = function() {
 
   this._saveTree = function() {
     var documentSession = this.context.documentSession;
-    var categoriesList = this.parent.refs.categoriesList;
-    var nodes = this.props.thematics.nodes;
-    var categories = [];
+    var rubricsList = this.parent.refs.rubricsList;
+    var nodes = this.props.rubrics.nodes;
+    var rubrics = [];
     each(nodes, function(node) {
-      if(node.selected) categories.push(node.thematic_id);
+      if(node.selected) rubrics.push(node.rubric_id);
     });
     documentSession.transaction(function(tx) {
-      tx.set(['meta', 'categories'], categories);
+      tx.set(['meta', 'rubrics'], rubrics);
     });
-    categoriesList.rerender();
-    this.send('updateListCategories', documentSession.documentId, categories);
+    rubricsList.rerender();
+    this.send('updateListRubrics', documentSession.documentId, rubrics);
   };
 };
 
-Component.extend(ThematicEditor);
+Component.extend(RubricEditor);
 
-module.exports = ThematicEditor;
+module.exports = RubricEditor;
