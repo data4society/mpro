@@ -24,3 +24,4 @@ node_modules
 
 # Production config
 config/production.json
+ecosystem.json
