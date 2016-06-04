@@ -29,7 +29,7 @@ VkImporter.Prototype = function() {
     // Preprocess record
     // Replace double <br> with paragraph
     html = "<p>" + html.replace(/<br><br>/gi, "</p><p>") + "</p>";
-
+    html = html.replace(/<br>/gi, "</p><p>");
     this.reset();
     var parsed = DefaultDOMElement.parseHTML(html);
     this.convertDocument(parsed);

@@ -3,6 +3,7 @@
 var oo = require('substance/util/oo');
 var Err = require('substance/util/Error');
 var map = require('lodash/map');
+var isEmpty = require('lodash/isEmpty');
 var Promise = require("bluebird");
 var JSONConverter = require('substance/model/JSONConverter');
 var converter = new JSONConverter();
@@ -32,7 +33,7 @@ SourceEngine.Prototype = function() {
   this.scheduleConversion = function() {
     this.interval = setInterval(function(){
       this.requestConversion();
-    }.bind(this), 60 * 1000 * this.gap); 
+    }.bind(this), 60 * 1000 * this.gap);
   };
 
   /*
@@ -66,10 +67,12 @@ SourceEngine.Prototype = function() {
         this.scheduleConversion();
       }.bind(this))
       .catch(function(err) {
+        this.scheduleConversion();
+        console.error(err);
         throw new Err('SourceEngine.ConversionError', {
           cause: err
         });
-      });
+      }.bind(this));
   };
 
   /*
@@ -88,6 +91,22 @@ SourceEngine.Prototype = function() {
   };
 
   /*
+    Mark document sources as errored
+    status 12 means that document source
+    didn't pass validation
+
+    @param {String} sourceId source id
+    @returns {Promise}
+  */
+  this.markError = function(sourceId) {
+    var data = {
+      status: 12
+    };
+
+    return this.sourceStore.updateSource(sourceId, data);
+  };
+
+  /*
     Get document sources for conversion
     status 10 means ready for conversion sources
 
@@ -95,7 +114,7 @@ SourceEngine.Prototype = function() {
   */
   this.getConversionData = function() {
     return new Promise(function(resolve, reject) {
-      this.sourceStore.listSources({'status': 10}, {columns: ['doc_id']}).then(function(results) {
+      this.sourceStore.listSources({'status': 10}, {columns: ['doc_id'], order: "created asc"}).then(function(results) {
         var sources = map(results.records, function(rec) {return rec.doc_id; });
         resolve(sources);
       }).catch(function(err) {
@@ -107,6 +126,39 @@ SourceEngine.Prototype = function() {
   };
 
   /*
+    Performs basic validation of document source
+
+    @param {String} sourceId source id
+    @returns {Promise}
+  */
+  this.validateSource = function(source) {
+    var errMsg;
+
+    return new Promise(function(resolve, reject) {
+      if(isEmpty(source.doc_source)) {
+        errMsg = 'Document source body is empty';
+      } else if (isEmpty(source.meta)) {
+        errMsg = 'Document source meta is empty';
+      } else if (isEmpty(source.rubric_ids)) {
+        errMsg = 'Document source has no rubrics';
+      } else if (!this.importers[source.type]) {
+        errMsg = 'Unknown type of document source: ' + source.type;
+      }
+
+      if(errMsg) {
+        return this.markError(source.doc_id)
+          .then(function() {
+            return reject(new Err('SourceEngine.ConversionError', {
+              message: errMsg
+            }));
+          });
+      } else {
+        resolve(source);
+      }
+    }.bind(this));
+  };
+
+  /*
     Converts document sources to substance documents
 
     @param {String} sourceId source id
@@ -114,6 +166,9 @@ SourceEngine.Prototype = function() {
   */
   this.convert = function(sourceId) {
     return this.sourceStore.getSource(sourceId)
+      .then(function(source) {
+        return this.validateSource(source);
+      }.bind(this))
       .then(function(source) {
         var recordBody = source.doc_source;
         var type = source.type;
