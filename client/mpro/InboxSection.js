@@ -17,7 +17,8 @@ function Inbox() {
   });
 
   this.handleActions({
-    'openDocument': this._openDocument
+    'openDocument': this._openDocument,
+    'updateListRubrics': this._updateRubrics
   });
 }
 
@@ -62,6 +63,11 @@ Inbox.Prototype = function() {
     viewer.extendProps({
       documentId: documentId
     });
+  };
+
+  this._updateRubrics = function(documentId, rubrics) {
+    var feed = this.refs.feed;
+    feed.updateRubrics(documentId, rubrics);
   };
 
   this._getUserId = function() {

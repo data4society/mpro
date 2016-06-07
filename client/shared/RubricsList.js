@@ -30,24 +30,20 @@ RubricsList.Prototype = function() {
 
     if(rubricsList.length > 0) {
       el.append($$('div').addClass('se-rubrics').append(rubricsList.join(', ')));
-      if(this.props.editing !== 'readonly') {
-        el.append(
-          $$('div').addClass('se-edit-rubrics')
-            .append($$(Icon, {icon: 'fa-pencil'}))
-            .on('click', this._openRubricEditor.bind(this))
-        );
-      }
+      el.append(
+        $$('div').addClass('se-edit-rubrics')
+          .append($$(Icon, {icon: 'fa-pencil'}))
+          .on('click', this._openRubricEditor.bind(this))
+      );
     } else {
       el.append($$('div').addClass('se-rubrics').append('No rubrics were attached to this document.'));
-      if(this.props.editing !== 'readonly') {
-        el.append(
-          $$('div').addClass('se-edit-rubrics')
-            .append(
-              'Want to add some?'
-            )
-            .on('click', this._openRubricEditor.bind(this))
-        );
-      }
+      el.append(
+        $$('div').addClass('se-edit-rubrics')
+          .append(
+            'Want to add some?'
+          )
+          .on('click', this._openRubricEditor.bind(this))
+      );
     }
 
     return el;

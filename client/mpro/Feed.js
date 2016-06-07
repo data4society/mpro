@@ -114,6 +114,16 @@ Feed.Prototype = function() {
     this.activeItem = documentId;
   };
 
+  this.updateRubrics = function(documentId, rubrics) {
+    if(this.refs[documentId]) {
+      var document = this.refs[documentId].props.document;
+      document.meta.rubrics = rubrics;
+      this.refs[documentId].extendProps({
+        'document': document
+      });
+    }
+  };
+
   this.updateUrl = function(documentId) {
     var urlHelper = this.context.urlHelper;
     urlHelper.writeRoute({section: 'inbox', documentId: documentId});

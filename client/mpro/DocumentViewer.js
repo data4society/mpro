@@ -26,7 +26,7 @@ DocumentViewer.Prototype = function() {
           doc: this.props.documentSession.doc,
           containerId: 'body',
           name: 'bodyEditor',
-          editing: 'readonly',
+          editing: 'selection',
           commands: config.bodyEditor.commands,
           textTypes: config.bodyEditor.textTypes
         }).ref('bodyEditor')

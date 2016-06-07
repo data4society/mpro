@@ -3,7 +3,6 @@
 //var Notification = require('./Notification');
 var DocumentLoader = require('../shared/DocumentLoader');
 var DocumentViewer = require('./DocumentViewer');
-//var RequestEditAccess = require('./RequestEditAccess');
 
 function ViewDocument() {
   DocumentLoader.apply(this, arguments);
