@@ -1,11 +1,11 @@
 'use strict';
 
-var DocumentClient = require('./MproDocumentClient');
-var Header = require('./Header');
+var DocumentClient = require('../clients/MproDocumentClient');
+var Header = require('../shared/Header');
 var Layout = require('substance/ui/Layout');
 var Component = require('substance/ui/Component');
 var TrainingList = require('./TrainingList');
-var Filters = require('./Filters');
+var Filters = require('../shared/Filters');
 var EditDocument = require('./EditDocument');
 
 function Configurator() {

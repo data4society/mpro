@@ -25,7 +25,6 @@ DocumentSummary.Prototype = function() {
    
     el.append($$(RubricsList, {
       rubrics: rubrics,
-      editing: this.props.editing
     }).ref('rubricsList'));
 
     el.append(

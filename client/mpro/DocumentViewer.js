@@ -2,7 +2,7 @@
 
 var Controller = require('substance/ui/Controller');
 var ContainerEditor = require('substance/ui/ContainerEditor');
-var Cover = require('./Cover');
+var Cover = require('../shared/Cover');
 
 function DocumentViewer() {
   Controller.apply(this, arguments);
@@ -26,7 +26,7 @@ DocumentViewer.Prototype = function() {
           doc: this.props.documentSession.doc,
           containerId: 'body',
           name: 'bodyEditor',
-          editing: 'readonly',
+          editing: 'selection',
           commands: config.bodyEditor.commands,
           textTypes: config.bodyEditor.textTypes
         }).ref('bodyEditor')

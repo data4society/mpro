@@ -2,6 +2,7 @@ var config = require('config');
 var express = require('express');
 var http = require('http');
 var path = require('path');
+var extend = require('lodash/extend');
 var app = express();
 var bodyParser = require('body-parser');
 var WebSocketServer = require('ws').Server;
@@ -195,7 +196,8 @@ var collabServer = new CollabServer({
       documentStore.getDocument(message.documentId, function(err, docRecord) {
         var updatedAt = new Date();
         var title = docRecord.title;
-        var rubrics = docRecord.meta.rubrics;
+        var meta = docRecord.meta;
+        var rubrics = meta.rubrics;
 
         if (message.change) {
           // Update the title if necessary
@@ -222,12 +224,15 @@ var collabServer = new CollabServer({
           name: req.session.user.name
         };
 
+        // update meta object with modified properties
+        extend(meta, {title: title, rubrics: rubrics});
+
         // commit and connect method take optional documentInfo argument
         message.documentInfo = {
           updatedAt: updatedAt,
           updatedBy: req.session.userId,
           title: title,
-          meta: {title: title, rubrics: rubrics}
+          meta: meta
         };
         cb(null);
       });

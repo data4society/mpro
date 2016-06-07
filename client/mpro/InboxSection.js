@@ -1,11 +1,11 @@
 'use strict';
 
-var DocumentClient = require('./MproDocumentClient');
-var Header = require('./Header');
+var DocumentClient = require('../clients/MproDocumentClient');
+var Header = require('../shared/Header');
 var Layout = require('substance/ui/Layout');
 var Component = require('substance/ui/Component');
 var Feed = require('./Feed');
-var Filters = require('./Filters');
+var Filters = require('../shared/Filters');
 var ViewDocument = require('./ViewDocument');
 
 function Inbox() {
@@ -17,7 +17,8 @@ function Inbox() {
   });
 
   this.handleActions({
-    'openDocument': this._openDocument
+    'openDocument': this._openDocument,
+    'updateListRubrics': this._updateRubrics
   });
 }
 
@@ -62,6 +63,11 @@ Inbox.Prototype = function() {
     viewer.extendProps({
       documentId: documentId
     });
+  };
+
+  this._updateRubrics = function(documentId, rubrics) {
+    var feed = this.refs.feed;
+    feed.updateRubrics(documentId, rubrics);
   };
 
   this._getUserId = function() {

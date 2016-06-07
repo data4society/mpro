@@ -1,9 +1,9 @@
 'use strict';
 
-var DocumentClient = require('./MproDocumentClient');
+var DocumentClient = require('../clients/MproDocumentClient');
 var Err = require('substance/util/Error');
 var Component = require('substance/ui/Component');
-var Rubric = require('../models/rubric/Rubric');
+var Rubric = require('../../models/rubric/Rubric');
 var FeedItem = require('./FeedItem');
 
 function Feed() {
@@ -112,6 +112,16 @@ Feed.Prototype = function() {
     }
 
     this.activeItem = documentId;
+  };
+
+  this.updateRubrics = function(documentId, rubrics) {
+    if(this.refs[documentId]) {
+      var document = this.refs[documentId].props.document;
+      document.meta.rubrics = rubrics;
+      this.refs[documentId].extendProps({
+        'document': document
+      });
+    }
   };
 
   this.updateUrl = function(documentId) {

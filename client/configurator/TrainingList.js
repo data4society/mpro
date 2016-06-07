@@ -2,7 +2,7 @@
 
 var Err = require('substance/util/Error');
 var Button = require('substance/ui/Button');
-var Feed = require('./Feed');
+var Feed = require('../mpro/Feed');
 var ListItem = require('./ListItem');
 
 function TrainingList() {
