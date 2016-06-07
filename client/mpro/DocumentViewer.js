@@ -2,7 +2,7 @@
 
 var Controller = require('substance/ui/Controller');
 var ContainerEditor = require('substance/ui/ContainerEditor');
-var Cover = require('./Cover');
+var Cover = require('../shared/Cover');
 
 function DocumentViewer() {
   Controller.apply(this, arguments);

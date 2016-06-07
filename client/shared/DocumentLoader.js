@@ -6,9 +6,9 @@ var CollabClient = require('substance/collab/CollabClient');
 var WebSocketConnection = require('substance/collab/WebSocketConnection');
 var Component = require('substance/ui/Component');
 var Err = require('substance/util/Error');
-var Rubric = require('../models/rubric/Rubric');
-var Article = require('../models/article/Article');
-var Vk = require('../models/vk/Vk');
+var Rubric = require('../../models/rubric/Rubric');
+var Article = require('../../models/article/Article');
+var Vk = require('../../models/vk/Vk');
 var DocumentInfo = require('./DocumentInfo');
 var converter = new JSONConverter();
 

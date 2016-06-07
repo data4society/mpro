@@ -1,9 +1,9 @@
 'use strict';
 
-var DocumentClient = require('./MproDocumentClient');
+var DocumentClient = require('../clients/MproDocumentClient');
 var Err = require('substance/util/Error');
 var Component = require('substance/ui/Component');
-var Rubric = require('../models/rubric/Rubric');
+var Rubric = require('../../models/rubric/Rubric');
 var FeedItem = require('./FeedItem');
 
 function Feed() {

@@ -2,7 +2,7 @@
 
 //var Collaborators = require('./Collaborators');
 //var Notification = require('./Notification');
-var DocumentLoader = require('./DocumentLoader');
+var DocumentLoader = require('../shared/DocumentLoader');
 var DocumentWriter = require('./DocumentWriter');
 var inBrowser = require('substance/util/inBrowser');
 

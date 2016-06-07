@@ -1,14 +1,14 @@
 'use strict';
 
-var DocumentClient = require('./MproDocumentClient');
-var Header = require('./Header');
+var DocumentClient = require('../clients/MproDocumentClient');
+var Header = require('../shared/Header');
 var Layout = require('substance/ui/Layout');
 var Component = require('substance/ui/Component');
-var TrainingList = require('./TrainingList');
-var Filters = require('./Filters');
-var EditDocument = require('./EditDocument');
+var Feed = require('./Feed');
+var Filters = require('../shared/Filters');
+var ViewDocument = require('./ViewDocument');
 
-function Configurator() {
+function Inbox() {
   Component.apply(this, arguments);
 
   var config = this.context.config;
@@ -17,13 +17,11 @@ function Configurator() {
   });
 
   this.handleActions({
-    'openDocument': this._openDocument,
-    'updateListTitle': this._updateTitle,
-    'updateListRubrics': this._updateRubrics,
+    'openDocument': this._openDocument
   });
 }
 
-Configurator.Prototype = function() {
+Inbox.Prototype = function() {
 
   this.render = function($$) {
     var userSession = this.props.userSession;
@@ -31,7 +29,7 @@ Configurator.Prototype = function() {
 
     el.append($$(Header, {
       actions: {
-        'home': 'Inbox'
+        'configurator': 'Configurator'
       }
     }));
 
@@ -42,13 +40,13 @@ Configurator.Prototype = function() {
     });
 
     layout.append(
-      $$(TrainingList, this.props).ref('list'),
+      $$(Feed, this.props).ref('feed'),
       $$(Filters, this.props).ref('filters'),
-      $$(EditDocument, {
+      $$(ViewDocument, {
         documentId: this.props.route.documentId,
         userSession: userSession,
         mobile: this.props.mobile
-      }).ref('editor')
+      }).ref('viewer')
     );
 
     el.append(layout);
@@ -57,26 +55,28 @@ Configurator.Prototype = function() {
   };
 
   this._openDocument = function(documentId) {
-    var list = this.refs.list;
-    var editor = this.refs.editor;
+    var feed = this.refs.feed;
+    var viewer = this.refs.viewer;
     
-    list.setActiveItem(documentId);
-    editor.extendProps({
+    feed.setActiveItem(documentId);
+    viewer.extendProps({
       documentId: documentId
     });
   };
 
-  this._updateTitle = function(documentId, title) {
-    var list = this.refs.list;
-    list.updateTitle(documentId, title);
+  this._getUserId = function() {
+    var authenticationClient = this.context.authenticationClient;
+    var user = authenticationClient.getUser();
+    return user.userId;
   };
-  
-  this._updateRubrics = function(documentId, rubrics) {
-    var list = this.refs.list;
-    list.updateRubrics(documentId, rubrics);
+
+  this._getUserName = function() {
+    var authenticationClient = this.context.authenticationClient;
+    var user = authenticationClient.getUser();
+    return user.name;
   };
 };
 
-Component.extend(Configurator);
+Component.extend(Inbox);
 
-module.exports = Configurator;
+module.exports = Inbox;
