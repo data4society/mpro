@@ -60,6 +60,11 @@ CREATE TABLE "changes" (
   PRIMARY KEY(document_id, version)
 );
 
+CREATE TABLE "entity_classes" (
+  class_id varchar(40) UNIQUE PRIMARY KEY,
+  name varchar(255)
+);
+
 CREATE TABLE "entities" (
   entity_id varchar(40) UNIQUE PRIMARY KEY,
   name varchar(255),
@@ -69,6 +74,24 @@ CREATE TABLE "entities" (
   entity_class varchar(255),
   data jsonb,
   tsv tsvector
+);
+
+CREATE TABLE "markups" (
+  markup_id varchar(40) UNIQUE PRIMARY KEY,
+  document varchar(40) REFERENCES documents,
+  name varchar(255),
+  data jsonb,
+  entity_classes varchar(40) REFERENCES entity_classes[],
+  type varchar(255)
+);
+
+CREATE TABLE "entity_references" (
+  reference_id varchar(40) UNIQUE PRIMARY KEY,
+  markup varchar(40) REFERENCES markups,
+  entity_class varchar(40) REFERENCES entity_classes,
+  entity varchar(40) REFERENCES entities,
+  start_offset integer,
+  end_offset integer
 );
 
 CREATE TABLE "rubrics" (
