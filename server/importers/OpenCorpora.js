@@ -28,9 +28,9 @@ function ImportEngine(config) {
   this.markupStore = config.markupStore;
   this.referenceStore = config.referenceStore;
 
-  this.import(path.join(__dirname, '../../uploads/devset.zip'));
+  this.import(path.join(__dirname, '../../uploads/errorset.zip'));
   this.validateExtensions = ['txt','spans','objects','coref'];
-  this.availableClasses = ['Person','Location','Org'];
+  this.availableClasses = ['person','location','org'];
 }
 
 ImportEngine.Prototype = function() {
@@ -92,10 +92,13 @@ ImportEngine.Prototype = function() {
           }.bind(this));
         }.bind(this)).then(function() {
           return Promise.map(references, function(reference) {
-            return this.referenceStore.createRefernce(reference);
+            return this.referenceStore.createReference(reference);
           }.bind(this));
-        }.bind(this)).then(function(data, markup) {
-          
+        }.bind(this)).then(function() {
+          console.log('set has been imported');
+          console.log('imported entities:', entities.length);
+          console.log('imported references:', references.length);
+          resolve();
         });
     }.bind(this));
   };
@@ -134,7 +137,7 @@ ImportEngine.Prototype = function() {
 
         var reference = {
           reference_id: index,
-          markup: 'blah', //markup id
+          markup: markup,
           entity_class: object.className,
           entity: object.entity.uuid
         };
@@ -244,7 +247,7 @@ ImportEngine.Prototype = function() {
 
             if(segments.length > 2) {
               item.id = segments[0];
-              item.className = segments[1];
+              item.className = segments[1].toLowerCase();
               item.spans = [];
 
               var n = 2

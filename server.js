@@ -21,6 +21,9 @@ var ChangeStore = require('./server/ChangeStore');
 var SessionStore = require('./server/SessionStore');
 var UserStore = require('./server/UserStore');
 var RubricStore = require('./server/RubricStore');
+var EntityStore = require('./server/EntityStore');
+var MarkupStore = require('./server/MarkupStore');
+var ReferenceStore = require('./server/ReferenceStore');
 
 /*
   Engines
@@ -72,6 +75,10 @@ var sourceStore = new SourceStore({db: db});
 
 var snapshotStore = new SnapshotStore({db: db});
 var rubricStore = new RubricStore({db: db});
+
+var entityStore = new EntityStore({db: db});
+var markupStore = new MarkupStore({db: db});
+var referenceStore = new ReferenceStore({db: db});
 
 /*
   Engines setup
@@ -133,7 +140,11 @@ var mproEngine = new MproEngine({
 });
 
 var importEngine = new ImportEngine({
-  uploadPath: path.join(__dirname, 'uploads')
+  uploadPath: path.join(__dirname, 'uploads'),
+  sourceStore: sourceStore,
+  entityStore: entityStore,
+  markupStore: markupStore,
+  referenceStore: referenceStore
 });
 
 /*
