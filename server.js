@@ -30,6 +30,7 @@ var AuthenticationEngine = require('./server/AuthenticationEngine');
 var SnapshotEngine = require('./server/MproSnapshotEngine');
 var MproEngine = require('./server/MproEngine');
 var SourceEngine = require('./server/SourceEngine');
+var ImportEngine = require('./server/ImportEngine');
 
 /*
   Servers
@@ -129,6 +130,10 @@ var sourceEngine = new SourceEngine({
 
 var mproEngine = new MproEngine({
   rubricStore: rubricStore
+});
+
+var importEngine = new ImportEngine({
+  uploadPath: path.join(__dirname, 'uploads')
 });
 
 /*
