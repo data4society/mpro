@@ -28,6 +28,10 @@ SourceStore.Prototype = function() {
       sourceData.doc_id = uuid();
     }
 
+    if (!sourceData.guid) {
+      sourceData.guid = sourceData.doc_id;
+    }
+
     return this.sourceExists(sourceData.doc_id).bind(this)
       .then(function(exists) {
         if (exists) {

@@ -21,7 +21,7 @@ MproServer.Prototype = function() {
   };
 
   /*
-    Just an example
+    List rubrics with given filters and options
   */
   this._listRubrics = function(req, res, next) {
     var filters = req.query.filters || {};
