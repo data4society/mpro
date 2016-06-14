@@ -8,10 +8,13 @@
     "body-parser": "^1.15.1",
     "config": "^1.20.1",
     "express": "^4.13.4",
+    "extract-zip": "^1.5.0",
     "font-awesome": "^4.6.1",
     "lodash": "^4.12.0",
     "massive": "^2.2.0",
     "moment": "^2.13.0",
+    "mv": "^2.1.1",
+    "rimraf": "^2.5.2",
     "substance": "git://github.com/substance/substance.git#4953e1fcf81febaa33562ad2c9d6e232a5466862",
     "ws": "^1.1.0"
   },
