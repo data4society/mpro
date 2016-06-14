@@ -1,7 +1,10 @@
 -- Reset database:
 
 drop table if exists "changes";
+drop table if exists "references";
 drop table if exists "entities";
+drop table if exists "entity_classes";
+drop table if exists "markups";
 drop table if exists "records";
 drop table if exists "documents";
 drop table if exists "rubrics";
@@ -81,11 +84,11 @@ CREATE TABLE "markups" (
   document varchar(40) REFERENCES documents,
   name varchar(255),
   data jsonb,
-  entity_classes varchar(40) REFERENCES entity_classes[],
+  entity_classes varchar(40)[],
   type varchar(255)
 );
 
-CREATE TABLE "entity_references" (
+CREATE TABLE "references" (
   reference_id varchar(40) UNIQUE PRIMARY KEY,
   markup varchar(40) REFERENCES markups,
   entity_class varchar(40) REFERENCES entity_classes,
