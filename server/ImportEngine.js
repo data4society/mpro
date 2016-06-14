@@ -1,8 +1,8 @@
 "use strict";
 
 var oo = require('substance/util/oo');
-var Err = require('substance/util/Error');
-var Promise = require("bluebird");
+// var Err = require('substance/util/Error');
+// var Promise = require("bluebird");
 
 var OpenCorpora = require('./importers/OpenCorpora');
 
@@ -25,9 +25,9 @@ ImportEngine.Prototype = function() {
   /*
     Import data from Open Corpora
   */
-  this.openCorporaImporter = function(file, classes) {
-    this.openCorpora.import();
-  };
+  // this.openCorporaImporter = function(file, classes) {
+  //   this.openCorpora.import();
+  // };
 
 };
 

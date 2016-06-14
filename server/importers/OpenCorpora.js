@@ -28,9 +28,9 @@ function ImportEngine(config) {
   this.markupStore = config.markupStore;
   this.referenceStore = config.referenceStore;
 
-  this.import(path.join(__dirname, '../../uploads/errorset.zip'));
   this.validateExtensions = ['txt','spans','objects','coref'];
   this.availableClasses = ['person','location','org'];
+  this.import(path.join(__dirname, '../../uploads/devset.zip'), this.availableClasses);
 }
 
 ImportEngine.Prototype = function() {
@@ -40,32 +40,31 @@ ImportEngine.Prototype = function() {
   */
   this.import = function(file, classes) {
     var dir;
-    var sets;
     return this.unzip(file)
       .then(function(res) {
         dir = res.dir;
         return this.collectSets(res.dir, res.files);
       }.bind(this)).then(function(sets) {
         return Promise.map(sets, function(set) {
-          return this.importSet(dir, set);
+          return this.importSet(dir, set, classes);
         }.bind(this));
-      }.bind(this)).then(function(sets) {
+      }.bind(this)).then(function() {
         return this.removeUploadedSet(dir);
       }.bind(this)).catch(function(err) {
         console.error(err);
         return this.removeUploadedSet(dir);
-      }.bind(this))
+      }.bind(this));
   };
 
   /*
     Import OK set
   */
-  this.importSet = function(dir, set) {
+  this.importSet = function(dir, set, classes) {
     var data;
     var entities;
     var references;
-    return new Promise(function(resolve, reject) {
-      return this.prepareSet(dir, set)
+    return new Promise(function(resolve) {
+      return this.prepareSet(dir, set, classes)
         .then(function(preparedData) {
           data = preparedData;
           // insert document source
@@ -77,7 +76,7 @@ ImportEngine.Prototype = function() {
           // insert markup
           return this.markupStore.createMarkup({
             document: source.doc_id,
-            entity_classes: this.availableClasses,
+            entity_classes: classes,
             type: 10
           });
         }.bind(this)).then(function(markup) {
@@ -108,7 +107,7 @@ ImportEngine.Prototype = function() {
     prepared OK set
   */
   this.exctractData = function(data, markup) {
-    return new Promise(function(resolve, reject) {
+    return new Promise(function(resolve) {
       var output = {};
       // Fill entities
       var entities = [];
@@ -188,14 +187,14 @@ ImportEngine.Prototype = function() {
   /*
     Transforms OK files to json objects
   */
-  this.prepareSet = function(dir, set) {
+  this.prepareSet = function(dir, set, classes) {
     var results = {};
     var dirPath = path.join(this.uploadPath, dir, set);
-    return new Promise(function(resolve, reject) {
+    return new Promise(function(resolve) {
       return readFile(dirPath + '/' + set + '.txt', 'utf8')
         .then(function(source) {
           results.source = source;
-          return readFile(dirPath + '/' + set + '.spans', 'utf8')
+          return readFile(dirPath + '/' + set + '.spans', 'utf8');
         }).then(function(spans) {
           
           /*
@@ -226,7 +225,7 @@ ImportEngine.Prototype = function() {
             }
           });
           results.spans = res;
-          return readFile(dirPath + '/' + set + '.objects', 'utf8')
+          return readFile(dirPath + '/' + set + '.objects', 'utf8');
         }).then(function(objects) {
 
           /*
@@ -250,20 +249,20 @@ ImportEngine.Prototype = function() {
               item.className = segments[1].toLowerCase();
               item.spans = [];
 
-              var n = 2
+              var n = 2;
               while (segments[n] != '#') {
                 item.spans.push(segments[n]);
                 n++;
               }
 
-              if(this.availableClasses.indexOf(item.className) > -1) {
+              if(classes.indexOf(item.className) > -1) {
                 var id = uuid();
                 res[id] = item;
               }
             }
           }.bind(this));
           results.objects = res;
-          return readFile(dirPath + '/' + set + '.coref', 'utf8')
+          return readFile(dirPath + '/' + set + '.coref', 'utf8');
         }.bind(this)).then(function(coref) {
 
           /*
@@ -279,7 +278,7 @@ ImportEngine.Prototype = function() {
           var corefItems = coref.split('\n\n');
 
           each(corefItems, function(corefItem) {
-            var item = {}
+            var item = {};
             var lines = corefItem.split('\n');
             var ids = lines[0].split(' ');
             
@@ -396,7 +395,7 @@ ImportEngine.Prototype = function() {
 
           resolve({dir: dirName, files: fileNames});
         //});
-      })
+      });
     }.bind(this));
   };
 
