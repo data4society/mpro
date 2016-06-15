@@ -14,6 +14,7 @@ function ImportEngine(config) {
   this.uploadPath = config.uploadPath;
   this.sourceStore = config.sourceStore;
   this.entityStore = config.entityStore;
+  this.classStore = config.classStore;
   this.markupStore = config.markupStore;
   this.referenceStore = config.referenceStore;
 
@@ -25,9 +26,9 @@ ImportEngine.Prototype = function() {
   /*
     Import data from Open Corpora
   */
-  // this.openCorporaImporter = function(file, classes) {
-  //   this.openCorpora.import();
-  // };
+  this.openCorporaImporter = function(file, classes) {
+    return this.openCorpora.import(file, classes);
+  };
 
 };
 

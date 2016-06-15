@@ -19,7 +19,7 @@ function Configurator() {
   this.handleActions({
     'openDocument': this._openDocument,
     'updateListTitle': this._updateTitle,
-    'updateListRubrics': this._updateRubrics,
+    'updateListRubrics': this._updateRubrics
   });
 }
 
@@ -31,7 +31,8 @@ Configurator.Prototype = function() {
 
     el.append($$(Header, {
       actions: {
-        'home': 'Inbox'
+        'home': 'Inbox',
+        'import': 'Import'
       }
     }));
 

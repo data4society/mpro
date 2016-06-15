@@ -30,7 +30,7 @@ function ImportEngine(config) {
 
   this.validateExtensions = ['txt','spans','objects','coref'];
   this.availableClasses = ['person','location','org'];
-  this.import(path.join(__dirname, '../../uploads/devset.zip'), this.availableClasses);
+  //this.import(path.join(__dirname, '../../uploads/devset.zip'), this.availableClasses);
 }
 
 ImportEngine.Prototype = function() {
@@ -39,6 +39,7 @@ ImportEngine.Prototype = function() {
     Run import
   */
   this.import = function(file, classes) {
+    file = path.join(__dirname, '../../uploads', file);
     var dir;
     return this.unzip(file)
       .then(function(res) {

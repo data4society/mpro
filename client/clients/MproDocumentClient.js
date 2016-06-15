@@ -20,10 +20,19 @@ MproDocumentClient.Prototype = function() {
   };
 
   this.listRubrics = function(filters, options, cb) {
-    // TODO: send filters and options to server
     var filtersRequest = encodeURIComponent(JSON.stringify(filters));
     var optionsRequest = encodeURIComponent(JSON.stringify(options));
     this._request('GET', '/api/rubrics?filters=' + filtersRequest + '&options=' + optionsRequest, null, cb);
+  };
+
+  this.listClasses = function(filters, options, cb) {
+    var filtersRequest = encodeURIComponent(JSON.stringify(filters));
+    var optionsRequest = encodeURIComponent(JSON.stringify(options));
+    this._request('GET', '/api/classes?filters=' + filtersRequest + '&options=' + optionsRequest, null, cb);
+  };
+
+  this.importData = function(file, classes, importer, cb) {
+    this._request('GET', '/api/import?file=' + file + '&classes=' + classes + '&importer=' + importer, null, cb);
   };
 
 };

@@ -5,9 +5,11 @@ var inBrowser = require('substance/util/inBrowser');
 var DefaultDOMElement = require('substance/ui/DefaultDOMElement');
 var Component = require('substance/ui/Component');
 var DocumentClient = require('./clients/MproDocumentClient');
+var FileClient = require('./clients/FileClient');
 var AuthenticationClient = require('./clients/AuthenticationClient');
 var InboxSection = require('./mpro/InboxSection');
 var ConfiguratorSection = require('./configurator/ConfiguratorSection');
+var ImportSection = require('./configurator/ImportSection');
 var EnterName = require('./shared/EnterName');
 var Welcome = require('./shared/Welcome');
 var SettingsSection = require('./shared/SettingsSection');
@@ -47,6 +49,10 @@ function MproApp() {
     httpUrl: config.documentServerUrl || 'http://'+config.host+':'+config.port+'/api/documents/'
   });
 
+  this.fileClient = new FileClient({
+    httpUrl: config.fileServerUrl || 'http://'+config.host+':'+config.port+'/api/files/'
+  });
+
   this.handleActions({
     'navigate': this.navigate,
     'newDocument': this._newDocument,
@@ -54,6 +60,7 @@ function MproApp() {
     'home': this._home,
     'settings': this._settings,
     'configurator': this._configurator,
+    'import': this._import,
     'deleteDocument': this._deleteDocument,
     'logout': this._logout,
     'userSessionUpdated': this._userSessionUpdated
@@ -199,6 +206,7 @@ MproApp.Prototype = function() {
     return {
       authenticationClient: this.authenticationClient,
       documentClient: this.documentClient,
+      fileClient: this.fileClient,
       config: this.config,
       urlHelper: this.router
     };
@@ -239,6 +247,9 @@ MproApp.Prototype = function() {
       case 'configurator':
         el.append($$(ConfiguratorSection, this.state).ref('configurator'));
         break;
+      case 'import':
+        el.append($$(ImportSection, this.state).ref('importer'));
+        break;
       default: // !section || section === index
         el.append($$(InboxSection, this.state).ref('inbox'));
         break;
@@ -270,6 +281,12 @@ MproApp.Prototype = function() {
   this._configurator = function() {
     this.navigate({
       section: 'configurator'
+    });
+  };
+
+  this._import = function() {
+    this.navigate({
+      section: 'import'
     });
   };
 
