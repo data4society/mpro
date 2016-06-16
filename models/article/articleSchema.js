@@ -21,6 +21,8 @@ Meta.static.defineSchema({
   entities: { type: ['id'], default: [] },
   cover: { type: 'string', default: ''},
   source: { type: 'string', default: ''},
+  published: { type: 'string', default: '' },
+  created: { type: 'string', default: '' },
   abstract: { type: 'string', default: ''},
   publisher: { type: 'string', default: ''}
 });
