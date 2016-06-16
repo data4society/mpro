@@ -71,7 +71,9 @@ ImportEngine.Prototype = function() {
           // insert document source
           return this.sourceStore.createSource({
             source: data.source,
-            stripped: data.source
+            stripped: data.source,
+            status: 1100,
+            type: 'oc'
           });
         }.bind(this)).then(function(source) {
           // insert markup

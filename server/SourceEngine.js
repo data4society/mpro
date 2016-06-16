@@ -84,7 +84,7 @@ SourceEngine.Prototype = function() {
   */
   this.markDone = function(sourceId) {
     var data = {
-      status: 11
+      status: 1001
     };
 
     return this.sourceStore.updateSource(sourceId, data);
@@ -100,7 +100,7 @@ SourceEngine.Prototype = function() {
   */
   this.markError = function(sourceId) {
     var data = {
-      status: 12
+      status: 1002
     };
 
     return this.sourceStore.updateSource(sourceId, data);
@@ -114,7 +114,7 @@ SourceEngine.Prototype = function() {
   */
   this.getConversionData = function() {
     return new Promise(function(resolve, reject) {
-      this.sourceStore.listSources({'status': 10}, {columns: ['doc_id'], order: "created asc"}).then(function(results) {
+      this.sourceStore.listSources({'status': 1000}, {columns: ['doc_id'], order: "created asc"}).then(function(results) {
         var sources = map(results.records, function(rec) {return rec.doc_id; });
         resolve(sources);
       }).catch(function(err) {
