@@ -1,5 +1,6 @@
 var ChangeStore = require('./server/ChangeStore');
 var DocumentStore = require('./server/DocumentStore');
+var ClassStore = require('./server/ClassStore');
 var EntityStore = require('./server/EntityStore');
 var RubricStore = require('./server/RubricStore');
 var SessionStore = require('./server/SessionStore');
@@ -16,6 +17,9 @@ db.reset() // Clear the database, set up the schema
   }).then(function() {
     var sessionStore = new SessionStore({ db: db });
     return sessionStore.seed();
+  }).then(function() {
+    var classStore = new ClassStore({ db: db });
+    return classStore.seed();
   }).then(function() {
     var entityStore = new EntityStore({ db: db });
     return entityStore.seed();

@@ -1,7 +1,10 @@
 -- Reset database:
 
 drop table if exists "changes";
+drop table if exists "references";
 drop table if exists "entities";
+drop table if exists "entity_classes";
+drop table if exists "markups";
 drop table if exists "records";
 drop table if exists "documents";
 drop table if exists "rubrics";
@@ -60,6 +63,11 @@ CREATE TABLE "changes" (
   PRIMARY KEY(document_id, version)
 );
 
+CREATE TABLE "entity_classes" (
+  class_id varchar(40) UNIQUE PRIMARY KEY,
+  name varchar(255)
+);
+
 CREATE TABLE "entities" (
   entity_id varchar(40) UNIQUE PRIMARY KEY,
   name varchar(255),
@@ -69,6 +77,24 @@ CREATE TABLE "entities" (
   entity_class varchar(255),
   data jsonb,
   tsv tsvector
+);
+
+CREATE TABLE "markups" (
+  markup_id varchar(40) UNIQUE PRIMARY KEY,
+  document varchar(40) REFERENCES documents,
+  name varchar(255),
+  data jsonb,
+  entity_classes varchar(40)[],
+  type varchar(255)
+);
+
+CREATE TABLE "references" (
+  reference_id varchar(40) UNIQUE PRIMARY KEY,
+  markup varchar(40) REFERENCES markups,
+  entity_class varchar(40) REFERENCES entity_classes,
+  entity varchar(40) REFERENCES entities,
+  start_offset integer,
+  end_offset integer
 );
 
 CREATE TABLE "rubrics" (

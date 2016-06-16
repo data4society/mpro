@@ -25,3 +25,6 @@ node_modules
 # Production config
 config/production.json
 ecosystem.json
+
+# Uploaded files
+uploads/*

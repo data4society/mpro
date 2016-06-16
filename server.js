@@ -21,6 +21,11 @@ var ChangeStore = require('./server/ChangeStore');
 var SessionStore = require('./server/SessionStore');
 var UserStore = require('./server/UserStore');
 var RubricStore = require('./server/RubricStore');
+var ClassStore = require('./server/ClassStore');
+var EntityStore = require('./server/EntityStore');
+var MarkupStore = require('./server/MarkupStore');
+var ReferenceStore = require('./server/ReferenceStore');
+var FileStore = require('./server/FileStore');
 
 /*
   Engines
@@ -30,6 +35,7 @@ var AuthenticationEngine = require('./server/AuthenticationEngine');
 var SnapshotEngine = require('./server/MproSnapshotEngine');
 var MproEngine = require('./server/MproEngine');
 var SourceEngine = require('./server/SourceEngine');
+var ImportEngine = require('./server/ImportEngine');
 
 /*
   Servers
@@ -37,6 +43,7 @@ var SourceEngine = require('./server/SourceEngine');
 var CollabServer = require('substance/collab/CollabServer');
 var AuthenticationServer = require('./server/AuthenticationServer');
 var DocumentServer = require('./server/MproDocumentServer');
+var FileServer = require('./server/FileServer');
 var MproServer = require('./server/MproServer');
 
 /*
@@ -68,9 +75,15 @@ var changeStore = new ChangeStore({db: db});
 var documentStore = new DocumentStore({db: db});
 var sourceStore = new SourceStore({db: db});
 
-
 var snapshotStore = new SnapshotStore({db: db});
 var rubricStore = new RubricStore({db: db});
+
+var entityStore = new EntityStore({db: db});
+var classStore = new ClassStore({db: db});
+var markupStore = new MarkupStore({db: db});
+var referenceStore = new ReferenceStore({db: db});
+
+var fileStore = new FileStore({destination: './uploads'});
 
 /*
   Engines setup
@@ -128,7 +141,16 @@ var sourceEngine = new SourceEngine({
 });
 
 var mproEngine = new MproEngine({
-  rubricStore: rubricStore
+  rubricStore: rubricStore,
+  classStore: classStore
+});
+
+var importEngine = new ImportEngine({
+  uploadPath: path.join(__dirname, 'uploads'),
+  sourceStore: sourceStore,
+  entityStore: entityStore,
+  markupStore: markupStore,
+  referenceStore: referenceStore
 });
 
 /*
@@ -253,9 +275,18 @@ var authenticationServer = new AuthenticationServer({
 
 authenticationServer.bind(app);
 
+// File Server
+var fileServer = new FileServer({
+  store: fileStore,
+  path: '/api/files'
+});
+
+fileServer.bind(app);
+
 // MPro Server
 var mproServer = new MproServer({
   mproEngine: mproEngine,
+  importEngine: importEngine,
   path: '/api'
 });
 

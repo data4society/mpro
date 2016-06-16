@@ -10,6 +10,7 @@ var Promise = require("bluebird");
 function MproEngine(config) {
   this.config = config;
   this.rubricStore = config.rubricStore;
+  this.classStore = config.classStore;
 }
 
 MproEngine.Prototype = function() {
@@ -27,6 +28,25 @@ MproEngine.Prototype = function() {
         resolve(results);
       }).catch(function(err) {
         reject(new Err('RubricsListError', {
+          cause: err
+        }));
+      });
+    }.bind(this));
+  };
+
+  /*
+    List entity classes with given filters and options
+
+    @param {Object} filters filters
+    @param {Object} options options
+    @returns {Promise}
+  */
+  this.listClasses = function(filters, options) {
+    return new Promise(function(resolve, reject) {
+      this.classStore.listClasses(filters, options).then(function(results) {
+        resolve(results);
+      }).catch(function(err) {
+        reject(new Err('ImportEngine.listEntityClassesError', {
           cause: err
         }));
       });
