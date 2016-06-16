@@ -179,13 +179,11 @@ SourceEngine.Prototype = function() {
             message: 'Unknowned type of source: ' + source.type
           });
         }
-        
         var importer = new Importer();
         var doc = importer.importDocument(recordBody, source);
         var data = converter.exportDocument(doc);
         var schema = doc.schema;
         var meta = doc.get('meta');
-
         var document = {
           title: meta.title,
           guid: source.guid,

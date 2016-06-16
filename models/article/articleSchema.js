@@ -17,7 +17,12 @@ Meta.static.name = 'meta';
 
 Meta.static.defineSchema({
   title: { type: 'string', default: 'Untitled article'},
-  rubrics: { type: ['id'], default: [] }
+  rubrics: { type: ['id'], default: [] },
+  entities: { type: ['id'], default: [] },
+  cover: { type: 'string', default: ''},
+  source: { type: 'string', default: ''},
+  abstract: { type: 'string', default: ''},
+  publisher: { type: 'string', default: ''}
 });
 
 /**
