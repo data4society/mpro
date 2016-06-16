@@ -18,7 +18,10 @@ function FileStore(config) {
     }
   });
   this.uploader = multer({
-    storage: this.storage
+    storage: this.storage,
+    limits: {
+      fieldSize: '10MB'
+    }
   });
 }
 
