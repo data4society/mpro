@@ -24,7 +24,7 @@ Meta.static.defineSchema({
   abstract: { type: 'string', default: '' },
   post_type: { type: 'string', default: '' },
   author: { type: 'object', default: {} },
-  attachments: { type: ['object'], default: [] },
+  attachments: { type: ['object'], default: [] }
 });
 
 /**

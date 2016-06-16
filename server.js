@@ -57,7 +57,7 @@ var DocumentChange = require('substance/model/DocumentChange');
   Importers
 */
 var vkImporter = require('./models/vk/vkImporter');
-
+var articleImporter = require('./models/article/articleImporter');
 var Database = require('./server/Database');
 
 
@@ -136,7 +136,8 @@ var sourceEngine = new SourceEngine({
   documentStore: documentStore,
   sourceStore: sourceStore,
   importers: {
-    'vk': vkImporter
+    'vk': vkImporter,
+    'article': articleImporter
   }
 });
 

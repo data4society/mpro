@@ -10,7 +10,7 @@ module.exports = createDocumentFactory(Vk, function(tx) {
     id: 'meta',
     type: 'meta',
     title: '',
-    categories: []
+    rubrics: []
   });
 
   tx.create({
