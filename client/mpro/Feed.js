@@ -150,7 +150,7 @@ Feed.Prototype = function() {
     //var userId = this._getUserId();
 
     this._loadRubrics();
-    documentClient.listDocuments({'training': false}, {order: "created asc"}, function(err, documents) {
+    documentClient.listDocuments({'training': false}, {order: "created desc"}, function(err, documents) {
       if (err) {
         this.setState({
           error: new Err('Feed.LoadingError', {
