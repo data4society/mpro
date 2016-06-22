@@ -1,6 +1,5 @@
 'use strict';
 
-var Err = require('substance/util/Error');
 var Button = require('substance/ui/Button');
 var Feed = require('../mpro/Feed');
 var ListItem = require('./ListItem');
@@ -10,6 +9,18 @@ function TrainingList() {
 }
 
 TrainingList.Prototype = function() {
+
+  this.getInitialState = function() {
+    return {
+      filters: {'training': true},
+      perPage: 10,
+      page: 1,
+      order: 'created',
+      direction: 'desc',
+      documentItems: [],
+      totalItems: 0
+    };
+  };
 
   this.renderIntro = function($$) {
     var totalItems = this.state.totalItems;
@@ -71,33 +82,6 @@ TrainingList.Prototype = function() {
   this.updateUrl = function(documentId) {
     var urlHelper = this.context.urlHelper;
     urlHelper.writeRoute({section: 'configurator', documentId: documentId});
-  };
-
-  /*
-    Loads documents
-  */
-  this._loadDocuments = function() {
-    var self = this;
-    var documentClient = this.documentClient;
-    //var userId = this._getUserId();
-    this._loadRubrics();
-    documentClient.listDocuments({'training': true}, {}, function(err, documents) {
-      if (err) {
-        this.setState({
-          error: new Err('TrainingList.LoadingError', {
-            message: 'Documents could not be loaded.',
-            cause: err
-          })
-        });
-        console.error('ERROR', err);
-        return;
-      }
-
-      self.extendState({
-        documentItems: documents.records,
-        totalItems: documents.total
-      });
-    }.bind(this));
   };
 };
 

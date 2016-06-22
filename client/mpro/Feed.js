@@ -1,10 +1,12 @@
 'use strict';
 
+var concat = require('lodash/concat');
 var DocumentClient = require('../clients/MproDocumentClient');
 var Err = require('substance/util/Error');
 var Component = require('substance/ui/Component');
 var Rubric = require('../../models/rubric/Rubric');
 var FeedItem = require('./FeedItem');
+var Pager = require('../shared/Pager');
 
 function Feed() {
   Component.apply(this, arguments);
@@ -15,16 +17,33 @@ function Feed() {
   });
 
   this.activeItem = this.props.route.documentId;
+
+  this.handleActions({
+    'loadMore': this._loadMore
+  });
 }
 
 Feed.Prototype = function() {
 
   this.didMount = function() {
+    this._loadRubrics();
     this._loadDocuments();
   };
 
   this.willReceiveProps = function() {
-    this._loadDocuments();
+    //this._loadDocuments();
+  };
+
+  this.getInitialState = function() {
+    return {
+      filters: {'training': false},
+      perPage: 10,
+      page: 1,
+      order: 'created',
+      direction: 'desc',
+      documentItems: [],
+      totalItems: 0
+    };
   };
 
   this.render = function($$) {
@@ -38,7 +57,14 @@ Feed.Prototype = function() {
     el.append(this.renderIntro($$));
 
     if (documentItems.length > 0) {
-      el.append(this.renderFull($$));
+      el.append(
+        this.renderFull($$),
+        $$(Pager, {
+          page: this.state.page,
+          perPage: this.state.perPage,
+          total: this.state.totalItems
+        })
+      );
     } else {
       el.append(this.renderEmpty($$));
     }
@@ -141,32 +167,52 @@ Feed.Prototype = function() {
     return user.name;
   };
 
+  this._loadMore = function(page) {
+    this.extendState({
+      page: page
+    });
+    this._loadDocuments();
+  };
+
   /*
     Loads documents
   */
   this._loadDocuments = function() {
-    var self = this;
     var documentClient = this.documentClient;
-    //var userId = this._getUserId();
+    var filters = this.state.filters;
+    var perPage = this.state.perPage;
+    var page = this.state.page;
+    var order = this.state.order;
+    var direction = this.state.direction;
+    var items = [];
 
-    this._loadRubrics();
-    documentClient.listDocuments({'training': false}, {order: "created desc"}, function(err, documents) {
-      if (err) {
-        this.setState({
-          error: new Err('Feed.LoadingError', {
-            message: 'Documents could not be loaded.',
-            cause: err
-          })
+    documentClient.listDocuments(
+      filters,
+      { 
+        limit: perPage, 
+        offset: perPage * (page - 1),
+        order: order + ' ' + direction
+      }, 
+      function(err, documents) {
+        if (err) {
+          this.setState({
+            error: new Err('Feed.LoadingError', {
+              message: 'Documents could not be loaded.',
+              cause: err
+            })
+          });
+          console.error('ERROR', err);
+          return;
+        }
+
+        items = concat(this.state.documentItems, documents.records);
+
+        this.extendState({
+          documentItems: items,
+          totalItems: documents.total
         });
-        console.error('ERROR', err);
-        return;
-      }
-
-      self.extendState({
-        documentItems: documents.records,
-        totalItems: documents.total
-      });
-    }.bind(this));
+      }.bind(this)
+    );
   };
 
   this._loadRubrics = function() {
