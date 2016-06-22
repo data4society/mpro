@@ -48,7 +48,7 @@ Rubric.prototype.getNestedTree = function() {
   return getChildren("root");
 };
 
-Rubric.prototype.getAllReferencedrubrics = function() {
+Rubric.prototype.getAllReferencedRubrics = function() {
   var doc = this.doc;
   var rubricRefs = doc.rubricReferencesIndex.get();
   var rubrics = [];
@@ -73,13 +73,13 @@ Rubric.prototype.getTree = function() {
   return this.tree;
 };
 
-Rubric.prototype.getReferencedrubricsTree = function() {
-  var referencedrubrics = this.getAllReferencedrubricsWithParents();
-  var filteredModel = new Rubric(this.doc, referencedrubrics);
+Rubric.prototype.getReferencedRubricsTree = function() {
+  var referencedrubrics = this.getAllReferencedRubricsWithParents();
+  var filteredModel = new Rubric(this.doc, referencedRubrics);
   return filteredModel.tree;
 };
 
-Rubric.prototype.getFullPathForrubric = function(rubricId) {
+Rubric.prototype.getFullPathForRubric = function(rubricId) {
   var tree = this.tree;
   var res = [];
 
@@ -95,8 +95,8 @@ Rubric.prototype.getFullPathForrubric = function(rubricId) {
 };
   
 // Used in state_handlers.js
-Rubric.prototype.getReferencesForrubric = function(rubricId) {
-  var tree = this.getReferencedrubricsTree();
+Rubric.prototype.getReferencesForRubric = function(rubricId) {
+  var tree = this.getReferencedRubricsTree();
   var relevantrubrics = tree.getAllChildren(rubricId).concat(rubricId);
   var doc = this.doc;
   var references = [];
@@ -108,8 +108,8 @@ Rubric.prototype.getReferencesForrubric = function(rubricId) {
   return uniq(references);
 };
 
-Rubric.prototype.getAllReferencedrubricsWithParents = function() {
-  var referencedrubrics = this.getAllReferencedrubrics();
+Rubric.prototype.getAllReferencedRubricsWithParents = function() {
+  var referencedrubrics = this.getAllReferencedRubrics();
   var rubrics = clone(referencedrubrics);
   var tree = this.tree;
   

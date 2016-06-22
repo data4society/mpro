@@ -42,7 +42,7 @@ Tree.Prototype = function() {
   // Get parent node for a given nodeId
   this.getParent = function(nodeId) {
     var node = this.nodes[nodeId];
-    return this.nodes[node.parent];
+    return this.nodes[node.parent_id];
   };
 
   // Collect all parent ids of a given node

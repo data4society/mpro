@@ -22,19 +22,31 @@
       float: right;
       cursor: pointer;
     }
-
-
   }
 
   .se-tree-node {
+    $nodePaddingLeft: 15px;
+
     cursor: pointer;
 
-    .name {
-      padding-left: 10px;
+    &.hide-expand {
+      padding-left: $nodePaddingLeft + 16px;
+    }
+
+    .selection {
+      padding: 2px 10px 2px 0px;
+    }
+
+    .expansion {
+      padding: 2px 10px 2px 0px;
     }
 
     .se-tree-node {
-      padding-left: 15px;
+      padding-left: $nodePaddingLeft;
+
+      &.hide-expand {
+        padding-left: $nodePaddingLeft + 16px;
+      }
     }
   }
 }

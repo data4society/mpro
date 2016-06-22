@@ -29,8 +29,8 @@ RubricEditorPrompt.Prototype = function() {
       return $$(TreeItem, {
         node: node,
         tree: tree,
-        selected: node.selected
-      });
+        selected: node.selected || false,
+      }).ref(node.rubric_id);
     }.bind(this));
     
     el.append(childEls);
