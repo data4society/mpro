@@ -12,7 +12,9 @@ Filters.Prototype = function() {
   this.render = function($$) {
     var el = $$('div').addClass('sc-filters');
 
-    el.append($$(Facets, this.props));
+    el.append(
+      $$(Facets, this.props)
+    );
 
     return el;
   };

@@ -12,7 +12,20 @@ function RubricEditorPrompt() {
 RubricEditorPrompt.Prototype = function() {
 
   this.render = function($$) {
+    var doc = this.context.controller.getDocument();
+    var rubricsMeta = doc.get(['meta','rubrics']);
     var tree = this.props.tree;
+
+    if(tree) {
+      each(tree.nodes, function(node){
+        node.selected = false;
+      });
+      each(rubricsMeta, function(rubric) {
+        var item = tree.get(rubric);
+        tree.nodes[rubric].selected = true;
+      }.bind(this));
+    }
+
     var el = $$('div').addClass('se-prompt');
     
     el.append(

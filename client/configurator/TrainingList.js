@@ -23,6 +23,15 @@ TrainingList.Prototype = function() {
     };
   };
 
+  this.willReceiveProps = function(props) {
+    this.extendState({
+      pagination: false,
+      page: 1
+    });
+    this._loadDocuments();
+    if (props.route.documentId) this.setActiveItem(props.route.documentId, true);
+  };
+
   this.renderIntro = function($$) {
     var totalItems = this.state.totalItems;
     var el = $$('div').addClass('se-intro');

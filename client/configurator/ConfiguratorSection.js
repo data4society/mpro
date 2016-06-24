@@ -84,6 +84,8 @@ Configurator.Prototype = function() {
   this._updateRubrics = function(documentId, rubrics) {
     var list = this.refs.list;
     list.updateRubrics(documentId, rubrics);
+    var facets = this.refs.filters.children[0];
+    facets._loadFacets();
   };
 
   this._filterFacets = function(facets) {

@@ -1,6 +1,7 @@
 'use strict';
 
 var concat = require('lodash/concat');
+var isEmpty = require('lodash/isEmpty');
 var DocumentClient = require('../clients/MproDocumentClient');
 var Err = require('substance/util/Error');
 var Component = require('substance/ui/Component');
@@ -119,15 +120,17 @@ Feed.Prototype = function() {
     return el;
   };
 
-  this.setActiveItem = function(documentId) {
+  this.setActiveItem = function(documentId, silent) {
     var currentActive = this.activeItem;
 
-    this.updateUrl(documentId);
+    if(!silent) this.updateUrl(documentId);
 
-    if(currentActive) {
-      this.refs[currentActive].extendProps({
-        'active': false
-      });
+    if(currentActive && !isEmpty(this.refs)) {
+      if(this.refs[currentActive]) {
+        this.refs[currentActive].extendProps({
+          'active': false
+        });
+      }
     }
 
     if(this.refs[documentId]) {
