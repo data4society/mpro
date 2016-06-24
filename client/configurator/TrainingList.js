@@ -15,7 +15,7 @@ TrainingList.Prototype = function() {
       filters: {'training': true},
       perPage: 10,
       page: 1,
-      order: 'created',
+      order: 'edited',
       direction: 'desc',
       documentItems: [],
       pagination: false,
