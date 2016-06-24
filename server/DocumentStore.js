@@ -54,6 +54,7 @@ DocumentStore.Prototype = function() {
       rubrics: props.rubrics || [],
       published: props.published,
       created: props.created || new Date(),
+      edited: props.edited || new Date(),
       source: props.source,
       meta: props.meta || {title: props.title, rubrics: []},
       content: props.content,
@@ -135,10 +136,12 @@ DocumentStore.Prototype = function() {
     if(props.info) {
       // TODO: update here all meta properties from document 
       // which could possibly updated
-      if(props.info.title) props.title = props.info.title;
+      if(!isUndefined(props.info.title)) props.title = props.info.title;
       if(props.info.meta) props.meta = props.info.meta;
       if(props.info.rubrics) props.rubrics = props.info.rubrics;
     }
+
+    if(isUndefined(props.edited)) props.edited = new Date();
 
     this.documentExists(documentId, function(err, exists) {
       if (err) {
