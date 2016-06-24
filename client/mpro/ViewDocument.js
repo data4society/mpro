@@ -46,7 +46,7 @@ ViewDocument.Prototype = function() {
           mobile: this.props.mobile,
           documentInfo: this.state.documentInfo,
           documentSession: this.state.session,
-          rubrics: this.state.rubrics
+          rubrics: this.props.rubrics
         }).ref('documentViewer')
       );
     }

@@ -20,6 +20,7 @@ MproServer.Prototype = function() {
   this.bind = function(app) {
     app.get(this.path + '/rubrics', this._listRubrics.bind(this));
     app.get(this.path + '/classes', this._listClasses.bind(this));
+    app.get(this.path + '/facets', this._listFacets.bind(this));
     app.get(this.path + '/import', this._import.bind(this));
   };
 
@@ -51,6 +52,22 @@ MproServer.Prototype = function() {
     if(!isEmpty(options)) options = JSON.parse(options);
     
     this.engine.listClasses(filters, options).then(function(result) {
+      res.json(result);
+    }).catch(function(err) {
+      return next(err);
+    });
+  };
+
+  /*
+    List facets with given rubrics
+  */
+  this._listFacets = function(req, res, next) {
+    var facets = req.query.facets || {};
+    var training = req.query.training || false;
+
+    if(!isEmpty(facets)) facets = JSON.parse(facets);
+    
+    this.engine.listFacets(facets, training).then(function(result) {
       res.json(result);
     }).catch(function(err) {
       return next(err);

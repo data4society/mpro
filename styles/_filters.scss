@@ -3,8 +3,12 @@
   top: 40px;
   bottom: 0px;
   left: 0px;
-  background: rgba(115, 128, 144, 0.8);
+  background: #282b2f;
   width: 220px;
-  color: #222;
   z-index: 999;
+  overflow: auto;
+
+  &::-webkit-scrollbar { 
+    width: 0 !important 
+  }
 }

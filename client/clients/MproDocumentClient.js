@@ -31,6 +31,11 @@ MproDocumentClient.Prototype = function() {
     this._request('GET', '/api/classes?filters=' + filtersRequest + '&options=' + optionsRequest, null, cb);
   };
 
+  this.listFacets = function(facets, training, cb) {
+    var facetsRequest = encodeURIComponent(JSON.stringify(facets));
+    this._request('GET', '/api/facets?facets=' + facetsRequest + '&training=' + training, null, cb);
+  };
+
   this.importData = function(file, classes, importer, cb) {
     this._request('GET', '/api/import?file=' + file + '&classes=' + classes + '&importer=' + importer, null, cb);
   };

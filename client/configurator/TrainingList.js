@@ -18,6 +18,7 @@ TrainingList.Prototype = function() {
       order: 'created',
       direction: 'desc',
       documentItems: [],
+      pagination: false,
       totalItems: 0
     };
   };
@@ -51,7 +52,7 @@ TrainingList.Prototype = function() {
           $$(ListItem, {
             document: documentItem,
             active: active,
-            rubrics: this.state.rubrics
+            rubrics: this.props.rubrics
           }).ref(documentItem.documentId)
         );
       }.bind(this));

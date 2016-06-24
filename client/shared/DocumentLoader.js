@@ -5,8 +5,6 @@ var JSONConverter = require('substance/model/JSONConverter');
 var CollabClient = require('substance/collab/CollabClient');
 var WebSocketConnection = require('substance/collab/WebSocketConnection');
 var Component = require('substance/ui/Component');
-var Err = require('substance/util/Error');
-var Rubric = require('../../models/rubric/Rubric');
 var Article = require('../../models/article/Article');
 var Vk = require('../../models/vk/Vk');
 var DocumentInfo = require('./DocumentInfo');
@@ -122,7 +120,6 @@ RealtimeDocument.Prototype = function() {
       }
 
       doc = converter.importDocument(doc, docRecord.data);
-      this._loadRubrics();
       var session = new CollabSession(doc, {
         documentId: documentId,
         version: docRecord.version,
@@ -141,29 +138,6 @@ RealtimeDocument.Prototype = function() {
         documentInfo: new DocumentInfo(docRecord),
         session: session
       });
-    }.bind(this));
-  };
-
-  this._loadRubrics = function() {
-    var documentClient = this.context.documentClient;
-
-    documentClient.listRubrics({}, {}, function(err, result) {
-      if (err) {
-        this.setState({
-          error: new Err('Feed.LoadingError', {
-            message: 'Rubrics could not be loaded.',
-            cause: err
-          })
-        });
-        console.error('ERROR', err);
-        return;
-      }
-
-      var rubrics = new Rubric(false, result.records);
-      this.extendState({
-        rubrics: rubrics.tree
-      });
-      return rubrics;
     }.bind(this));
   };
 };

@@ -4,7 +4,6 @@ var concat = require('lodash/concat');
 var DocumentClient = require('../clients/MproDocumentClient');
 var Err = require('substance/util/Error');
 var Component = require('substance/ui/Component');
-var Rubric = require('../../models/rubric/Rubric');
 var FeedItem = require('./FeedItem');
 var Pager = require('../shared/Pager');
 
@@ -26,7 +25,6 @@ function Feed() {
 Feed.Prototype = function() {
 
   this.didMount = function() {
-    this._loadRubrics();
     this._loadDocuments();
   };
 
@@ -42,6 +40,7 @@ Feed.Prototype = function() {
       order: 'created',
       direction: 'desc',
       documentItems: [],
+      pagination: false,
       totalItems: 0
     };
   };
@@ -112,7 +111,7 @@ Feed.Prototype = function() {
           $$(FeedItem, {
             document: documentItem,
             active: active,
-            rubrics: this.state.rubrics
+            rubrics: this.props.rubrics
           }).ref(documentItem.documentId)
         );
       }.bind(this));
@@ -169,7 +168,17 @@ Feed.Prototype = function() {
 
   this._loadMore = function(page) {
     this.extendState({
-      page: page
+      page: page,
+      pagination: true
+    });
+    this._loadDocuments();
+  };
+
+  this._applyFacets = function(facets) {
+    var filters = this.state.filters;
+    filters["rubrics @>"] = facets;
+    this.extendState({
+      filters: filters
     });
     this._loadDocuments();
   };
@@ -184,6 +193,7 @@ Feed.Prototype = function() {
     var page = this.state.page;
     var order = this.state.order;
     var direction = this.state.direction;
+    var pagination = this.state.pagination;
     var items = [];
 
     documentClient.listDocuments(
@@ -205,7 +215,11 @@ Feed.Prototype = function() {
           return;
         }
 
-        items = concat(this.state.documentItems, documents.records);
+        if(pagination) {
+          items = concat(this.state.documentItems, documents.records);
+        } else {
+          items = documents.records;
+        }
 
         this.extendState({
           documentItems: items,
@@ -215,27 +229,6 @@ Feed.Prototype = function() {
     );
   };
 
-  this._loadRubrics = function() {
-    var documentClient = this.context.documentClient;
-
-    documentClient.listRubrics({}, {}, function(err, result) {
-      if (err) {
-        this.setState({
-          error: new Err('Feed.LoadingError', {
-            message: 'Rubrics could not be loaded.',
-            cause: err
-          })
-        });
-        console.error('ERROR', err);
-        return;
-      }
-
-      var rubrics = new Rubric(false, result.records);
-      this.extendState({
-        rubrics: rubrics.tree
-      });
-    }.bind(this));
-  };
 };
 
 Component.extend(Feed);

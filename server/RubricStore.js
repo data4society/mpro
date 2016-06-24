@@ -219,6 +219,26 @@ RubricStore.Prototype = function() {
   };
 
   /*
+    List facets
+
+    @param {Array} rubrics rubrics
+    @returns {Promise}
+  */
+  this.listFacets = function(rubrics, training) {
+    return new Promise(function(resolve, reject) {
+      this.db.facets([rubrics, training], function(err, facets) {
+        if (err) {
+          reject(new Err('RubricStore.FacetsError', {
+            cause: err
+          }));
+        }
+          
+        resolve(facets);
+      }.bind(this));
+    }.bind(this));
+  };
+
+  /*
     Loads seed objects from sql query
     Be careful with running this in production
 

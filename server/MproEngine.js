@@ -53,6 +53,24 @@ MproEngine.Prototype = function() {
     }.bind(this));
   };
 
+  /*
+    List facets for given rubrics
+
+    @param {Array} facets facets
+    @returns {Promise}
+  */
+  this.listFacets = function(facets, training) {
+    return new Promise(function(resolve, reject) {
+      this.rubricStore.listFacets(facets, training).then(function(results) {
+        resolve(results);
+      }).catch(function(err) {
+        reject(new Err('RubricsFacetsError', {
+          cause: err
+        }));
+      });
+    }.bind(this));
+  };
+
 };
 
 oo.initClass(MproEngine);

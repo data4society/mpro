@@ -72,7 +72,7 @@ EditDocument.Prototype = function() {
       main = $$(DocumentWriter, {
         documentInfo: this.state.documentInfo,
         documentSession: this.state.session,
-        rubrics: this.state.rubrics
+        rubrics: this.props.rubrics
       }).ref('documentEditor');
     }
 
