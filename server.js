@@ -49,6 +49,7 @@ var MproServer = require('./server/MproServer');
 /*
   Models
 */
+var newTrainingArticle = require('./models/training/newTrainingArticle');
 var newArticle = require('./models/article/newArticle');
 var newVk = require('./models/vk/newVk');
 var DocumentChange = require('substance/model/DocumentChange');
@@ -94,6 +95,11 @@ var snapshotEngine = new SnapshotEngine({
   changeStore: changeStore,
   snapshotStore: snapshotStore,
   schemas: {
+    'mpro-training-article': {
+      name: 'mpro-training-article',
+      version: '1.0.0',
+      documentFactory: newTrainingArticle
+    },
     'mpro-article': {
       name: 'mpro-article',
       version: '1.0.0',
@@ -113,6 +119,11 @@ var documentEngine = new DocumentEngine({
   changeStore: changeStore,
   snapshotEngine: snapshotEngine,
   schemas: {
+    'mpro-training-article': {
+      name: 'mpro-training-article',
+      version: '1.0.0',
+      documentFactory: newTrainingArticle
+    },
     'mpro-article': {
       name: 'mpro-article',
       version: '1.0.0',

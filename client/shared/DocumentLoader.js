@@ -5,6 +5,7 @@ var JSONConverter = require('substance/model/JSONConverter');
 var CollabClient = require('substance/collab/CollabClient');
 var WebSocketConnection = require('substance/collab/WebSocketConnection');
 var Component = require('substance/ui/Component');
+var TrainingArticle = require('../../models/training/TrainingArticle');
 var Article = require('../../models/article/Article');
 var Vk = require('../../models/vk/Vk');
 var DocumentInfo = require('./DocumentInfo');
@@ -113,7 +114,9 @@ RealtimeDocument.Prototype = function() {
       var schema = docRecord.data.schema;
       var doc;
 
-      if (schema.name == 'mpro-article') {
+      if (schema.name == 'mpro-training-article') {
+        doc = new TrainingArticle();
+      } else if (schema.name == 'mpro-article') {
         doc = new Article();
       } else if (schema.name == 'mpro-vk') {
         doc = new Vk();
