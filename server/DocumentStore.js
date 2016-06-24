@@ -137,6 +137,7 @@ DocumentStore.Prototype = function() {
       // which could possibly updated
       if(props.info.title) props.title = props.info.title;
       if(props.info.meta) props.meta = props.info.meta;
+      if(props.info.rubrics) props.rubrics = props.info.rubrics;
     }
 
     this.documentExists(documentId, function(err, exists) {

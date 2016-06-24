@@ -255,7 +255,8 @@ var collabServer = new CollabServer({
           updatedAt: updatedAt,
           updatedBy: req.session.userId,
           title: title,
-          meta: meta
+          meta: meta,
+          rubrics: rubrics
         };
         cb(null);
       });
