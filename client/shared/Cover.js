@@ -31,20 +31,16 @@ Cover.Prototype = function() {
    
     var el = $$("div").addClass("sc-cover");
 
-    if(metaNode.title !== '' && this.props.editing == 'readonly') {
-      el.append(
-        // Editable title
-        $$(TextPropertyEditor, {
-          name: 'title',
-          tagName: "div",
-          commands: config.titleEditor.commands,
-          path: [metaNode.id, "title"],
-          editing: this.props.editing || 'full'
-        }).addClass('se-title'),
-        $$('div').addClass('se-separator')
-      );
-    }
     el.append(
+      // Editable title
+      $$(TextPropertyEditor, {
+        name: 'title',
+        tagName: "div",
+        commands: config.titleEditor.commands,
+        path: [metaNode.id, "title"],
+        editing: this.props.editing || 'full'
+      }).addClass('se-title'),
+      $$('div').addClass('se-separator'),
       $$(DocumentSummary, {
         mobile: this.props.mobile,
         documentInfo: this.props.documentInfo,
