@@ -21,7 +21,6 @@ RubricEditorPrompt.Prototype = function() {
         node.selected = false;
       });
       each(rubricsMeta, function(rubric) {
-        var item = tree.get(rubric);
         tree.nodes[rubric].selected = true;
       }.bind(this));
     }

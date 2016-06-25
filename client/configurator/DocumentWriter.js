@@ -15,6 +15,7 @@ var StrongTool = require('substance/packages/strong/StrongTool');
 var EmphasisTool = require('substance/packages/emphasis/EmphasisTool');
 var LinkTool = require('substance/packages/link/LinkTool');
 var ImageTool = require('substance/packages/image/ImageTool');
+var AcceptorTool = require('./AcceptorTool');
 
 function DocumentWriter() {
   Controller.apply(this, arguments);
@@ -39,6 +40,9 @@ DocumentWriter.Prototype = function() {
                 $$(EmphasisTool).append($$(Icon, {icon: 'fa-italic'})),
                 $$(LinkTool).append($$(Icon, {icon: 'fa-link'})),
                 $$(ImageTool).append($$(Icon, {icon: 'fa-image'}))
+              ),
+              $$(Toolbar.Group).append(
+                $$(AcceptorTool).append($$(Icon, {icon: 'fa-check'}))
               )
             )
           )
@@ -90,7 +94,8 @@ DocumentWriter.static.config = {
     commands: [
       require('substance/ui/UndoCommand'),
       require('substance/ui/RedoCommand'),
-      require('substance/ui/SaveCommand')
+      require('substance/ui/SaveCommand'),
+      require('./AcceptorCommand')
     ]
   },
   titleEditor: {

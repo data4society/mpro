@@ -2,7 +2,9 @@ var config = require('config');
 var express = require('express');
 var http = require('http');
 var path = require('path');
+var isUndefined = require('lodash/isUndefined');
 var extend = require('lodash/extend');
+var find = require('lodash/find');
 var app = express();
 var bodyParser = require('body-parser');
 var WebSocketServer = require('ws').Server;
@@ -230,8 +232,10 @@ var collabServer = new CollabServer({
       documentStore.getDocument(message.documentId, function(err, docRecord) {
         var updatedAt = new Date();
         var title = docRecord.title;
-        var meta = docRecord.meta;
+        var meta = find(docRecord.content.nodes, { 'id': 'meta'});
         var rubrics = meta.rubrics;
+        var entities = meta.entities;
+        var accepted;
 
         if (message.change) {
           // Update the title if necessary
@@ -248,6 +252,18 @@ var collabServer = new CollabServer({
             }
           });
 
+          change.ops.forEach(function(op) {
+            if(op.path[0] == 'meta' && op.path[1] == 'entities') {
+              entities = op.val;
+            }
+          });
+
+          change.ops.forEach(function(op) {
+            if(op.path[0] == 'meta' && op.path[1] == 'accepted') {
+              accepted = op.val;
+            }
+          });
+
           message.change.info = {
             userId: req.session.userId,
             updatedAt: updatedAt
@@ -259,7 +275,11 @@ var collabServer = new CollabServer({
         };
 
         // update meta object with modified properties
-        extend(meta, {title: title, rubrics: rubrics});
+        extend(meta, {title: title, rubrics: rubrics, entities: entities});
+
+        if(!isUndefined(accepted)) {
+          extend(meta, {accepted: accepted});
+        }
 
         // commit and connect method take optional documentInfo argument
         message.documentInfo = {

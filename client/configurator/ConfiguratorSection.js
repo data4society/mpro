@@ -23,6 +23,7 @@ function Configurator() {
     'openDocument': this._openDocument,
     'updateListTitle': this._updateTitle,
     'updateListRubrics': this._updateRubrics,
+    'acceptArticle': this._acceptArticle,
     'filterFacets': this._filterFacets
   });
 }
@@ -86,6 +87,11 @@ Configurator.Prototype = function() {
     list.updateRubrics(documentId, rubrics);
     var facets = this.refs.filters.children[0];
     facets._loadFacets();
+  };
+
+  this._acceptArticle = function(documentId, accept) {
+    var list = this.refs.list;
+    list.acceptItem(documentId, accept);
   };
 
   this._filterFacets = function(facets) {

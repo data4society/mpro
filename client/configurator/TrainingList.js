@@ -89,6 +89,16 @@ TrainingList.Prototype = function() {
     }
   };
 
+  this.acceptItem = function(documentId, accept) {
+    if(this.refs[documentId]) {
+      var document = this.refs[documentId].props.document;
+      document.meta.accepted = accept;
+      this.refs[documentId].extendProps({
+        'document': document
+      });
+    }
+  };
+
   this.updateUrl = function(documentId) {
     var urlHelper = this.context.urlHelper;
     urlHelper.writeRoute({section: 'configurator', documentId: documentId});

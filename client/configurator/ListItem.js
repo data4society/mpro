@@ -49,10 +49,13 @@ ListItem.Prototype = function() {
       rubricsEl.append('No categories assigned');
     }
 
+    var title = $$('div').addClass('se-title');
+    if(meta.accepted) title.append($$('span').addClass('se-accepted').append('✓'));
+    title.append(document.title);
+
     // Title
     el.append(
-      $$('div').addClass('se-title')
-        .append(document.title),
+      title,
       rubricsEl,
       $$('div').addClass('se-separator')
     );
