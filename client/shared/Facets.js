@@ -114,7 +114,7 @@ Facets.Prototype = function() {
           node.count = !isUndefined(facets[node.rubric_id]) ? facets[node.rubric_id].cnt : '0';
         });
       }
-      console.log(facets, result)
+
       this.extendState({
         rubrics: rubrics,
         facets: facets
