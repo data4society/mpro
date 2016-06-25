@@ -76,24 +76,24 @@ Facets.Prototype = function() {
     });
   };
 
-  this._loadFacets = function() {
+  this._loadFacets = function(silent) {
     var documentClient = this.context.documentClient;
 
     var isTraining = this.props.training;
     var rubrics = this.props.rubrics;
-    var facets = [];
+    var activeFacets = [];
 
     if(rubrics) {
       for(var key in rubrics.nodes) {
-        if(rubrics.nodes[key].active) facets.push(key);
+        if(rubrics.nodes[key].active) activeFacets.push(key);
       }
     }
 
-    if(!isEqual(this.state.facets, facets)) {
-      this.send('filterFacets', facets);
+    if(!isEqual(this.state.facets, activeFacets) && !silent) {
+      this.send('filterFacets', activeFacets);
     }
 
-    documentClient.listFacets(facets, isTraining, function(err, result) {
+    documentClient.listFacets(activeFacets, isTraining, function(err, result) {
       if (err) {
         this.setState({
           error: new Err('Feed.LoadingError', {
@@ -114,6 +114,7 @@ Facets.Prototype = function() {
           node.count = !isUndefined(facets[node.rubric_id]) ? facets[node.rubric_id].cnt : '0';
         });
       }
+      console.log(facets, result)
       this.extendState({
         rubrics: rubrics,
         facets: facets

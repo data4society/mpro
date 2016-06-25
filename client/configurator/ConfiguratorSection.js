@@ -86,7 +86,11 @@ Configurator.Prototype = function() {
     var list = this.refs.list;
     list.updateRubrics(documentId, rubrics);
     var facets = this.refs.filters.children[0];
-    facets._loadFacets();
+    // TODO: seems that rubrics isn't saved atm,
+    // we should avoid this ugly hack somehow
+    setTimeout(function(){
+      facets._loadFacets(true);
+    }.bind(this), 100);
   };
 
   this._acceptArticle = function(documentId, accept) {
