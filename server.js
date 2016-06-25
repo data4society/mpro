@@ -232,7 +232,7 @@ var collabServer = new CollabServer({
       documentStore.getDocument(message.documentId, function(err, docRecord) {
         var updatedAt = new Date();
         var title = docRecord.title;
-        var meta = find(docRecord.content.nodes, { 'id': 'meta'});
+        var meta = docRecord.content ? find(docRecord.content.nodes, { 'id': 'meta'}) : docRecord.meta;
         var rubrics = meta.rubrics;
         var entities = meta.entities;
         var accepted;
