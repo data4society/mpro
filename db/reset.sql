@@ -31,6 +31,8 @@ CREATE TABLE "documents" (
   created timestamp,
   meta jsonb,
   rubric_ids varchar(40)[],
+  entity_ids varchar(40)[],
+  markup jsonb,
   type varchar(255)
 );
 
@@ -47,6 +49,7 @@ CREATE TABLE "records" (
   edited_by varchar(40) REFERENCES users,
   training boolean,
   rubrics varchar(40)[],
+  entities varchar(40)[],
   source varchar(40) REFERENCES documents,
   content jsonb,
   meta jsonb,
