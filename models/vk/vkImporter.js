@@ -3,6 +3,8 @@
 var HTMLImporter = require('substance/model/HTMLImporter');
 var DefaultDOMElement = require('substance/ui/DefaultDOMElement');
 var map = require('lodash/map');
+var each = require('lodash/each');
+var find = require('lodash/find');
 var vkSchema = require('./vkSchema');
 var Vk = require('./Vk');
 
@@ -30,6 +32,8 @@ VkImporter.Prototype = function() {
     // Replace double <br> with paragraph
     html = "<p>" + html.replace(/<br><br>/gi, "</p><p>") + "</p>";
     html = html.replace(/<br>/gi, "</p><p>");
+    // Replace new lines with paragraphs
+    html = html.replace(/\n\n/g, "</p><p>");
     this.reset();
     var parsed = DefaultDOMElement.parseHTML(html);
     this.convertDocument(parsed);
@@ -37,6 +41,8 @@ VkImporter.Prototype = function() {
 
     // Create document metadata
     this.convertMeta(doc, source);
+
+    this.convertEntities(doc, source.markup);
     return doc;
   };
 
@@ -79,6 +85,7 @@ VkImporter.Prototype = function() {
       source: source.guid,
       published: published.toJSON(),
       rubrics: source.rubric_ids,
+      entities: source.entity_ids,
       abstract: abstract,
       post_type: meta.vk_post_type,
       author: {
@@ -86,6 +93,37 @@ VkImporter.Prototype = function() {
         url: owner.owner_url
       },
       attachments: attachments
+    });
+  };
+
+  this.convertEntities = function(doc, markup) {
+    var nodeList = doc.get(['body', 'nodes']);
+    var nodes = [];
+
+    var pos = 0;
+
+    each(nodeList, function(nodeId) {
+      var node = doc.get(nodeId);
+      var length = node.content.length;
+      node.startPos = pos;
+      node.endPos = pos + length;
+      nodes.push(node);
+      pos += length + 2; 
+    });
+
+    each(markup, function(ref, id) {
+      var node = find(nodes, function(n) { return n.startPos <= ref.start_offset && n.endPos >= ref.start_offset; });
+      if(node) {
+        var startOffset = ref.start_offset - node.startPos;
+        doc.create({
+          id: 'entity-' + id,
+          type: 'entity',
+          path: [node.id, 'content'],
+          reference: ref.entity,
+          startOffset: startOffset,
+          endOffset: startOffset + ref.end_offset
+        });
+      }
     });
   };
 

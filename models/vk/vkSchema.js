@@ -2,6 +2,7 @@
 
 var DocumentSchema = require('substance/model/DocumentSchema');
 var DocumentNode = require('substance/model/DocumentNode');
+var Entity = require('../entity/Entity');
 
 /**
   Meta
@@ -18,6 +19,7 @@ Meta.static.name = 'meta';
 Meta.static.defineSchema({
   title: { type: 'string', default: '' },
   rubrics: { type: ['id'], defaut: [] },
+  entities: { type: ['id'], defaut: [] },
   source: { type: 'string', default: '' },
   published: { type: 'string', default: '' },
   created: { type: 'string', default: '' },
@@ -43,7 +45,8 @@ schema.addNodes([
   require('substance/packages/emphasis/Emphasis'),
   require('substance/packages/strong/Strong'),
   require('substance/packages/link/Link'),
-  Meta
+  Meta,
+  Entity
 ]);
 
 module.exports = schema;
