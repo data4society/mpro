@@ -73,6 +73,7 @@ DocumentViewer.static.config = {
       require('substance/packages/emphasis/EmphasisCommand'),
       require('substance/packages/link/LinkCommand'),
       require('substance/packages/image/ImageCommand'),
+      require('../../models/entity/EntityCommand')
     ],
     textTypes: [
       {name: 'paragraph', data: {type: 'paragraph'}},
