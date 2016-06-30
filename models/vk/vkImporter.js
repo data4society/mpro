@@ -1,5 +1,6 @@
 'use strict';
 
+var sanitizeHtml = require('sanitize-html');
 var HTMLImporter = require('substance/model/HTMLImporter');
 var DefaultDOMElement = require('substance/ui/DefaultDOMElement');
 var map = require('lodash/map');
@@ -23,22 +24,38 @@ function VkImporter() {
     converters: converters,
     DocumentClass: Vk
   });
-};
+}
 
 VkImporter.Prototype = function() {
 
   this.importDocument = function(html, source) {
-    // Preprocess record
-    // Replace double <br> with paragraph
-    html = "<p>" + html.replace(/<br><br>/gi, "</p><p>") + "</p>";
-    html = html.replace(/<br>/gi, "</p><p>");
-    // Replace new lines with paragraphs
-    html = html.replace(/\n\n/g, "</p><p>");
+
+    html = html.replace(/&#13;/g, '').replace(/<br ?\/?>|<\/p>|<\/div>/g, '\n');
+
+    var clean = sanitizeHtml(html, {
+      allowedTags: [ /*'p',*/ 'b', 'i', 'em', 'strong', 'a' ],
+      allowedAttributes: {
+        'a': [ 'href' ]
+      }
+    });
+
+    clean = clean.split('\n');
+
+    for (var i = 0; i < clean.length; i++) {
+      clean[i] = clean[i].trim();
+      if (clean[i] === "") {         
+        clean.splice(i, 1);
+        i--;
+      }
+    }
+
+    clean = clean.join('</p><p>');
+    clean = "<p>" + clean + "</p>";
+
     this.reset();
-    var parsed = DefaultDOMElement.parseHTML(html);
+    var parsed = DefaultDOMElement.parseHTML(clean);
     this.convertDocument(parsed);
     var doc = this.generateDocument();
-
     // Create document metadata
     this.convertMeta(doc, source);
 
@@ -71,7 +88,7 @@ VkImporter.Prototype = function() {
       return {
         type: type,
         src: src
-      } 
+      }; 
     });
 
     var published = new Date(source.published_date);
@@ -108,20 +125,21 @@ VkImporter.Prototype = function() {
       node.startPos = pos;
       node.endPos = pos + length;
       nodes.push(node);
-      pos += length + 2; 
+      pos += length + 1; 
     });
 
     each(markup, function(ref, id) {
       var node = find(nodes, function(n) { return n.startPos <= ref.start_offset && n.endPos >= ref.start_offset; });
       if(node) {
         var startOffset = ref.start_offset - node.startPos;
+        var endOffset = startOffset + ref.end_offset - ref.start_offset;
         doc.create({
           id: 'entity-' + id,
           type: 'entity',
           path: [node.id, 'content'],
           reference: ref.entity,
           startOffset: startOffset,
-          endOffset: startOffset + ref.end_offset
+          endOffset: endOffset
         });
       }
     });

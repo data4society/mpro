@@ -3,7 +3,8 @@
 var sanitizeHtml = require('sanitize-html');
 var HTMLImporter = require('substance/model/HTMLImporter');
 var DefaultDOMElement = require('substance/ui/DefaultDOMElement');
-var map = require('lodash/map');
+var each = require('lodash/each');
+var find = require('lodash/find');
 var articleSchema = require('./articleSchema');
 var Article = require('./Article');
 
@@ -22,28 +23,42 @@ function ArticleImporter() {
     converters: converters,
     DocumentClass: Article
   });
-};
+}
 
 ArticleImporter.Prototype = function() {
 
   this.importDocument = function(html, source) {
 
+    html = html.replace(/&#13;/g, '').replace(/<br ?\/?>|<\/p>|<\/div>/g, '\n');
+
     var clean = sanitizeHtml(html, {
-      allowedTags: [ 'p', 'b', 'i', 'em', 'strong', 'a' ],
+      allowedTags: [ 'b', 'i', 'em', 'strong', 'a'],
       allowedAttributes: {
         'a': [ 'href' ]
       }
     });
-    // Preprocess record
-    // Replace double <br> with paragraph
-    //html = "<p>" + html + "</p>";
-    //html = html.replace(/<br>/gi, "</p><p>");
+
+    clean = clean.split('\n');
+
+    for (var i = 0; i < clean.length; i++) {
+      clean[i] = clean[i].trim();
+      if (clean[i] === "") {         
+        clean.splice(i, 1);
+        i--;
+      }
+    }
+
+    clean = clean.join('</p><p>');
+    clean = "<p>" + clean + "</p>";
+
     this.reset();
     var parsed = DefaultDOMElement.parseHTML(clean);
     this.convertDocument(parsed);
     var doc = this.generateDocument();
     // Create document metadata
     this.convertMeta(doc, source);
+
+    this.convertEntities(doc, source.markup);
     return doc;
   };
 
@@ -68,6 +83,38 @@ ArticleImporter.Prototype = function() {
       abstract: meta.abstract,
       cover: '',
       publisher: publisher.name
+    });
+  };
+
+  this.convertEntities = function(doc, markup) {
+    var nodeList = doc.get(['body', 'nodes']);
+    var nodes = [];
+
+    var pos = 0;
+
+    each(nodeList, function(nodeId) {
+      var node = doc.get(nodeId);
+      var length = node.content.length;
+      node.startPos = pos;
+      node.endPos = pos + length;
+      nodes.push(node);
+      pos += length + 1; 
+    });
+
+    each(markup, function(ref, id) {
+      var node = find(nodes, function(n) { return n.startPos <= ref.start_offset && n.endPos >= ref.start_offset; });
+      if(node) {
+        var startOffset = ref.start_offset - node.startPos;
+        var endOffset = startOffset + ref.end_offset - ref.start_offset;
+        doc.create({
+          id: 'entity-' + id,
+          type: 'entity',
+          path: [node.id, 'content'],
+          reference: ref.entity,
+          startOffset: startOffset,
+          endOffset: endOffset
+        });
+      }
     });
   };
 };

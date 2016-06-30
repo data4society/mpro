@@ -2,6 +2,7 @@
 
 var DocumentSchema = require('substance/model/DocumentSchema');
 var DocumentNode = require('substance/model/DocumentNode');
+var Entity = require('../entity/Entity');
 
 /**
   Meta
@@ -43,7 +44,8 @@ schema.addNodes([
   require('substance/packages/emphasis/Emphasis'),
   require('substance/packages/strong/Strong'),
   require('substance/packages/link/Link'),
-  Meta
+  Meta,
+  Entity
 ]);
 
 module.exports = schema;
