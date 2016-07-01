@@ -12,8 +12,10 @@
     padding-top: 60px;
   }
 
-  .se-document-content {
-    padding: 40px;
-    width: 100%;
+  .sc-document-viewer {
+    > .sc-split-pane {
+      padding-left: 20px;
+      width: 100%;
+    }
   }
 }

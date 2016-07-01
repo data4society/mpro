@@ -2,7 +2,13 @@
 
 var Controller = require('substance/ui/Controller');
 var ContainerEditor = require('substance/ui/ContainerEditor');
+var SplitPane = require('substance/ui/SplitPane');
+var ScrollPane = require('substance/ui/ScrollPane');
+var Icon = require('substance/ui/FontAwesomeIcon');
+var Toolbar = require('substance/ui/Toolbar');
+var Layout = require('substance/ui/Layout');
 var Cover = require('../shared/Cover');
+var EntityTool = require('../../models/entity/EntityTool');
 
 function DocumentViewer() {
   Controller.apply(this, arguments);
@@ -13,23 +19,41 @@ DocumentViewer.Prototype = function() {
   // Custom Render method for your editor
   this.render = function($$) {
     var config = this.getConfig();
-    return $$('div').addClass('sc-document-viewer sc-scroll-pane').append(
-      $$('div').addClass('se-document-content se-scrollable').append(
-        $$(Cover, {
-          doc: this.doc,
-          mobile: this.props.mobile,
-          editing: 'readonly',
-          documentInfo: this.props.documentInfo,
-          rubrics: this.props.rubrics
-        }).ref('cover'),
-        $$(ContainerEditor, {
-          doc: this.props.documentSession.doc,
-          containerId: 'body',
-          name: 'bodyEditor',
-          editing: 'selection',
-          commands: config.bodyEditor.commands,
-          textTypes: config.bodyEditor.textTypes
-        }).ref('bodyEditor')
+    return $$('div').addClass('sc-document-viewer').append(
+      $$(SplitPane, {splitType: 'horizontal'}).append(
+        // Top area (toolbar)
+        $$('div').addClass('se-toolbar-wrapper').append(
+          $$(Toolbar).append(
+            $$(Toolbar.Group).append(
+              $$(EntityTool).append($$(Icon, {icon: 'fa-users'}))
+            )
+          )
+        ),
+        // Bottom area (content)
+        $$(ScrollPane, {
+          scrollbarType: 'native',
+          scrollbarPosition: 'right'
+        }).append(
+          $$(Layout, {
+            width: 'large'
+          }).append(
+            $$(Cover, {
+              doc: this.doc,
+              mobile: this.props.mobile,
+              editing: 'readonly',
+              documentInfo: this.props.documentInfo,
+              rubrics: this.props.rubrics
+            }).ref('cover'),
+            $$(ContainerEditor, {
+              doc: this.props.documentSession.doc,
+              containerId: 'body',
+              name: 'bodyEditor',
+              editing: 'selection',
+              commands: config.bodyEditor.commands,
+              textTypes: config.bodyEditor.textTypes
+            }).ref('bodyEditor')
+          )
+        )
       )
     );
   };

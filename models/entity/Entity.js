@@ -13,7 +13,7 @@ PropertyAnnotation.extend(Entity);
 Entity.static.name = 'entity';
 
 Entity.static.defineSchema({
-  "reference": "string"
+  "reference": {type: "string", default: "test"}
 });
 
 module.exports = Entity;
