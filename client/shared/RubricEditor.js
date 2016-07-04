@@ -4,6 +4,7 @@ var Component = require('substance/ui/Component');
 var Icon = require('substance/ui/FontAwesomeIcon');
 var each = require('lodash/each');
 var TreeItem = require('./TreeItem');
+var RubricSelector = require('./RubricSelector');
 
 function RubricEditorPrompt() {
   RubricEditorPrompt.super.apply(this, arguments);
@@ -35,17 +36,18 @@ RubricEditorPrompt.Prototype = function() {
       $$('div').addClass('se-prompt-title').append(this.i18n.t('Pick up rubrics:'))
     );
     
-    var childNodes = tree.getChildren("root");
+    // var childNodes = tree.getChildren("root");
 
-    var childEls = childNodes.map(function(node) {
-      return $$(TreeItem, {
-        node: node,
-        tree: tree,
-        selected: node.selected || false,
-      }).ref(node.rubric_id);
-    }.bind(this));
+    // var childEls = childNodes.map(function(node) {
+    //   return $$(TreeItem, {
+    //     node: node,
+    //     tree: tree,
+    //     selected: node.selected || false,
+    //   }).ref(node.rubric_id);
+    // }.bind(this));
     
-    el.append(childEls);
+    // el.append(childEls);
+    el.append($$(RubricSelector, {rubrics: tree}));
     return el;
   };
 

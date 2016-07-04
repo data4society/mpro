@@ -99,7 +99,7 @@ Inbox.Prototype = function() {
   this._loadRubrics = function() {
     var documentClient = this.context.documentClient;
 
-    documentClient.listRubrics({}, {}, function(err, result) {
+    documentClient.listRubrics({}, {limit: 300}, function(err, result) {
       if (err) {
         this.setState({
           error: new Err('Feed.LoadingError', {

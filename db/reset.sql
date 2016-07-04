@@ -104,7 +104,8 @@ CREATE TABLE "rubrics" (
   rubric_id varchar(40) UNIQUE PRIMARY KEY,
   name varchar(255),
   created timestamp,
-  parent_id varchar(40) REFERENCES rubrics
+  parent_id varchar(40) REFERENCES rubrics,
+  description text
 );
 
 CREATE TABLE "sessions" (

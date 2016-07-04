@@ -12,6 +12,7 @@ var Rubric = function(doc, rubrics) {
   this.rubrics = {};
 
   each(rubrics, function(rubric) {
+    rubric.id = rubric.rubric_id;
     this.rubrics[rubric.rubric_id] = rubric;
     if (doc) {
       var references = doc.rubricReferencesIndex.get(rubric.rubric_id);
