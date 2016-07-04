@@ -3,7 +3,6 @@
 var Component = require('substance/ui/Component');
 var Icon = require('substance/ui/FontAwesomeIcon');
 var each = require('lodash/each');
-var TreeItem = require('./TreeItem');
 var RubricSelector = require('./RubricSelector');
 
 function RubricEditorPrompt() {

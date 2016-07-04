@@ -1,11 +1,8 @@
 'use strict';
 
 var each = require('lodash/each');
-var keyBy = require('lodash/keyBy');
 var concat = require('lodash/concat');
-var isEqual = require('lodash/isEqual');
 var flattenDeep = require('lodash/flattenDeep');
-var isUndefined = require('lodash/isUndefined');
 var Component = require('substance/ui/Component');
 var Icon = require('substance/ui/FontAwesomeIcon');
 
@@ -84,7 +81,7 @@ RubricSelector.Prototype = function() {
     return concat(el, childrenEls);
   };
 
-  this._expandNode = function(rubric_id, e) {
+  this._expandNode = function(rubric_id) {
     var rubrics = this.props.rubrics;
     var isExpanded = rubrics.nodes[rubric_id].expanded;
     rubrics.nodes[rubric_id].expanded = !isExpanded;
@@ -93,7 +90,7 @@ RubricSelector.Prototype = function() {
     });
   };
 
-  this._selectNode = function(rubric_id, e) {
+  this._selectNode = function(rubric_id) {
     var rubrics = this.props.rubrics;
     var isSelected = rubrics.nodes[rubric_id].selected;
     rubrics.nodes[rubric_id].selected = !isSelected;
