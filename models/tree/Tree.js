@@ -50,10 +50,22 @@ Tree.Prototype = function() {
   this.getParents = function(nodeId) {
     var node = this.get(nodeId);
     var parents = [];
-    while (node == this.getParent(node.id)) {
+    while (node.parent_id) {
+      node = this.getParent(node.id);
       parents.push(node.id);
     }
     return parents;
+  };
+
+  // Get root parent
+  this.getRootParent = function(nodeId) {
+    var node = this.get(nodeId);
+    var parent;
+    while (node.parent_id) {
+      node = this.getParent(node.id);
+      if(!node.parent_id) parent = node;
+    }
+    return parent;
   };
 
   // Collect all child nodes of a node

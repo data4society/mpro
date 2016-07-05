@@ -49,7 +49,7 @@ Facets.Prototype = function() {
 
   this.renderChildren = function($$, node, level) {
     var rubrics = this.state.rubrics;
-    var isSelected = node.selected;
+    var isSelected = node.active;
     var isExpanded = node.expanded || isSelected;
     var childNodes = rubrics.getChildren(node.rubric_id);
     var hideExpand = childNodes.length === 0;
@@ -113,8 +113,8 @@ Facets.Prototype = function() {
     e.preventDefault();
     e.stopPropagation();
     var rubrics = this.state.rubrics;
-    var currentValue = rubrics.nodes[id].selected;
-    rubrics.nodes[id].selected = !currentValue;
+    var currentValue = rubrics.nodes[id].active;
+    rubrics.nodes[id].active = !currentValue;
     this.extendProps({
       rubrics: rubrics
     });
