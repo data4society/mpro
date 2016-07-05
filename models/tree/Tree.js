@@ -1,3 +1,4 @@
+var map = require('lodash/map');
 var each = require('lodash/each');
 var sortBy = require('lodash/sortBy');
 
@@ -49,7 +50,7 @@ Tree.Prototype = function() {
   this.getParents = function(nodeId) {
     var node = this.get(nodeId);
     var parents = [];
-    while (node = this.getParent(node.id)) {
+    while (node == this.getParent(node.id)) {
       parents.push(node.id);
     }
     return parents;
@@ -60,12 +61,12 @@ Tree.Prototype = function() {
   this.getAllChildren = function(nodeId) {
     var childNodes = this.getChildren(nodeId);
     if (childNodes.length === 0) return [];
-    var allChildren = _.pluck(childNodes, 'id');
+    var allChildren = map(childNodes, 'id');
     each(childNodes, function(childNode) {
-      allChildren = allChildren.concat(this.getAllChildren(childNode.id))
+      allChildren = allChildren.concat(this.getAllChildren(childNode.id));
     }.bind(this));
     return allChildren;
-  }
+  };
 
   // Walk the tree
   this.walkTree = function(fn, ctx) {
@@ -76,7 +77,6 @@ Tree.Prototype = function() {
       if (rootNode !== "root") {
         fn.call(ctx, rootNode);
       }
-      var children = self.getChildren(rootNode.id);
       each(self.getChildren(rootNode.id || rootNode), function(child) {
         _walkTree(child, fn, ctx);
       });

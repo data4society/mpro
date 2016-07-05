@@ -41,12 +41,18 @@
       width: 15px;
     }
 
-    .se-tree-node {
-      padding-left: $nodePaddingLeft;
+    .help {
+      font-size: 13px;
+      padding-left: 10px;
+    }
 
-      &.hide-expand {
-        padding-left: $nodePaddingLeft + 16px;
-      }
+    .se-node-help {
+      position: absolute;
+      font-size: 10px;
+      left: 260px;
+      background: rgba(255, 255, 255, 0.8);
+      padding: 10px;
+      border: 1px dotted #000;
     }
   }
 }

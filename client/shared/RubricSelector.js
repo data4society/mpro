@@ -52,7 +52,7 @@ RubricSelector.Prototype = function() {
 
     var el = $$('div').addClass('se-tree-node').ref(node.rubric_id)
       .on('click', this._expandNode.bind(this, node.rubric_id));
-    
+
     // level graphical nesting
     if(hideExpand) {
       level = level * 2;
@@ -78,7 +78,30 @@ RubricSelector.Prototype = function() {
 
     el.append($$('span').addClass('se-tree-node-name').append(node.name));
 
+    if(node.description) {
+      var helpIcon = node.help ? 'fa-question-circle' : 'fa-question-circle-o';
+
+      el.append(
+        $$(Icon, {icon: helpIcon + ' help'})
+          .on('click', this._toggleHelp.bind(this, node.rubric_id))
+      );
+      if(node.help) {
+        el.append($$('div').addClass('se-node-help').append(node.description));
+      }
+    }
+
     return concat(el, childrenEls);
+  };
+
+  this._toggleHelp = function(rubric_id, e) {
+    e.preventDefault();
+    e.stopPropagation();
+    var rubrics = this.props.rubrics;
+    var show = rubrics.nodes[rubric_id].help;
+    rubrics.nodes[rubric_id].help = !show;
+    this.extendProps({
+      rubrics: rubrics
+    });
   };
 
   this._expandNode = function(rubric_id) {
@@ -96,9 +119,9 @@ RubricSelector.Prototype = function() {
     rubrics.nodes[rubric_id].selected = !isSelected;
     if(isSelected) {
       // Unselect all children
-      var children = rubrics.getChildren(rubric_id);
+      var children = rubrics.getAllChildren(rubric_id);
       each(children, function(node) {
-        rubrics.nodes[node.rubric_id].selected = !isSelected;
+        rubrics.nodes[node].selected = !isSelected;
       });
     } else {
       // Select all parents except root
