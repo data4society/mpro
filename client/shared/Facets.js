@@ -7,6 +7,7 @@ var isEqual = require('lodash/isEqual');
 var flattenDeep = require('lodash/flattenDeep');
 var isUndefined = require('lodash/isUndefined');
 var Component = require('substance/ui/Component');
+var Icon = require('substance/ui/FontAwesomeIcon');
 var Err = require('substance/util/Error');
 
 function Facets() {
@@ -48,29 +49,72 @@ Facets.Prototype = function() {
 
   this.renderChildren = function($$, node, level) {
     var rubrics = this.state.rubrics;
+    var isSelected = node.selected;
+    var isExpanded = node.expanded || isSelected;
     var childNodes = rubrics.getChildren(node.rubric_id);
+    var hideExpand = childNodes.length === 0;
     var childrenEls = [];
 
-    childrenEls = childNodes.map(function(сhildNode) {
-      return this.renderChildren($$, сhildNode, level + 1);
-    }.bind(this));
+    if(level === 1) {
+      isExpanded = true;
+      hideExpand = true;
+    }
 
-    var el = $$('div').addClass('se-tree-node').ref(node.rubric_id)
-      .on('click', this._toggleFacet.bind(this, node.rubric_id));
-    if(rubrics.nodes[node.rubric_id].active) el.addClass('active');
-    var levelSign = new Array(level).join('—') + ' ';
-    el.append($$('span').addClass('se-tree-node-name').append(levelSign).append(node.name));
-    el.append($$('span').addClass('se-tree-node-counter').append(node.count));
+    if(isExpanded) {
+      childrenEls = childNodes.map(function(сhildNode) {
+        return this.renderChildren($$, сhildNode, level + 1);
+      }.bind(this));
+    }
+
+    var el = $$('div').addClass('se-tree-node').ref(node.rubric_id);
+
+    if(isSelected) el.addClass('active');
+
+    // level graphical nesting
+    if(hideExpand && level !== 1) {
+      level = level * 2;
+      if(level == 4) level = 5;
+    }
+    var levelSign = new Array(level).join('·') + ' ';
+    el.append(levelSign);
+
+    if(!hideExpand) {
+      var expandedIcon = isExpanded ? 'fa-caret-down' : 'fa-caret-right';
+      el.append(
+        $$(Icon, {icon: expandedIcon + ' expansion'})
+          .on('click', this._expandNode.bind(this, node.rubric_id))
+      );
+    }
+
+    if(level === 1) {
+      el.addClass('se-tree-title');
+      el.append($$('span').addClass('se-tree-node-name').append(node.name));
+    } else {
+      el.on('click', this._toggleFacet.bind(this, node.rubric_id));
+      el.append($$('span').addClass('se-tree-node-name').append(node.name));
+      el.append($$('span').addClass('se-tree-node-counter').append(node.count));
+    }
 
     return concat(el, childrenEls);
+  };
+
+  this._expandNode = function(id, e) {
+    e.preventDefault();
+    e.stopPropagation();
+    var rubrics = this.state.rubrics;
+    var isExpanded = rubrics.nodes[id].expanded;
+    rubrics.nodes[id].expanded = !isExpanded;
+    this.extendProps({
+      rubrics: rubrics
+    });
   };
 
   this._toggleFacet = function(id, e) {
     e.preventDefault();
     e.stopPropagation();
     var rubrics = this.state.rubrics;
-    var currentValue = rubrics.nodes[id].active;
-    rubrics.nodes[id].active = !currentValue;
+    var currentValue = rubrics.nodes[id].selected;
+    rubrics.nodes[id].selected = !currentValue;
     this.extendProps({
       rubrics: rubrics
     });
@@ -85,7 +129,7 @@ Facets.Prototype = function() {
 
     if(rubrics) {
       for(var key in rubrics.nodes) {
-        if(rubrics.nodes[key].active) activeFacets.push(key);
+        if(rubrics.nodes[key].selected) activeFacets.push(key);
       }
     }
 

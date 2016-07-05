@@ -8,18 +8,19 @@
     font-size: 12px;
     min-height: 25px;
     display: block;
-    padding: 5px;
+    padding: 5px 20px;
     position: relative;
     line-height: 15px;
     border-bottom: 1px solid rgba(121,121,121,0.1);
     cursor: pointer;
 
     .se-tree-node-name {
+      line-height: 10px;
       width: 180px;
       white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;
-      display: block;
+      display: inline-block;
     }
 
     .se-tree-node-counter {
@@ -35,8 +36,20 @@
       font-weight: 700;
     }
 
+    .expansion {
+      width: 12px;
+    }
+
     &.active {
       background: #4a7b18;
+    }
+
+    &.se-tree-title {
+      padding: 10px 20px;
+      text-transform: capitalize;
+      font-size: 14px;
+      font-weight: 100;
+      cursor: default;
     }
   }
 }
