@@ -17,7 +17,7 @@
     "mv": "^2.1.1",
     "rimraf": "^2.5.2",
     "sanitize-html": "^1.11.4",
-    "substance": "git://github.com/substance/substance.git#4953e1fcf81febaa33562ad2c9d6e232a5466862",
+    "substance": "git://github.com/substance/substance.git#97456fc530c3e081db593fa29795c03dbaa57cdb",
     "ws": "^1.1.0"
   },
   "devDependencies": {
