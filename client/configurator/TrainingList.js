@@ -12,7 +12,7 @@ TrainingList.Prototype = function() {
 
   this.getInitialState = function() {
     return {
-      filters: {'schema_name': 'mpro-trn'},
+      filters: {'training': true},
       perPage: 10,
       page: 1,
       order: 'edited',

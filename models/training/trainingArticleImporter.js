@@ -39,7 +39,7 @@ TrainingArticleImporter.Prototype = function() {
     //html = "<p>" + html + "</p>";
     //html = html.replace(/<br>/gi, "</p><p>");
     this.reset();
-    var parsed = DefaultDOMElement.parseHTML(source.stripped);
+    var parsed = DefaultDOMElement.parseHTML(clean);
     this.convertDocument(parsed);
     var doc = this.generateDocument();
     // Create document metadata

@@ -183,6 +183,7 @@ SourceEngine.Prototype = function() {
         var doc = importer.importDocument(recordBody, source);
         var data = converter.exportDocument(doc);
         var schema = doc.schema;
+        var training = source.type == 'trn' ? true: false;
         var meta = doc.get('meta');
         var document = {
           title: meta.title,
@@ -191,7 +192,7 @@ SourceEngine.Prototype = function() {
           schema_version: schema.version,
           published: meta.published,
           created: source.created,
-          training: false,
+          training: training,
           rubrics: meta.rubrics,
           source: sourceId,
           content: data,

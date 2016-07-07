@@ -35,7 +35,7 @@ Feed.Prototype = function() {
 
   this.getInitialState = function() {
     return {
-      filters: {'schema_name !=': 'mpro-trn'},
+      filters: {'training': false},
       perPage: 10,
       page: 1,
       order: 'created',
