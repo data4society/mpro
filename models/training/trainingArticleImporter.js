@@ -39,7 +39,7 @@ TrainingArticleImporter.Prototype = function() {
     //html = "<p>" + html + "</p>";
     //html = html.replace(/<br>/gi, "</p><p>");
     this.reset();
-    var parsed = DefaultDOMElement.parseHTML(clean);
+    var parsed = DefaultDOMElement.parseHTML(source.stripped);
     this.convertDocument(parsed);
     var doc = this.generateDocument();
     // Create document metadata
@@ -55,11 +55,15 @@ TrainingArticleImporter.Prototype = function() {
   this.convertMeta = function(doc, source) {
     var meta = source.meta;
 
+    // Hack, should be replaced
+    var source_type = source.guid.indexOf('vk.com') > -1 ? 'vk' : 'article'; 
+
     doc.create({
       id: 'meta',
       type: 'meta',
       title: source.title,
       rubrics: source.rubric_ids,
+      source_type: source_type,
       entities: [],
       accepted: false
     });

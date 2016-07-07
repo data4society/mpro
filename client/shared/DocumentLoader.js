@@ -114,7 +114,7 @@ RealtimeDocument.Prototype = function() {
       var schema = docRecord.data.schema;
       var doc;
 
-      if (schema.name == 'mpro-training-article') {
+      if (schema.name == 'mpro-trn') {
         doc = new TrainingArticle();
       } else if (schema.name == 'mpro-article') {
         doc = new Article();

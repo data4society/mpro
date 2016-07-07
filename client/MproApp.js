@@ -319,7 +319,7 @@ MproApp.Prototype = function() {
     var userId = this.state.userSession.user.userId;
 
     this.documentClient.createDocument({
-      schemaName: 'mpro-training-article',
+      schemaName: 'mpro-trn',
       // TODO: Find a way not to do this statically
       // Actually we should not provide the userId
       // from the client here.

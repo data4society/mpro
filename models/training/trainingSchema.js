@@ -16,16 +16,17 @@ DocumentNode.extend(Meta);
 Meta.static.name = 'meta';
 
 Meta.static.defineSchema({
-  title: { type: 'string', default: 'Untitled article'},
+  title: { type: 'string', default: 'Untitled article' },
   rubrics: { type: ['id'], default: [] },
   entities: { type: ['id'], default: [] },
-  accepted: { type: 'boolean', default: false}
+  source_type: { type: 'string' },
+  accepted: { type: 'boolean', default: false }
 });
 
 /**
   Schema instance
 */
-var schema = new DocumentSchema('mpro-training-article', '1.0.0');
+var schema = new DocumentSchema('mpro-trn', '1.0.0');
 schema.getDefaultTextType = function() {
   return 'paragraph';
 };

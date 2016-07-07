@@ -61,6 +61,7 @@ var DocumentChange = require('substance/model/DocumentChange');
 */
 var vkImporter = require('./models/vk/vkImporter');
 var articleImporter = require('./models/article/articleImporter');
+var trainingImporter = require('./models/training/trainingArticleImporter');
 var Database = require('./server/Database');
 
 
@@ -98,7 +99,7 @@ var snapshotEngine = new SnapshotEngine({
   snapshotStore: snapshotStore,
   schemas: {
     'mpro-training-article': {
-      name: 'mpro-training-article',
+      name: 'mpro-trn',
       version: '1.0.0',
       documentFactory: newTrainingArticle
     },
@@ -150,7 +151,8 @@ var sourceEngine = new SourceEngine({
   sourceStore: sourceStore,
   importers: {
     'vk': vkImporter,
-    'article': articleImporter
+    'article': articleImporter,
+    'trn': trainingImporter
   }
 });
 

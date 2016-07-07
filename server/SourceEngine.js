@@ -139,7 +139,7 @@ SourceEngine.Prototype = function() {
         errMsg = 'Document source body is empty';
       } else if (isEmpty(source.meta)) {
         errMsg = 'Document source meta is empty';
-      } else if (isEmpty(source.rubric_ids)) {
+      } else if (isEmpty(source.rubric_ids) && source.type != 'trn') {
         errMsg = 'Document source has no rubrics';
       } else if (!this.importers[source.type]) {
         errMsg = 'Unknown type of document source: ' + source.type;
