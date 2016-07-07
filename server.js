@@ -232,6 +232,8 @@ var collabServer = new CollabServer({
     if (message.type === 'sync') {
       // We fetch the document record to get the old title
       documentStore.getDocument(message.documentId, function(err, docRecord) {
+        if(err) return cb(err);
+
         var updatedAt = new Date();
         var title = docRecord.title;
         var meta = docRecord.content ? find(docRecord.content.nodes, { 'id': 'meta'}) : docRecord.meta;
