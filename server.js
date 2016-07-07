@@ -98,7 +98,7 @@ var snapshotEngine = new SnapshotEngine({
   changeStore: changeStore,
   snapshotStore: snapshotStore,
   schemas: {
-    'mpro-training-article': {
+    'mpro-trn': {
       name: 'mpro-trn',
       version: '1.0.0',
       documentFactory: newTrainingArticle
@@ -122,8 +122,8 @@ var documentEngine = new DocumentEngine({
   changeStore: changeStore,
   snapshotEngine: snapshotEngine,
   schemas: {
-    'mpro-training-article': {
-      name: 'mpro-training-article',
+    'mpro-trn': {
+      name: 'mpro-trn',
       version: '1.0.0',
       documentFactory: newTrainingArticle
     },

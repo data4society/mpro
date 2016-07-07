@@ -19,7 +19,7 @@ Meta.static.defineSchema({
   title: { type: 'string', default: 'Untitled article' },
   rubrics: { type: ['id'], default: [] },
   entities: { type: ['id'], default: [] },
-  source_type: { type: 'string' },
+  source_type: { type: 'string', default: '' },
   accepted: { type: 'boolean', default: false }
 });
 
