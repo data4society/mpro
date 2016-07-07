@@ -1,4 +1,5 @@
 .sc-list-item {
+  position: relative;
   color: #5F6773;
   padding: 10px 25px 0px;
   background: #d5d7da;
@@ -14,12 +15,18 @@
     .se-abstract {
       color: rgba(253, 253, 253, 0.75);
     }
+
+    .se-delete-document {
+      color: rgba(253, 253, 253, 0.75);
+      border: 1px solid rgba(253, 253, 253, 0.75);
+    }
   }
 
   .se-title {
     font-size: 17px;
     line-height: 20px;
     padding: 10px 0px;
+    margin-right: 100px;
   }
 
   .se-accepted {
@@ -29,6 +36,7 @@
 
   .se-rubrics {
     font-size: 12px;
+    margin-right: 100px;
 
     i {
       padding-right: 5px;
@@ -38,6 +46,15 @@
   .se-abstract {
     color: rgba(0,0,0,0.75);
     font-size: 12px;
+    margin-right: 100px;
+  }
+
+  .se-delete-document {
+    position: absolute;
+    right: 20px;
+    top: 20px;
+    color: rgba(177, 0, 0, 0.75);
+    border: 1px solid rgba(177, 0, 0, 0.75);
   }
 
   .se-separator {

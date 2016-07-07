@@ -325,6 +325,7 @@ MproApp.Prototype = function() {
       // from the client here.
       info: {
         title: 'Untitled Article',
+        abstract: '',
         userId: userId,
         training: true,
         rubrics: [],
@@ -341,7 +342,7 @@ MproApp.Prototype = function() {
 
   this._deleteDocument = function(documentId) {
     this.documentClient.deleteDocument(documentId, function(/*err, result*/) {
-      this._home();
+      this._configurator();
     }.bind(this));
   };
 

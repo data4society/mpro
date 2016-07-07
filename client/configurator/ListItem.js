@@ -2,6 +2,7 @@
 
 var Component = require('substance/ui/Component');
 var Icon = require('substance/ui/FontAwesomeIcon');
+var Button = require('substance/ui/Button');
 var each = require('lodash/each');
 var moment = require('moment');
 
@@ -59,6 +60,8 @@ ListItem.Prototype = function() {
       $$('div').addClass('se-abstract')
         .append(meta.abstract),
       rubricsEl,
+      $$(Button).addClass('se-delete-document').append('Delete')
+        .on('click', this.send.bind(this, 'deleteDocument', document.documentId)),
       $$('div').addClass('se-separator')
     );
 
