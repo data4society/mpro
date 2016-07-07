@@ -49,7 +49,7 @@ TrainingArticleImporter.Prototype = function() {
 
     clean = clean.join('</p><p>');
     clean = "<p>" + clean + "</p>";
-    
+
     this.reset();
     var parsed = DefaultDOMElement.parseHTML(clean);
     this.convertDocument(parsed);
@@ -73,7 +73,7 @@ TrainingArticleImporter.Prototype = function() {
     doc.create({
       id: 'meta',
       type: 'meta',
-      title: source.title,
+      title: source.title || '',
       rubrics: source.rubric_ids,
       source_type: source_type,
       entities: [],
