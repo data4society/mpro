@@ -85,6 +85,13 @@ TrainingArticleImporter.Prototype = function() {
       accepted: false
     });
   };
+
+  this.truncate = function(string, n, useWordBoundary) {
+    var isTooLong = string.length > n,
+        s_ = isTooLong ? string.substr(0,n-1) : string;
+        s_ = (useWordBoundary && isTooLong) ? s_.substr(0,s_.lastIndexOf(' ')) : s_;
+    return  isTooLong ? s_ + '&hellip;' : s_;
+  };
 };
 
 // Expose converters so we can reuse them in ArticleHtmlExporter
