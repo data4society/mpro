@@ -69,6 +69,10 @@ TrainingArticleImporter.Prototype = function() {
 
     // Hack, should be replaced
     var source_type = source.guid.indexOf('vk.com') > -1 ? 'vk' : 'article'; 
+    var abstract = source.doc_source.substr(0, source.doc_source.indexOf('<br>'));
+    abstract = this.truncate(abstract, 200, true);
+
+    if(meta.abstract) abstract = meta.abstract;
 
     doc.create({
       id: 'meta',
@@ -77,6 +81,7 @@ TrainingArticleImporter.Prototype = function() {
       rubrics: source.rubric_ids,
       source_type: source_type,
       entities: [],
+      abstract: abstract,
       accepted: false
     });
   };

@@ -10,6 +10,7 @@ module.exports = createDocumentFactory(TrainingArticle, function(tx) {
     id: 'meta',
     type: 'meta',
     title: 'Untitled Article',
+    abstract: '',
     rubrics: [],
     entities: [],
     accepted: false
