@@ -56,6 +56,8 @@ ListItem.Prototype = function() {
     // Title
     el.append(
       title,
+      $$('div').addClass('se-abstract')
+        .append(meta.abstract),
       rubricsEl,
       $$('div').addClass('se-separator')
     );

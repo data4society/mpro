@@ -10,6 +10,10 @@
     color: #fff;
     margin-right: 0px;
     margin-top: -1px;
+
+    .se-abstract {
+      color: rgba(253, 253, 253, 0.75);
+    }
   }
 
   .se-title {
@@ -29,6 +33,11 @@
     i {
       padding-right: 5px;
     }
+  }
+
+  .se-abstract {
+    color: rgba(0,0,0,0.75);
+    font-size: 12px;
   }
 
   .se-separator {
