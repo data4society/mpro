@@ -28,16 +28,28 @@ TrainingArticleImporter.Prototype = function() {
 
   this.importDocument = function(html, source) {
 
+    html = html.replace(/&#13;/g, '').replace(/<br ?\/?>|<\/p>|<\/div>/g, '\n');
+
     var clean = sanitizeHtml(html, {
-      allowedTags: [ 'p', 'b', 'i', 'em', 'strong', 'a' ],
+      allowedTags: [ /*'p',*/ 'b', 'i', 'em', 'strong', 'a' ],
       allowedAttributes: {
         'a': [ 'href' ]
       }
     });
-    // Preprocess record
-    // Replace double <br> with paragraph
-    //html = "<p>" + html + "</p>";
-    //html = html.replace(/<br>/gi, "</p><p>");
+
+    clean = clean.split('\n');
+
+    for (var i = 0; i < clean.length; i++) {
+      clean[i] = clean[i].trim();
+      if (clean[i] === "") {         
+        clean.splice(i, 1);
+        i--;
+      }
+    }
+
+    clean = clean.join('</p><p>');
+    clean = "<p>" + clean + "</p>";
+    
     this.reset();
     var parsed = DefaultDOMElement.parseHTML(clean);
     this.convertDocument(parsed);

@@ -5,5 +5,5 @@
     "wsUrl": "ws://localhost:5000",
     "appUrl": "http://localhost:5000"
   },
-  "db_url": "postgres://postgres_mpro:qap9edMUKWixt6gAjTCz@46.101.162.206:5432/postgres_mpro"
+  "db_url": "postgres://mpro_user:mpro_pw@localhost:5432/mpro"
 }
