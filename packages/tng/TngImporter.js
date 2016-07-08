@@ -32,7 +32,7 @@ TngImporter.Prototype = function() {
     html = html.replace(/&#13;/g, '').replace(/<br ?\/?>|<\/p>|<\/div>/g, '\n');
 
     var clean = sanitizeHtml(html, {
-      allowedTags: [ 'b', 'i', 'em', 'strong', 'a'],
+      allowedTags: [ /*'p',*/ 'b', 'i', 'em', 'strong', 'a' ],
       allowedAttributes: {
         'a': [ 'href' ]
       }
@@ -57,8 +57,6 @@ TngImporter.Prototype = function() {
     var doc = this.generateDocument();
     // Create document metadata
     this.convertMeta(doc, source);
-
-    this.convertEntities(doc, source.markup);
     return doc;
   };
 
@@ -69,53 +67,31 @@ TngImporter.Prototype = function() {
 
   this.convertMeta = function(doc, source) {
     var meta = source.meta;
-    var publisher = meta.publisher;
-    var published = new Date(source.published_date);
+
+    // Hack, should be replaced
+    var source_type = source.guid.indexOf('vk.com') > -1 ? 'vk' : 'article'; 
+    var abstract = source.doc_source.substr(0, source.doc_source.indexOf('<br>'));
+    abstract = this.truncate(abstract, 200, true);
+
+    if(meta.abstract) abstract = meta.abstract;
 
     doc.create({
       id: 'meta',
       type: 'meta',
-      title: source.title,
-      source: source.guid,
-      published: published.toJSON(),
+      title: source.title || '',
       rubrics: source.rubric_ids,
+      source_type: source_type,
       entities: [],
-      abstract: meta.abstract,
-      cover: '',
-      publisher: publisher.name
+      abstract: abstract,
+      accepted: false
     });
   };
 
-  this.convertEntities = function(doc, markup) {
-    var nodeList = doc.get(['body', 'nodes']);
-    var nodes = [];
-
-    var pos = 0;
-
-    each(nodeList, function(nodeId) {
-      var node = doc.get(nodeId);
-      var length = node.content.length;
-      node.startPos = pos;
-      node.endPos = pos + length;
-      nodes.push(node);
-      pos += length + 1; 
-    });
-
-    each(markup, function(ref, id) {
-      var node = find(nodes, function(n) { return n.startPos <= ref.start_offset && n.endPos >= ref.start_offset; });
-      if(node) {
-        var startOffset = ref.start_offset - node.startPos;
-        var endOffset = startOffset + ref.end_offset - ref.start_offset;
-        doc.create({
-          id: 'entity-' + id,
-          type: 'entity',
-          path: [node.id, 'content'],
-          reference: ref.entity,
-          startOffset: startOffset,
-          endOffset: endOffset
-        });
-      }
-    });
+  this.truncate = function(string, n, useWordBoundary) {
+    var isTooLong = string.length > n,
+        s_ = isTooLong ? string.substr(0,n-1) : string;
+        s_ = (useWordBoundary && isTooLong) ? s_.substr(0,s_.lastIndexOf(' ')) : s_;
+    return  isTooLong ? s_ + '&hellip;' : s_;
   };
 };
 
