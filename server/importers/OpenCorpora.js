@@ -2,7 +2,7 @@
 
 var oo = require('substance/util/oo');
 var uuid = require('substance/util/uuid');
-var Err = require('substance/util/Error');
+var Err = require('substance/util/SubstanceError');
 var Promise = require('bluebird');
 var extract = require('extract-zip');
 var sortBy = require('lodash/sortBy');

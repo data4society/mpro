@@ -1,7 +1,7 @@
 "use strict";
 
 var oo = require('substance/util/oo');
-var Err = require('substance/util/Error');
+var Err = require('substance/util/SubstanceError');
 var map = require('lodash/map');
 var has = require('lodash/has');
 var Promise = require("bluebird");
