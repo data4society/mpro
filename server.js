@@ -11,7 +11,7 @@ var WebSocketServer = require('ws').Server;
 
 // Development server 
 // Serves HTML, bundled JS and CSS in non-production mode
-var server = require('substance/util/server');
+var serverUtils = require('substance/util/server');
 
 /*
   Stores
@@ -183,9 +183,14 @@ var env = config.util.getEnv('NODE_ENV');
 
 if(env !== 'production') {
   // Serve HTML, bundled JS and CSS in non-production mode
-  server.serveHTML(app, '/', path.join(__dirname, 'index.html'), config);
-  server.serveStyles(app, '/app.css', path.join(__dirname, 'app.scss'));
-  server.serveJS(app, '/app.js', path.join(__dirname, 'app.js'));
+
+  serverUtils.serveStyles(app, '/app.css', {
+    rootDir: __dirname,
+    configuratorPath: require.resolve('./packages/mpro/MproConfigurator'),
+    configPath: require.resolve('./client/package')
+  });
+  serverUtils.serveJS(app, '/app.js', path.join(__dirname, 'client', 'app.js'));
+  serverUtils.serveHTML(app, '/', path.join(__dirname, 'client', 'index.html'), config);
   // Serve static files in non-production mode
   app.use('/assets', express.static(path.join(__dirname, 'styles/assets')));
   app.use('/fonts', express.static(path.join(__dirname, 'node_modules/font-awesome/fonts')));
