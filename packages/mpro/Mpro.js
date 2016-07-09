@@ -1,6 +1,7 @@
 'use strict';
 
 var AbstractApplication = require('../common/AbstractApplication');
+var Inbox = require('../inbox/Inbox');
 var MproRouter = require('./MproRouter');
 
 /*
@@ -16,6 +17,8 @@ function Mpro() {
   this.authenticationClient = configurator.getAuthenticationClient();
   this.documentClient = configurator.getDocumentClient();
   this.fileClient = configurator.getFileClient();
+
+  this.addPage('inbox', Inbox);
 }
 
 Mpro.Prototype = function() {
