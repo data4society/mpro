@@ -17,12 +17,13 @@
     "mv": "^2.1.1",
     "rimraf": "^2.5.2",
     "sanitize-html": "^1.11.4",
-    "substance": "git://github.com/substance/substance.git#97456fc530c3e081db593fa29795c03dbaa57cdb",
+    "substance": "git://github.com/substance/substance.git#60fdced18043f6f84f5bd78983cf6c0d67dad985",
     "ws": "^1.1.0"
   },
   "devDependencies": {
     "browserify": "^13.0.1",
     "chai": "^3.5.0",
+    "glob": "7.0.3",
     "gulp": "^3.9.1",
     "gulp-istanbul": "^0.10.4",
     "gulp-mocha": "^2.2.0",
