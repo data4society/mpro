@@ -21,9 +21,16 @@ Inbox.Prototype = function() {
 
   this.render = function($$) {
     var componentRegistry = this.context.componentRegistry;
+    var Header = componentRegistry.get('header');
     var Feed = componentRegistry.get('feed');
 
     var el = $$('div').addClass('sc-inbox');
+
+    el.append($$(Header, {
+      actions: {
+        'configurator': this.getLabel('configurator-menu')
+      }
+    }));
 
     el.append(
       $$(DoubleSplitPane, {splitType: 'vertical', sizeA: '300px', sizeB: '40%'}).append(
