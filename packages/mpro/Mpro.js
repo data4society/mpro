@@ -1,7 +1,6 @@
 'use strict';
 
 var AbstractApplication = require('../common/AbstractApplication');
-var Inbox = require('../inbox/Inbox');
 var MproRouter = require('./MproRouter');
 
 /*
@@ -11,14 +10,17 @@ function Mpro() {
   Mpro.super.apply(this, arguments);
 
   var configurator = this.props.configurator;
-  
+
   this.config = configurator.getAppConfig();
 
   this.authenticationClient = configurator.getAuthenticationClient();
   this.documentClient = configurator.getDocumentClient();
   this.fileClient = configurator.getFileClient();
+  this.componentRegistry = configurator.getComponentRegistry();
+  this.iconProvider = configurator.getIconProvider();
+  this.labelProvider = configurator.getLabelProvider();
 
-  this.addPage('inbox', Inbox);
+  this.addPage('inbox', this.componentRegistry.get('inbox'));
 }
 
 Mpro.Prototype = function() {
@@ -30,8 +32,9 @@ Mpro.Prototype = function() {
       documentClient: this.documentClient,
       fileClient: this.fileClient,
       urlHelper: this.router,
-      iconProvider: configurator.getIconProvider(),
-      labelProvider: configurator.getLabelProvider()
+      componentRegistry: this.componentRegistry,
+      iconProvider: this.iconProvider,
+      labelProvider: this.labelProvider
     };
   };
 
@@ -49,11 +52,11 @@ Mpro.Prototype = function() {
   };
 
   this._onAuthentication = function(route, session) {
-    if(!session) {
-      route.page = 'welcome';
-    } else if (!session.user.name) {
-      route.page = 'entername';
-    }
+    // if(!session) {
+    //   route.page = 'welcome';
+    // } else if (!session.user.name) {
+    //   route.page = 'entername';
+    // }
 
     return route;
   };

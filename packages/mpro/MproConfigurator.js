@@ -50,6 +50,13 @@ MproConfigurator.Prototype = function() {
   };
 
   /*
+    Set File Client class
+  */
+  this.setFileClient = function(fileClient) {
+    this.config.fileClient = fileClient;
+  };
+
+  /*
     Set Document Client class
   */
   this.setDocumentClient = function(DocumentClientClass) {

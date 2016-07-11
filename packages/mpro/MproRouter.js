@@ -10,11 +10,16 @@ function MproRouter(app) {
 MproRouter.Prototype = function() {
 
   // URL helpers
-  this.openNote = function(documentId) {
+  this.openDocument = function(documentId) {
     return '#' + Router.objectToRouteString({
-      section: 'document',
+      page: 'documents',
       documentId: documentId
     });
+  };
+
+  this.getRoute = function() {
+    var routerString = this.getRouteString();
+    return Router.routeStringToObject(routerString);
   };
 };
 
