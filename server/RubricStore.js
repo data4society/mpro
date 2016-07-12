@@ -204,7 +204,6 @@ RubricStore.Prototype = function() {
     return new Promise(function(resolve, reject) {
 
       this.listFacets(filters, options).then(function(facets) {
-        console.log(facets)
         this.db.rubrics.find({}, options, function(err, rubrics) {
           if (err) {
             reject(new Err('RubricStore.ListError', {
