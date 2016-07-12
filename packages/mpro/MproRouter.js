@@ -12,7 +12,7 @@ MproRouter.Prototype = function() {
   // URL helpers
   this.openDocument = function(documentId) {
     return '#' + Router.objectToRouteString({
-      page: 'documents',
+      page: 'inbox',
       documentId: documentId
     });
   };

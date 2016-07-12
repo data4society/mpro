@@ -12,7 +12,7 @@ function Mpro() {
   var configurator = this.props.configurator;
 
   this.config = configurator.getAppConfig();
-
+  this.configurator = configurator;
   this.authenticationClient = configurator.getAuthenticationClient();
   this.documentClient = configurator.getDocumentClient();
   this.fileClient = configurator.getFileClient();
@@ -28,6 +28,7 @@ Mpro.Prototype = function() {
   this.getChildContext = function() {
     return {
       config: this.config,
+      configurator: this.configurator,
       authenticationClient: this.authenticationClient,
       documentClient: this.documentClient,
       fileClient: this.fileClient,
