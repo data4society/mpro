@@ -14,51 +14,16 @@ function Feed() {
 
   var route = this.context.urlHelper.getRoute();
   this.activeItem = route.documentId;
-
-  this.handleActions({
-    'loadMore': this._loadMore
-  });
 }
 
 Feed.Prototype = function() {
-
-  /*
-    Load documents list on mount.
-  */
-  this.didMount = function() {
-    this._loadDocuments();
-  };
-
-  /*
-    Initial state of component, contains:
-    - filters: default filters (e.g. not show training documents)
-    - perPage: number of documents per page
-    - page: default page number
-    - order: sort by property
-    - direction: order of sorting (desc, asc)
-    - documentItems: loaded document items (used internaly)
-    - pagination: flag to show/hide pager (used internaly)
-    - totalItems: total number of items (used internaly)
-  */
-  this.getInitialState = function() {
-    return {
-      filters: {'training': false},
-      perPage: 10,
-      page: 1,
-      order: 'created',
-      direction: 'desc',
-      documentItems: [],
-      pagination: false,
-      totalItems: 0
-    };
-  };
 
   this.render = function($$) {
     var componentRegistry = this.context.componentRegistry;
     var FeedItem = componentRegistry.get('feedItem');
     var Pager = componentRegistry.get('pager');
 
-    var documentItems = this.state.documentItems;
+    var documentItems = this.props.documentItems;
     var el = $$('div').addClass('sc-feed');
 
     if (!documentItems) {
@@ -71,9 +36,9 @@ Feed.Prototype = function() {
       el.append(
         this.renderFull($$, FeedItem),
         $$(Pager, {
-          page: this.state.page,
-          perPage: this.state.perPage,
-          total: this.state.totalItems
+          page: this.props.page,
+          perPage: this.props.perPage,
+          total: this.props.totalItems
         })
       );
     } else {
@@ -88,7 +53,7 @@ Feed.Prototype = function() {
     Contains counter of founded documents.
   */
   this.renderIntro = function($$) {
-    var totalItems = this.state.totalItems;
+    var totalItems = this.props.totalItems;
     var el = $$('div').addClass('se-intro');
     var label = this.getLabel('counter' + this._getNumEnding(totalItems));
     label = totalItems > 0 ? totalItems + ' ' + label : label;
@@ -123,7 +88,7 @@ Feed.Prototype = function() {
     Contains Feed Items.
   */
   this.renderFull = function($$, FeedItem) {
-    var documentItems = this.state.documentItems;
+    var documentItems = this.props.documentItems;
     var el = $$('div').addClass('se-feed-not-empty');
 
     if (documentItems) {
@@ -178,7 +143,7 @@ Feed.Prototype = function() {
 
   this.updateUrl = function(documentId) {
     var urlHelper = this.context.urlHelper;
-    urlHelper.writeRoute({section: 'inbox', documentId: documentId});
+    urlHelper.writeRoute({page: 'inbox', documentId: documentId});
   };
 
   /*
@@ -208,66 +173,6 @@ Feed.Prototype = function() {
       }
     }
     return endingSet;
-  };
-
-  this._loadMore = function(page) {
-    this.extendState({
-      page: page,
-      pagination: true
-    });
-    this._loadDocuments();
-  };
-
-  this._applyFacets = function(facets) {
-    var filters = this.state.filters;
-    filters["rubrics @>"] = facets;
-    this.extendState({
-      filters: filters
-    });
-    this._loadDocuments();
-  };
-
-  /*
-    Loads documents
-  */
-  this._loadDocuments = function() {
-    var documentClient = this.context.documentClient;
-    var filters = this.state.filters;
-    var perPage = this.state.perPage;
-    var page = this.state.page;
-    var order = this.state.order;
-    var direction = this.state.direction;
-    var pagination = this.state.pagination;
-    var items = [];
-
-    documentClient.listDocuments(
-      filters,
-      { 
-        limit: perPage, 
-        offset: perPage * (page - 1),
-        order: order + ' ' + direction
-      }, 
-      function(err, documents) {
-        if (err) {
-          console.error(err);
-          this.setState({
-            error: new Error('Feed loading failed')
-          });
-          return;
-        }
-
-        if(pagination) {
-          items = concat(this.state.documentItems, documents.records);
-        } else {
-          items = documents.records;
-        }
-
-        this.extendState({
-          documentItems: items,
-          totalItems: documents.total
-        });
-      }.bind(this)
-    );
   };
 
 };
