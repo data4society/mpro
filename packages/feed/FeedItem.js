@@ -1,6 +1,7 @@
 'use strict';
 
 var Component = require('substance/ui/Component');
+var isEmpty = require('lodash/isEmpty');
 var each = require('lodash/each');
 var moment = require('moment');
 
@@ -32,7 +33,7 @@ FeedItem.Prototype = function() {
 
     var rubricsList = [];
 
-    if(rubrics) {
+    if(!isEmpty(rubrics)) {
       each(rubricsMeta, function(rubric) {
         var item = rubrics.get(rubric);
         rubricsList.push(item.name);
