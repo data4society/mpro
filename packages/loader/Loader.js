@@ -5,16 +5,17 @@ var JSONConverter = require('substance/model/JSONConverter');
 var CollabClient = require('substance/collab/CollabClient');
 var WebSocketConnection = require('substance/collab/WebSocketConnection');
 var Component = require('substance/ui/Component');
+var Viewer = require('../viewer/Viewer');
 var converter = new JSONConverter();
 
 /*
-  Abstract document loader class.
+  Loader class.
   
   Used for retrieving document, configurator and
   initilise collaboration session.
 */
 
-function AbstractDocumentLoader() {
+function Loader() {
   Component.apply(this, arguments);
 
   var appConfig = this.context.config;
@@ -38,7 +39,7 @@ function AbstractDocumentLoader() {
   this.collabClient.on('connected', this._onCollabClientConnected, this);
 }
 
-AbstractDocumentLoader.Prototype = function() {
+Loader.Prototype = function() {
 
   this.getInitialState = function() {
     return {
@@ -81,7 +82,7 @@ AbstractDocumentLoader.Prototype = function() {
   };
 
   this.getChildConfigurator = function(schemaName) {
-    var mode = this.mode;
+    var mode = this.props.mode;
     var mproConfigurator = this.context.configurator;
     return mproConfigurator.getConfigurator(mode + '-' + schemaName);
   };
@@ -141,13 +142,56 @@ AbstractDocumentLoader.Prototype = function() {
       window.session = session;
 
       this.setState({
+        configurator: configurator,
         //documentInfo: new DocumentInfo(docRecord),
         session: session
       });
     }.bind(this));
   };
+
+  this.render = function($$) {
+    var el = $$('div').addClass('sc-edit-document');
+
+    var EditorClass;
+
+    if (this.props.mode === 'viewer') {
+      EditorClass = Viewer;
+    } else if (this.props.mode === 'editor') {
+      //EditorClass = Author;
+    }
+
+    // var layout = $$(Layout, {
+    //   width: 'large'
+    // });
+    // Display top-level errors. E.g. when a doc could not be loaded
+    // we will display the notification on top level
+    if (this.state.error) {
+      console.log(this.state.error.message);
+      // layout.append($$(Notification, {
+      //   type: 'error',
+      //   message: this.state.error.message
+      // }));
+    } else if (!this.props.documentId) {
+      el.append(
+        $$('div').addClass('no-document').append(
+          $$('p').append('click on document to open')
+        )
+      );
+    } else if (this.state.session) {
+      el.append(
+        $$(EditorClass, {
+          configurator: this.state.configurator,
+          //documentInfo: this.state.documentInfo,
+          documentSession: this.state.session,
+          rubrics: this.props.rubrics
+        }).ref('documentViewer')
+      );
+    }
+
+    return el;
+  };
 };
 
-Component.extend(AbstractDocumentLoader);
+Component.extend(Loader);
 
-module.exports = AbstractDocumentLoader;
+module.exports = Loader;
