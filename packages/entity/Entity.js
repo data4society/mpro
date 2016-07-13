@@ -1,6 +1,7 @@
 'use strict';
 
 var PropertyAnnotation = require('substance/model/PropertyAnnotation');
+var Fragmenter = require('substance/model/Fragmenter');
 
 /**
   Entity Node.
@@ -20,5 +21,8 @@ Entity.static.defineSchema({
   "reference": {type: "string", default: ""},
   "class": {type: "string", default: ""}
 });
+
+// in presence of overlapping annotations will try to render this as one element
+Entity.static.fragmentation = Fragmenter.SHOULD_NOT_SPLIT;
 
 module.exports = Entity;

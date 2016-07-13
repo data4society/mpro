@@ -9,7 +9,13 @@ module.exports = {
   name: 'entity',
   configure: function(config) {
     config.addNode(Entity);
-    config.addTool(EntityTool);
+    config.addTool(EntityTool, {viewer: true});
     config.addCommand(EntityCommand);
+    config.addIcon(EntityCommand.static.name, { 'fontawesome': 'fa-users' });
+    config.addStyle(__dirname, '_entity.scss');
+    config.addLabel('entity', {
+      en: 'Entity reference',
+      ru: 'Упоминание сущности'
+    });
   }
 };

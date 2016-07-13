@@ -9,6 +9,5 @@ function EntityCommand() {
 AnnotationCommand.extend(EntityCommand);
 
 EntityCommand.static.name = 'entity';
-EntityCommand.static.annotationType = 'entity';
 
 module.exports = EntityCommand;

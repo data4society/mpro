@@ -9,6 +9,5 @@ function EntityTool() {
 AnnotationTool.extend(EntityTool);
 
 EntityTool.static.name = 'entity';
-EntityTool.static.command = 'entity';
 
 module.exports = EntityTool;
