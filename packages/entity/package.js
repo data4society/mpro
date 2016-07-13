@@ -12,7 +12,7 @@ module.exports = {
     config.addTool(EntityTool, {viewer: true});
     config.addCommand(EntityCommand);
     config.addIcon(EntityCommand.static.name, { 'fontawesome': 'fa-users' });
-    config.addStyle(__dirname, '_entity.scss');
+    config.addStyle(__dirname, '_entity');
     config.addLabel('entity', {
       en: 'Entity reference',
       ru: 'Упоминание сущности'

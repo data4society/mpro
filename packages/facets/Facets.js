@@ -1,15 +1,10 @@
 'use strict';
 
-var map = require('lodash/map');
-var each = require('lodash/each');
-var keyBy = require('lodash/keyBy');
-var concat = require('lodash/concat');
-var isEqual = require('lodash/isEqual');
-var flattenDeep = require('lodash/flattenDeep');
-var isUndefined = require('lodash/isUndefined');
-var isEmpty = require('lodash/isEmpty');
 var Component = require('substance/ui/Component');
-var Icon = require('substance/ui/FontAwesomeIcon');
+var map = require('lodash/map');
+var concat = require('lodash/concat');
+var isEmpty = require('lodash/isEmpty');
+var flattenDeep = require('lodash/flattenDeep');
 
 function Facets() {
   Component.apply(this, arguments);
