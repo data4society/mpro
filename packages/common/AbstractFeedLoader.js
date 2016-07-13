@@ -3,6 +3,7 @@
 var Component = require('substance/ui/Component');
 var isEqual = require('lodash/isEqual');
 var extend = require('lodash/extend');
+var concat = require('lodash/concat');
 var each = require('lodash/each');
 var Rubric = require('../../models/rubric/Rubric');
 
