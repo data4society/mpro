@@ -4,6 +4,7 @@ var ProseEditor = require('substance/packages/prose-editor/ProseEditor');
 var ContainerEditor = require('substance/ui/ContainerEditor');
 var SplitPane = require('substance/ui/SplitPane');
 var ScrollPane = require('substance/ui/ScrollPane');
+var Layout = require('substance/ui/Layout');
 var ProseEditorOverlay = require('substance/packages/prose-editor/ProseEditorOverlay')
 
 function Viewer() {
@@ -23,7 +24,11 @@ Viewer.Prototype = function() {
       scrollbarPosition: 'right',
       overlay: ProseEditorOverlay,
     }).append(
-      editor
+      $$(Layout, {
+        width: 'large'
+      }).append(
+        editor
+      )
     ).ref('contentPanel');
 
     el.append(
