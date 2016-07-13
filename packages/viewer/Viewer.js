@@ -1,57 +1,54 @@
 'use strict';
 
-var AbstractDocumentLoader = require('../common/AbstractDocumentLoader');
-// var DocumentViewer = require('./DocumentViewer');
+var ProseEditor = require('substance/packages/prose-editor/ProseEditor');
+var ContainerEditor = require('substance/ui/ContainerEditor');
+var SplitPane = require('substance/ui/SplitPane');
+var ScrollPane = require('substance/ui/ScrollPane');
+var ProseEditorOverlay = require('substance/packages/prose-editor/ProseEditorOverlay')
 
 function Viewer() {
-  AbstractDocumentLoader.apply(this, arguments);
-
-  this.mode = 'viewer';
+  Viewer.super.apply(this, arguments);
 }
 
 Viewer.Prototype = function() {
 
   this.render = function($$) {
-    var el = $$('div').addClass('sc-view-document');
+    var el = $$('div').addClass('sc-document-viewer');
 
-    // var layout = $$(Layout, {
-    //   width: 'large'
-    // });
-    // Display top-level errors. E.g. when a doc could not be loaded
-    // we will display the notification on top level
-    // if (this.state.error) {
-    //   console.log(this.state.error.message);
-    //   // layout.append($$(Notification, {
-    //   //   type: 'error',
-    //   //   message: this.state.error.message
-    //   // }));
-    // } else if (!this.props.documentId) {
-    //   el.append(
-    //     $$('div').addClass('no-document').append(
-    //       $$('p').append('click on document to open')
-    //     )
-    //   );
-    // } else if (this.state.session) {
-    //   el.append(
-    //     $$(DocumentViewer, {
-    //       mobile: this.props.mobile,
-    //       documentInfo: this.state.documentInfo,
-    //       documentSession: this.state.session,
-    //       rubrics: this.props.rubrics
-    //     }).ref('documentViewer')
-    //   );
-    // }
+    var toolbar = this._renderToolbar($$);
+    var editor = this._renderEditor($$);
 
-    // if (this.state.requestLogin) {
-    //   el.append($$(RequestEditAccess, {
-    //     documentId: this.getDocumentId()
-    //   }));
-    // }
+    var contentPanel = $$(ScrollPane, {
+      scrollbarType: 'substance',
+      scrollbarPosition: 'right',
+      overlay: ProseEditorOverlay,
+    }).append(
+      editor
+    ).ref('contentPanel');
 
+    el.append(
+      $$(SplitPane, {splitType: 'horizontal'}).append(
+        toolbar,
+        contentPanel
+      )
+    );
     return el;
   };
+
+  this._renderEditor = function($$) {
+    var configurator = this.props.configurator;
+    return $$(ContainerEditor, {
+      disabled: this.props.disabled,
+      documentSession: this.documentSession,
+      node: this.doc.get('body'),
+      editing: 'selection',
+      commands: configurator.getSurfaceCommandNames(),
+      textTypes: configurator.getTextTypes()
+    }).ref('body');
+  };
+
 };
 
-AbstractDocumentLoader.extend(Viewer);
+ProseEditor.extend(Viewer);
 
 module.exports = Viewer;

@@ -1,21 +1,20 @@
-.sc-view-document {
-  position: fixed;
-  top: 40px;
-  bottom: 0px;
-  left: 55%;
-  width: 45%;
-  background: #fff;
-  z-index: 10;
+.sc-document-viewer {
 
   .no-document {
     text-align: center;
     padding-top: 60px;
   }
 
-  .sc-document-viewer {
-    > .sc-split-pane {
-      padding-left: 20px;
-      width: 100%;
-    }
+  > .sc-split-pane {
+    padding-left: 40px;
+    width: 100%;
+  }
+
+  .se-scrollable {
+    padding-right: 20px;
+  }
+
+  .sc-paragraph {
+    padding-bottom: 10px;
   }
 }
