@@ -5,7 +5,7 @@ var HTMLImporter = require('substance/model/HTMLImporter');
 var DefaultDOMElement = require('substance/ui/DefaultDOMElement');
 var each = require('lodash/each');
 var find = require('lodash/find');
-var Article = require('./Article');
+var Article = require('../common/Article');
 var schema = Article.schema;
 
 var converters = [
@@ -17,12 +17,8 @@ var converters = [
   require('substance/packages/link/LinkHTMLConverter')
 ];
 
-function VkImporter() {
-  VkImporter.super.call(this, {
-    schema: schema,
-    converters: converters,
-    DocumentClass: Article
-  });
+function VkImporter(config) {
+  VkImporter.super.call(this, config);
 }
 
 VkImporter.Prototype = function() {
