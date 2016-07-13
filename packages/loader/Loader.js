@@ -5,6 +5,7 @@ var JSONConverter = require('substance/model/JSONConverter');
 var CollabClient = require('substance/collab/CollabClient');
 var WebSocketConnection = require('substance/collab/WebSocketConnection');
 var Component = require('substance/ui/Component');
+var isUndefined = require('lodash/isUndefined');
 var Viewer = require('../viewer/Viewer');
 var converter = new JSONConverter();
 
@@ -51,7 +52,7 @@ Loader.Prototype = function() {
 
   this.didMount = function() {
     var documentId = this.getDocumentId();
-    if (documentId) {
+    if (!isUndefined(documentId)) {
       // load the document after mounting
       this._loadDocument(this.getDocumentId());
     } else {
@@ -174,7 +175,7 @@ Loader.Prototype = function() {
     } else if (!this.props.documentId) {
       el.append(
         $$('div').addClass('no-document').append(
-          $$('p').append('click on document to open')
+          $$('p').append(this.getLabel('no-document'))
         )
       );
     } else if (this.state.session) {
