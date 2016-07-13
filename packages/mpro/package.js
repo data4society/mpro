@@ -9,6 +9,7 @@ var HeaderPackage = require('../header/package');
 var FeedPackage = require('../feed/package');
 var PagerPackage = require('../pager/package');
 var InboxPackage = require('../inbox/package');
+var LoaderPackage = require('../loader/package');
 var ViewerPackage = require('../viewer/package');
 
 var Article = require('../article/package');
@@ -30,7 +31,7 @@ module.exports = {
     config.import(RubricsPackage);
     config.import(FiltersPackage);
     config.import(FacetsPackage);
-    config.import(ViewerPackage);
+    config.import(LoaderPackage);
     
     // Default configuration for available modes
     config.addConfigurator('viewer-mpro-article', articleViewerConfigurator);

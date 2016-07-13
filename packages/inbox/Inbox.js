@@ -30,7 +30,7 @@ Inbox.Prototype = function() {
     var Header = componentRegistry.get('header');
     var Feed = componentRegistry.get('feed');
     var Filters = componentRegistry.get('filters');
-    var Viewer = componentRegistry.get('viewer');
+    var Loader = componentRegistry.get('loader');
 
     var el = $$('div').addClass('sc-inbox');
 
@@ -49,11 +49,12 @@ Inbox.Prototype = function() {
         }).append(
           $$(Feed, extend({}, this.props, this.state)).ref('feed')
         ),
-        $$(Viewer, {
+        $$(Loader, {
           documentId: this.props.documentId,
           rubrics: this.state.rubrics,
+          mode: 'viewer', // For debugging purposes
           userSession: {sessionToken: 'testusertoken'} // For debugging purposes
-        }).ref('viewer')
+        }).ref('loader')
       )
     );
 
@@ -61,9 +62,9 @@ Inbox.Prototype = function() {
   };
 
   this._openDocument = function(documentId) {
-    var viewer = this.refs.viewer;
+    var loader = this.refs.loader;
     
-    viewer.extendProps({
+    loader.extendProps({
       documentId: documentId
     });
   };
