@@ -18,7 +18,8 @@ function Inbox() {
   AbstractFeedLoader.apply(this, arguments);
 
   this.handleActions({
-    'loadMore': this._loadMore
+    'loadMore': this._loadMore,
+    'openDocument': this._openDocument
   });
 }
 
@@ -29,6 +30,7 @@ Inbox.Prototype = function() {
     var Header = componentRegistry.get('header');
     var Feed = componentRegistry.get('feed');
     var Filters = componentRegistry.get('filters');
+    var Viewer = componentRegistry.get('viewer');
 
     var el = $$('div').addClass('sc-inbox');
 
@@ -47,26 +49,29 @@ Inbox.Prototype = function() {
         }).append(
           $$(Feed, extend({}, this.props, this.state)).ref('feed')
         ),
-        $$('div').addClass('test3')
+        $$(Viewer, {
+          documentId: this.props.documentId,
+          rubrics: this.state.rubrics,
+          userSession: {sessionToken: 'testusertoken'} // For debugging purposes
+        }).ref('viewer')
       )
     );
 
     return el;
   };
 
+  this._openDocument = function(documentId) {
+    var viewer = this.refs.viewer;
+    
+    viewer.extendProps({
+      documentId: documentId
+    });
+  };
+
   this._loadMore = function(page) {
     this.extendState({
       page: page,
       pagination: true
-    });
-    this._loadDocuments();
-  };
-
-  this._applyFacets = function(facets) {
-    var filters = this.state.filters;
-    filters["rubrics @>"] = facets;
-    this.extendState({
-      filters: filters
     });
     this._loadDocuments();
   };
