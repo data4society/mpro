@@ -149,7 +149,6 @@ AbstractFeedLoader.Prototype = function() {
     var order = this.state.order;
     var direction = this.state.direction;
     var items = [];
-
     documentClient.listDocuments(
       filters,
       {
@@ -168,7 +167,7 @@ AbstractFeedLoader.Prototype = function() {
           items = concat(documents.records, this.state.documentItems);
           this.extendState({
             documentItems: items,
-            totalItems: documents.total + this.state.totalItems,
+            totalItems: parseInt(documents.total) + parseInt(this.state.totalItems),
             lastQueryTime: new Date()
           });
         }

@@ -63,10 +63,20 @@ Inbox.Prototype = function() {
 
   this._openDocument = function(documentId) {
     var loader = this.refs.loader;
+    var feed = this.refs.feed;
+
+    feed.setActiveItem(documentId);
+
+    this.updateUrl(documentId);
     
     loader.extendProps({
       documentId: documentId
     });
+  };
+
+  this.updateUrl = function(documentId) {
+    var urlHelper = this.context.urlHelper;
+    urlHelper.writeRoute({page: 'inbox', documentId: documentId});
   };
 
   this._loadMore = function(page) {

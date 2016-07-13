@@ -109,10 +109,8 @@ Feed.Prototype = function() {
     return el;
   };
 
-  this.setActiveItem = function(documentId, silent) {
+  this.setActiveItem = function(documentId) {
     var currentActive = this.activeItem;
-
-    if(!silent) this.updateUrl(documentId);
 
     if(currentActive && !isEmpty(this.refs)) {
       if(this.refs[currentActive]) {
@@ -139,11 +137,6 @@ Feed.Prototype = function() {
         'document': document
       });
     }
-  };
-
-  this.updateUrl = function(documentId) {
-    var urlHelper = this.context.urlHelper;
-    urlHelper.writeRoute({page: 'inbox', documentId: documentId});
   };
 
   /*
