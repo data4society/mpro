@@ -9,7 +9,15 @@ var HeaderPackage = require('../header/package');
 var FeedPackage = require('../feed/package');
 var PagerPackage = require('../pager/package');
 var InboxPackage = require('../inbox/package');
-// var ViewerPackage = require('../viewer/package');
+var ViewerPackage = require('../viewer/package');
+
+var Article = require('../article/package');
+var articleViewerConfigurator = new ProseEditorConfigurator().import(ViewerPackage);
+articleViewerConfigurator.import(Article);
+
+var Vk = require('../vk/package');
+var vkViewerConfigurator = new ProseEditorConfigurator().import(ViewerPackage);
+vkViewerConfigurator.import(Vk);
 
 module.exports = {
   name: 'mpro',
@@ -22,7 +30,10 @@ module.exports = {
     config.import(RubricsPackage);
     config.import(FiltersPackage);
     config.import(FacetsPackage);
-    // // Default configuration for available modes
-    // config.addConfigurator('viewer', new ProseEditorConfigurator().import(ViewerPackage));
+    config.import(ViewerPackage);
+    
+    // Default configuration for available modes
+    config.addConfigurator('viewer-mpro-article', articleViewerConfigurator);
+    config.addConfigurator('viewer-mpro-vk', vkViewerConfigurator);
   }
 };

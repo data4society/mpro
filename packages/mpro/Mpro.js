@@ -39,11 +39,6 @@ Mpro.Prototype = function() {
     };
   };
 
-  this.getChildConfigurator = function() {
-    var scientistConfigurator = this.props.configurator;
-    return scientistConfigurator.getConfigurator(this.props.mode);
-  };
-
   this.getDefaultPage = function() {
     return 'inbox';
   };
