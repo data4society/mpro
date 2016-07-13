@@ -137,6 +137,11 @@ AbstractFeedLoader.Prototype = function() {
     );
   };
 
+  /*
+    Documents long polling.
+    Will query for a new documents with setted up filters
+    since last query time.
+  */
   this._pollDocuments = function() {
     var documentClient = this.context.documentClient;
     var filters = extend({}, this.state.filters, {"created >": this.state.lastQueryTime});
@@ -183,14 +188,14 @@ AbstractFeedLoader.Prototype = function() {
       }
     }.bind(this));
 
-    if(facetChange) this._changeFacets();
+    if(facetChange) this._applyFacets();
   };
 
   /*
     Called when facets changed.
     Will change filters and load rubrics again.
   */
-  this._changeFacets = function() {
+  this._applyFacets = function() {
     var rubrics = this.state.rubrics;
     var filters = this.state.filters;
     var newFilters = {};
