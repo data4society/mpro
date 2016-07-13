@@ -85,6 +85,7 @@ Rubrics.Prototype = function() {
     return active;
   };
 
+  // Whatever children of given node has active prop
   this.hasActiveChildren = function(nodeId) {
     var result = false;
     var children = this.getAllChildren(nodeId);
@@ -96,6 +97,40 @@ Rubrics.Prototype = function() {
       }
     }.bind(this));
     return result;
+  };
+
+  // Get ids of all selected nodes
+  this.getSelected = function() {
+    var selected = [];
+    var rubricNodes = this.getIndex('type').get('rubric');
+    each(rubricNodes, function(node) {
+      if(node.selected) selected.push(node.id);
+    });
+    return selected;
+  };
+
+  // Whatever children of given node has selected prop
+  this.hasSelectedChildren = function(nodeId) {
+    var result = false;
+    var children = this.getAllChildren(nodeId);
+    each(children, function(childId) {
+      var node = this.get(childId);
+      if(node.selected) {
+        result = true;
+        return false;
+      }
+    }.bind(this));
+    return result;
+  };
+
+  // Resets selections for all nodes
+  this.resetSelection = function() {
+    var nodes = this.getNodes();
+    each(nodes, function(node) {
+      if(node.selected) {
+        this.set([node.id, 'selected'], false);
+      }
+    }.bind(this));
   };
 };
 
