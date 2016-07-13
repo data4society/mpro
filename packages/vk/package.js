@@ -9,6 +9,7 @@ var LinkPackage = require('substance/packages/link/LinkPackage');
 var EmphasisPackage = require('substance/packages/emphasis/EmphasisPackage');
 var StrongPackage = require('substance/packages/strong/StrongPackage');
 var EntityPackage = require('../entity/package');
+var RubricatorPackage = require('../rubricator/package');
 
 var Article = require('../common/Article');
 var VkMeta = require('./VkMeta');
@@ -35,5 +36,6 @@ module.exports = {
     config.import(StrongPackage);
     config.import(LinkPackage);
     config.import(EntityPackage);
+    config.import(RubricatorPackage);
   }
 };
