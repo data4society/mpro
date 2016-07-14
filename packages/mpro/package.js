@@ -13,6 +13,7 @@ var LoaderPackage = require('../loader/package');
 var ViewerPackage = require('../viewer/package');
 var NotificationPackage = require('../notification/package');
 var CollaboratorsPackage = require('../collaborators/package');
+var WelcomePackage = require('../welcome/package');
 
 var Article = require('../article/package');
 var articleViewerConfigurator = new ProseEditorConfigurator().import(ViewerPackage);
@@ -36,6 +37,7 @@ module.exports = {
     config.import(LoaderPackage);
     config.import(NotificationPackage);
     config.import(CollaboratorsPackage);
+    config.import(WelcomePackage);
     
     // Default configuration for available modes
     config.addConfigurator('viewer-mpro-article', articleViewerConfigurator);

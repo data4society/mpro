@@ -20,6 +20,7 @@ function Mpro() {
   this.iconProvider = configurator.getIconProvider();
   this.labelProvider = configurator.getLabelProvider();
 
+  this.addPage('welcome', this.componentRegistry.get('welcome'));
   this.addPage('inbox', this.componentRegistry.get('inbox'));
 }
 
@@ -43,14 +44,19 @@ Mpro.Prototype = function() {
     return 'inbox';
   };
 
+  this.getLoginPage = function() {
+    return 'welcome';
+  };
+
   this.getRouter = function() {
     return new MproRouter(this);
   };
 
   this._onAuthentication = function(route, session) {
-    // if(!session) {
-    //   route.page = 'welcome';
-    // } else if (!session.user.name) {
+    if(!session) {
+      route.page = 'welcome';
+    } 
+    // else if (!session.user.name) {
     //   route.page = 'entername';
     // }
 
