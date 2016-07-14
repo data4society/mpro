@@ -35,6 +35,7 @@ Inbox.Prototype = function() {
     var Loader = componentRegistry.get('loader');
     var Notification = componentRegistry.get('notification');
     var Collaborators = componentRegistry.get('collaborators');
+    var LoginStatus = componentRegistry.get('login-status');
 
     var el = $$('div').addClass('sc-inbox');
 
@@ -52,6 +53,12 @@ Inbox.Prototype = function() {
       $$(Collaborators, {}).ref('collaborators')
     );
 
+    header.outlet('content').append(
+      $$(LoginStatus)
+    );
+
+    //header.append($$(LoginStatus));
+
     el.append(
       header,
       $$(DoubleSplitPane, {splitType: 'vertical', sizeA: '300px', sizeB: '40%'}).append(
@@ -66,7 +73,7 @@ Inbox.Prototype = function() {
           documentId: this.props.documentId,
           rubrics: this.state.rubrics,
           mode: 'viewer', // For debugging purposes
-          userSession: {sessionToken: 'testusertoken'} // For debugging purposes
+          userSession: this.props.userSession // For debugging purposes
         }).ref('loader')
       )
     );
