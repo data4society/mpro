@@ -47,7 +47,6 @@ Loader.Prototype = function() {
     return {
       session: null, // CollabSession will be stored here, if null indicates we are in loading state
       error: null, // used to display error messages e.g. loading of document failed
-      notification: null //used to display status messages in topbar
     };
   };
 
@@ -98,17 +97,29 @@ Loader.Prototype = function() {
     });
   };
 
-  // Some hooks
   this._onCollabClientDisconnected = function() {
+    this.send('notify', {type: 'error', message: 'Connection lost! After reconnecting, your changes will be saved.'});
   };
 
   this._onCollabClientConnected = function() {
+    this.send('notify', null);
   };
 
-  this._onCollabSessionError = function(/*err*/) {
+  /*
+    Extract error message for error object. Also consider first cause.
+  */
+  this._onCollabSessionError = function(err) {
+    var message = [
+      err.name
+    ];
+    if (err.cause) {
+      message.push(err.cause.name);
+    }
+    this.send('notify', {type: 'error', message: message.join(' ')});
   };
 
   this._onCollabSessionSync = function() {
+    this.send('notify', null);
   };
 
   /*
@@ -162,17 +173,8 @@ Loader.Prototype = function() {
       //EditorClass = Author;
     }
 
-    // var layout = $$(Layout, {
-    //   width: 'large'
-    // });
-    // Display top-level errors. E.g. when a doc could not be loaded
-    // we will display the notification on top level
     if (this.state.error) {
-      console.log(this.state.error.message);
-      // layout.append($$(Notification, {
-      //   type: 'error',
-      //   message: this.state.error.message
-      // }));
+      this.send('notify', {type: 'error', message: this.state.error.message});
     } else if (!this.props.documentId) {
       el.append(
         $$('div').addClass('no-document').append(
@@ -180,6 +182,7 @@ Loader.Prototype = function() {
         )
       );
     } else if (this.state.session) {
+      this.send('connectSession', this.state.session);
       el.append(
         $$(EditorClass, {
           configurator: this.state.configurator,
