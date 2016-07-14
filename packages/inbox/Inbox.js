@@ -19,7 +19,9 @@ function Inbox() {
 
   this.handleActions({
     'loadMore': this._loadMore,
-    'openDocument': this._openDocument
+    'openDocument': this._openDocument,
+    'notify': this._notify,
+    'connectSession': this._connectSession
   });
 }
 
@@ -31,16 +33,27 @@ Inbox.Prototype = function() {
     var Feed = componentRegistry.get('feed');
     var Filters = componentRegistry.get('filters');
     var Loader = componentRegistry.get('loader');
+    var Notification = componentRegistry.get('notification');
+    var Collaborators = componentRegistry.get('collaborators');
 
     var el = $$('div').addClass('sc-inbox');
 
-    el.append($$(Header, {
+    var header = $$(Header, {
       actions: {
         'configurator': this.getLabel('configurator-menu')
       }
-    }));
+    });
+
+    header.outlet('content').append(
+      $$(Notification, {}).ref('notification')
+    );
+
+    header.outlet('content').append(
+      $$(Collaborators, {}).ref('collaborators')
+    );
 
     el.append(
+      header,
       $$(DoubleSplitPane, {splitType: 'vertical', sizeA: '300px', sizeB: '40%'}).append(
         $$(Filters, {rubrics: this.state.rubrics}).ref('filters'),
         $$(ListScrollPane, {
@@ -86,6 +99,14 @@ Inbox.Prototype = function() {
     });
     this._loadDocuments();
   };
+
+  this._notify = function(msg) {
+    this.refs.notification.extendProps(msg);
+  };
+
+  this._connectSession = function(session) {
+    this.refs.collaborators.extendProps(session)
+  }; 
 
 };
 

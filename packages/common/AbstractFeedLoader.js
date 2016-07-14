@@ -5,7 +5,6 @@ var isEqual = require('lodash/isEqual');
 var extend = require('lodash/extend');
 var concat = require('lodash/concat');
 var each = require('lodash/each');
-var Rubric = require('../../models/rubric/Rubric');
 
 /*
   Abstract Feed Loader class.
@@ -48,6 +47,7 @@ AbstractFeedLoader.Prototype = function() {
     - documentItems: loaded document items (used internaly)
     - pagination: flag to show/hide pager (used internaly)
     - totalItems: total number of items (used internaly)
+    - rubrics: document with all rubrics (used internaly)
   */
   this.getInitialState = function() {
     return {

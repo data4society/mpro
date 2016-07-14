@@ -11,6 +11,8 @@ var PagerPackage = require('../pager/package');
 var InboxPackage = require('../inbox/package');
 var LoaderPackage = require('../loader/package');
 var ViewerPackage = require('../viewer/package');
+var NotificationPackage = require('../notification/package');
+var CollaboratorsPackage = require('../collaborators/package');
 
 var Article = require('../article/package');
 var articleViewerConfigurator = new ProseEditorConfigurator().import(ViewerPackage);
@@ -32,6 +34,8 @@ module.exports = {
     config.import(FiltersPackage);
     config.import(FacetsPackage);
     config.import(LoaderPackage);
+    config.import(NotificationPackage);
+    config.import(CollaboratorsPackage);
     
     // Default configuration for available modes
     config.addConfigurator('viewer-mpro-article', articleViewerConfigurator);
