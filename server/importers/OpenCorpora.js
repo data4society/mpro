@@ -25,8 +25,8 @@ var oc_spans = {"фамилия":"oc_span_last_name",
 	"должность":"oc_span_post",
 	"роль":"oc_span_role",
 	"статус":"oc_span_status"
-	}
-var oc_classes = {"Персона":"oc_class_person"}
+	};
+var oc_classes = {"Персона":"oc_class_person"};
 
 /*
   Implements the Import Engine API.

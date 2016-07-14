@@ -54,7 +54,9 @@ ReferenceStore.Prototype = function() {
       entity_class: referenceData.entity_class,
       entity: referenceData.entity,
       start_offset: referenceData.start_offset,
-      end_offset: referenceData.end_offset
+      end_offset: referenceData.end_offset,
+      length_offset: referenceData.length_offset,
+      outer_id: referenceData.outer_id
     };
 
     return new Promise(function(resolve, reject) {

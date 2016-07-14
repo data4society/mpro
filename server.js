@@ -27,6 +27,7 @@ var ClassStore = require('./server/ClassStore');
 var EntityStore = require('./server/EntityStore');
 var MarkupStore = require('./server/MarkupStore');
 var ReferenceStore = require('./server/ReferenceStore');
+var MentionStore = require('./server/MentionStore');
 var FileStore = require('./server/FileStore');
 
 /*
@@ -86,6 +87,7 @@ var entityStore = new EntityStore({db: db});
 var classStore = new ClassStore({db: db});
 var markupStore = new MarkupStore({db: db});
 var referenceStore = new ReferenceStore({db: db});
+var mentionStore = new MentionStore({db: db});
 
 var fileStore = new FileStore({destination: './uploads'});
 
@@ -166,7 +168,8 @@ var importEngine = new ImportEngine({
   sourceStore: sourceStore,
   entityStore: entityStore,
   markupStore: markupStore,
-  referenceStore: referenceStore
+  referenceStore: referenceStore,
+  mentionStore: mentionStore
 });
 
 /*

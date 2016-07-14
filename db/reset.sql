@@ -2,6 +2,7 @@
 
 drop table if exists "changes";
 drop table if exists "references";
+drop table if exists "mentions";
 drop table if exists "entities";
 drop table if exists "entity_classes";
 drop table if exists "markups";
@@ -97,8 +98,34 @@ CREATE TABLE "references" (
   entity_class varchar(40) REFERENCES entity_classes,
   entity varchar(40) REFERENCES entities,
   start_offset integer,
-  end_offset integer
+  end_offset integer,
+  length_offset integer,
+  outer_id integer
 );
+
+CREATE TABLE "mentions" (
+  mention_id varchar(40) UNIQUE PRIMARY KEY,
+  markup varchar(40) REFERENCES markups,
+  reference_ids varchar(40)[],
+  outer_id integer
+);
+CREATE TABLE public.mentions
+(
+  mention_id uuid NOT NULL DEFAULT uuid_generate_v4(),
+  reference_ids uuid[],
+  markup uuid,
+  outer_id integer,
+  CONSTRAINT mentions_pkey PRIMARY KEY (mention_id),
+  CONSTRAINT mentions_markup_fkey FOREIGN KEY (markup)
+      REFERENCES public.markups (markup_id) MATCH SIMPLE
+      ON UPDATE NO ACTION ON DELETE NO ACTION
+)
+WITH (
+  OIDS=FALSE
+);
+ALTER TABLE public.mentions
+  OWNER TO postgres_mpro;
+
 
 CREATE TABLE "rubrics" (
   rubric_id varchar(40) UNIQUE PRIMARY KEY,
