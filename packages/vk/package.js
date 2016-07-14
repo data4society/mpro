@@ -14,6 +14,7 @@ var RubricatorPackage = require('../rubricator/package');
 var Article = require('../common/Article');
 var VkMeta = require('./VkMeta');
 var VkImporter = require('./VkImporter');
+var VkMetaComponent = require('./VkMetaComponent');
 
 module.exports = {
   name: 'vk',
@@ -26,6 +27,22 @@ module.exports = {
 
     config.addNode(VkMeta);
     config.addImporter('html', VkImporter);
+
+    config.addComponent('meta-summary', VkMetaComponent);
+    config.addIcon('published', { 'fontawesome': 'fa-clock-o' });
+    config.addIcon('source', { 'fontawesome': 'fa-chain' });
+    config.addLabel('published-by', {
+      en: 'Published by',
+      ru: 'Опубликовано'
+    });
+    config.addLabel('published-date', {
+      en: ' on',
+      ru: ','
+    });
+    config.addLabel('source', {
+      en: 'Original source:',
+      ru: 'Источник:'
+    });
 
     config.import(BasePackage);
     config.import(ParagraphPackage);
