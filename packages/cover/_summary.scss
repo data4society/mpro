@@ -1,0 +1,20 @@
+.sc-document-summary {
+  font-size: 14px;
+  padding: 10px 0px;
+
+  .sc-meta-summary > * {
+    padding: 5px 0px;
+    position: relative;
+  }
+
+  .se-rubrics {
+    padding: 5px 0px;
+    position: relative;
+  }
+
+  .sm-item {
+    position: absolute;
+    top: 0px;
+    left: 20px;
+  }
+}
