@@ -21,6 +21,12 @@ ListScrollPane.Prototype = function() {
     });
   };
 
+  this.dispose = function() {
+    if (this.props.highlights) {
+      this.props.highlights.off(this);
+    }
+  };
+
   // HACK: Scrollbar should use DOMMutationObserver instead
   this.onListChange = function() {
     this.refs.scrollbar.updatePositions();

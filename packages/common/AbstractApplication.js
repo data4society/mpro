@@ -25,6 +25,13 @@ AbstractApplication.Prototype = function() {
   };
 
   /*
+    Gets login route.
+  */
+  this.getLoginPage = function() {
+    throw new Error("This method is abstract.");
+  };
+
+  /*
     Gets application router.
   */
   this.getRouter = function() {
@@ -125,7 +132,7 @@ AbstractApplication.Prototype = function() {
       userSession: userSession
     });
 
-    this.navigate(this.getDefaultPage());
+    this.navigate({page: this.getDefaultPage()});
   };
 
   /*
@@ -135,13 +142,11 @@ AbstractApplication.Prototype = function() {
     this.authenticationClient.logout(function(err) {
       if (err) return alert('Logout failed');
 
-      var indexRoute = {};
       window.localStorage.removeItem('sessionToken');
       this.extendState({
-        userSession: null,
-        route: indexRoute
+        userSession: null
       });
-      this.router.writeRoute(indexRoute);
+      this.navigate({page: this.getLoginPage()});
     }.bind(this));
   };
 
