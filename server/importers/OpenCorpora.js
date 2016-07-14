@@ -17,6 +17,17 @@ var exists = Promise.promisify(fs.access);
 var readFile = Promise.promisify(fs.readFile);
 var removeDir = Promise.promisify(require('rimraf'));
 
+var oc_spans = {"фамилия":"oc_span_last_name",
+	"имя":"oc_span_first_name",
+	"отчество":"oc_span_middle_name",
+	"ник":"oc_span_nickname",
+	"иностранное имя":"oc_span_foreign_name",
+	"должность":"oc_span_post",
+	"роль":"oc_span_role",
+	"статус":"oc_span_status"
+	}
+var oc_classes = {"Персона":"oc_class_person"}
+
 /*
   Implements the Import Engine API.
 */
@@ -28,7 +39,7 @@ function ImportEngine(config) {
   this.markupStore = config.markupStore;
   this.referenceStore = config.referenceStore;
 
-  this.validateExtensions = ['txt','spans','objects','coref'];
+  this.validateExtensions = ['txt','spans','objects'/*,'coref'*/];
   this.availableClasses = ['person','location','org'];
   //this.import(path.join(__dirname, '../../uploads/devset.zip'), this.availableClasses);
 }
@@ -38,7 +49,7 @@ ImportEngine.Prototype = function() {
   /*
     Run import
   */
-  this.import = function(file, classes) {
+  this.import = function(file, classes, spans) {
     file = path.join(__dirname, '../../uploads', file);
     var dir;
     return this.unzip(file)
@@ -61,12 +72,17 @@ ImportEngine.Prototype = function() {
     Import OK set
   */
   this.importSet = function(dir, set, classes) {
+	  
+			console.log(set);
+			console.log(classes);
+			console.log(dir);
     var data;
     var entities;
     var references;
     return new Promise(function(resolve) {
       return this.prepareSet(dir, set, classes)
         .then(function(preparedData) {
+			console.log(preparedData);
           data = preparedData;
           // insert document source
           return this.sourceStore.createSource({
@@ -219,7 +235,7 @@ ImportEngine.Prototype = function() {
 
             if(segments.length > 3) {
               item.id = segments[0];
-              item.propName = segments[1];
+              item.propName = oc_spans[segments[1]];
               item.start_offset = parseInt(segments[2]);
               item.length = parseInt(segments[3]);
               item.end_offset = item.start_offset + item.length;
@@ -247,9 +263,9 @@ ImportEngine.Prototype = function() {
             var item = {};
             var segments = line.split(' ');
 
-            if(segments.length > 2) {
+            if(segments.length > 2 && segments[1] in oc_classes) {
               item.id = segments[0];
-              item.className = segments[1].toLowerCase();
+              item.className = oc_classes[segments[1]];
               item.spans = [];
 
               var n = 2;
@@ -258,25 +274,25 @@ ImportEngine.Prototype = function() {
                 n++;
               }
 
-              if(classes.indexOf(item.className) > -1) {
+              //if(classes.indexOf(item.className) > -1) {
                 var id = uuid();
                 res[id] = item;
-              }
+              //}
             }
-          }.bind(this));
+          }/*.bind(this)*/);
           results.objects = res;
-          return readFile(dirPath + '/' + set + '.coref', 'utf8');
+          /*return readFile(dirPath + '/' + set + '.coref', 'utf8');
         }.bind(this)).then(function(coref) {
 
-          /*
-            transforms coref to json with structure: 
+          
+            //transforms coref to json with structure: 
             
-            53399: { 
-              id: '53399', 
-              objects: ['234', '234234'],
-              name: 'Blah'
-            }
-          */
+            //53399: { 
+              //id: '53399', 
+              //objects: ['234', '234234'],
+              //name: 'Blah'
+            //}
+          
           var res = {};
           var corefItems = coref.split('\n\n');
 
@@ -325,7 +341,7 @@ ImportEngine.Prototype = function() {
               res[id] = item;
             }
           });
-          results.coref = res;
+          results.coref = res;*/
           resolve(results);
         });
     }.bind(this));
