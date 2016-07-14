@@ -28,7 +28,7 @@ ViewerToolbar.Prototype = function() {
   };
 
   this.getClassNames = function() {
-    return 'sc-prose-editor-toolbar';
+    return 'sc-viewer-toolbar';
   };
 
 };
