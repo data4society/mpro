@@ -6,6 +6,7 @@ var CollabClient = require('substance/collab/CollabClient');
 var WebSocketConnection = require('substance/collab/WebSocketConnection');
 var Component = require('substance/ui/Component');
 var isUndefined = require('lodash/isUndefined');
+var Info = require('./Info');
 var Viewer = require('../viewer/Viewer');
 var converter = new JSONConverter();
 
@@ -113,7 +114,7 @@ Loader.Prototype = function() {
   /*
     Loads a document and initializes a CollabSession
   */
-  this._loadDocument = function(documentId, mode) {
+  this._loadDocument = function(documentId) {
     var collabClient = this.collabClient;
     var documentClient = this.context.documentClient;
 
@@ -144,7 +145,7 @@ Loader.Prototype = function() {
 
       this.setState({
         configurator: configurator,
-        //documentInfo: new DocumentInfo(docRecord),
+        documentInfo: new Info(docRecord),
         session: session
       });
     }.bind(this));
@@ -182,7 +183,7 @@ Loader.Prototype = function() {
       el.append(
         $$(EditorClass, {
           configurator: this.state.configurator,
-          //documentInfo: this.state.documentInfo,
+          documentInfo: this.state.documentInfo,
           documentSession: this.state.session,
           rubrics: this.props.rubrics
         }).ref('documentViewer')
