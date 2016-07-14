@@ -13,6 +13,7 @@ var RubricatorPackage = require('../rubricator/package');
 var Article = require('../common/Article');
 var TngMeta = require('./TngMeta');
 var TngImporter = require('./TngImporter');
+var TngMetaComponent = require('./TngMetaComponent');
 
 module.exports = {
   name: 'tng',
@@ -26,6 +27,7 @@ module.exports = {
     config.addNode(TngMeta);
     config.addImporter('html', TngImporter);
 
+    config.addComponent('meta-summary', TngMetaComponent);
     config.import(BasePackage);
     config.import(ParagraphPackage);
     config.import(HeadingPackage);
