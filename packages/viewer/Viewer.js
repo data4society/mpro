@@ -18,6 +18,7 @@ Viewer.Prototype = function() {
 
     var toolbar = this._renderToolbar($$);
     var editor = this._renderEditor($$);
+    var cover = this._renderCover($$);
 
     var contentPanel = $$(ScrollPane, {
       scrollbarType: 'substance',
@@ -27,6 +28,7 @@ Viewer.Prototype = function() {
       $$(Layout, {
         width: 'large'
       }).append(
+        cover,
         editor
       )
     ).ref('contentPanel');
@@ -50,6 +52,19 @@ Viewer.Prototype = function() {
       commands: configurator.getSurfaceCommandNames(),
       textTypes: configurator.getTextTypes()
     }).ref('body');
+  };
+
+  this._renderCover = function($$) {
+    var configurator = this.props.configurator;
+    var componentRegistry = this.componentRegistry;
+    var Cover = componentRegistry.get('cover');
+    return $$(Cover, {
+      doc: this.doc,
+      mobile: this.props.mobile,
+      editing: 'readonly',
+      documentInfo: this.props.documentInfo,
+      rubrics: this.props.rubrics
+    }).ref('cover');
   };
 
 };
