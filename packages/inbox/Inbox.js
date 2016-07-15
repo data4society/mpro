@@ -28,6 +28,7 @@ function Inbox() {
 Inbox.Prototype = function() {
 
   this.render = function($$) {
+    var authenticationClient = this.context.authenticationClient;
     var componentRegistry = this.context.componentRegistry;
     var Header = componentRegistry.get('header');
     var Feed = componentRegistry.get('feed');
@@ -46,18 +47,10 @@ Inbox.Prototype = function() {
     });
 
     header.outlet('content').append(
-      $$(Notification, {}).ref('notification')
-    );
-
-    header.outlet('content').append(
+      $$(LoginStatus),
+      $$(Notification, {}).ref('notification'),
       $$(Collaborators, {}).ref('collaborators')
     );
-
-    header.outlet('content').append(
-      $$(LoginStatus)
-    );
-
-    //header.append($$(LoginStatus));
 
     el.append(
       header,
@@ -72,8 +65,8 @@ Inbox.Prototype = function() {
         $$(Loader, {
           documentId: this.props.documentId,
           rubrics: this.state.rubrics,
-          mode: 'viewer', // For debugging purposes
-          userSession: this.props.userSession // For debugging purposes
+          mode: 'viewer',
+          userSession: authenticationClient.getSession()
         }).ref('loader')
       )
     );
