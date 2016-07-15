@@ -9,6 +9,7 @@ var LinkPackage = require('substance/packages/link/LinkPackage');
 var EmphasisPackage = require('substance/packages/emphasis/EmphasisPackage');
 var StrongPackage = require('substance/packages/strong/StrongPackage');
 var RubricatorPackage = require('../rubricator/package');
+var AcceptorPackage = require('../acceptor/package');
 
 var Article = require('../common/Article');
 var TngMeta = require('./TngMeta');
@@ -37,5 +38,6 @@ module.exports = {
     config.import(StrongPackage);
     config.import(LinkPackage);
     config.import(RubricatorPackage);
+    config.import(AcceptorPackage);
   }
 };
