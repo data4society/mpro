@@ -10,6 +10,9 @@
     "express": "^4.13.4",
     "extract-zip": "^1.5.0",
     "font-awesome": "^4.6.1",
+    "gulp-eslint": "^3.0.1",
+    "gulp-file": "^0.3.0",
+    "gulp-tape": "0.0.9",
     "lodash": "^4.12.0",
     "massive": "^2.2.0",
     "moment": "^2.13.0",
@@ -18,6 +21,8 @@
     "rimraf": "^2.5.2",
     "sanitize-html": "^1.11.4",
     "substance": "git://github.com/substance/substance.git#60fdced18043f6f84f5bd78983cf6c0d67dad985",
+    "tap-spec": "^4.1.1",
+    "tape": "^4.6.0",
     "ws": "^1.1.0"
   },
   "devDependencies": {
