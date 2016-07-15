@@ -1,15 +1,10 @@
-'use strict';
-
-var createDocumentFactory = require('substance/model/createDocumentFactory');
-var Vk = require('./Vk');
-
-module.exports = createDocumentFactory(Vk, function(tx) {
+var seed = function(tx) {
   var body = tx.get('body');
 
   tx.create({
     id: 'meta',
     type: 'meta',
-    title: '',
+    title: 'Untitled',
     rubrics: []
   });
 
@@ -19,4 +14,6 @@ module.exports = createDocumentFactory(Vk, function(tx) {
     content: 'Paste your arcticle here.'
   });
   body.show('p1');
-});
+};
+
+module.exports = seed;

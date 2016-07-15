@@ -1,9 +1,4 @@
-'use strict';
-
-var createDocumentFactory = require('substance/model/createDocumentFactory');
-var TrainingArticle = require('./TrainingArticle');
-
-module.exports = createDocumentFactory(TrainingArticle, function(tx) {
+var seed = function(tx) {
   var body = tx.get('body');
 
   tx.create({
@@ -22,4 +17,6 @@ module.exports = createDocumentFactory(TrainingArticle, function(tx) {
     content: 'Paste your article here.'
   });
   body.show('p1');
-});
+};
+
+module.exports = seed;
