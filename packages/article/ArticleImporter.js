@@ -68,18 +68,21 @@ ArticleImporter.Prototype = function() {
     var publisher = meta.publisher;
     var published = new Date(source.published_date);
 
-    doc.create({
-      id: 'meta',
-      type: 'meta',
-      title: source.title,
-      source: source.guid,
-      published: published.toJSON(),
-      rubrics: source.rubric_ids,
-      entities: [],
-      abstract: meta.abstract,
-      cover: '',
-      publisher: publisher.name
-    });
+    var metaNode = doc.get('meta');
+    if(!metaNode){
+      doc.create({
+        id: 'meta',
+        type: 'meta',
+        title: source.title,
+        source: source.guid,
+        published: published.toJSON(),
+        rubrics: source.rubric_ids,
+        entities: [],
+        abstract: meta.abstract,
+        cover: '',
+        publisher: publisher.name
+      });
+    }
   };
 
   this.convertEntities = function(doc, markup) {

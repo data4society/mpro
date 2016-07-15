@@ -13,8 +13,8 @@ var RubricatorPackage = require('../rubricator/package');
 
 var Article = require('../common/Article');
 var ArticleMeta = require('./ArticleMeta');
-var ArticleImporter = require('./ArticleImporter');
 var ArticleMetaComponent = require('./ArticleMetaComponent');
+var ArticleSeed = require('./ArticleSeed');
 
 module.exports = {
   name: 'article',
@@ -26,7 +26,7 @@ module.exports = {
     });
 
     config.addNode(ArticleMeta);
-    config.addImporter('html', ArticleImporter);
+    config.addSeed(ArticleSeed);
 
     config.addComponent('meta-summary', ArticleMetaComponent);
     config.addIcon('published', { 'fontawesome': 'fa-clock-o' });
