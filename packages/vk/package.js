@@ -13,8 +13,8 @@ var RubricatorPackage = require('../rubricator/package');
 
 var Article = require('../common/Article');
 var VkMeta = require('./VkMeta');
-var VkImporter = require('./VkImporter');
 var VkMetaComponent = require('./VkMetaComponent');
+var VkSeed = require('./VkSeed');
 
 module.exports = {
   name: 'vk',
@@ -26,7 +26,7 @@ module.exports = {
     });
 
     config.addNode(VkMeta);
-    config.addImporter('html', VkImporter);
+    config.addSeed(VkSeed);
 
     config.addComponent('meta-summary', VkMetaComponent);
     config.addIcon('published', { 'fontawesome': 'fa-clock-o' });

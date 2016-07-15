@@ -5,6 +5,7 @@ var HTMLImporter = require('substance/model/HTMLImporter');
 var DefaultDOMElement = require('substance/ui/DefaultDOMElement');
 var each = require('lodash/each');
 var find = require('lodash/find');
+var map = require('lodash/map');
 var Article = require('../common/Article');
 var schema = Article.schema;
 
@@ -28,7 +29,7 @@ VkImporter.Prototype = function() {
     html = html.replace(/&#13;/g, '').replace(/<br ?\/?>|<\/p>|<\/div>/g, '\n');
 
     var clean = sanitizeHtml(html, {
-      allowedTags: [ 'b', 'i', 'em', 'strong', 'a'],
+      allowedTags: [ /*'p',*/ 'b', 'i', 'em', 'strong', 'a' ],
       allowedAttributes: {
         'a': [ 'href' ]
       }
@@ -65,21 +66,49 @@ VkImporter.Prototype = function() {
 
   this.convertMeta = function(doc, source) {
     var meta = source.meta;
-    var publisher = meta.publisher;
-    var published = new Date(source.published_date);
+    var owner = meta.vk_owner;
+    var author_name;
 
-    doc.create({
-      id: 'meta',
-      type: 'meta',
-      title: source.title,
-      source: source.guid,
-      published: published.toJSON(),
-      rubrics: source.rubric_ids,
-      entities: [],
-      abstract: meta.abstract,
-      cover: '',
-      publisher: publisher.name
+    // Compile first and last names for users and name for other cases
+    if(owner.owner_type == "user") {
+      author_name = owner.first_name + " " + owner.last_name;
+    } else {
+      author_name = owner.name;
+    }
+
+    // Create array of objects with type and src url
+    var attachments = map(meta.vk_attachments, function(attachment) {
+      var type = attachment.type;
+      var src = "";
+      if(attachment[type]) src = attachment[type].src;
+      return {
+        type: type,
+        src: src
+      }; 
     });
+
+    var published = new Date(source.published_date);
+    var abstract = source.doc_source.substr(0, source.doc_source.indexOf('<br>'));
+    abstract = this.truncate(abstract, 200, true);
+    var metaNode = doc.get('meta');
+    if(!metaNode){
+      doc.create({
+        id: 'meta',
+        type: 'meta',
+        title: '',
+        source: source.guid,
+        published: published.toJSON(),
+        rubrics: source.rubric_ids,
+        entities: source.entity_ids,
+        abstract: abstract,
+        post_type: meta.vk_post_type,
+        author: {
+          name: author_name,
+          url: owner.owner_url
+        },
+        attachments: attachments
+      });
+    }
   };
 
   this.convertEntities = function(doc, markup) {
@@ -112,6 +141,13 @@ VkImporter.Prototype = function() {
         });
       }
     });
+  };
+
+  this.truncate = function(string, n, useWordBoundary) {
+    var isTooLong = string.length > n,
+        s_ = isTooLong ? string.substr(0,n-1) : string;
+        s_ = (useWordBoundary && isTooLong) ? s_.substr(0,s_.lastIndexOf(' ')) : s_;
+    return  isTooLong ? s_ + '&hellip;' : s_;
   };
 };
 
