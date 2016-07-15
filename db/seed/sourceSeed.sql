@@ -71,7 +71,7 @@ NEWSru.com отмечает, что мессенджер распростран�
   '{2,3}',
   '{}',
   E'{"abc1e960-3ee0-11e6-9ad4-040119c69801": {"set": "abc16ee0-3ee0-11e6-9ad4-040119c69801", "class": "person", "entity": "0057375a-8242-1c6d-bf64-d5cb5a7ad7dd", "end_offset": 1142, "start_offset": 1136}, "abc2759c-3ee0-11e6-9ad4-040119c69801": {"set": "abc16ee0-3ee0-11e6-9ad4-040119c69801", "class": "person", "entity": "0057375a-8242-1c6d-bf64-d5cb5a7ad7dd", "end_offset": 1447, "start_offset": 1427}, "abc27be6-3ee0-11e6-9ad4-040119c69801": {"set": "abc16ee0-3ee0-11e6-9ad4-040119c69801", "class": "person", "entity": "0057375a-8242-1c6d-bf64-d5cb5a7ad7dd", "end_offset": 385, "start_offset": 364}, "abc2815e-3ee0-11e6-9ad4-040119c69801": {"set": "abc16ee0-3ee0-11e6-9ad4-040119c69801", "class": "person", "entity": "0057375a-8242-1c6d-bf64-d5cb5a7ad7dd", "end_offset": 237, "start_offset": 223}, "abc28690-3ee0-11e6-9ad4-040119c69801": {"set": "abc16ee0-3ee0-11e6-9ad4-040119c69801", "class": "person", "entity": "0057375a-8242-1c6d-bf64-d5cb5a7ad7dd", "end_offset": 1199, "start_offset": 1193}}',
-  'trn'
+  'tng'
 ),
 (
   'c020ebad-9ac1-4114-a70f-fa5b6d3dcfb1',
@@ -86,7 +86,7 @@ NEWSru.com отмечает, что мессенджер распростран�
   NULL,
   NULL,
   'null',
-  'trn'
+  'tng'
 ),
 (
   '5a5c3bad-d431-4a26-8c06-6a1ad6219388',
