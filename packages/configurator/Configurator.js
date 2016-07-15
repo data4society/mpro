@@ -21,6 +21,7 @@ function Configurator() {
     'loadMore': this._loadMore,
     'openDocument': this._openDocument,
     'newDocument': this._newDocument,
+    'deleteDocument': this._deleteDocument,
     'notify': this._notify,
     'connectSession': this._connectSession
   });
@@ -121,6 +122,7 @@ Configurator.Prototype = function() {
       info: {
         title: 'Untitled Article',
         abstract: '',
+        source_type: 'mpro',
         userId: userId,
         training: true,
         rubrics: [],
@@ -129,6 +131,17 @@ Configurator.Prototype = function() {
       }
     }, function(err, result) {
       this._openDocument(result.documentId);
+    }.bind(this));
+  };
+
+  /*
+    Removes a document
+  */
+
+  this._deleteDocument = function(documentId) {
+    var documentClient = this.context.documentClient;
+    documentClient.deleteDocument(documentId, function(/*err, result*/) {
+      this.send('configurator');
     }.bind(this));
   };
 

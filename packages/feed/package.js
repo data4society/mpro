@@ -43,6 +43,10 @@ module.exports = {
       en: 'New document',
       ru: 'Новый документ'
     });
+    config.addLabel('delete-document', {
+      en: 'Delete',
+      ru: 'Удалить'
+    });
 
     config.addIcon('rubrics', { 'fontawesome': 'fa-tags' });
     config.addIcon('vk', { 'fontawesome': 'fa-vk' });

@@ -39,6 +39,7 @@ DocumentStore.Prototype = function() {
       if(props.info.title) props.title = props.info.title;
       if(props.info.training) props.training = props.info.training;
       if(props.info.meta) props.meta = props.info.meta;
+      if(props.info.source_type) props.source_type = props.info.source_type;
       if(props.info.schemaName) props.schema_name = props.info.schemaName;
       if(props.info.schemaVersion) props.schema_version = props.info.schemaVersion;
     }
