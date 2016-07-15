@@ -7,16 +7,13 @@ var moment = require('moment');
 
 function FeedItem() {
   Component.apply(this, arguments);
-
-  if (!this.context.urlHelper) {
-    throw new Error('FeedItem requires urlHelper.');
-  }
 }
 
 FeedItem.Prototype = function() {
 
   this.render = function($$) {
     var document = this.props.document;
+    var meta = document.meta;
     var el = $$('div').addClass('sc-feed-item')
       .on('click', this.send.bind(this, 'openDocument', document.documentId));
 
@@ -26,33 +23,12 @@ FeedItem.Prototype = function() {
       el.addClass('active');
     }
 
-    var meta = document.meta;
-
-    var rubrics = this.props.rubrics;
-    var rubricsMeta = meta.rubrics;
-
-    var rubricsList = [];
-
-    if(!isEmpty(rubrics)) {
-      each(rubricsMeta, function(rubric) {
-        var item = rubrics.get(rubric);
-        rubricsList.push(item.name);
-      }.bind(this));
-    }
-
-    var rubricsEl = $$('div').addClass('se-rubrics');
-
-    rubricsEl.append(this.context.iconProvider.renderIcon($$, 'rubrics'));
-
-    if(rubricsList.length > 0) {
-      rubricsEl.append(rubricsList.join(', '));
-    } else {
-      rubricsEl.append('No categories assigned');
-    }
+    var rubrics = this.renderRubrics($$);
+    var source = this.renderSourceInfo($$);
 
     el.append(
-      rubricsEl,
-      this.renderSourceInfo($$)
+      rubrics,
+      source
     );
 
     if(document.title !== '') {
@@ -71,17 +47,38 @@ FeedItem.Prototype = function() {
     return el;
   };
 
+  this.renderRubrics = function($$) {
+    var document = this.props.document;
+    var meta = document.meta;
+    var rubrics = this.props.rubrics;
+    var rubricsMeta = meta.rubrics;
+    var rubricsList = [];
+
+    if(!isEmpty(rubrics)) {
+      each(rubricsMeta, function(rubric) {
+        var item = rubrics.get(rubric);
+        rubricsList.push(item.name);
+      }.bind(this));
+    }
+
+    var rubricsEl = $$('div').addClass('se-rubrics');
+    rubricsEl.append(this.context.iconProvider.renderIcon($$, 'rubrics'));
+
+    if(rubricsList.length > 0) {
+      rubricsEl.append(rubricsList.join(', '));
+    } else {
+      rubricsEl.append('No categories assigned');
+    }
+
+    return rubricsEl;
+  };
+
   this.renderSourceInfo = function($$) {
     var document = this.props.document;
     var meta = document.meta;
     var published = this.props.document.published;
     var publisher = meta.publisher;
     var source_name = meta.source.split('/')[2];
-
-    if(document.schema_name == 'mpro-vk') {
-      publisher = meta.author.name;
-      source_name = this.context.iconProvider.renderIcon($$, 'vk');
-    }
 
     var el = $$('div').addClass('se-source-info');
 

@@ -1,8 +1,9 @@
 'use strict';
 
+var Component = require('substance/ui/Component');
+var Button = require('substance/ui/Button');
 var concat = require('lodash/concat');
 var isEmpty = require('lodash/isEmpty');
-var Component = require('substance/ui/Component');
 
 /*
   Incoming Documents Feed.
@@ -20,7 +21,6 @@ Feed.Prototype = function() {
 
   this.render = function($$) {
     var componentRegistry = this.context.componentRegistry;
-    var FeedItem = componentRegistry.get('feedItem');
     var Pager = componentRegistry.get('pager');
 
     var documentItems = this.props.documentItems;
@@ -34,7 +34,7 @@ Feed.Prototype = function() {
 
     if (documentItems.length > 0) {
       el.append(
-        this.renderFull($$, FeedItem),
+        this.renderFull($$),
         $$(Pager, {
           page: this.props.page,
           perPage: this.props.perPage,
@@ -50,7 +50,7 @@ Feed.Prototype = function() {
   /*
     Intro.
 
-    Contains counter of founded documents.
+    Contains counter of found documents.
   */
   this.renderIntro = function($$) {
     var totalItems = this.props.totalItems;
@@ -63,6 +63,13 @@ Feed.Prototype = function() {
         label
       )
     );
+
+    if(this.props.addNew) {
+      el.append(
+        $$(Button).addClass('se-new-document-button').append(this.getLabel('new-document'))
+          .on('click', this.send.bind(this, 'newDocument'))
+      );
+    }
 
     return el;
   };
@@ -87,12 +94,15 @@ Feed.Prototype = function() {
 
     Contains Feed Items.
   */
-  this.renderFull = function($$, FeedItem) {
+  this.renderFull = function($$) {
+    var componentRegistry = this.context.componentRegistry;
     var documentItems = this.props.documentItems;
     var el = $$('div').addClass('se-feed-not-empty');
 
     if (documentItems) {
       documentItems.forEach(function(documentItem) {
+        var schemaName = documentItem.schemaName;
+        var FeedItem = componentRegistry.get(schemaName + '-feed-item');
         var active = false;
         if(documentItem.documentId === this.activeItem) {
           active = true;
@@ -147,6 +157,7 @@ Feed.Prototype = function() {
     - 5 is for 5 items
   */
   this._getNumEnding = function(number) {
+    number = parseInt(number);
     var endingSet, i;
     if(number === 0) return 0;
     number = number % 100;

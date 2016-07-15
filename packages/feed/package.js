@@ -2,12 +2,18 @@
 
 var Feed = require('./Feed');
 var FeedItem = require('./FeedItem');
+var ArticleFeedItem = require('../article/ArticleFeedItem');
+var VkFeedItem = require('../vk/VkFeedItem');
+var TngFeedItem = require('../tng/TngFeedItem');
 
 module.exports = {
   name: 'feed',
   configure: function(config) {
     config.addComponent('feed', Feed);
     config.addComponent('feedItem', FeedItem);
+    config.addComponent('mpro-article-feed-item', ArticleFeedItem);
+    config.addComponent('mpro-vk-feed-item', VkFeedItem);
+    config.addComponent('mpro-tng-feed-item', TngFeedItem);
     config.addStyle(__dirname, '_feed');
     config.addStyle(__dirname, '_feed-item');
     
@@ -32,6 +38,10 @@ module.exports = {
     config.addLabel('empty-feed', {
       en: 'Sorry, we have no documents matching your query',
       ru: 'Ой, кажется нам нечем ответить на ваш запрос'
+    });
+    config.addLabel('new-document', {
+      en: 'New document',
+      ru: 'Новый документ'
     });
 
     config.addIcon('rubrics', { 'fontawesome': 'fa-tags' });
