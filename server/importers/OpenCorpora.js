@@ -35,9 +35,10 @@ function ImportEngine(config) {
   this.config = config;
   this.uploadPath = config.uploadPath;
   this.sourceStore = config.sourceStore;
-  this.entityStore = config.entityStore;
+  //this.entityStore = config.entityStore;
   this.markupStore = config.markupStore;
   this.referenceStore = config.referenceStore;
+  this.mentionStore = config.mentionStore;
 
   this.validateExtensions = ['txt','spans','objects'/*,'coref'*/];
   this.availableClasses = ['person','location','org'];
@@ -58,7 +59,7 @@ ImportEngine.Prototype = function() {
         return this.collectSets(res.dir, res.files);
       }.bind(this)).then(function(sets) {
         return Promise.map(sets, function(set) {
-          return this.importSet(dir, set, classes);
+          return this.importSet(dir, set, oc_classes);
         }.bind(this));
       }.bind(this)).then(function() {
         return this.removeUploadedSet(dir);
@@ -72,17 +73,17 @@ ImportEngine.Prototype = function() {
     Import OK set
   */
   this.importSet = function(dir, set, classes) {
-	  
-			console.log(set);
-			console.log(classes);
-			console.log(dir);
+	var entity_classes_arr = [];
+	for (var key in oc_spans){
+		entity_classes_arr.push(oc_spans[key]);
+	}
     var data;
-    var entities;
+    //var entities;
     var references;
+    var mentions;
     return new Promise(function(resolve) {
       return this.prepareSet(dir, set, classes)
         .then(function(preparedData) {
-			console.log(preparedData);
           data = preparedData;
           // insert document source
           return this.sourceStore.createSource({
@@ -95,27 +96,34 @@ ImportEngine.Prototype = function() {
           // insert markup
           return this.markupStore.createMarkup({
             document: source.doc_id,
-            entity_classes: classes,
-            type: 10
+            entity_classes: entity_classes_arr,
+			name: new Date().toJSON() + " from Opencorpora",
+            type: 30
           });
         }.bind(this)).then(function(markup) {
-          // extract entities and references
+          // extract references and mentions
           return this.exctractData(data, markup.markup_id);
         }.bind(this)).then(function(exctracted) {
-          entities = exctracted.entities;
+          //entities = exctracted.entities;
           references = exctracted.references;
+          mentions = exctracted.mentions;
 
-          return Promise.map(entities, function(entity) {
+          /*return Promise.map(entities, function(entity) {
             return this.entityStore.createEntity(entity);
           }.bind(this));
-        }.bind(this)).then(function() {
+        }.bind(this)).then(function() {*/
           return Promise.map(references, function(reference) {
             return this.referenceStore.createReference(reference);
           }.bind(this));
         }.bind(this)).then(function() {
+		  return Promise.map(mentions, function(mention) {
+            return this.mentionStore.createMention(mention);
+          }.bind(this));
+        }.bind(this)).then(function() {
           console.log('set has been imported');
-          console.log('imported entities:', entities.length);
+          //console.log('imported entities:', entities.length);
           console.log('imported references:', references.length);
+          console.log('imported mentions:', mentions.length);
           resolve();
         });
     }.bind(this));
@@ -129,12 +137,32 @@ ImportEngine.Prototype = function() {
     return new Promise(function(resolve) {
       var output = {};
       // Fill entities
-      var entities = [];
+      //var entities = [];
       // Fill references
       var references = [];
+      var mentions = [];
 
+	  var spans = data.spans;
+	  each(spans, function(span, id) {
+          //references.push(jQuery.extend({markup:markup}, span));
+		  var obj = {};
+		  for (var prop in span){
+			obj[prop] = span[prop];
+		  }
+		  obj.markup = markup;
+          references.push(obj);
+      });
       var objects = data.objects;
-      each(objects, function(object, index) {
+	  each(objects, function(object, id) {
+          //mentions.push(jQuery.extend({markup:markup}, object));
+		  var obj = {};
+		  for (var prop in object){
+			  obj[prop] = object[prop];
+		  }
+		  obj.markup = markup;
+          mentions.push(obj);
+      });
+      /*each(objects, function(object, index) {
         object.refs = [];
         var spans = object.spans;
 
@@ -143,7 +171,7 @@ ImportEngine.Prototype = function() {
           var ref = {};
           ref.start_offset = data.spans[span].start_offset;
           ref.end_offset = data.spans[span].end_offset;
-          ref.length = data.spans[span].length;
+          ref.length_offset = data.spans[span].length_offset;
           object.refs.push(ref);
         });
 
@@ -197,8 +225,9 @@ ImportEngine.Prototype = function() {
 
       });
 
-      output.entities = uniqBy(entities, 'entity_id');
+      output.entities = uniqBy(entities, 'entity_id');*/
       output.references = references;
+      output.mentions = mentions;
       resolve(output);
     }.bind(this));
   }; 
@@ -219,10 +248,12 @@ ImportEngine.Prototype = function() {
           /*
             transforms spans to json with structure: 
             
-            '88606': { id: '88606',
-              propName: 'geo_adj',
+            '12345': {
+			  reference_id: 'c2824c0f8e13057db67b16915080c831',
+			  outer_id: '12345',
+              entity_class: 'oc_span_first_name',
               start_offset: 1875,
-              length: 7,
+              length_offset: 7,
               end_offset: 1882 
             }
           */
@@ -234,13 +265,14 @@ ImportEngine.Prototype = function() {
             var segments = line.split(' ');
 
             if(segments.length > 3) {
-              item.id = segments[0];
-              item.propName = oc_spans[segments[1]];
+              item.reference_id = uuid();
+              item.outer_id = segments[0];
+              item.entity_class = oc_spans[segments[1]];
               item.start_offset = parseInt(segments[2]);
-              item.length = parseInt(segments[3]);
-              item.end_offset = item.start_offset + item.length;
+              item.length_offset = parseInt(segments[3]);
+              item.end_offset = item.start_offset + item.length_offset;
 
-              res[item.id] = item;
+              res[item.outer_id] = item;
             }
           });
           results.spans = res;
@@ -250,10 +282,11 @@ ImportEngine.Prototype = function() {
           /*
             transforms objects to json with structure: 
             
-            c2824c0f8e13057db67b16915080c833: { 
-              id: '53399', 
-              className: 'Org',
-              spans: ['234', '234234']
+            '56789': { 
+			  mention_id: 'c2824c0f8e13057db67b16915080c831'
+              outer_id: '56789', 
+              entity_class: 'person',
+              reference_ids: ['c2824c0f8e13057db67b16915080c833', 'c2824c0f8e13057db67b16915080c834']
             }
           */
 
@@ -263,21 +296,24 @@ ImportEngine.Prototype = function() {
             var item = {};
             var segments = line.split(' ');
 
-            if(segments.length > 2 && segments[1] in oc_classes) {
-              item.id = segments[0];
-              item.className = oc_classes[segments[1]];
-              item.spans = [];
+            if(segments.length > 2 && segments[1] in classes) {
+			  item.mention_id = uuid();
+              item.outer_id = segments[0];
+              item.entity_class = classes[segments[1]];
+              item.reference_ids = [];
 
               var n = 2;
               while (segments[n] != '#') {
-                item.spans.push(segments[n]);
+				if(segments[n] in results.spans){
+					item.reference_ids.push(results.spans[segments[n]].reference_id);
+				}
                 n++;
               }
-
-              //if(classes.indexOf(item.className) > -1) {
+			  res[item.outer_id] = item;
+              /*if(classes.indexOf(item.className) > -1) {
                 var id = uuid();
                 res[id] = item;
-              //}
+              }*/
             }
           }/*.bind(this)*/);
           results.objects = res;

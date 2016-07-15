@@ -51,6 +51,7 @@ MentionStore.Prototype = function() {
     var record = {
       mention_id: mentionData.mention_id,
       markup: mentionData.markup,
+      entity_class: mentionData.entity_class,
       reference_ids: mentionData.reference_ids,
       outer_id: mentionData.outer_id
     };
