@@ -11,6 +11,7 @@ var each = require('lodash/each');
 var find = require('lodash/find');
 var path = require('path');
 var fs = require('fs');
+var extend = require('lodash/extend')
 
 var mv = Promise.promisify(require('mv'));
 var exists = Promise.promisify(fs.access);
@@ -145,23 +146,11 @@ ImportEngine.Prototype = function() {
 
 	  var spans = data.spans;
 	  each(spans, function(span, id) {
-          //references.push(jQuery.extend({markup:markup}, span));
-		  var obj = {};
-		  for (var prop in span){
-			obj[prop] = span[prop];
-		  }
-		  obj.markup = markup;
-          references.push(obj);
+          references.push(extend({markup:markup}, span));
       });
       var objects = data.objects;
 	  each(objects, function(object, id) {
-          //mentions.push(jQuery.extend({markup:markup}, object));
-		  var obj = {};
-		  for (var prop in object){
-			  obj[prop] = object[prop];
-		  }
-		  obj.markup = markup;
-          mentions.push(obj);
+          mentions.push(extend({markup:markup}, object));
       });
       /*each(objects, function(object, index) {
         object.refs = [];
