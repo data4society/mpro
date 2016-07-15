@@ -71,8 +71,10 @@ TngImporter.Prototype = function() {
 
     if(meta.abstract) abstract = meta.abstract;
 
-    doc.create({
-      id: 'meta',
+    var metaNode = doc.get('meta');
+    if(!metaNode){
+      doc.create({
+       id: 'meta',
       type: 'meta',
       title: source.title || '',
       rubrics: source.rubric_ids,
@@ -80,7 +82,8 @@ TngImporter.Prototype = function() {
       entities: [],
       abstract: abstract,
       accepted: false
-    });
+      });
+    }
   };
 
   this.truncate = function(string, n, useWordBoundary) {
