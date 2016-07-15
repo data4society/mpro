@@ -50,7 +50,7 @@ ImportEngine.Prototype = function() {
   /*
     Run import
   */
-  this.import = function(file, classes, spans) {
+  this.import = function(file, classes) {
     file = path.join(__dirname, '../../uploads', file);
     var dir;
     return this.unzip(file)
