@@ -1,3 +1,5 @@
+'use strict';
+
 var seed = function(tx) {
   var body = tx.get('body');
 

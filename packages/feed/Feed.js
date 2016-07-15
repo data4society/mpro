@@ -2,7 +2,6 @@
 
 var Component = require('substance/ui/Component');
 var Button = require('substance/ui/Button');
-var concat = require('lodash/concat');
 var isEmpty = require('lodash/isEmpty');
 
 /*
@@ -157,7 +156,7 @@ Feed.Prototype = function() {
     - 5 is for 5 items
   */
   this._getNumEnding = function(number) {
-    number = parseInt(number);
+    number = parseInt(number, 10);
     var endingSet, i;
     if(number === 0) return 0;
     number = number % 100;

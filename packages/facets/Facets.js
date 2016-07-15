@@ -55,7 +55,7 @@ Facets.Prototype = function() {
     // level graphical nesting
     if(hideExpand && level !== 1) {
       level = level * 2;
-      if(level == 4) level = 5;
+      if(level === 4) level = 5;
     }
     var levelSign = new Array(level).join('·') + ' ';
     el.append(levelSign);

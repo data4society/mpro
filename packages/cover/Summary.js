@@ -5,11 +5,10 @@ var isEmpty = require('lodash/isEmpty');
 var groupBy = require('lodash/groupBy');
 var each = require('lodash/each');
 var map = require('lodash/map');
-var moment = require('moment');
 
-var Summary = function() {
+function Summary() {
   Summary.super.apply(this, arguments);
-};
+}
 
 Summary.Prototype = function() {
 
@@ -46,7 +45,7 @@ Summary.Prototype = function() {
       var item = {
         name: rubrics.get([id, 'name']),
         root: rubrics.getRootParent(id).name
-      }
+      };
       rubricsList.push(item);
     });
 

@@ -26,10 +26,8 @@ RubricIndex.Prototype = function() {
   };
 
   this._getPath = function(node, parentId) {
-    var doc = this.doc;
     parentId = parentId || node.parent;
     var type = node.type;
-    var parent = doc.get(parentId);
 
     return [parentId, type, node.id];
   };

@@ -35,7 +35,7 @@ RequestLogin.Prototype = function() {
 
       el.append(
         $$(Button, {
-          disabled: !!this.state.loading // disable button when in loading state
+          disabled: Boolean(this.state.loading) // disable button when in loading state
         }).append(this.getLabel('welcome-submit'))
           .on('click', this._requestLoginLink)
       );

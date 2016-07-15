@@ -58,7 +58,7 @@ ServerConfigurator.Prototype = function() {
     return schemas;
   };
 
-}
+};
 
 Configurator.extend(ServerConfigurator);
 

@@ -129,7 +129,7 @@ MproConfigurator.Prototype = function() {
     // reader use a lot of shared styles
     return uniq(styles);
   };
-}
+};
 
 Configurator.extend(MproConfigurator);
 

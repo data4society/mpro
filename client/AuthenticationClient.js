@@ -52,11 +52,11 @@ AuthenticationClient.Prototype = function() {
     Returns true if client is authenticated
   */
   this.isAuthenticated = function() {
-    return !!this._session;
+    return Boolean(this._session);
   };
 
   this._requestInvalid = function(reqName, reqParams) {
-    return this._requests[reqName] !==  reqParams;
+    return this._requests[reqName] !== reqParams;
   };
 
   /*

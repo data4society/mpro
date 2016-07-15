@@ -3,9 +3,9 @@
 var Component = require('substance/ui/Component');
 var moment = require('moment');
 
-var VkMetaComponent = function() {
+function VkMetaComponent() {
   VkMetaComponent.super.apply(this, arguments);
-};
+}
 
 VkMetaComponent.Prototype = function() {
 

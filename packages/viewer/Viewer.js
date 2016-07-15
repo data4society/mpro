@@ -5,7 +5,7 @@ var ContainerEditor = require('substance/ui/ContainerEditor');
 var SplitPane = require('substance/ui/SplitPane');
 var ScrollPane = require('substance/ui/ScrollPane');
 var Layout = require('substance/ui/Layout');
-var ProseEditorOverlay = require('substance/packages/prose-editor/ProseEditorOverlay')
+var ProseEditorOverlay = require('substance/packages/prose-editor/ProseEditorOverlay');
 
 function Viewer() {
   Viewer.super.apply(this, arguments);
@@ -55,7 +55,6 @@ Viewer.Prototype = function() {
   };
 
   this._renderCover = function($$) {
-    var configurator = this.props.configurator;
     var componentRegistry = this.componentRegistry;
     var Cover = componentRegistry.get('cover');
     return $$(Cover, {

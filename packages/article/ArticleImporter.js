@@ -5,8 +5,6 @@ var HTMLImporter = require('substance/model/HTMLImporter');
 var DefaultDOMElement = require('substance/ui/DefaultDOMElement');
 var each = require('lodash/each');
 var find = require('lodash/find');
-var Article = require('../common/Article');
-var schema = Article.schema;
 
 var converters = [
   require('substance/packages/paragraph/ParagraphHTMLConverter'),

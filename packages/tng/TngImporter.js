@@ -3,10 +3,6 @@
 var sanitizeHtml = require('sanitize-html');
 var HTMLImporter = require('substance/model/HTMLImporter');
 var DefaultDOMElement = require('substance/ui/DefaultDOMElement');
-var each = require('lodash/each');
-var find = require('lodash/find');
-var Article = require('../common/Article');
-var schema = Article.schema;
 
 var converters = [
   require('substance/packages/paragraph/ParagraphHTMLConverter'),
@@ -74,23 +70,23 @@ TngImporter.Prototype = function() {
     var metaNode = doc.get('meta');
     if(!metaNode){
       doc.create({
-       id: 'meta',
-      type: 'meta',
-      title: source.title || '',
-      rubrics: source.rubric_ids,
-      source_type: source_type,
-      entities: [],
-      abstract: abstract,
-      accepted: false
+        id: 'meta',
+        type: 'meta',
+        title: source.title || '',
+        rubrics: source.rubric_ids,
+        source_type: source_type,
+        entities: [],
+        abstract: abstract,
+        accepted: false
       });
     }
   };
 
   this.truncate = function(string, n, useWordBoundary) {
-    var isTooLong = string.length > n,
-        s_ = isTooLong ? string.substr(0,n-1) : string;
-        s_ = (useWordBoundary && isTooLong) ? s_.substr(0,s_.lastIndexOf(' ')) : s_;
-    return  isTooLong ? s_ + '&hellip;' : s_;
+    var isTooLong = string.length > n;
+    var s_ = isTooLong ? string.substr(0,n-1) : string;
+    s_ = (useWordBoundary && isTooLong) ? s_.substr(0,s_.lastIndexOf(' ')) : s_;
+    return isTooLong ? s_ + '&hellip;' : s_;
   };
 };
 

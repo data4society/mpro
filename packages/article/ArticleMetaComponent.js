@@ -3,9 +3,9 @@
 var Component = require('substance/ui/Component');
 var moment = require('moment');
 
-var ArticleMetaComponent = function() {
+function ArticleMetaComponent() {
   ArticleMetaComponent.super.apply(this, arguments);
-};
+}
 
 ArticleMetaComponent.Prototype = function() {
 

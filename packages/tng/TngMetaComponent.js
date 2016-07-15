@@ -1,11 +1,10 @@
 'use strict';
 
 var Component = require('substance/ui/Component');
-var moment = require('moment');
 
-var TngMetaComponent = function() {
+function TngMetaComponent() {
   TngMetaComponent.super.apply(this, arguments);
-};
+}
 
 TngMetaComponent.Prototype = function() {
 

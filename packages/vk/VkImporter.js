@@ -6,8 +6,6 @@ var DefaultDOMElement = require('substance/ui/DefaultDOMElement');
 var each = require('lodash/each');
 var find = require('lodash/find');
 var map = require('lodash/map');
-var Article = require('../common/Article');
-var schema = Article.schema;
 
 var converters = [
   require('substance/packages/paragraph/ParagraphHTMLConverter'),
@@ -70,7 +68,7 @@ VkImporter.Prototype = function() {
     var author_name;
 
     // Compile first and last names for users and name for other cases
-    if(owner.owner_type == "user") {
+    if(owner.owner_type === "user") {
       author_name = owner.first_name + " " + owner.last_name;
     } else {
       author_name = owner.name;
@@ -144,10 +142,10 @@ VkImporter.Prototype = function() {
   };
 
   this.truncate = function(string, n, useWordBoundary) {
-    var isTooLong = string.length > n,
-        s_ = isTooLong ? string.substr(0,n-1) : string;
-        s_ = (useWordBoundary && isTooLong) ? s_.substr(0,s_.lastIndexOf(' ')) : s_;
-    return  isTooLong ? s_ + '&hellip;' : s_;
+    var isTooLong = string.length > n;
+    var s_ = isTooLong ? string.substr(0,n-1) : string;
+    s_ = (useWordBoundary && isTooLong) ? s_.substr(0,s_.lastIndexOf(' ')) : s_;
+    return isTooLong ? s_ + '&hellip;' : s_;
   };
 };
 

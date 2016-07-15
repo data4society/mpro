@@ -1,7 +1,6 @@
 'use strict';
 
 var extend = require('lodash/extend');
-var Component = require('substance/ui/Component');
 var ListScrollPane = require('../common/ListScrollPane');
 var DoubleSplitPane = require('../common/DoubleSplitPane');
 var AbstractFeedLoader = require('../common/AbstractFeedLoader');
@@ -163,8 +162,8 @@ Configurator.Prototype = function() {
   };
 
   this._connectSession = function(session) {
-    this.refs.collaborators.extendProps(session)
-  }; 
+    this.refs.collaborators.extendProps(session);
+  };
 
 };
 

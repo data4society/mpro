@@ -173,7 +173,7 @@ AbstractFeedLoader.Prototype = function() {
           items = concat(documents.records, this.state.documentItems);
           this.extendState({
             documentItems: items,
-            totalItems: parseInt(documents.total) + parseInt(this.state.totalItems),
+            totalItems: parseInt(documents.total, 10) + parseInt(this.state.totalItems, 10),
             lastQueryTime: new Date()
           });
         }
@@ -202,7 +202,7 @@ AbstractFeedLoader.Prototype = function() {
       if(key.indexOf('active') > -1) {
         facetChange = true;
       }
-    }.bind(this));
+    });
 
     if(facetChange) this._applyFacets();
   };

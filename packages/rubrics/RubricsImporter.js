@@ -2,9 +2,6 @@
 
 var HTMLImporter = require('substance/model/HTMLImporter');
 var each = require('lodash/each');
-var Rubrics = require('./Rubrics');
-var schema = Rubrics.schema;
-
 var converters = [];
 
 function RubricsImporter(config) {

@@ -7,9 +7,9 @@ var concat = require('lodash/concat');
 var isEmpty = require('lodash/isEmpty');
 var flattenDeep = require('lodash/flattenDeep');
 
-var RubricSelector = function() {
+function RubricSelector() {
   RubricSelector.super.apply(this, arguments);
-};
+}
 
 RubricSelector.Prototype = function() {
 

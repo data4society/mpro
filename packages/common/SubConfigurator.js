@@ -12,11 +12,11 @@ SubConfigurator.Prototype = function() {
     this.config.seed = seed;
   };
 
-  this.getSeed = function(seed) {
+  this.getSeed = function() {
     return this.config.seed;
   };
 
-}
+};
 
 ProseEditorConfigurator.extend(SubConfigurator);
 

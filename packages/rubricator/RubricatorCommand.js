@@ -7,14 +7,14 @@ function RubricatorCommand() {
 }
 
 RubricatorCommand.Prototype = function() {
-  this.getCommandState = function(props, context) {
+  this.getCommandState = function() {
     return {
       disabled: false,
       active: false
     };
   };
 
-  this.execute = function(props, context) {
+  this.execute = function(props) {
     var documentSession = props.documentSession;
     var rubrics = props.rubrics;
     documentSession.transaction(function(tx) {

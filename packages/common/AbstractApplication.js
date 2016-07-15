@@ -88,6 +88,7 @@ AbstractApplication.Prototype = function() {
   /*
     Used for session inspection and returning changed route.
   */
+  // eslint-disable-next-line
   this._onAuthentication = function(route, session) {
     // Inspect session here
     return route;
@@ -115,7 +116,6 @@ AbstractApplication.Prototype = function() {
     Store session token in localStorage.
   */
   this._setSessionToken = function(sessionToken) {
-    console.log('storing new sessionToken', sessionToken);
     window.localStorage.setItem('sessionToken', sessionToken);
   };
 
@@ -130,7 +130,6 @@ AbstractApplication.Prototype = function() {
     Update user session with new data, for example new user name.
   */
   this._updateUserSession = function(userSession) {
-    console.log('user session updated');
     this.extendState({
       userSession: userSession
     });
@@ -143,7 +142,7 @@ AbstractApplication.Prototype = function() {
   */
   this._logout = function() {
     this.authenticationClient.logout(function(err) {
-      if (err) return alert('Logout failed');
+      if (err) throw err;
 
       window.localStorage.removeItem('sessionToken');
       this.extendState({

@@ -69,7 +69,7 @@ Rubrics.Prototype = function() {
     var index = this.getIndex('rubrics').index;
     var roots = [];
     each(index, function(node, nodeId) {
-      var node = this.get(nodeId);
+      node = this.get(nodeId);
       if(!node.hasParent()) roots.push(node);
     }.bind(this));
     return roots;
