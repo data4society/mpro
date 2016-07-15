@@ -48,7 +48,10 @@ AbstractApplication.Prototype = function() {
     var loginData = this._getLoginData(route);
 
     this._authenticate(loginData, function(err, userSession) {
-      if (err) throw err;
+      if (err) {
+        console.error(err);
+        route = {page: this.getLoginPage()};
+      }
 
       // Patch route not to include loginKey for security reasons
       delete route.loginKey;

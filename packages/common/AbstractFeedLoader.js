@@ -48,6 +48,7 @@ AbstractFeedLoader.Prototype = function() {
     - pagination: flag to show/hide pager (used internaly)
     - totalItems: total number of items (used internaly)
     - rubrics: document with all rubrics (used internaly)
+    - addNew: show button for adding a new document
   */
   this.getInitialState = function() {
     return {
@@ -59,7 +60,8 @@ AbstractFeedLoader.Prototype = function() {
       documentItems: [],
       pagination: false,
       totalItems: 0,
-      rubrics: {}
+      rubrics: {},
+      addNew: false
     };
   };
 
