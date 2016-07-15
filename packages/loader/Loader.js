@@ -8,6 +8,7 @@ var Component = require('substance/ui/Component');
 var isUndefined = require('lodash/isUndefined');
 var Info = require('./Info');
 var Viewer = require('../viewer/Viewer');
+var Editor = require('../editor/Editor');
 var converter = new JSONConverter();
 
 /*
@@ -170,7 +171,7 @@ Loader.Prototype = function() {
     if (this.props.mode === 'viewer') {
       EditorClass = Viewer;
     } else if (this.props.mode === 'editor') {
-      //EditorClass = Author;
+      EditorClass = Editor;
     }
 
     if (this.state.error) {

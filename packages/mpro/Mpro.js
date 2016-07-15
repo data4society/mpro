@@ -22,6 +22,12 @@ function Mpro() {
 
   this.addPage('welcome', this.componentRegistry.get('welcome'));
   this.addPage('inbox', this.componentRegistry.get('inbox'));
+  this.addPage('configurator', this.componentRegistry.get('configurator'));
+
+  this.handleActions({
+    'configurator': this._configurator,
+    'inbox': this._inbox
+  });
 }
 
 Mpro.Prototype = function() {
@@ -63,6 +69,17 @@ Mpro.Prototype = function() {
     return route;
   };
 
+  this._configurator = function() {
+    this.navigate({
+      page: 'configurator'
+    });
+  };
+
+  this._inbox = function() {
+    this.navigate({
+      page: 'inbox'
+    });
+  };
 };
 
 AbstractApplication.extend(Mpro);
