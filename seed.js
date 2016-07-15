@@ -1,3 +1,5 @@
+'use strict';
+
 var ChangeStore = require('./server/ChangeStore');
 var DocumentStore = require('./server/DocumentStore');
 var ClassStore = require('./server/ClassStore');
@@ -27,15 +29,15 @@ db.reset() // Clear the database, set up the schema
     var thematicStore = new RubricStore({ db: db });
     return thematicStore.seed();
   }).then(function() {
-  var sourceStore = new SourceStore({ db: db });
+    var sourceStore = new SourceStore({ db: db });
     return sourceStore.seed();
   }).then(function() {
-  var documentStore = new DocumentStore({ db: db });
+    var documentStore = new DocumentStore({ db: db });
     return documentStore.seed();
   }).then(function() {
-  var changeStore = new ChangeStore({ db: db });
+    var changeStore = new ChangeStore({ db: db });
     return changeStore.seed();
   }).then(function() {
-    console.log('Done seeding.');
+    console.log('Done seeding.'); // eslint-disable-line
     db.connection.end();
   });

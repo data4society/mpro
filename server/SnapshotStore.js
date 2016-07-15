@@ -92,9 +92,11 @@ SnapshotStore.Prototype = function() {
   this.deleteSnaphot = function(documentId, version, cb) {
     // Fake deletion
     this.getSnapshot({documentId: documentId, version: version}, function(err, snapshot) {
-      if (err) return cb(new Err('SnapshotStore.ReadError', {
-        cause: err
-      }));
+      if (err) {
+        return cb(new Err('SnapshotStore.ReadError', {
+          cause: err
+        }));
+      }
 
       return cb(null, snapshot);
     });

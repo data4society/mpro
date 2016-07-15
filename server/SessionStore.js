@@ -106,7 +106,7 @@ SessionStore.Prototype = function() {
             resolve(session);
           });
         }.bind(this));
-      });
+      }.bind(this));
   };
 
   /*

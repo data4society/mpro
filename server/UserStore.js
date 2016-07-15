@@ -41,7 +41,7 @@ UserStore.Prototype = function() {
         }
 
         return this._createUser(userData);
-      });
+      }.bind(this));
   };
 
   /*
@@ -155,7 +155,7 @@ UserStore.Prototype = function() {
             resolve(user);
           });
         }.bind(this));
-      });
+      }.bind(this));
   };
 
   /*
@@ -184,7 +184,7 @@ UserStore.Prototype = function() {
             resolve(user);
           });
         }.bind(this));
-      });
+      }.bind(this));
   };
 
   /*

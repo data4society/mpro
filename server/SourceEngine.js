@@ -59,8 +59,10 @@ SourceEngine.Prototype = function() {
       .then(function(sources) {
         if(sources.length > 0) {
           var ids = map(sources, function(s) {return s.doc_id; });
+          // eslint-disable-next-line
           console.log(sources.length + ' new records were converted: ' + ids.join(', '));
         } else {
+          // eslint-disable-next-line
           console.log('There are no new records for conversion.');
         }
         // Resume the timer
@@ -139,7 +141,7 @@ SourceEngine.Prototype = function() {
         errMsg = 'Document source body is empty';
       } else if (isEmpty(source.meta)) {
         errMsg = 'Document source meta is empty';
-      } else if (isEmpty(source.rubric_ids) && source.type != 'tng') {
+      } else if (isEmpty(source.rubric_ids) && source.type !== 'tng') {
         errMsg = 'Document source has no rubrics';
       } else if (!this.importers[source.type]) {
         errMsg = 'Unknown type of document source: ' + source.type;
@@ -183,7 +185,7 @@ SourceEngine.Prototype = function() {
         var doc = importer.importDocument(recordBody, source);
         var data = converter.exportDocument(doc);
         var schema = doc.schema;
-        var training = source.type == 'tng' ? true: false;
+        var training = source.type === 'tng' ? true: false;
         var meta = doc.get('meta');
         var document = {
           title: meta.title,

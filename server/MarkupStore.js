@@ -37,7 +37,7 @@ MarkupStore.Prototype = function() {
         }
 
         return this._createMarkup(data);
-      });
+      }.bind(this));
   };
 
   /*

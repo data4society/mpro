@@ -1,3 +1,5 @@
+'use strict';
+
 var express = require('express');
 var http = require('http');
 var path = require('path');
@@ -61,13 +63,6 @@ var MproServer = require('./server/MproServer');
 
 var DocumentChange = require('substance/model/DocumentChange');
 
-/*
-  Importers
-*/
-var articleImporter = require('./packages/article/ArticleImporter');
-var tngImporter = require('./packages/tng/TngImporter');
-var vkImporter = require('./packages/vk/VkImporter');
-
 var Database = require('./server/Database');
 
 
@@ -122,6 +117,7 @@ var authenticationEngine = new AuthenticationEngine({
   emailService: null // TODO
 });
 
+// eslint-disable-next-line
 var sourceEngine = new SourceEngine({
   documentStore: documentStore,
   sourceStore: sourceStore,
@@ -223,25 +219,25 @@ var collabServer = new CollabServer({
           // Update the title if necessary
           var change = DocumentChange.fromJSON(message.change);
           change.ops.forEach(function(op) {
-            if(op.path[0] == 'meta' && op.path[1] == 'title') {
+            if(op.path[0] === 'meta' && op.path[1] === 'title') {
               title = op.diff.apply(title);
             }
           });
 
           change.ops.forEach(function(op) {
-            if(op.path[0] == 'meta' && op.path[1] == 'rubrics') {
+            if(op.path[0] === 'meta' && op.path[1] === 'rubrics') {
               rubrics = op.val;
             }
           });
 
           change.ops.forEach(function(op) {
-            if(op.path[0] == 'meta' && op.path[1] == 'entities') {
+            if(op.path[0] === 'meta' && op.path[1] === 'entities') {
               entities = op.val;
             }
           });
 
           change.ops.forEach(function(op) {
-            if(op.path[0] == 'meta' && op.path[1] == 'accepted') {
+            if(op.path[0] === 'meta' && op.path[1] === 'accepted') {
               accepted = op.val;
             }
           });
@@ -326,7 +322,7 @@ app.use(function(err, req, res, next) {
   
   res.status(500).json({
     errorName: err.name,
-    errorMessage: err.message || err.name
+    errorMessage: err.message || err.name
   });
 });
 
@@ -338,7 +334,7 @@ httpServer.on('request', app);
 // E.g. we'll need to establish a reverse proxy
 // forwarding http+ws from domain name to localhost:5001 for instance
 httpServer.listen(config.port, config.host, function() {
-  console.log('Listening on ' + httpServer.address().port); 
+  console.log('Listening on ' + httpServer.address().port); // eslint-disable-line
 });
 
 // Export app for requiring in test files

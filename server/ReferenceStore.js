@@ -37,7 +37,7 @@ ReferenceStore.Prototype = function() {
         }
 
         return this._createReference(data);
-      });
+      }.bind(this));
   };
 
   /*

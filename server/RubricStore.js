@@ -48,7 +48,7 @@ RubricStore.Prototype = function() {
         }
 
         return this._createRubric(rubricData);
-      });
+      }.bind(this));
   };
 
   /*
@@ -107,7 +107,7 @@ RubricStore.Prototype = function() {
             resolve(rubric);
           });
         }.bind(this));
-      });
+      }.bind(this));
   };
 
   /*
@@ -138,7 +138,7 @@ RubricStore.Prototype = function() {
             resolve(rubric);
           });
         }.bind(this));
-      });
+      }.bind(this));
   };
 
   /*
@@ -196,8 +196,6 @@ RubricStore.Prototype = function() {
     @returns {Promise}
   */
   this.listRubrics = function(filters, options) {
-    var output = {};
-
     // Default limit for number of returned records
     if(!options.limit) options.limit = 100;
 
@@ -228,6 +226,7 @@ RubricStore.Prototype = function() {
     @param {Array} rubrics rubrics
     @returns {Promise}
   */
+  // eslint-disable-next-line
   this.listFacets = function(filters, options) {
     var args = ArgTypes.findArgs(arguments, this);
     var where = isEmpty(args.conditions) ? {where: " "} : Where.forTable(args.conditions);
@@ -248,7 +247,7 @@ RubricStore.Prototype = function() {
         }
           
         resolve(facets);
-      }.bind(this));
+      });
     }.bind(this));
   };
 

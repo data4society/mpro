@@ -58,7 +58,7 @@ FeedItem.Prototype = function() {
       each(rubricsMeta, function(rubric) {
         var item = rubrics.get(rubric);
         rubricsList.push(item.name);
-      }.bind(this));
+      });
     }
 
     var rubricsEl = $$('div').addClass('se-rubrics');

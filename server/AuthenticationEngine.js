@@ -1,6 +1,5 @@
 'use strict';
 
-var appConfig = require('config');
 var uuid = require('substance/util/uuid');
 var oo = require('substance/util/oo');
 var Err = require('substance/util/SubstanceError');
@@ -73,18 +72,19 @@ AuthenticationEngine.Prototype = function() {
   /*
     Send a login link via email
   */
+  // eslint-disable-next-line
   this._sendLoginLink = function(user, documentId) {
-    var url = appConfig.get('server.appUrl');
-    //var subject = "Your login key!";
-    var msg;
+    // var url = appConfig.get('server.appUrl');
+    // //var subject = "Your login key!";
+    // var msg;
 
-    if (documentId) {
-      msg = "Click the following link to edit: "+url + "/#section=note,documentId=" +documentId+",loginKey=" + user.loginKey;
-    } else {
-      msg = "Click the following link to login: "+url + "/#loginKey=" + user.loginKey;
-    }
+    // if (documentId) {
+    //   msg = "Click the following link to edit: "+url + "/#section=note,documentId=" +documentId+",loginKey=" + user.loginKey;
+    // } else {
+    //   msg = "Click the following link to login: "+url + "/#loginKey=" + user.loginKey;
+    // }
     
-    console.log('Message: ', msg);
+    // console.log('Message: ', msg);
     // Let's not do it for now
     // return Mail.sendPlain(user.email, subject, msg)
     //   .then(function(info){

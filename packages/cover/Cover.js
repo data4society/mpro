@@ -21,10 +21,9 @@ Cover.Prototype = function() {
   };
 
   this.render = function($$) {
-    var documentInfo = this.props.documentInfo.props;
-    var authors = [documentInfo.author || documentInfo.userId];
-
-    authors = authors.concat(documentInfo.collaborators);
+    // var documentInfo = this.props.documentInfo.props;
+    // var authors = [documentInfo.author || documentInfo.userId];
+    // authors = authors.concat(documentInfo.collaborators);
    
     var el = $$("div").addClass("sc-cover");
 

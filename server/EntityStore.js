@@ -45,7 +45,7 @@ EntityStore.Prototype = function() {
         }
 
         return this._createEntity(entityData);
-      });
+      }.bind(this));
   };
 
   /*
@@ -106,7 +106,7 @@ EntityStore.Prototype = function() {
             resolve(entity);
           });
         }.bind(this));
-      });
+      }.bind(this));
   };
 
   /*
@@ -135,7 +135,7 @@ EntityStore.Prototype = function() {
             resolve(entity);
           });
         }.bind(this));
-      });
+      }.bind(this));
   };
 
   /*

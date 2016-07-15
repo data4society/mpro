@@ -41,7 +41,7 @@ SourceStore.Prototype = function() {
         }
 
         return this._createSource(sourceData);
-      });
+      }.bind(this));
   };
 
   /*
@@ -100,7 +100,7 @@ SourceStore.Prototype = function() {
             resolve(source);
           });
         }.bind(this));
-      });
+      }.bind(this));
   };
 
   /*
@@ -129,7 +129,7 @@ SourceStore.Prototype = function() {
             resolve(source);
           });
         }.bind(this));
-      });
+      }.bind(this));
   };
 
   /*

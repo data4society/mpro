@@ -81,7 +81,7 @@ ChangeStore.Prototype = function() {
         }));
       }
 
-      cb(null, parseInt(count));
+      cb(null, parseInt(count, 10));
     });
   };
 

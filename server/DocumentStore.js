@@ -251,9 +251,11 @@ DocumentStore.Prototype = function() {
 
     // Default limit for number of returned records
     if(!options.limit) options.limit = 100;
-    if(!options.columns) options.columns = [
-      'document_id', 'guid', 'title', 'schema_name', 'published', 'created', 'edited', 'rubrics', 'meta'
-    ];
+    if(!options.columns) {
+      options.columns = [
+        'document_id', 'guid', 'title', 'schema_name', 'published', 'created', 'edited', 'rubrics', 'meta'
+      ];
+    }
 
     this.db.records.count(filters, function(err, count) {
       if (err) {
