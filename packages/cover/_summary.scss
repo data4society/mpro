@@ -10,11 +10,19 @@
   .se-rubrics {
     padding: 5px 0px;
     position: relative;
+
+    .sm-leaf-item {
+      padding-bottom: 3px;
+    }
   }
 
   .sm-item {
-    position: absolute;
-    top: 0px;
-    left: 20px;
+    position: relative;
+    padding-left: 30px;
+  }
+
+  .fa {
+    float: left;
+    padding-top: 4px;
   }
 }

@@ -14,6 +14,10 @@ var each = require('lodash/each');
 
 function AbstractFeedLoader() {
   Component.apply(this, arguments);
+
+  this.handleActions({
+    'updateFeedItem': this._updateFeedItem
+  });
 }
 
 AbstractFeedLoader.Prototype = function() {
@@ -21,7 +25,7 @@ AbstractFeedLoader.Prototype = function() {
   this.didMount = function() {
     this._loadRubrics();
     this._loadDocuments();
-    this.pollTimer = setInterval(this._pollDocuments.bind(this), 60000);
+    //this.pollTimer = setInterval(this._pollDocuments.bind(this), 60000);
   };
 
   this.dispose = function() {
@@ -175,6 +179,16 @@ AbstractFeedLoader.Prototype = function() {
         }
       }.bind(this)
     );
+  };
+
+
+  this._updateFeedItem = function(documentId, meta) {
+    var feed = this.refs.feed;
+    var feedItem = feed.refs[documentId];
+    if(feedItem) {
+      var document = extend({}, feedItem.document, {meta: meta});
+      feedItem.extendProps({document: document});
+    }
   };
 
   /*

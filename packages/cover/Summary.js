@@ -59,7 +59,11 @@ Summary.Prototype = function() {
 
       each(groupedList, function(list, key) {
         var leaf = key.charAt(0).toUpperCase() + key.slice(1);
-        listEl.append(leaf + ': ' + map(list, 'name').join(', '));
+        listEl.append(
+          $$('div').addClass('sm-leaf-item').append(
+            leaf + ': ' + map(list, 'name').join(', ')
+          )
+        );
       });
     } else {
       listEl.append(this.getLabel('no-rubrics'));

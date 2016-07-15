@@ -59,10 +59,16 @@ Cover.Prototype = function() {
     documentInfo.props.updatedAt = new Date();
     documentInfo.props.meta = {title: meta.title, rubrics: meta.rubrics};
 
-    // if (change.after.surfaceId == 'title') {
-    //   var title = doc.get(['meta', 'title']);
-    //   this.send('updateListTitle', documentId, title);
-    // }
+    if (change.updated['meta,rubrics']) {
+      this.rerender();
+    }
+
+    var changed = Object.keys(change.updated)[0];
+    var metaChanged = changed.indexOf('meta') > -1;
+
+    if(metaChanged) {
+      this.send('updateFeedItem', documentId, meta);
+    }
   };
 
   this.getDocument = function() {

@@ -31,10 +31,10 @@ FeedItem.Prototype = function() {
       source
     );
 
-    if(document.title !== '') {
+    if(meta.title !== '') {
       el.append(
         $$('div').addClass('se-title')
-          .append(document.title)
+          .append(meta.title)
       );
     }
 
