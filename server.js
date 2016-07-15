@@ -1,4 +1,3 @@
-var config = require('config');
 var express = require('express');
 var http = require('http');
 var path = require('path');
@@ -8,6 +7,14 @@ var find = require('lodash/find');
 var app = express();
 var bodyParser = require('body-parser');
 var WebSocketServer = require('ws').Server;
+
+/*
+  Config
+*/
+var ServerConfigurator = require('./packages/server/ServerConfigurator');
+var ServerPackage = require('./packages/server/package');
+var configurator = new ServerConfigurator().import(ServerPackage);
+var config = configurator.getAppConfig();
 
 // Development server 
 // Serves HTML, bundled JS and CSS in non-production mode
@@ -51,17 +58,16 @@ var MproServer = require('./server/MproServer');
 /*
   Models
 */
-var newTrainingArticle = require('./models/training/newTrainingArticle');
-var newArticle = require('./models/article/newArticle');
-var newVk = require('./models/vk/newVk');
+
 var DocumentChange = require('substance/model/DocumentChange');
 
 /*
   Importers
 */
-var vkImporter = require('./models/vk/vkImporter');
-var articleImporter = require('./models/article/articleImporter');
-var trainingImporter = require('./models/training/trainingArticleImporter');
+var articleImporter = require('./packages/article/ArticleImporter');
+var tngImporter = require('./packages/tng/TngImporter');
+var vkImporter = require('./packages/vk/VkImporter');
+
 var Database = require('./server/Database');
 
 
@@ -92,28 +98,14 @@ var fileStore = new FileStore({destination: './uploads'});
 /*
   Engines setup
 */
+var schemas = configurator.getSchemas();
+
 var snapshotEngine = new SnapshotEngine({
   db: db,
   documentStore: documentStore,
   changeStore: changeStore,
   snapshotStore: snapshotStore,
-  schemas: {
-    'mpro-trn': {
-      name: 'mpro-trn',
-      version: '1.0.0',
-      documentFactory: newTrainingArticle
-    },
-    'mpro-article': {
-      name: 'mpro-article',
-      version: '1.0.0',
-      documentFactory: newArticle
-    },
-    'mpro-vk': {
-      name: 'mpro-vk',
-      version: '1.0.0',
-      documentFactory: newVk
-    }
-  }
+  schemas: schemas
 });
 
 var documentEngine = new DocumentEngine({
@@ -121,23 +113,7 @@ var documentEngine = new DocumentEngine({
   documentStore: documentStore,
   changeStore: changeStore,
   snapshotEngine: snapshotEngine,
-  schemas: {
-    'mpro-trn': {
-      name: 'mpro-trn',
-      version: '1.0.0',
-      documentFactory: newTrainingArticle
-    },
-    'mpro-article': {
-      name: 'mpro-article',
-      version: '1.0.0',
-      documentFactory: newArticle
-    },
-    'mpro-vk': {
-      name: 'mpro-vk',
-      version: '1.0.0',
-      documentFactory: newVk
-    }
-  }
+  schemas: schemas
 });
 
 var authenticationEngine = new AuthenticationEngine({
@@ -150,9 +126,9 @@ var sourceEngine = new SourceEngine({
   documentStore: documentStore,
   sourceStore: sourceStore,
   importers: {
-    'vk': vkImporter,
-    'article': articleImporter,
-    'trn': trainingImporter
+    'article': configurator.getConfigurator('mpro-article').createImporter('html'),
+    'tng': configurator.getConfigurator('mpro-tng').createImporter('html'),
+    'vk': configurator.getConfigurator('mpro-vk').createImporter('html')
   }
 });
 
@@ -178,10 +154,7 @@ app.use(bodyParser.urlencoded({ extended: true, limit: '3mb', parameterLimit: 30
 /*
   Serve app
 */
-var config = config.get('server');
-var env = config.util.getEnv('NODE_ENV');
-
-if(env !== 'production') {
+if(config.env !== 'production') {
   // Serve HTML, bundled JS and CSS in non-production mode
 
   serverUtils.serveStyles(app, '/app.css', {
@@ -312,7 +285,7 @@ collabServer.bind(wss);
 // AuthenticationServer
 var authenticationServer = new AuthenticationServer({
   authenticationEngine: authenticationEngine,
-  path: '/api/auth/'
+  path: '/api/auth'
 });
 
 authenticationServer.bind(app);
