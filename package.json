@@ -39,9 +39,10 @@
   },
   "browserify": {},
   "scripts": {
+    "bundle": "gulp bundle",
+    "postinstall": "mkdir -p uploads",
     "seed": "node seed",
-    "test": "gulp test",
-    "bundle": "gulp bundle"
+    "test": "gulp test"
   },
   "version": "0.0.1"
 }
