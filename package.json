@@ -21,31 +21,26 @@
     "rimraf": "^2.5.2",
     "sanitize-html": "^1.11.4",
     "substance": "git://github.com/substance/substance.git#60fdced18043f6f84f5bd78983cf6c0d67dad985",
-    "tap-spec": "^4.1.1",
-    "tape": "^4.6.0",
     "ws": "^1.1.0"
   },
   "devDependencies": {
     "browserify": "^13.0.1",
-    "chai": "^3.5.0",
     "glob": "7.0.3",
     "gulp": "^3.9.1",
     "gulp-istanbul": "^0.10.4",
-    "gulp-mocha": "^2.2.0",
     "gulp-rename": "^1.2.2",
     "gulp-replace": "^0.5.4",
     "gulp-sass": "^2.3.1",
     "gulp-uglify": "^1.5.3",
-    "jshint": "^2.9.2",
-    "mocha": "^2.4.5",
-    "mocha-jshint": "^2.3.1",
     "node-sass": "^3.7.0",
+    "tap-spec": "^4.1.1",
+    "tape": "^4.6.0",
     "through2": "^2.0.1"
   },
   "browserify": {},
   "scripts": {
     "seed": "node seed",
-    "test": "mocha --recursive",
+    "test": "gulp test",
     "bundle": "gulp bundle"
   },
   "version": "0.0.1"
