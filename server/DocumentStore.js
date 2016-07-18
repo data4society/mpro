@@ -253,7 +253,7 @@ DocumentStore.Prototype = function() {
     if(!options.limit) options.limit = 100;
     if(!options.columns) {
       options.columns = [
-        'document_id', 'guid', 'title', 'schema_name', 'published', 'created', 'edited', 'rubrics', 'meta'
+        'document_id', 'guid', 'title', 'schema_name', 'schema_version', 'published', 'created', 'edited', 'edited_by', 'rubrics', 'meta'
       ];
     }
 
