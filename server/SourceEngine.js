@@ -1,7 +1,7 @@
 "use strict";
 
 var oo = require('substance/util/oo');
-var Err = require('substance/util/Error');
+var Err = require('substance/util/SubstanceError');
 var map = require('lodash/map');
 var isEmpty = require('lodash/isEmpty');
 var Promise = require("bluebird");
@@ -59,8 +59,10 @@ SourceEngine.Prototype = function() {
       .then(function(sources) {
         if(sources.length > 0) {
           var ids = map(sources, function(s) {return s.doc_id; });
+          // eslint-disable-next-line
           console.log(sources.length + ' new records were converted: ' + ids.join(', '));
         } else {
+          // eslint-disable-next-line
           console.log('There are no new records for conversion.');
         }
         // Resume the timer
@@ -139,7 +141,7 @@ SourceEngine.Prototype = function() {
         errMsg = 'Document source body is empty';
       } else if (isEmpty(source.meta)) {
         errMsg = 'Document source meta is empty';
-      } else if (isEmpty(source.rubric_ids) && source.type != 'trn') {
+      } else if (isEmpty(source.rubric_ids) && source.type !== 'tng') {
         errMsg = 'Document source has no rubrics';
       } else if (!this.importers[source.type]) {
         errMsg = 'Unknown type of document source: ' + source.type;
@@ -172,18 +174,18 @@ SourceEngine.Prototype = function() {
       .then(function(source) {
         var recordBody = source.doc_source;
         var type = source.type;
-        var Importer = this.importers[type];
+        var importer = this.importers[type];
         
-        if(!Importer) {
+        if(!importer) {
           throw new Err('SourceEngine.ConvertError', {
             message: 'Unknowned type of source: ' + source.type
           });
         }
-        var importer = new Importer();
+
         var doc = importer.importDocument(recordBody, source);
         var data = converter.exportDocument(doc);
         var schema = doc.schema;
-        var training = source.type == 'trn' ? true: false;
+        var training = source.type === 'tng' ? true: false;
         var meta = doc.get('meta');
         var document = {
           title: meta.title,

@@ -1,0 +1,83 @@
+.sc-rubricator {
+  max-height: 600px;
+  overflow: auto;
+
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  -o-user-select: none;
+  user-select: none;
+
+  .se-tree-node {
+    position: relative;
+    font-size: 14px;
+    text-transform: uppercase;
+    border-bottom: 1px solid #E0E4E4;
+    padding: 20px;
+    background: #fafafa;
+    border-bottom: 1px solid #ddd;
+    border-left: 4px solid transparent;
+    cursor: pointer;
+
+    $nodePaddingLeft: 25px;
+
+    &.hide-expand {
+      padding-left: $nodePaddingLeft + 16px;
+    }
+
+    @for $i from 2 through 6 {
+      &.level-#{$i} {
+        padding-left: $nodePaddingLeft * $i;
+      }
+    }
+
+    &.level-2 {
+
+    }
+
+    &.sm-selected {
+      border-left: 4px solid #91bb04;
+      background: #fff;
+    }
+
+    .se-tree-node-name {
+      padding-left: 20px;
+    }
+
+    .selection {
+      float: right;
+      font-size: 23px;
+      padding: 17px 20px;
+      top: 0px;
+      position: absolute;
+      right: 0px;
+
+      &.fa-square-o {
+        padding: 17px 23px;
+      }
+    }
+
+    .expansion {
+      font-size: 23px;
+      position: absolute;
+      top: 17px;
+    }
+
+    .help {
+      font-size: 13px;
+      padding-left: 10px;
+    }
+
+    .se-node-help {
+      position: absolute;
+      font-size: 10px;
+      left: 260px;
+      top: 6px;
+      right: 60px;
+      background: rgba(255, 255, 255, 0.8);
+      padding: 10px;
+      border: 1px dotted #000;
+      z-index: 99;
+    }
+  }
+}

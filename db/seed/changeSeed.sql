@@ -4,7 +4,7 @@ insert into changes(document_id, version, data, created, owner)
 values (
   '1',
   1,
-  E'{"sessionId":1,"sha":"bd2cbad90f84f19d5b62e5b663e5c35d","before":{"selection":null},"ops":[{"type":"create","path":["meta"],"val":{"id":"meta","type":"meta","title":"Untitled","categories":[]}},{"type":"create","path":["p1"],"val":{"id":"p1","type":"paragraph","content":"Paste your arcticle here."}},{"type":"update","path":["body","nodes"],"propertyType":"array","diff":{"type":"insert","pos":0,"val":"p1"}}],"info":{"title":"Untitled","training":true},"after":{"selection":null}}',
+  E'{"ops": [{"val": {"id": "paragraph-6d53e6a3695ec91a5e2fc97dba8003de", "type": "paragraph", "content": ""}, "path": ["paragraph-6d53e6a3695ec91a5e2fc97dba8003de"], "type": "create"}, {"diff": {"pos": 1, "val": "paragraph-6d53e6a3695ec91a5e2fc97dba8003de", "type": "insert"}, "path": ["body", "nodes"], "type": "update", "propertyType": "array"}], "sha": "a899d736bc9981025d86a37df112e8e6", "info": {"userId": "testuser", "updatedAt": "2016-07-18T09:28:57.327Z"}, "after": {"selection": {"path": ["paragraph-6d53e6a3695ec91a5e2fc97dba8003de", "content"], "type": "property", "reverse": false, "endOffset": 0, "surfaceId": "body", "containerId": "body", "startOffset": 0}, "surfaceId": "body"}, "before": {"selection": {"path": ["p1", "content"], "type": "property", "reverse": false, "endOffset": 24, "surfaceId": "body", "containerId": "body", "startOffset": 24}, "surfaceId": "body"}}',
   NOW(),
   'testuser'
 ),

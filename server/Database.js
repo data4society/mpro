@@ -35,7 +35,8 @@ Database.Prototype = function() {
     return new Promise(function(resolve) {
       this.connection.reset(function(err){
         if (err) {
-          console.log(err.stack);
+          // eslint-disable-next-line
+          console.err(err.stack);
           process.exit(1);
         }
         resolve();

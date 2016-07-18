@@ -2,7 +2,7 @@
 
 var SnapshotEngine = require('substance/collab/SnapshotEngine');
 var JSONConverter = require('substance/model/JSONConverter');
-var Err = require('substance/util/Error');
+var Err = require('substance/util/SubstanceError');
 var converter = new JSONConverter();
 
 /*

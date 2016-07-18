@@ -1,195 +1,204 @@
-var assert = require('chai').assert;
-var should = require('chai').should();
+'use strict';
+
+var substanceTest = require('substance/test/test').module('server/RubricStore');
 
 var Database = require('../../server/Database');
 var RubricStore = require('../../server/RubricStore');
+var UserStore = require('../../server/UserStore');
 
-describe('Rubric Store', function() {
-  var db = new Database();
+var db, rubricStore, userStore;
 
-  var rubricStore = new RubricStore({db: db});
-
-  // we have to shutdown db connection and establish it again one time
-  // so massive will have all methods attached to it's DB object
-  // if we will not do it massive will not have methods atatched to table
-  // because there was no tables when we started first unit test
-  before(function(done) {
-    db.reset()
-      .then(function() {
-        var rubricStore = new RubricStore({ db: db });
-        return rubricStore.seed();
-      }).then(function(){
-        db.connection.end();
-        db = new Database();
-        rubricStore = new RubricStore({db: db});
-        
-        done();
-      });
-  });
-
-  beforeEach(function(done) {
-    db.reset()
-      .then(function() {
-        var rubricStore = new RubricStore({ db: db });
-        return rubricStore.seed();
-      }).then(done);
-  });
-
-  describe('Create rubric', function() {
-    it('should return new rubric record with given data', function(done) {
-      var rubricData = {
-        name: 'Test',
-        parent_id: '3'
-      };
-      return rubricStore.createRubric(rubricData)
-        .then(function(rubric) {
-          rubric.should.be.an('object');
-          should.exist(rubric.rubric_id);
-          assert.equal(rubric.name, rubricData.name);
-          assert.equal(rubric.parent_id, rubricData.parent_id);
-          done();
-        });
+function setup() {
+  db = new Database();
+  return db.reset()
+    .then(function() {
+      userStore = new UserStore({db: db});
+      return userStore.seed();
+    })
+    .then(function() {
+      rubricStore = new RubricStore({ db: db });
+      return rubricStore.seed();
+    }).then(function(){
+      // we have to shutdown db connection and establish test again one time
+      // so massive will have all methods attached to test's DB object
+      // if we will not do test massive will not have methods atatched to table
+      // because there was no tables when we started first unit test
+      db.connection.end();
+      db = new Database();
+      rubricStore = new RubricStore({ db: db });
     });
+}
 
-    it('should return new rubric record with given id', function(done) {
-      var rubricData = {
-        rubric_id: "non-existing-rubric"
-      };
-      return rubricStore.createRubric(rubricData)
-        .then(function(rubric) {
-          rubric.should.be.an('object');
-          should.exist(rubric.rubric_id);
-          assert.equal(rubric.rubric_id, rubricData.rubric_id);
-          done();
-        });
-    });
+function teardown() {
+  db.connection.end();
+}
 
-    it('should return empty name in new rubric record if it wasn\'t provided', function(done) {
-      var rubricData = {
-        parent_id: "4"
-      };
-      return rubricStore.createRubric(rubricData)
-        .then(function(rubric) {
-          rubric.should.be.an('object');
-          should.exist(rubric.rubric_id);
-          assert.equal(rubric.name, '');
-          done();
-        });
-    });
-
-    it('should return error if rubric with given rubric_id already exist', function(done) {
-      var rubricData = {
-        rubric_id: "1"
-      };
-      return rubricStore.createRubric(rubricData)
-        .then(function(rubric) {
-          should.not.exist(rubric);
-        }).catch(function(err) {
-          should.exist(err);
-          assert.equal(err.message, 'Rubric ' + rubricData.rubric_id + ' already exists.');
-          done();
-        });
+function test(description, fn) {
+  substanceTest(description, function (t) {
+    setup().then(function(){
+      t.once('end', teardown);
+      fn(t);
     });
   });
+}
 
-  describe('Get rubric', function() {
-    it('should return rubric record with given id', function(done) {
-      var rubricId = '1';
-      return rubricStore.getRubric(rubricId)
-        .then(function(rubric) {
-          rubric.should.be.an('object');
-          assert.equal(rubric.rubric_id, rubricId);
-          done();
-        });
+/*
+  Create rubric
+*/
+
+test('Should return new rubric record with given data', function(t) {
+  var rubricData = {
+    name: 'Test',
+    parent_id: '3'
+  };
+  return rubricStore.createRubric(rubricData)
+    .then(function(rubric) {
+      t.isNotNil(rubric.rubric_id, 'Rubric should contains rubric_id');
+      t.equal(rubric.name, rubricData.name, 'Rubric name should equals name from arguments');
+      t.equal(rubric.parent_id, rubricData.parent_id, 'Rubric parent should equals parent_id from arguments');
+      t.end();
     });
+});
 
-    it('should return error if rubricId with given id does not exist', function(done) {
-      var rubricId = 'non-existing-rubric';
-      return rubricStore.getRubric(rubricId)
-        .then(function(rubric) {
-          should.not.exist(rubric);
-        }).catch(function(err) {
-          should.exist(err);
-          assert.equal(err.message, 'No rubric found for rubric_id ' + rubricId);
-          done();
-        });
+test('Should return new rubric record with given id', function(t) {
+  var rubricData = {
+    rubric_id: "non-existing-rubric"
+  };
+  return rubricStore.createRubric(rubricData)
+    .then(function(rubric) {
+      t.isNotNil(rubric.rubric_id, 'Rubric should contains rubric_id');
+      t.equal(rubric.rubric_id, rubricData.rubric_id, 'Rubric id should equals rubric_id from arguments');
+      t.end();
     });
-  });
+});
 
-  describe('Update rubric', function() {
-    it('should update rubric and return updated record', function(done) {
-      var rubricId = '1';
-      var data = {
-        name: 'Test rubric'
-      };
-
-      return rubricStore.updateRubric(rubricId, data)
-        .then(function(rubric) {
-          should.exist(rubric);
-          rubric.should.be.an('object');
-          assert.equal(rubric.rubric_id, rubricId);
-          assert.equal(rubric.name, data.name);
-          return rubricStore.getRubric(rubricId);
-        })
-        .then(function(rubric) {
-          should.exist(rubric);
-          rubric.should.be.an('object');
-          assert.equal(rubric.rubric_id, rubricId);
-          assert.equal(rubric.name, data.name);
-          done();
-        });
+test('Should return empty name in new rubric record if it wasn\'t provided', function(t) {
+  var rubricData = {
+    parent_id: "4"
+  };
+  return rubricStore.createRubric(rubricData)
+    .then(function(rubric) {
+      t.isNotNil(rubric.rubric_id, 'Rubric should contains rubric_id');
+      t.equal(rubric.name, '', 'Rubric name should equals empty string');
+      t.end();
     });
-  });
+});
 
-  describe('Delete rubric', function() {
-    it('should delete rubric and return deleted record for a last time', function(done) {
-      var rubricId = '4';
-
-      return rubricStore.deleteRubric(rubricId)
-        .then(function(rubric) {
-          should.exist(rubric);
-          rubric.should.be.an('object');
-          assert.equal(rubric.rubric_id, rubricId);
-          return rubricStore.getRubric(rubricId);
-        })
-        .catch(function(err) {
-          should.exist(err);
-          assert.equal(err.message, 'No rubric found for rubric_id ' + rubricId);
-          done();
-        });
+test('Should return error if rubric with given rubric_id already exist', function(t) {
+  var rubricData = {
+    rubric_id: "1"
+  };
+  return rubricStore.createRubric(rubricData)
+    .then(function(rubric) {
+      t.isNil(rubric);
+    }).catch(function(err) {
+      t.isNotNil(err, 'Should error');
+      t.equal(err.message, 'Rubric ' + rubricData.rubric_id + ' already exists.', 'Error message should equals to given one');
+      t.end();
     });
+});
 
-    it('should return error in case of non-existing record', function(done) {
-      var rubricId = 'non-existing-rubric';
+/*
+  Get rubric
+*/
 
-      return rubricStore.deleteRubric(rubricId)
-        .catch(function(err) {
-          should.exist(err);
-          assert.equal(err.message, 'Rubric with rubric_id ' + rubricId + ' does not exists');
-          done();
-        });
+test('Should return rubric record with given id', function(t) {
+  var rubricId = '1';
+  return rubricStore.getRubric(rubricId)
+    .then(function(rubric) {
+      t.equal(rubric.rubric_id, rubricId, 'Rubric id should equals rubricId from arguments');
+      t.end();
     });
-  });
+});
 
-  describe('Rubric existance', function() {
-    it('should return true in case of existed record', function(done) {
-      var rubricId = '1';
-
-      return rubricStore.rubricExists(rubricId)
-        .then(function(exist) {
-          assert.equal(exist, true);
-          done();
-        });
+test('Should return error if rubricId with given id does not exist', function(t) {
+  var rubricId = 'non-existing-rubric';
+  return rubricStore.getRubric(rubricId)
+    .then(function(rubric) {
+      t.isNil(rubric);
+    }).catch(function(err) {
+      t.isNotNil(err, 'Should error');
+      t.equal(err.message, 'No rubric found for rubric_id ' + rubricId, 'Error message should equals to given one');
+      t.end();
     });
+});
 
-    it('should return false in case of non-existed record', function(done) {
-      var rubricId = 'non-existing-rubric';
+/*
+  Update rubric
+*/
 
-      return rubricStore.rubricExists(rubricId)
-        .then(function(exist) {
-          assert.equal(exist, false);
-          done();
-        });
+test('Should update rubric and return updated record', function(t) {
+  var rubricId = '1';
+  var data = {
+    name: 'Test rubric'
+  };
+
+  return rubricStore.updateRubric(rubricId, data)
+    .then(function(rubric) {
+      t.isNotNil(rubric, 'Rubric should exists');
+      t.equal(rubric.rubric_id, rubricId, 'Rubric id should equals rubricId from arguments');
+      t.equal(rubric.name, data.name, 'Rubric name should equals name from arguments');
+      return rubricStore.getRubric(rubricId);
+    })
+    .then(function(rubric) {
+      t.isNotNil(rubric, 'Rubric should exists');
+      t.equal(rubric.rubric_id, rubricId, 'Rubric id should equals rubricId from arguments');
+      t.equal(rubric.name, data.name, 'Rubric name should equals name from arguments');
+      t.end();
     });
-  });
+});
+
+/*
+  Delete rubric
+*/
+
+test('Should delete rubric and return deleted record for a last time', function(t) {
+  var rubricId = '4';
+
+  return rubricStore.deleteRubric(rubricId)
+    .then(function(rubric) {
+      t.isNotNil(rubric, 'Rubric should exists');
+      t.equal(rubric.rubric_id, rubricId, 'Rubric id should equals rubricId from arguments');
+      return rubricStore.getRubric(rubricId);
+    })
+    .catch(function(err) {
+      t.isNotNil(err, 'Should error');
+      t.equal(err.message, 'No rubric found for rubric_id ' + rubricId, 'Error message should equals to given one');
+      t.end();
+    });
+});
+
+test('Should return error in case of non-existing record', function(t) {
+  var rubricId = 'non-existing-rubric';
+
+  return rubricStore.deleteRubric(rubricId)
+    .catch(function(err) {
+      t.isNotNil(err, 'Should error');
+      t.equal(err.message, 'Rubric with rubric_id ' + rubricId + ' does not exists', 'Error message should equals to given one');
+      t.end();
+    });
+});
+
+/*
+  Rubric existance
+*/
+
+test('Should return true in case of existed record', function(t) {
+  var rubricId = '1';
+
+  return rubricStore.rubricExists(rubricId)
+    .then(function(exist) {
+      t.equal(exist, true, 'Rubric should exists');
+      t.end();
+    });
+});
+
+test('Should return false in case of non-existed record', function(t) {
+  var rubricId = 'non-existing-rubric';
+
+  return rubricStore.rubricExists(rubricId)
+    .then(function(exist) {
+      t.equal(exist, false, 'Rubric should not exists');
+      t.end();
+    });
 });

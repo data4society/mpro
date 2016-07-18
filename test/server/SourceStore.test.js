@@ -1,180 +1,190 @@
-var assert = require('chai').assert;
-var should = require('chai').should();
+'use strict';
+
+var substanceTest = require('substance/test/test').module('server/SourceStore');
 
 var Database = require('../../server/Database');
 var SourceStore = require('../../server/SourceStore');
+var UserStore = require('../../server/UserStore');
 
-describe('Source Store', function() {
-  var db = new Database();
+var db, sourceStore, userStore;
 
-  var sourceStore = new SourceStore({db: db});
-
-  // we have to shutdown db connection and establish it again one time
-  // so massive will have all methods attached to it's DB object
-  // if we will not do it massive will not have methods atatched to table
-  // because there was no tables when we started first unit test
-  before(function(done) {
-    db.reset()
-      .then(function() {
-        var sourceStore = new SourceStore({ db: db });
-        return sourceStore.seed();
-      }).then(function(){
-        db.connection.end();
-        db = new Database();
-        sourceStore = new SourceStore({db: db});
-        
-        done();
-      });
-  });
-
-  beforeEach(function(done) {
-    db.reset()
-      .then(function() {
-        var sourceStore = new SourceStore({ db: db });
-        return sourceStore.seed();
-      }).then(done);
-  });
-
-  describe('Create source document', function() {
-    it('should return new document source record with given data', function(done) {
-      var sourceData = {
-        title: 'Test'
-      };
-      return sourceStore.createSource(sourceData)
-        .then(function(source) {
-          source.should.be.an('object');
-          should.exist(source.doc_id);
-          assert.equal(source.title, sourceData.title);
-          done();
-        });
+function setup() {
+  db = new Database();
+  return db.reset()
+    .then(function() {
+      userStore = new UserStore({db: db});
+      return userStore.seed();
+    })
+    .then(function() {
+      sourceStore = new SourceStore({ db: db });
+      return sourceStore.seed();
+    }).then(function(){
+      // we have to shutdown db connection and establish test again one time
+      // so massive will have all methods attached to test's DB object
+      // if we will not do test massive will not have methods atatched to table
+      // because there was no tables when we started first unit test
+      db.connection.end();
+      db = new Database();
+      sourceStore = new SourceStore({ db: db });
     });
+}
 
-    it('should return new document source record with given id', function(done) {
-      var sourceData = {
-        doc_id: "non-existing-rubric"
-      };
-      return sourceStore.createSource(sourceData)
-        .then(function(source) {
-          source.should.be.an('object');
-          should.exist(source.doc_id);
-          assert.equal(source.doc_id, sourceData.doc_id);
-          done();
-        });
-    });
+function teardown() {
+  db.connection.end();
+}
 
-    it('should return error if document source with given doc_id already exist', function(done) {
-      var sourceData = {
-        doc_id: '68c14a78-d02b-454d-88ce-6948d27fce09'
-      };
-      return sourceStore.createSource(sourceData)
-        .then(function(source) {
-          should.not.exist(source);
-        }).catch(function(err) {
-          should.exist(err);
-          assert.equal(err.message, 'Document source ' + sourceData.doc_id + ' already exists.');
-          done();
-        });
+function test(description, fn) {
+  substanceTest(description, function (t) {
+    setup().then(function(){
+      t.once('end', teardown);
+      fn(t);
     });
   });
+}
 
-  describe('Get document source', function() {
-    it('should return document source record with given id', function(done) {
-      var sourceId = '68c14a78-d02b-454d-88ce-6948d27fce09';
-      return sourceStore.getSource(sourceId)
-        .then(function(source) {
-          source.should.be.an('object');
-          assert.equal(source.doc_id, sourceId);
-          done();
-        });
+/*
+  Create source document
+*/
+
+test('Should return new document source record with given data', function(t) {
+  var sourceData = {
+    title: 'Test'
+  };
+  return sourceStore.createSource(sourceData)
+    .then(function(source) {
+      t.isNotNil(source.doc_id, 'Source doc_id should exists');
+      t.equal(source.title, sourceData.title, 'Source title should equals title from arguments');
+      t.end();
     });
+});
 
-    it('should return error if document source with given id does not exist', function(done) {
-      var sourceId = 'non-existing-document-source';
-      return sourceStore.getSource(sourceId)
-        .then(function(source) {
-          should.not.exist(source);
-        }).catch(function(err) {
-          should.exist(err);
-          assert.equal(err.message, 'No document source found for doc_id ' + sourceId);
-          done();
-        });
+test('Should return new document source record with given id', function(t) {
+  var sourceData = {
+    doc_id: "non-existing-rubric"
+  };
+  return sourceStore.createSource(sourceData)
+    .then(function(source) {
+      t.isNotNil(source.doc_id, 'Source doc_id should exists');
+      t.equal(source.doc_id, sourceData.doc_id, 'Source doc_id should equals doc_id from arguments');
+      t.end();
     });
-  });
+});
 
-  describe('Update document source', function() {
-    it('should update document source and return updated record', function(done) {
-      var sourceId = '68c14a78-d02b-454d-88ce-6948d27fce09';
-      var data = {
-        title: 'Test document'
-      };
-
-      return sourceStore.updateSource(sourceId, data)
-        .then(function(source) {
-          should.exist(source);
-          source.should.be.an('object');
-          assert.equal(source.doc_id, sourceId);
-          assert.equal(source.title, data.title);
-          return sourceStore.getSource(sourceId);
-        })
-        .then(function(source) {
-          should.exist(source);
-          source.should.be.an('object');
-          assert.equal(source.doc_id, sourceId);
-          assert.equal(source.title, data.title);
-          done();
-        });
+test('Should return error if document source with given doc_id already exist', function(t) {
+  var sourceData = {
+    doc_id: '68c14a78-d02b-454d-88ce-6948d27fce09'
+  };
+  return sourceStore.createSource(sourceData)
+    .then(function(source) {
+      t.isNil(source, 'Source should not exists');
+    }).catch(function(err) {
+      t.isNotNil(err, 'Should error');
+      t.equal(err.message, 'Document source ' + sourceData.doc_id + ' already exists.', 'Error message should equals to given one');
+      t.end();
     });
-  });
+});
 
-  describe('Delete document source', function() {
-    it('should delete document source and return deleted record for a last time', function(done) {
-      var sourceId = '68c14a78-d02b-454d-88ce-6948d27fce09';
+/*
+  Get source document
+*/
 
-      return sourceStore.deleteSource(sourceId)
-        .then(function(source) {
-          should.exist(source);
-          source.should.be.an('object');
-          assert.equal(source.doc_id, sourceId);
-          return sourceStore.getSource(sourceId);
-        })
-        .catch(function(err) {
-          should.exist(err);
-          assert.equal(err.message, 'No document source found for doc_id ' + sourceId);
-          done();
-        });
+test('Should return document source record with given id', function(t) {
+  var sourceId = '68c14a78-d02b-454d-88ce-6948d27fce09';
+  return sourceStore.getSource(sourceId)
+    .then(function(source) {
+      t.equal(source.doc_id, sourceId, 'Source doc_id should equals sourceId from arguments');
+      t.end();
     });
+});
 
-    it('should return error in case of non-existing record', function(done) {
-      var sourceId = 'non-existing-document-source';
-
-      return sourceStore.deleteSource(sourceId)
-        .catch(function(err) {
-          should.exist(err);
-          assert.equal(err.message, 'Document source with doc_id ' + sourceId + ' does not exists');
-          done();
-        });
+test('Should return error if document source with given id does not exist', function(t) {
+  var sourceId = 'non-existing-document-source';
+  return sourceStore.getSource(sourceId)
+    .then(function(source) {
+      t.isNil(source, 'Source should not exists');
+    }).catch(function(err) {
+      t.isNotNil(err, 'Should error');
+      t.equal(err.message, 'No document source found for doc_id ' + sourceId, 'Error message should equals to given one');
+      t.end();
     });
-  });
+});
 
-  describe('Document existance', function() {
-    it('should return true in case of existed record', function(done) {
-      var sourceId = '68c14a78-d02b-454d-88ce-6948d27fce09';
+/*
+  Update document source
+*/
 
-      return sourceStore.sourceExists(sourceId)
-        .then(function(exist) {
-          assert.equal(exist, true);
-          done();
-        });
+test('Should update document source and return updated record', function(t) {
+  var sourceId = '68c14a78-d02b-454d-88ce-6948d27fce09';
+  var data = {
+    title: 'Test document'
+  };
+
+  return sourceStore.updateSource(sourceId, data)
+    .then(function(source) {
+      t.isNotNil(source, 'Source should exists');
+      t.equal(source.doc_id, sourceId, 'Source doc_id should equals sourceId from arguments');
+      t.equal(source.title, data.title, 'Source title should equals title from arguments');
+      return sourceStore.getSource(sourceId);
+    })
+    .then(function(source) {
+      t.isNotNil(source, 'Source should exists');
+      t.equal(source.doc_id, sourceId, 'Source doc_id should equals sourceId from arguments');
+      t.equal(source.title, data.title, 'Source title should equals title from arguments');
+      t.end();
     });
+});
 
-    it('should return false in case of non-existed record', function(done) {
-      var sourceId = 'non-existing-document-source';
+/*
+  Delete document source
+*/
 
-      return sourceStore.sourceExists(sourceId)
-        .then(function(exist) {
-          assert.equal(exist, false);
-          done();
-        });
+test('Should delete document source and return deleted record for a last time', function(t) {
+  var sourceId = '68c14a78-d02b-454d-88ce-6948d27fce09';
+
+  return sourceStore.deleteSource(sourceId)
+    .then(function(source) {
+      t.isNotNil(source, 'Source should exists');
+      t.equal(source.doc_id, sourceId, 'Source doc_id should equals sourceId from arguments');
+      return sourceStore.getSource(sourceId);
+    })
+    .catch(function(err) {
+      t.isNotNil(err, 'Should error');
+      t.equal(err.message, 'No document source found for doc_id ' + sourceId, 'Error message should equals to given one');
+      t.end();
     });
-  });
+});
+
+test('Should return error in case of non-existing record', function(t) {
+  var sourceId = 'non-existing-document-source';
+
+  return sourceStore.deleteSource(sourceId)
+    .catch(function(err) {
+      t.isNotNil(err, 'Should error');
+      t.equal(err.message, 'Document source with doc_id ' + sourceId + ' does not exists', 'Error message should equals to given one');
+      t.end();
+    });
+});
+
+/*
+  Document existance
+*/
+
+test('Should return true in case of existed record', function(t) {
+  var sourceId = '68c14a78-d02b-454d-88ce-6948d27fce09';
+
+  return sourceStore.sourceExists(sourceId)
+    .then(function(exist) {
+      t.equal(exist, true, 'Source should exists');
+      t.end();
+    });
+});
+
+test('Should return false in case of non-existed record', function(t) {
+  var sourceId = 'non-existing-document-source';
+
+  return sourceStore.sourceExists(sourceId)
+    .then(function(exist) {
+      t.equal(exist, false, 'Source should not exists');
+      t.end();
+    });
 });

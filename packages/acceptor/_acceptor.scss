@@ -1,0 +1,22 @@
+.se-tool-acceptor {
+  
+  &.sm-accepted {
+    button {
+      background: #88cc82!important;
+    }
+  }
+
+  button {
+    background: #cc8282!important;
+  }
+}
+
+.sc-feed-item {
+  &.sm-accepted {
+    border-left: 4px solid #91bb04;
+  }
+
+  &.sm-not-accepted {
+    border-left: 4px solid #bb3704;
+  }
+}

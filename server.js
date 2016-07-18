@@ -1,4 +1,5 @@
-var config = require('config');
+'use strict';
+
 var express = require('express');
 var http = require('http');
 var path = require('path');
@@ -9,9 +10,17 @@ var app = express();
 var bodyParser = require('body-parser');
 var WebSocketServer = require('ws').Server;
 
+/*
+  Config
+*/
+var ServerConfigurator = require('./packages/server/ServerConfigurator');
+var ServerPackage = require('./packages/server/package');
+var configurator = new ServerConfigurator().import(ServerPackage);
+var config = configurator.getAppConfig();
+
 // Development server 
 // Serves HTML, bundled JS and CSS in non-production mode
-var server = require('substance/util/server');
+var serverUtils = require('substance/util/server');
 
 /*
   Stores
@@ -51,17 +60,9 @@ var MproServer = require('./server/MproServer');
 /*
   Models
 */
-var newTrainingArticle = require('./models/training/newTrainingArticle');
-var newArticle = require('./models/article/newArticle');
-var newVk = require('./models/vk/newVk');
+
 var DocumentChange = require('substance/model/DocumentChange');
 
-/*
-  Importers
-*/
-var vkImporter = require('./models/vk/vkImporter');
-var articleImporter = require('./models/article/articleImporter');
-var trainingImporter = require('./models/training/trainingArticleImporter');
 var Database = require('./server/Database');
 
 
@@ -92,28 +93,14 @@ var fileStore = new FileStore({destination: './uploads'});
 /*
   Engines setup
 */
+var schemas = configurator.getSchemas();
+
 var snapshotEngine = new SnapshotEngine({
   db: db,
   documentStore: documentStore,
   changeStore: changeStore,
   snapshotStore: snapshotStore,
-  schemas: {
-    'mpro-trn': {
-      name: 'mpro-trn',
-      version: '1.0.0',
-      documentFactory: newTrainingArticle
-    },
-    'mpro-article': {
-      name: 'mpro-article',
-      version: '1.0.0',
-      documentFactory: newArticle
-    },
-    'mpro-vk': {
-      name: 'mpro-vk',
-      version: '1.0.0',
-      documentFactory: newVk
-    }
-  }
+  schemas: schemas
 });
 
 var documentEngine = new DocumentEngine({
@@ -121,23 +108,7 @@ var documentEngine = new DocumentEngine({
   documentStore: documentStore,
   changeStore: changeStore,
   snapshotEngine: snapshotEngine,
-  schemas: {
-    'mpro-trn': {
-      name: 'mpro-trn',
-      version: '1.0.0',
-      documentFactory: newTrainingArticle
-    },
-    'mpro-article': {
-      name: 'mpro-article',
-      version: '1.0.0',
-      documentFactory: newArticle
-    },
-    'mpro-vk': {
-      name: 'mpro-vk',
-      version: '1.0.0',
-      documentFactory: newVk
-    }
-  }
+  schemas: schemas
 });
 
 var authenticationEngine = new AuthenticationEngine({
@@ -146,13 +117,14 @@ var authenticationEngine = new AuthenticationEngine({
   emailService: null // TODO
 });
 
+// eslint-disable-next-line
 var sourceEngine = new SourceEngine({
   documentStore: documentStore,
   sourceStore: sourceStore,
   importers: {
-    'vk': vkImporter,
-    'article': articleImporter,
-    'trn': trainingImporter
+    'article': configurator.getConfigurator('mpro-article').createImporter('html'),
+    'tng': configurator.getConfigurator('mpro-tng').createImporter('html'),
+    'vk': configurator.getConfigurator('mpro-vk').createImporter('html')
   }
 });
 
@@ -178,14 +150,16 @@ app.use(bodyParser.urlencoded({ extended: true, limit: '3mb', parameterLimit: 30
 /*
   Serve app
 */
-var config = config.get('server');
-var env = config.util.getEnv('NODE_ENV');
-
-if(env !== 'production') {
+if(config.env !== 'production') {
   // Serve HTML, bundled JS and CSS in non-production mode
-  server.serveHTML(app, '/', path.join(__dirname, 'index.html'), config);
-  server.serveStyles(app, '/app.css', path.join(__dirname, 'app.scss'));
-  server.serveJS(app, '/app.js', path.join(__dirname, 'app.js'));
+
+  serverUtils.serveStyles(app, '/app.css', {
+    rootDir: __dirname,
+    configuratorPath: require.resolve('./packages/mpro/MproConfigurator'),
+    configPath: require.resolve('./client/package')
+  });
+  serverUtils.serveJS(app, '/app.js', path.join(__dirname, 'client', 'app.js'));
+  serverUtils.serveHTML(app, '/', path.join(__dirname, 'client', 'index.html'), config);
   // Serve static files in non-production mode
   app.use('/assets', express.static(path.join(__dirname, 'styles/assets')));
   app.use('/fonts', express.static(path.join(__dirname, 'node_modules/font-awesome/fonts')));
@@ -245,25 +219,25 @@ var collabServer = new CollabServer({
           // Update the title if necessary
           var change = DocumentChange.fromJSON(message.change);
           change.ops.forEach(function(op) {
-            if(op.path[0] == 'meta' && op.path[1] == 'title') {
+            if(op.path[0] === 'meta' && op.path[1] === 'title') {
               title = op.diff.apply(title);
             }
           });
 
           change.ops.forEach(function(op) {
-            if(op.path[0] == 'meta' && op.path[1] == 'rubrics') {
+            if(op.path[0] === 'meta' && op.path[1] === 'rubrics') {
               rubrics = op.val;
             }
           });
 
           change.ops.forEach(function(op) {
-            if(op.path[0] == 'meta' && op.path[1] == 'entities') {
+            if(op.path[0] === 'meta' && op.path[1] === 'entities') {
               entities = op.val;
             }
           });
 
           change.ops.forEach(function(op) {
-            if(op.path[0] == 'meta' && op.path[1] == 'accepted') {
+            if(op.path[0] === 'meta' && op.path[1] === 'accepted') {
               accepted = op.val;
             }
           });
@@ -307,7 +281,7 @@ collabServer.bind(wss);
 // AuthenticationServer
 var authenticationServer = new AuthenticationServer({
   authenticationEngine: authenticationEngine,
-  path: '/api/auth/'
+  path: '/api/auth'
 });
 
 authenticationServer.bind(app);
@@ -348,7 +322,7 @@ app.use(function(err, req, res, next) {
   
   res.status(500).json({
     errorName: err.name,
-    errorMessage: err.message || err.name
+    errorMessage: err.message || err.name
   });
 });
 
@@ -360,7 +334,7 @@ httpServer.on('request', app);
 // E.g. we'll need to establish a reverse proxy
 // forwarding http+ws from domain name to localhost:5001 for instance
 httpServer.listen(config.port, config.host, function() {
-  console.log('Listening on ' + httpServer.address().port); 
+  console.log('Listening on ' + httpServer.address().port); // eslint-disable-line
 });
 
 // Export app for requiring in test files

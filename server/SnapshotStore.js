@@ -1,7 +1,7 @@
 'use strict';
 
 var oo = require('substance/util/oo');
-var Err = require('substance/util/Error');
+var Err = require('substance/util/SubstanceError');
 var isNull = require('lodash/isNull');
 
 /*
@@ -92,9 +92,11 @@ SnapshotStore.Prototype = function() {
   this.deleteSnaphot = function(documentId, version, cb) {
     // Fake deletion
     this.getSnapshot({documentId: documentId, version: version}, function(err, snapshot) {
-      if (err) return cb(new Err('SnapshotStore.ReadError', {
-        cause: err
-      }));
+      if (err) {
+        return cb(new Err('SnapshotStore.ReadError', {
+          cause: err
+        }));
+      }
 
       return cb(null, snapshot);
     });

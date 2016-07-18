@@ -1,0 +1,42 @@
+.sc-configurator {
+  .sc-header {
+    background: #565656;
+    background: linear-gradient(to right bottom, #565656, #293f50);
+  }
+
+  > .sc-split-pane {
+    top: 40px;
+  }
+
+  .sc-feed-item {
+    position: relative;
+
+    > div {
+      padding-right: 100px;
+    }
+
+    .se-title {
+      padding: 0px;
+    }
+
+    .se-source-info {
+      padding-bottom: 30px;
+    }
+
+    .se-delete-document {
+      position: absolute;
+      right: 20px;
+      top: 35px;
+      color: rgba(177, 0, 0, 0.75);
+      border: 1px solid rgba(177, 0, 0, 0.75);
+    }
+
+    &.active {
+      .se-delete-document {
+        right: 30px;
+        color: #fff;
+        border-color: #fff;
+      }
+    }
+  }
+}

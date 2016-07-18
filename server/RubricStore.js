@@ -1,10 +1,17 @@
 "use strict";
 
 var oo = require('substance/util/oo');
-var Err = require('substance/util/Error');
+var Err = require('substance/util/SubstanceError');
 var uuid = require('substance/util/uuid');
+var isEmpty = require('lodash/isEmpty');
 var isUndefined = require('lodash/isUndefined');
+var each = require('lodash/each');
+var find = require('lodash/find');
 var Promise = require("bluebird");
+
+// Massive internal libs
+var ArgTypes = require('../node_modules/massive/lib/arg_types');
+var Where = require('../node_modules/massive/lib/where');
 
 /*
   Implements the Rubric Store API.
@@ -41,7 +48,7 @@ RubricStore.Prototype = function() {
         }
 
         return this._createRubric(rubricData);
-      });
+      }.bind(this));
   };
 
   /*
@@ -100,7 +107,7 @@ RubricStore.Prototype = function() {
             resolve(rubric);
           });
         }.bind(this));
-      });
+      }.bind(this));
   };
 
   /*
@@ -131,7 +138,7 @@ RubricStore.Prototype = function() {
             resolve(rubric);
           });
         }.bind(this));
-      });
+      }.bind(this));
   };
 
   /*
@@ -189,44 +196,50 @@ RubricStore.Prototype = function() {
     @returns {Promise}
   */
   this.listRubrics = function(filters, options) {
-    var output = {};
-
     // Default limit for number of returned records
     if(!options.limit) options.limit = 100;
 
     return new Promise(function(resolve, reject) {
 
-      this.db.rubrics.count(filters, function(err, count) {
-        if (err) {
-          reject(new Err('RubricStore.ListError', {
-            cause: err
-          }));
-        }
-        output.total = count;
-        
-        this.db.rubrics.find(filters, options, function(err, rubrics) {
+      this.listFacets(filters, options).then(function(facets) {
+        this.db.rubrics.find({}, options, function(err, rubrics) {
           if (err) {
             reject(new Err('RubricStore.ListError', {
               cause: err
             }));
           }
 
-          output.records = rubrics;
-          resolve(output);
+          each(facets, function(facet) {
+            var rubric = find(rubrics, { 'rubric_id': facet.rubric });
+            rubric.cnt = facet.cnt;
+          });
+
+          resolve(rubrics);
         });
       }.bind(this));
     }.bind(this));
   };
 
   /*
-    List facets
+    List facets with given filters
 
     @param {Array} rubrics rubrics
     @returns {Promise}
   */
-  this.listFacets = function(rubrics, training) {
+  // eslint-disable-next-line
+  this.listFacets = function(filters, options) {
+    var args = ArgTypes.findArgs(arguments, this);
+    var where = isEmpty(args.conditions) ? {where: " "} : Where.forTable(args.conditions);
+
+    var sql = 'SELECT rubric, cnt, rubrics.name FROM (\
+      SELECT DISTINCT\
+        unnest(records.rubrics) AS rubric,\
+        COUNT(*) OVER (PARTITION BY unnest(records.rubrics)) cnt\
+      FROM records' + where.where + ') AS docs INNER JOIN rubrics ON (docs.rubric = rubrics.rubric_id)';
+
     return new Promise(function(resolve, reject) {
-      this.db.facets([rubrics, training], function(err, facets) {
+
+      this.db.run(sql, where.params, args.options, function(err, facets){
         if (err) {
           reject(new Err('RubricStore.FacetsError', {
             cause: err
@@ -234,7 +247,7 @@ RubricStore.Prototype = function() {
         }
           
         resolve(facets);
-      }.bind(this));
+      });
     }.bind(this));
   };
 

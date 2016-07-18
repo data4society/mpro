@@ -1,7 +1,7 @@
 "use strict";
 
 var oo = require('substance/util/oo');
-var Err = require('substance/util/Error');
+var Err = require('substance/util/SubstanceError');
 var uuid = require('substance/util/uuid');
 var isUndefined = require('lodash/isUndefined');
 var Promise = require("bluebird");
@@ -41,7 +41,7 @@ UserStore.Prototype = function() {
         }
 
         return this._createUser(userData);
-      });
+      }.bind(this));
   };
 
   /*
@@ -155,7 +155,7 @@ UserStore.Prototype = function() {
             resolve(user);
           });
         }.bind(this));
-      });
+      }.bind(this));
   };
 
   /*
@@ -184,7 +184,7 @@ UserStore.Prototype = function() {
             resolve(user);
           });
         }.bind(this));
-      });
+      }.bind(this));
   };
 
   /*

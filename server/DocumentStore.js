@@ -1,7 +1,7 @@
 "use strict";
 
 var oo = require('substance/util/oo');
-var Err = require('substance/util/Error');
+var Err = require('substance/util/SubstanceError');
 var uuid = require('substance/util/uuid');
 var each = require('lodash/each');
 var isUndefined = require('lodash/isUndefined');
@@ -39,6 +39,7 @@ DocumentStore.Prototype = function() {
       if(props.info.title) props.title = props.info.title;
       if(props.info.training) props.training = props.info.training;
       if(props.info.meta) props.meta = props.info.meta;
+      if(props.info.source_type) props.source_type = props.info.source_type;
       if(props.info.schemaName) props.schema_name = props.info.schemaName;
       if(props.info.schemaVersion) props.schema_version = props.info.schemaVersion;
     }
@@ -250,6 +251,11 @@ DocumentStore.Prototype = function() {
 
     // Default limit for number of returned records
     if(!options.limit) options.limit = 100;
+    if(!options.columns) {
+      options.columns = [
+        'document_id', 'guid', 'title', 'schema_name', 'schema_version', 'published', 'created', 'edited', 'edited_by', 'rubrics', 'meta'
+      ];
+    }
 
     this.db.records.count(filters, function(err, count) {
       if (err) {

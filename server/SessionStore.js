@@ -1,7 +1,7 @@
 "use strict";
 
 var oo = require('substance/util/oo');
-var Err = require('substance/util/Error');
+var Err = require('substance/util/SubstanceError');
 var uuid = require('substance/util/uuid');
 var isUndefined = require('lodash/isUndefined');
 var Promise = require("bluebird");
@@ -106,7 +106,7 @@ SessionStore.Prototype = function() {
             resolve(session);
           });
         }.bind(this));
-      });
+      }.bind(this));
   };
 
   /*

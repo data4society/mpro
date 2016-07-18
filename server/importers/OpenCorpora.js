@@ -2,7 +2,7 @@
 
 var oo = require('substance/util/oo');
 var uuid = require('substance/util/uuid');
-var Err = require('substance/util/Error');
+var Err = require('substance/util/SubstanceError');
 var Promise = require('bluebird');
 var extract = require('extract-zip');
 var sortBy = require('lodash/sortBy');
@@ -97,9 +97,9 @@ ImportEngine.Prototype = function() {
             return this.referenceStore.createReference(reference);
           }.bind(this));
         }.bind(this)).then(function() {
-          console.log('set has been imported');
-          console.log('imported entities:', entities.length);
-          console.log('imported references:', references.length);
+          console.log('set has been imported'); // eslint-disable-line
+          console.log('imported entities:', entities.length); // eslint-disable-line
+          console.log('imported references:', references.length); // eslint-disable-line
           resolve();
         });
     }.bind(this));
@@ -144,7 +144,7 @@ ImportEngine.Prototype = function() {
           entity: object.entity.uuid
         };
 
-        if(object.refs.length == 1) {
+        if(object.refs.length === 1) {
           reference.start_offset = object.refs[0].start_offset;
           reference.end_offset = object.refs[0].length;
           references.push(reference);
@@ -184,7 +184,7 @@ ImportEngine.Prototype = function() {
       output.entities = uniqBy(entities, 'entity_id');
       output.references = references;
       resolve(output);
-    }.bind(this));
+    });
   }; 
 
   /*
@@ -220,8 +220,8 @@ ImportEngine.Prototype = function() {
             if(segments.length > 3) {
               item.id = segments[0];
               item.propName = segments[1];
-              item.start_offset = parseInt(segments[2]);
-              item.length = parseInt(segments[3]);
+              item.start_offset = parseInt(segments[2], 10);
+              item.length = parseInt(segments[3], 10);
               item.end_offset = item.start_offset + item.length;
 
               res[item.id] = item;
@@ -253,7 +253,7 @@ ImportEngine.Prototype = function() {
               item.spans = [];
 
               var n = 2;
-              while (segments[n] != '#') {
+              while (segments[n] !== '#') {
                 item.spans.push(segments[n]);
                 n++;
               }
@@ -263,10 +263,10 @@ ImportEngine.Prototype = function() {
                 res[id] = item;
               }
             }
-          }.bind(this));
+          });
           results.objects = res;
           return readFile(dirPath + '/' + set + '.coref', 'utf8');
-        }.bind(this)).then(function(coref) {
+        }).then(function(coref) {
 
           /*
             transforms coref to json with structure: 
@@ -300,10 +300,10 @@ ImportEngine.Prototype = function() {
               n = 1;
               while (n < lines.length) {
                 var lineItems = lines[n].split(' ');
-                if(lineItems[0] == 'name') {
+                if(lineItems[0] === 'name') {
                   item.name = [];
                 }
-                if(lastProp != lineItems[0]) {
+                if(lastProp !== lineItems[0]) {
                   var i = 1;
                   while (i < lineItems.length) {
                     item.name.push(lineItems[i]);
@@ -312,7 +312,7 @@ ImportEngine.Prototype = function() {
                 }
                 lastProp = lineItems[0];
                 n++;
-                if(lineItems[0] == 'name') {
+                if(lineItems[0] === 'name') {
                   break;
                 }
               }
@@ -328,7 +328,7 @@ ImportEngine.Prototype = function() {
           results.coref = res;
           resolve(results);
         });
-    }.bind(this));
+    });
   };
 
   /*
@@ -340,7 +340,7 @@ ImportEngine.Prototype = function() {
       var sets = [];
       return Promise.map(files, function(file) {
         var setName = file.split('.')[0];
-        if(sets.indexOf(setName) == -1) sets.push(setName);
+        if(sets.indexOf(setName) === -1) sets.push(setName);
 
         var from = this.uploadPath + '/' + dir + '/' + file;
         var to = this.uploadPath + '/' + dir + '/' + setName + '/' + file;
@@ -396,7 +396,7 @@ ImportEngine.Prototype = function() {
         //     }));
         //   }
 
-          resolve({dir: dirName, files: fileNames});
+        resolve({dir: dirName, files: fileNames});
         //});
       });
     }.bind(this));
