@@ -95,7 +95,7 @@ ArticleImporter.Prototype = function() {
       node.startPos = pos;
       node.endPos = pos + length;
       nodes.push(node);
-      pos += length + 1; 
+      pos += length; 
     });
 
     each(markup, function(ref, id) {
@@ -108,6 +108,7 @@ ArticleImporter.Prototype = function() {
           type: 'entity',
           path: [node.id, 'content'],
           reference: ref.entity,
+          entityClass: ref.class,
           startOffset: startOffset,
           endOffset: endOffset
         });
