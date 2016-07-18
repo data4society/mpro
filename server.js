@@ -121,11 +121,7 @@ var authenticationEngine = new AuthenticationEngine({
 var sourceEngine = new SourceEngine({
   documentStore: documentStore,
   sourceStore: sourceStore,
-  importers: {
-    'article': configurator.getConfigurator('mpro-article').createImporter('html'),
-    'tng': configurator.getConfigurator('mpro-tng').createImporter('html'),
-    'vk': configurator.getConfigurator('mpro-vk').createImporter('html')
-  }
+  configurator: configurator
 });
 
 var mproEngine = new MproEngine({
