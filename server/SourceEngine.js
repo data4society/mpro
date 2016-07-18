@@ -20,7 +20,7 @@ function SourceEngine(config) {
   this.concurrency = config.concurrency || 5;
   this.sourceStore = config.sourceStore;
   this.documentStore = config.documentStore;
-  this.importers = config.importers;
+  this.configurator = config.configurator;
 
   this.scheduleConversion();
 }
@@ -143,7 +143,7 @@ SourceEngine.Prototype = function() {
         errMsg = 'Document source meta is empty';
       } else if (isEmpty(source.rubric_ids) && source.type !== 'tng') {
         errMsg = 'Document source has no rubrics';
-      } else if (!this.importers[source.type]) {
+      } else if (!this.configurator.getConfigurator('mpro-' + source.type)) {
         errMsg = 'Unknown type of document source: ' + source.type;
       }
 
@@ -174,7 +174,7 @@ SourceEngine.Prototype = function() {
       .then(function(source) {
         var recordBody = source.doc_source;
         var type = source.type;
-        var importer = this.importers[type];
+        var importer = this.configurator.getConfigurator('mpro-' + type).createImporter('html');
         
         if(!importer) {
           throw new Err('SourceEngine.ConvertError', {
@@ -193,7 +193,8 @@ SourceEngine.Prototype = function() {
           schema_name: schema.name,
           schema_version: schema.version,
           published: meta.published,
-          created: source.created,
+          created: new Date().toJSON(), // should be parsed source.created someday
+          edited: new Date().toJSON(),
           training: training,
           rubrics: meta.rubrics,
           source: sourceId,
