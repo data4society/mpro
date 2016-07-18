@@ -219,7 +219,7 @@ test('Should return true if document is existing', function(t) {
   documentStore.documentExists(documentId, function(err, exist) {
     t.isNil(err, 'Should not error');
     t.isNotNil(exist, 'Exists param should exists');
-    t.equal(exist, true, 'Exists param should equals true');
+    t.equal(exist, true, 'Document should exists');
     t.end();
   });
 });
@@ -230,7 +230,7 @@ test('Should return false if document is not existing ', function(t) {
   documentStore.documentExists(documentId, function(err, exist) {
     t.isNil(err, 'Should not error');
     t.isNotNil(exist, 'Exists param should exists');
-    t.equal(exist, false, 'Exists param should equals false');
+    t.equal(exist, false, 'Document should not exists');
     t.end();
   });
 });
