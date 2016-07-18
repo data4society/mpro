@@ -179,6 +179,9 @@ documentServer.bind(app);
 
 // CollabServer
 var collabServer = new CollabServer({
+  // every 30s a heart beat message is sent to keep
+  // websocket connects alive when they are inactive
+  heartbeat: 30*1000,
   documentEngine: documentEngine,
 
   /*
