@@ -25,6 +25,7 @@ function setup() {
       // because there was no tables when we started first unit test
       db.connection.end();
       db = new Database();
+      documentStore = new DocumentStore({ db: db });
     });
 }
 

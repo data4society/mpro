@@ -33,17 +33,19 @@ function setup() {
       changeStore = new ChangeStore({ db: db });
       return changeStore.seed();
     }).then(function(){
-      documentEngine = new DocumentEngine({
-        changeStore: changeStore,
-        documentStore: documentStore,
-        schemas: schemas
-      });
       // we have to shutdown db connection and establish it again one time
       // so massive will have all methods attached to it's DB object
       // if we will not do it massive will not have methods atatched to table
       // because there was no tables when we started first unit test
       db.connection.end();
       db = new Database();
+      changeStore = new ChangeStore({ db: db });
+      documentStore = new DocumentStore({ db: db });
+      documentEngine = new DocumentEngine({
+        changeStore: changeStore,
+        documentStore: documentStore,
+        schemas: schemas
+      });
     });
 }
 
