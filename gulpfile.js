@@ -3,19 +3,20 @@
 
 var fs = require('fs');
 var path = require('path');
+var config = require('config');
 var through2 = require('through2');
 var browserify = require('browserify');
 var gulp = require('gulp');
 var uglify = require('gulp-uglify');
 var eslint = require('gulp-eslint');
 var gulpFile = require('gulp-file');
+var replace = require('gulp-replace');
 var tape = require('gulp-tape');
 var tapSpec = require('tap-spec');
 var bundleStyles = require('substance/util/bundleStyles');
 
 gulp.task('assets', function () {
   gulp.src('./client/index.html')
-    //.pipe(replace('<!--CONFIG-->', metaTags.join('')))
     .pipe(gulp.dest('./dist'));
   gulp.src('node_modules/font-awesome/fonts/*')
     .pipe(gulp.dest('./dist/fonts'));
@@ -57,6 +58,10 @@ gulp.task('browserify', function() {
       console.log(error.stack);
       this.emit('end');
     })
+    .pipe(replace(
+      '{"protocol":"http","host":"localhost","port":5000}',
+      JSON.stringify(config.get('app'))
+    ))
     .pipe(uglify().on('error', function(err){console.log(err); }))
     .pipe(gulp.dest('./dist'));
 });

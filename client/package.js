@@ -5,11 +5,8 @@ var AuthenticationClient = require('./AuthenticationClient');
 var DocumentClient = require('./DocumentClient');
 var FileClient = require('./FileClient');
 
-var appConfig = {
-  protocol: "http",
-  host: "localhost",
-  port: 5000
-};
+var appConfig = '{"protocol":"http","host":"localhost","port":5000}';
+appConfig = JSON.parse(appConfig);
 
 module.exports = {
   name: 'mpro-app',
