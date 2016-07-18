@@ -202,7 +202,7 @@ test('Should return error in case of invalid use of getChanges version arguments
   Get version
 */
 
-test('should return version of a document', function(t) {
+test('Should return version of a document', function(t) {
   var documentId = 1;
 
   changeStore.getVersion(documentId, function(err, version) {
@@ -213,7 +213,7 @@ test('should return version of a document', function(t) {
   });
 });
 
-test('should return version 0 if no changes are found', function(t) {
+test('Should return version 0 if no changes are found', function(t) {
   var documentId = 'non-existing-doc';
 
   changeStore.getVersion(documentId, function(err, version) {
@@ -228,7 +228,7 @@ test('should return version 0 if no changes are found', function(t) {
   Delete changes
 */
 
-test('should delete all changes of a document', function(t) {
+test('Should delete all changes of a document', function(t) {
   var documentId = 1;
 
   changeStore.deleteChanges(documentId, function(err, count) {
@@ -249,7 +249,7 @@ test('should delete all changes of a document', function(t) {
   });
 });
 
-test('counter of deleted changes should equals 0 if no changes are found', function(t) {
+test('Counter of deleted changes should equals 0 if no changes are found', function(t) {
   var documentId = 'non-existing-doc';
 
   changeStore.deleteChanges(documentId, function(err, count) {
