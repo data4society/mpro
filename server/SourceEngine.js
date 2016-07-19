@@ -256,7 +256,8 @@ SourceEngine.Prototype = function() {
       this.documentStore.listDocuments({
         "meta->>'accepted'": "true"
       }, {
-        columns: ['document_id', 'schema_name', 'schema_version']
+        columns: ['document_id', 'schema_name', 'schema_version'],
+        limit: 1000
       }, function(err, list) {
         if(err) {
           reject(err);
