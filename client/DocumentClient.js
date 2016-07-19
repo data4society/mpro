@@ -41,6 +41,10 @@ MproDocumentClient.Prototype = function() {
     request('GET', '/api/import?file=' + file + '&classes=' + classes + '&importer=' + importer, null, cb);
   };
 
+  this.updateSource = function(documentId, sourceData, cb) {
+    request('PUT', '/api/sources/' + documentId, sourceData, cb);
+  };
+
 };
 
 DocumentClient.extend(MproDocumentClient);
