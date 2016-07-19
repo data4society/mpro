@@ -9,6 +9,7 @@ var isEmpty = require('lodash/isEmpty');
 function MproServer(config) {
   this.engine = config.mproEngine;
   this.importEngine = config.importEngine;
+  this.sourceEngine = config.sourceEngine;
   this.path = config.path;
 }
 
@@ -22,6 +23,8 @@ MproServer.Prototype = function() {
     app.get(this.path + '/classes', this._listClasses.bind(this));
     app.get(this.path + '/facets', this._listFacets.bind(this));
     app.get(this.path + '/import', this._import.bind(this));
+    app.put(this.path + '/sources/:id', this._updateSource.bind(this));
+    app.get(this.path + '/sources/training', this._convertTrainingDocs.bind(this));
   };
 
   /*
@@ -74,6 +77,19 @@ MproServer.Prototype = function() {
     });
   };
 
+  this._updateSource = function(req, res, next) {
+    var documentId = req.params.id;
+    var sourceData = req.body;
+    this.sourceEngine.updateSource(documentId, sourceData).then(function() {
+      res.json(null);
+    }).catch(function(err) {
+      return next(err);
+    });
+  };  
+
+  /*
+    Import external data
+  */
   this._import = function(req, res, next) {
     var file = req.query.file || '';
     var classes = req.query.classes.split(',') || [];
@@ -90,6 +106,14 @@ MproServer.Prototype = function() {
       return next(new Error('wrong importer: ' + importer));
     }
   };
+
+  this._convertTrainingDocs = function(req, res, next) {
+    this.sourceEngine.convertTrainingDocs().then(function() {
+      res.send('done');
+    }).catch(function(err) {
+      return next(err);
+    });
+  };  
 };
 
 oo.initClass(MproServer);

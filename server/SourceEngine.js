@@ -3,6 +3,7 @@
 var oo = require('substance/util/oo');
 var Err = require('substance/util/SubstanceError');
 var map = require('lodash/map');
+var each = require('lodash/each');
 var isEmpty = require('lodash/isEmpty');
 var Promise = require("bluebird");
 var JSONConverter = require('substance/model/JSONConverter');
@@ -222,6 +223,90 @@ SourceEngine.Prototype = function() {
           cause: err
         });
       });
+  };
+
+  this.updateSource = function(documentId, sourceData) {
+    return this.getSourceId(documentId)
+      .then(function(sourceId) {
+        // Set new status for accepted training documents
+        sourceData.status = 1200;
+        return this.sourceStore.updateSource(sourceId, sourceData);
+      }.bind(this))
+      .then(function(source) {
+        return source;
+      });
+  };
+
+  this.getSourceId = function(documentId) {
+    return new Promise(function(resolve, reject) {
+      this.documentStore.getDocument(documentId, function(err, doc) {
+        if(err) {
+          reject(new Err('SourceEngine.GetSourceIdError', {
+            cause: err
+          }));
+        }
+        var sourceId = doc.source;
+        resolve(sourceId);
+      });
+    }.bind(this));
+  };
+
+  this.convertTrainingDocs = function() {
+    return new Promise(function(resolve, reject) {
+      this.documentStore.listDocuments({
+        "meta->>'accepted'": "true"
+      }, {
+        columns: ['document_id', 'schema_name', 'schema_version']
+      }, function(err, list) {
+        if(err) {
+          reject(err);
+        }
+        return Promise.map(list.records, function(record) {
+          var documentId = record.documentId;
+          return this.convertDoc(documentId).then(function(sourceData) {
+            return this.updateSource(documentId, sourceData);
+          }.bind(this));
+        }.bind(this), {concurrency: 10})
+        .then(function(){
+          resolve();
+        })
+        .catch(function(err) {
+          reject(new Err('SourceEngine.TrainingDocsConversionError', {
+            cause: err
+          }));
+        });
+      }.bind(this));
+    }.bind(this));
+  };
+
+  this.convertDoc = function(documentId) {
+    return new Promise(function(resolve, reject) {
+      this.documentStore.getDocument(documentId, function(err, doc) {
+        if(err) {
+          reject(new Err('SourceEngine.ConvertDocError', {
+            cause: err
+          }));
+        }
+        var result = {};
+        result.rubric_ids = doc.rubrics;
+        var nodes = {};
+        each(doc.content.nodes, function(node) {
+          nodes[node.id] = node;
+        });
+
+        var plain = [];
+        each(nodes.body.nodes, function(nodeId) {
+          var content = nodes[nodeId].content;
+          if(content) {
+            plain.push(content);
+          }
+        });
+        plain = plain.join('\n');
+        result.stripped = plain;
+
+        resolve(result);
+      });
+    }.bind(this));
   };
 };
 

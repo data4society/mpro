@@ -297,6 +297,7 @@ fileServer.bind(app);
 var mproServer = new MproServer({
   mproEngine: mproEngine,
   importEngine: importEngine,
+  sourceEngine: sourceEngine,
   path: '/api'
 });
 
