@@ -30,8 +30,8 @@ Person.static.defineSchema({
   middlename: { type: 'string', default: '', field: { type: "text", dataType: "text", placeholder: "Enter person's middle name" }},
   nickname: { type: 'string', default: '', field: { type: "text", dataType: "text", placeholder: "Enter person's nick name" }},
   status: { type: 'string', default: '', field: { type: "select", options: ['пострадавший', 'хелпер', 'актор преследования'], placeholder: "Pick person's status" }},
-  position: { type: 'string', default: '', field: { type: "text", dataType: "text", placeholder: "Enter person's position in organization" }},
-  role: { type: 'string', default: '', field: { type: "text", dataType: "text", placeholder: "Enter person's role" }},
+  position: { type: ['string'], default: [], field: { type: "multiple", placeholder: "Enter person's position in organization" }},
+  role: { type: ['string'], default: [], field: { type: "multiple", placeholder: "Enter person's role" }},
 });
 
 module.exports = Person;
