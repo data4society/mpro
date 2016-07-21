@@ -36,7 +36,6 @@ Multiple.Prototype = function() {
       multipleWidget,
       $$('input').attr({type: 'text', placeholder: 'Add values'})
         .ref('value')
-        .htmlProp('autofocus', true)
         .on('keyup', this.onKeyUp)
     );
 
