@@ -53,7 +53,7 @@ Inbox.Prototype = function() {
 
     el.append(
       header,
-      $$(DoubleSplitPane, {splitType: 'vertical', sizeA: '300px', sizeB: '40%'}).append(
+      $$(DoubleSplitPane, {splitType: 'vertical', sizeA: '300px', sizeB: '38%'}).append(
         $$(Filters, {rubrics: this.state.rubrics}).ref('filters'),
         $$(ListScrollPane, {
           scrollbarType: 'substance',
