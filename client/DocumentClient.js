@@ -45,6 +45,10 @@ MproDocumentClient.Prototype = function() {
     request('PUT', '/api/sources/' + documentId, sourceData, cb);
   };
 
+  this.getEntity = function(entityId, cb) {
+    request('GET', '/api/entities/' + entityId, null, cb);
+  };
+
 };
 
 DocumentClient.extend(MproDocumentClient);

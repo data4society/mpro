@@ -125,6 +125,7 @@ var sourceEngine = new SourceEngine({
 });
 
 var mproEngine = new MproEngine({
+  entityStore: entityStore,
   rubricStore: rubricStore,
   classStore: classStore
 });

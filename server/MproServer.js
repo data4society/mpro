@@ -24,7 +24,9 @@ MproServer.Prototype = function() {
     app.get(this.path + '/facets', this._listFacets.bind(this));
     app.get(this.path + '/import', this._import.bind(this));
     app.put(this.path + '/sources/:id', this._updateSource.bind(this));
-    app.get(this.path + '/sources/training', this._convertTrainingDocs.bind(this));
+    // Convert all accepted documents
+    //app.get(this.path + '/sources/training', this._convertTrainingDocs.bind(this));
+    app.get(this.path + '/entities/:id', this._getEntity.bind(this));
   };
 
   /*
@@ -114,6 +116,18 @@ MproServer.Prototype = function() {
       return next(err);
     });
   };  
+
+  /*
+    Get entity
+  */
+  this._getEntity = function(req, res, next) {
+    var entityId = req.params.id;
+    this.engine.getEntity(entityId).then(function(result) {
+      res.json(result);
+    }).catch(function(err) {
+      return next(err);
+    });
+  };
 };
 
 oo.initClass(MproServer);

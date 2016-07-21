@@ -9,6 +9,7 @@ var Promise = require("bluebird");
 */
 function MproEngine(config) {
   this.config = config;
+  this.entityStore = config.entityStore;
   this.rubricStore = config.rubricStore;
   this.classStore = config.classStore;
 }
@@ -69,6 +70,16 @@ MproEngine.Prototype = function() {
         }));
       });
     }.bind(this));
+  };
+
+  /*
+    Load entity
+
+    @param {Array} entityId entity id
+    @returns {Promise}
+  */
+  this.getEntity = function(entityId) {
+    return this.entityStore.getEntity(entityId);
   };
 
 };
