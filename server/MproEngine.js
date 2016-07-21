@@ -75,11 +75,22 @@ MproEngine.Prototype = function() {
   /*
     Load entity
 
-    @param {Array} entityId entity id
+    @param {String} entityId entity id
     @returns {Promise}
   */
   this.getEntity = function(entityId) {
     return this.entityStore.getEntity(entityId);
+  };
+
+  /*
+    Update entity
+
+    @param {String} entityId entity id
+    @param {Object} entityData entity data to update
+    @returns {Promise}
+  */
+  this.updateEntity = function(entityId, entityData) {
+    return this.entityStore.updateEntity(entityId, entityData);
   };
 
 };

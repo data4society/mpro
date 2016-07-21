@@ -24,9 +24,9 @@ Field.Prototype = function() {
     return this.refs.input.val();
   };
 
-  this.getDocumentSession = function() {
+  this.getSession = function() {
     var form = this.props.form;
-    return form.parent.getDocumentSession();
+    return form.props.session;
   };
 
   this.getNodeId = function() {
@@ -34,12 +34,12 @@ Field.Prototype = function() {
   };
 
   this.commit = function() {
-    var documentSession = this.getDocumentSession();
+    var session = this.getSession();
     var nodeId = this.getNodeId();
     var propId = this.props.id;
     var value = this.getFieldValue();
 
-    documentSession.transaction(function(tx) {
+    session.transaction(function(tx) {
       tx.set([nodeId, propId], value);
     });
   };

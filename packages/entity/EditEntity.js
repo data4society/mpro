@@ -34,7 +34,7 @@ EditEntity.Prototype = function() {
 
     if(entity && doc) {
       var entityData = doc.get(entity.entity_class);
-      var form = $$(Form, {node: entityData});
+      var form = $$(Form, {node: entityData, session: this.state.session});
 
       el.append(form);
     }
@@ -78,6 +78,24 @@ EditEntity.Prototype = function() {
         session: session,
         entity: entity
       });
+    }.bind(this));
+  };
+
+  this._updateEntity = function(data) {
+    var entityId = this.props.entityId;
+    var documentClient = this.context.documentClient;
+    var entityData = {
+      data: data
+    };
+
+    documentClient.updateEntity(entityId, entityData, function(err) {
+      if(err) {
+        console.error(err);
+        this.setState({
+          error: new Error('Entity update failed')
+        });
+        return;
+      }
     }.bind(this));
   };
 
