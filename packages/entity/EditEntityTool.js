@@ -38,7 +38,7 @@ EditEntityTool.Prototype = function() {
     if (this.state.edit) {
       el.append(
         $$(Modal, {
-          width: 'large'
+          width: 'middle'
         }).append(
           $$(EditEntity, {entityId: node.reference})
         )

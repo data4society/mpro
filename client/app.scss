@@ -4,3 +4,9 @@ $fa-font-path:  "../fonts" !default;
 body {
   overflow: hidden;
 }
+
+.sm-width-middle {
+  .se-body {
+    width: 550px;
+  }
+}
