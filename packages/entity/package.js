@@ -15,6 +15,7 @@ module.exports = {
     config.addTool(EditEntityTool, {overlay: true});
     config.addCommand(EntityCommand);
     config.addIcon(EntityCommand.static.name, { 'fontawesome': 'fa-users' });
+    config.addIcon('delete', { 'fontawesome': 'fa-trash' });
     config.addStyle(__dirname, '_entity');
     config.addLabel('entity', {
       en: 'Entity reference',

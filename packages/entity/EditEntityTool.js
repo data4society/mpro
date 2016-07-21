@@ -4,6 +4,7 @@ var Component = require('substance/ui/Component');
 var clone = require('lodash/clone');
 var Modal = require('substance/ui/Modal');
 var Prompt = require('substance/ui/Prompt');
+var EditEntity = require('./EditEntity');
 
 /*
   Edit an entity reference in a prompt.
@@ -39,7 +40,7 @@ EditEntityTool.Prototype = function() {
         $$(Modal, {
           width: 'large'
         }).append(
-          $$('div').append('ENTITY WILL BE HERE ONE DAY')
+          $$(EditEntity, {entityId: node.reference})
         )
       );
     }
