@@ -77,7 +77,8 @@ Form.static.fields = {
   radio: require('./Radio'),
   checkboxes: require('./Checkboxes'),
   textarea: require('./Text'),
-  toggle: require('./Toggle')
+  toggle: require('./Toggle'),
+  multiple: require('./Multiple')
 };
 
 module.exports = Form;
