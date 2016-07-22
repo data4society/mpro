@@ -90,9 +90,8 @@ Inbox.Prototype = function() {
     urlHelper.writeRoute({page: 'inbox', documentId: documentId});
   };
 
-  this._loadMore = function(page) {
+  this._loadMore = function() {
     this.extendState({
-      page: page,
       pagination: true
     });
     this._loadDocuments();

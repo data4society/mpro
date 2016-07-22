@@ -36,7 +36,7 @@ AbstractFeedLoader.Prototype = function() {
     var oldFilters = this.state.filters;
     var newFilters = state.filters;
     if(!isEqual(oldFilters, newFilters)) {
-      this._loadRubrics(newFilters);
+      this._loadRubrics(state);
       this._loadDocuments(state);
     }
   };
@@ -45,7 +45,6 @@ AbstractFeedLoader.Prototype = function() {
     Initial state of component, contains:
     - filters: default filters (e.g. not show training documents)
     - perPage: number of documents per page
-    - page: default page number
     - order: sort by property
     - direction: order of sorting (desc, asc)
     - documentItems: loaded document items (used internaly)
@@ -58,7 +57,6 @@ AbstractFeedLoader.Prototype = function() {
     return {
       filters: {'training': false, 'rubrics @>': []},
       perPage: 10,
-      page: 1,
       order: 'created',
       direction: 'desc',
       documentId: this.props.documentId,
@@ -75,9 +73,10 @@ AbstractFeedLoader.Prototype = function() {
 
     Loads rubrics and creates document with all rubrics.
   */
-  this._loadRubrics = function(filters) {
+  this._loadRubrics = function(newState) {
+    var state = newState || this.state;
     var documentClient = this.context.documentClient;
-    filters = filters || this.state.filters;
+    var filters = state.filters;
 
     documentClient.listRubrics(filters, {limit: 300}, function(err, result) {
       if (err) {
@@ -90,7 +89,7 @@ AbstractFeedLoader.Prototype = function() {
       
       var configurator = this.context.configurator;
       var importer = configurator.createImporter('rubrics');
-      var facets = this.state.filters['rubrics @>'];
+      var facets = state.filters['rubrics @>'];
       var rubrics = importer.importDocument(result, facets);
       rubrics.on('document:changed', this._onRubricsChanged, this);
 
@@ -107,7 +106,6 @@ AbstractFeedLoader.Prototype = function() {
     var state = newState || this.state;
     var documentClient = this.context.documentClient;
     var perPage = state.perPage;
-    var page = state.page;
     var order = state.order;
     var direction = state.direction;
     var pagination = state.pagination;
@@ -119,7 +117,7 @@ AbstractFeedLoader.Prototype = function() {
       filters,
       { 
         limit: perPage, 
-        offset: perPage * (page - 1),
+        offset: state.documentItems.length,
         order: order + ' ' + direction
       }, 
       function(err, documents) {
@@ -226,7 +224,7 @@ AbstractFeedLoader.Prototype = function() {
       filters: extend({}, filters, newFilters),
       pagination: defaultState.pagination,
       perPage: defaultState.perPage,
-      page: defaultState.page
+      documentItems: []
     });
   };
 };

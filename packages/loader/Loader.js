@@ -5,7 +5,7 @@ var JSONConverter = require('substance/model/JSONConverter');
 var CollabClient = require('substance/collab/CollabClient');
 var WebSocketConnection = require('substance/collab/WebSocketConnection');
 var Component = require('substance/ui/Component');
-var isUndefined = require('lodash/isUndefined');
+var isEmpty = require('lodash/isEmpty');
 var Info = require('./Info');
 var Viewer = require('../viewer/Viewer');
 var Editor = require('../editor/Editor');
@@ -53,7 +53,7 @@ Loader.Prototype = function() {
 
   this.didMount = function() {
     var documentId = this.getDocumentId();
-    if (!isUndefined(documentId)) {
+    if (!isEmpty(documentId)) {
       // load the document after mounting
       this._loadDocument(this.getDocumentId());
     } else {
@@ -62,7 +62,7 @@ Loader.Prototype = function() {
   };
 
   this.willReceiveProps = function(newProps) {
-    if (newProps.documentId !== this.props.documentId) {
+    if (newProps.documentId !== this.props.documentId && !isEmpty(newProps.documentId)) {
       this.dispose();
       // TODO: Use setState instead?
       this.state = this.getInitialState();
@@ -176,7 +176,7 @@ Loader.Prototype = function() {
 
     if (this.state.error) {
       this.send('notify', {type: 'error', message: this.state.error.message});
-    } else if (!this.props.documentId) {
+    } else if (isEmpty(this.props.documentId)) {
       el.append(
         $$('div').addClass('no-document').append(
           $$('p').append(this.getLabel('no-document'))

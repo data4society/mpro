@@ -18,7 +18,8 @@ function Feed() {
 Feed.Prototype = function() {
 
   this.shouldRerender = function(props) {
-    if(props.documentId !== this.props.documentId) {
+    var documentId = this.props.documentId;
+    if(props.documentId !== documentId && !isEmpty(props.documentId)) {
       return false;
     }
     return true;
@@ -41,9 +42,8 @@ Feed.Prototype = function() {
       el.append(
         this.renderFull($$),
         $$(Pager, {
-          page: this.props.page,
-          perPage: this.props.perPage,
-          total: this.props.totalItems
+          total: this.props.totalItems,
+          loaded: this.props.documentItems.length
         })
       );
     } else {

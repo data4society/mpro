@@ -11,9 +11,8 @@ Pager.Prototype = function() {
 
   this.render = function($$) {
     var total = this.props.total;
-    var page = this.props.page;
-    var perPage = this.props.perPage;
-    var isLastPage = page * perPage >= total;
+    var loaded = this.props.loaded;
+    var isLastPage = loaded >= total;
 
     var el = $$('div').addClass('sc-pager');
 
@@ -26,8 +25,7 @@ Pager.Prototype = function() {
   };
 
   this._loadMore = function() {
-    var page = this.props.page;
-    this.send('loadMore', page + 1);
+    this.send('loadMore');
   };
 
 };

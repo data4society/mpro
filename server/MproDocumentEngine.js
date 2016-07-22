@@ -15,6 +15,36 @@ MproDocumentEngine.Prototype = function() {
   //var _super = MproDocumentEngine.super.prototype;
 
   /*
+    Creates a new empty or prefilled document
+    Writes the initial change into the database.
+    Returns the JSON serialized version, as a starting point
+  */
+  this.createDocument = function(args, cb) {
+    var schemaConfig = this.schemas[args.schemaName];
+    if (!schemaConfig) {
+      return cb(new Err('SchemaNotFoundError', {
+        message: 'Schema not found for ' + args.schemaName
+      }));
+    }
+
+    this.documentStore.createDocument({
+      schemaName: schemaConfig.name,
+      schemaVersion: schemaConfig.version,
+      documentId: args.documentId,
+      version: 1, // we always start with version 1
+      info: args.info
+    }, function(err, docRecord) {
+      if (err) {
+        return cb(new Err('CreateError', {
+          cause: err
+        }));
+      }
+
+      cb(null, docRecord);
+    });
+  };
+
+  /*
     Get version for given documentId
   */
   this.getVersion = function(documentId, cb) {

@@ -1,5 +1,7 @@
 'use strict';
 
+var filter = require('lodash/filter');
+var concat = require('lodash/concat');
 var ListScrollPane = require('../common/ListScrollPane');
 var DoubleSplitPane = require('../common/DoubleSplitPane');
 var AbstractFeedLoader = require('../common/AbstractFeedLoader');
@@ -31,7 +33,6 @@ Configurator.Prototype = function() {
     return {
       filters: {'training': true, 'rubrics @>': []},
       perPage: 10,
-      page: 1,
       order: 'created',
       direction: 'desc',
       documentId: this.props.documentId,
@@ -129,6 +130,12 @@ Configurator.Prototype = function() {
         accepted: false
       }
     }, function(err, result) {
+      var documentItems = concat(result, this.state.documentItems);
+      var totalItems = parseInt(this.state.totalItems, 10) + 1;
+      this.extendState({
+        documentItems: documentItems,
+        totalItems: totalItems
+      });
       this._openDocument(result.documentId);
     }.bind(this));
   };
@@ -140,7 +147,16 @@ Configurator.Prototype = function() {
   this._deleteDocument = function(documentId) {
     var documentClient = this.context.documentClient;
     documentClient.deleteDocument(documentId, function(/*err, result*/) {
-      this.send('configurator');
+      var documentItems = this.state.documentItems;
+      var cleanedItems = filter(documentItems, function(i) { 
+        return i.documentId !== documentId;
+      });
+      var totalItems = parseInt(this.state.totalItems, 10) - 1;
+      this.extendState({
+        documentId: '',
+        documentItems: cleanedItems,
+        totalItems: totalItems
+      });
     }.bind(this));
   };
 
@@ -149,9 +165,8 @@ Configurator.Prototype = function() {
     urlHelper.writeRoute({page: 'configurator', documentId: documentId});
   };
 
-  this._loadMore = function(page) {
+  this._loadMore = function() {
     this.extendState({
-      page: page,
       pagination: true
     });
     this._loadDocuments();
