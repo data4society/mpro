@@ -75,8 +75,8 @@ test('Should create a new document', function(t) {
   documentEngine.createDocument(args, function(err, doc) {
     t.isNil(err, 'Should not error');
     t.equal(doc.documentId, args.documentId, 'Document id should equals documentId from argument');
-    t.isNotNil(doc.data, 'Document data should exists');
-    t.equal(doc.data.schema.name, args.schemaName, 'Schema name should equals schemaName from argument');
+    t.isNotNil(doc, 'Document should exists');
+    t.equal(doc.schemaName, args.schemaName, 'Schema name should equals schemaName from argument');
     t.end();
   });
 });
@@ -88,7 +88,7 @@ test('Should create a new document without documentId provided', function(t) {
 
   documentEngine.createDocument(args, function(err, doc) {
     t.isNil(err, 'Should not error');
-    t.isNotNil(doc.data, 'Document data should exists');
+    t.isNotNil(doc, 'Document data should exists');
     t.isNotNil(doc.documentId, 'Document id should exists');
     t.end();
   });
