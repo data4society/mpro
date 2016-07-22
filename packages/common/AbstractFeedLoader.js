@@ -37,7 +37,7 @@ AbstractFeedLoader.Prototype = function() {
     var newFilters = state.filters;
     if(!isEqual(oldFilters, newFilters)) {
       this._loadRubrics(newFilters);
-      this._loadDocuments(newFilters);
+      this._loadDocuments(state);
     }
   };
 
@@ -61,6 +61,7 @@ AbstractFeedLoader.Prototype = function() {
       page: 1,
       order: 'created',
       direction: 'desc',
+      documentId: this.props.documentId,
       documentItems: [],
       pagination: false,
       totalItems: 0,
@@ -102,16 +103,17 @@ AbstractFeedLoader.Prototype = function() {
   /*
     Loads documents
   */
-  this._loadDocuments = function(filters) {
+  this._loadDocuments = function(newState) {
+    var state = newState || this.state;
     var documentClient = this.context.documentClient;
-    var perPage = this.state.perPage;
-    var page = this.state.page;
-    var order = this.state.order;
-    var direction = this.state.direction;
-    var pagination = this.state.pagination;
+    var perPage = state.perPage;
+    var page = state.page;
+    var order = state.order;
+    var direction = state.direction;
+    var pagination = state.pagination;
     var items = [];
 
-    filters = filters || this.state.filters;
+    var filters = state.filters;
 
     documentClient.listDocuments(
       filters,
@@ -130,7 +132,7 @@ AbstractFeedLoader.Prototype = function() {
         }
 
         if(pagination) {
-          items = concat(this.state.documentItems, documents.records);
+          items = concat(state.documentItems, documents.records);
         } else {
           items = documents.records;
         }
@@ -186,8 +188,8 @@ AbstractFeedLoader.Prototype = function() {
     var feed = this.refs.feed;
     var feedItem = feed.refs[documentId];
     if(feedItem) {
-      var document = extend({}, feedItem.document, {meta: meta});
-      feedItem.extendProps({document: document});
+      var document = extend({}, feedItem.props.document, {meta: meta});
+      feedItem.extendProps({document: document, update: true});
     }
   };
 
@@ -212,14 +214,20 @@ AbstractFeedLoader.Prototype = function() {
     Will change filters and load rubrics again.
   */
   this._applyFacets = function() {
+    var defaultState = this.getInitialState();
     var rubrics = this.state.rubrics;
     var filters = this.state.filters;
-    var newFilters = {};
     var facets = rubrics.getActive();
+    var newFilters = {};
     rubrics.off(this);
 
     newFilters['rubrics @>'] = facets;
-    this.extendState({filters: extend({}, filters, newFilters)});
+    this.extendState({
+      filters: extend({}, filters, newFilters),
+      pagination: defaultState.pagination,
+      perPage: defaultState.perPage,
+      page: defaultState.page
+    });
   };
 };
 

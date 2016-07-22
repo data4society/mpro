@@ -64,7 +64,7 @@ Cover.Prototype = function() {
     var metaChanged = changed.indexOf('meta') > -1;
 
     if(metaChanged) {
-      this.send('updateFeedItem', documentId, meta);
+      this.send('updateFeedItem', documentId, meta.toJSON());
     }
   };
 

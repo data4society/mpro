@@ -1,6 +1,5 @@
 'use strict';
 
-var extend = require('lodash/extend');
 var ListScrollPane = require('../common/ListScrollPane');
 var DoubleSplitPane = require('../common/DoubleSplitPane');
 var AbstractFeedLoader = require('../common/AbstractFeedLoader');
@@ -35,6 +34,7 @@ Configurator.Prototype = function() {
       page: 1,
       order: 'created',
       direction: 'desc',
+      documentId: this.props.documentId,
       documentItems: [],
       pagination: false,
       totalItems: 0,
@@ -77,10 +77,10 @@ Configurator.Prototype = function() {
           scrollbarType: 'substance',
           scrollbarPosition: 'left'
         }).append(
-          $$(Feed, extend({}, this.props, this.state)).ref('feed')
+          $$(Feed, this.state).ref('feed')
         ),
         $$(Loader, {
-          documentId: this.props.documentId,
+          documentId: this.state.documentId,
           rubrics: this.state.rubrics,
           mode: 'editor',
           userSession: authenticationClient.getSession()
@@ -95,8 +95,8 @@ Configurator.Prototype = function() {
     var loader = this.refs.loader;
     var feed = this.refs.feed;
 
+    this.extendState({documentId: documentId});
     feed.setActiveItem(documentId);
-    this.extendProps({documentId: documentId});
     this.updateUrl(documentId);
     
     loader.extendProps({

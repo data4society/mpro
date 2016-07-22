@@ -11,6 +11,13 @@ function FeedItem() {
 
 FeedItem.Prototype = function() {
 
+  this.shouldRerender = function(props) {
+    if(props.update) {
+      return true;
+    }
+    return false;
+  };
+
   this.render = function($$) {
     var document = this.props.document;
     var meta = document.meta;

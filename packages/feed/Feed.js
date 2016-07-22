@@ -12,11 +12,17 @@ var isEmpty = require('lodash/isEmpty');
 function Feed() {
   Component.apply(this, arguments);
 
-  var route = this.context.urlHelper.getRoute();
-  this.activeItem = route.documentId;
+  window.activeItem = this.activeItem = this.props.documentId;
 }
 
 Feed.Prototype = function() {
+
+  this.shouldRerender = function(props) {
+    if(props.documentId !== this.props.documentId) {
+      return false;
+    }
+    return true;
+  };
 
   this.render = function($$) {
     var componentRegistry = this.context.componentRegistry;
@@ -124,14 +130,16 @@ Feed.Prototype = function() {
     if(currentActive && !isEmpty(this.refs)) {
       if(this.refs[currentActive]) {
         this.refs[currentActive].extendProps({
-          'active': false
+          update: true,
+          active: false
         });
       }
     }
 
     if(this.refs[documentId]) {
       this.refs[documentId].extendProps({
-        'active': true
+        update: true,
+        active: true
       });
     }
 
@@ -143,7 +151,8 @@ Feed.Prototype = function() {
       var document = this.refs[documentId].props.document;
       document.meta.rubrics = rubrics;
       this.refs[documentId].extendProps({
-        'document': document
+        update: true,
+        document: document
       });
     }
   };
