@@ -25,7 +25,7 @@ Act.static.defineSchema({
   code: { type: 'string', default: '', field: { type: "select", options: ['УК', 'КоАП'], placeholder: "Pick a code" }},
   article: { type: 'string', default: '', field: { type: "text", dataType: "text", placeholder: "Enter article number" }},
   content: { type: 'string', default: '', field: { type: "text", dataType: "text", placeholder: "Enter article content" }},
-  parent: { type: 'string', default: '', field: { type: "text", dataType: "text", placeholder: "Enter paretn article" }}
+  parent: { type: 'string', default: '', field: { type: "text", dataType: "text", placeholder: "Enter parent article" }}
 });
 
 module.exports = Act;
