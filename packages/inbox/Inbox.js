@@ -78,7 +78,7 @@ Inbox.Prototype = function() {
     var feed = this.refs.feed;
 
     feed.setActiveItem(documentId);
-
+    this.extendProps({documentId: documentId});
     this.updateUrl(documentId);
     
     loader.extendProps({
