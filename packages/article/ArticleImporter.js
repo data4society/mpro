@@ -46,8 +46,6 @@ ArticleImporter.Prototype = function() {
     clean = clean.join('</p><p>');
     clean = "<p>" + clean + "</p>";
 
-    console.log(clean)
-
     this.reset();
     var parsed = DefaultDOMElement.parseHTML(clean);
     this.convertDocument(parsed);
