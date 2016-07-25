@@ -22,8 +22,9 @@ function ArticleImporter(config) {
 ArticleImporter.Prototype = function() {
 
   this.importDocument = function(html, source) {
-
-    html = html.replace(/&#13;/g, '').replace(/<br ?\/?>|<\/p>|<\/div>/g, '\n');
+    // move all trailing spaces after tag closing first
+    // e.g. " </strong>" should be turned to "</strong> "
+    html = html.replace(/\s+<\/([a-z]+)>/g,"</$1> ").replace(/<br ?\/?>|<\/p>|<\/div>/g, '\n');
 
     var clean = sanitizeHtml(html, {
       allowedTags: [ 'b', 'i', 'em', 'strong', 'a'],
@@ -44,6 +45,8 @@ ArticleImporter.Prototype = function() {
 
     clean = clean.join('</p><p>');
     clean = "<p>" + clean + "</p>";
+
+    console.log(clean)
 
     this.reset();
     var parsed = DefaultDOMElement.parseHTML(clean);
