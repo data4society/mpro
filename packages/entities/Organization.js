@@ -23,7 +23,7 @@ Organization.static.name = 'org';
 Organization.static.defineSchema({
   name: { type: 'string', default: '', field: { type: "text", dataType: "text", placeholder: "Enter organization name" }},
   jurisdiction: { type: ['string'], default: [], field: { type: "reference", multiple: true, placeholder: "Enter parent organizations", restrictions: {"entity_class": "org"}}},
-  location: { type: ['string'], default: [], field: { type: "reference", multiple: true, placeholder: "Enter organization locations", restrictions: {"entity_class": "loc"}}}
+  location: { type: ['string'], default: [], field: { type: "reference", multiple: true, placeholder: "Enter organization locations", restrictions: {"entity_class": "location"}}}
 });
 
 module.exports = Organization;

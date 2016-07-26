@@ -8,7 +8,7 @@ function Location() {
 
 DocumentNode.extend(Location);
 
-Location.static.name = 'loc';
+Location.static.name = 'location';
 
 /*
   Entities Location node.
