@@ -29,8 +29,8 @@ VkMeta.static.name = 'meta';
 
 VkMeta.static.defineSchema({
   title: { type: 'string', default: '' },
-  rubrics: { type: ['id'], defaut: [] },
-  entities: { type: ['id'], defaut: [] },
+  rubrics: { type: ['id'], default: [] },
+  entities: { type: ['id'], default: [] },
   source: { type: 'string', default: '' },
   published: { type: 'string', default: '' },
   created: { type: 'string', default: '' },
