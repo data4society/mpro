@@ -24,8 +24,8 @@ Act.static.name = 'norm_act';
 Act.static.defineSchema({
   code: { type: 'string', default: '', field: { type: "select", options: ['УК', 'КоАП'], placeholder: "Pick a code" }},
   article: { type: 'string', default: '', field: { type: "text", dataType: "text", placeholder: "Enter article number" }},
-  content: { type: 'string', default: '', field: { type: "text", dataType: "text", placeholder: "Enter article content" }},
-  parent: { type: 'string', default: '', field: { type: "reference", multiple: false, placeholder: "Enter parent article", restrictions: {"entity_class": "norm_act"}}}
+  parent: { type: 'string', default: '', field: { type: "reference", multiple: false, placeholder: "Enter parent article", restrictions: {"entity_class": "norm_act"}}},
+  content: { type: 'string', default: '', field: { type: "prose", placeholder: "Enter article content" }}
 });
 
 module.exports = Act;
