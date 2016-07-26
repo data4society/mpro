@@ -38,6 +38,8 @@ EditEntity.Prototype = function() {
       var form = $$(Form, {node: entityData, session: this.state.session});
 
       el.append(form);
+    } else {
+      el.append('There is no handler for this entity class, sorry');
     }
 
     return el;
@@ -62,23 +64,25 @@ EditEntity.Prototype = function() {
 
       var container = configurator.createArticle();
 
-      var entityData = {
-        id: entityClass,
-        type: entityClass
-      };
+      if(container.schema.getNodeClass(this.props.entity_class)) {
+        var entityData = {
+          id: entityClass,
+          type: entityClass
+        };
 
-      entityData = extend(entityData, entity.data);
-      container.create(entityData);
+        entityData = extend(entityData, entity.data);
+        container.create(entityData);
 
-      container.on('document:changed', this._onDocumentChanged, this);
+        container.on('document:changed', this._onDocumentChanged, this);
 
-      var session = new DocumentSession(container);
+        var session = new DocumentSession(container);
 
-      this.setState({
-        doc: container,
-        session: session,
-        entity: entity
-      });
+        this.setState({
+          doc: container,
+          session: session,
+          entity: entity
+        });
+      }
     }.bind(this));
   };
 
@@ -86,8 +90,11 @@ EditEntity.Prototype = function() {
     var entityId = this.props.entityId;
     var documentClient = this.context.documentClient;
     var entityData = {
-      data: data
+      data: data.toJSON()
     };
+    // Remove node props
+    delete entityData.data.id;
+    delete entityData.data.type;
 
     documentClient.updateEntity(entityId, entityData, function(err) {
       if(err) {
