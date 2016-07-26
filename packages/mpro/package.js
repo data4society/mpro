@@ -16,7 +16,6 @@ var EditorPackage = require('../editor/package');
 var NotificationPackage = require('../notification/package');
 var CollaboratorsPackage = require('../collaborators/package');
 var WelcomePackage = require('../welcome/package');
-var FormsPackage = require('../forms/package.js');
 
 // Article configurator
 // Holds article schema
@@ -57,7 +56,6 @@ module.exports = {
     config.import(NotificationPackage);
     config.import(CollaboratorsPackage);
     config.import(WelcomePackage);
-    config.import(FormsPackage);
     
     // Default configuration for available modes
     config.addConfigurator('viewer-mpro-article', articleViewerConfigurator);

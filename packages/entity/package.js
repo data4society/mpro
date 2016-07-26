@@ -5,6 +5,7 @@ var EntityTool = require('./EntityTool');
 var EditEntityTool = require('./EditEntityTool');
 var EntityCommand = require('./EntityCommand');
 var EntityComponent = require('./EntityComponent');
+var FormsPackage = require('../forms/package.js');
 
 module.exports = {
   name: 'entity',
@@ -29,5 +30,7 @@ module.exports = {
       en: 'Entity reference',
       ru: 'Удалить упоминание'
     });
+
+    config.import(FormsPackage);
   }
 };

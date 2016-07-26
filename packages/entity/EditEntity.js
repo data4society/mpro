@@ -27,7 +27,8 @@ EditEntity.Prototype = function() {
   this.render = function($$) {
     var doc = this.state.doc;
     var entity = this.state.entity;
-    var componentRegistry = this.context.configurator.getComponentRegistry();
+    var controller = this.context.controller;
+    var componentRegistry = controller.props.configurator.getComponentRegistry();
     var Form = componentRegistry.get('form');
 
     var el = $$('div').addClass('sc-entity-editor');
