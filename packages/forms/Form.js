@@ -76,7 +76,7 @@ Form.static.fields = {
   date: require('./Date'),
   radio: require('./Radio'),
   checkboxes: require('./Checkboxes'),
-  textarea: require('./Text'),
+  prose: require('./Prose'),
   toggle: require('./Toggle'),
   multiple: require('./Multiple'),
   reference: require('./Reference')

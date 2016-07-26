@@ -15,6 +15,16 @@
         border-color: rgb(198, 224, 243);
       }
     }
+
+    .sc-textarea {
+      padding: 6px;
+      width: 100%;
+      
+      &:focus {
+        background: #fff;
+        border-color: rgb(198, 224, 243);
+      }
+    }
   
     .help {
       font-size: 12px;
