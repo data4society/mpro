@@ -78,7 +78,8 @@ Form.static.fields = {
   checkboxes: require('./Checkboxes'),
   textarea: require('./Text'),
   toggle: require('./Toggle'),
-  multiple: require('./Multiple')
+  multiple: require('./Multiple'),
+  reference: require('./Reference')
 };
 
 module.exports = Form;
