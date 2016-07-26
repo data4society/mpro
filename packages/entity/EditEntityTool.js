@@ -40,7 +40,7 @@ EditEntityTool.Prototype = function() {
         $$(Modal, {
           width: 'middle'
         }).append(
-          $$(EditEntity, {entityId: node.reference})
+          $$(EditEntity, {entityId: node.reference, node: node})
         )
       );
     }

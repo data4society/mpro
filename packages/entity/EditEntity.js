@@ -61,10 +61,9 @@ EditEntity.Prototype = function() {
       }
 
       var entityClass = entity.entity_class;
-
       var container = configurator.createArticle();
 
-      if(container.schema.getNodeClass(this.props.entity_class)) {
+      if(container.schema.getNodeClass(this.props.node.entityClass)) {
         var entityData = {
           id: entityClass,
           type: entityClass
