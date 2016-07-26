@@ -3,6 +3,8 @@
 var Article = require('../common/Article');
 var Person = require('./Person');
 var Act = require('./Act');
+var Location = require('./Location');
+var Organization = require('./Organization');
 
 module.exports = {
   name: 'entities',
@@ -15,5 +17,7 @@ module.exports = {
 
     config.addNode(Person);
     config.addNode(Act);
+    config.addNode(Location);
+    config.addNode(Organization);
   }
 };
