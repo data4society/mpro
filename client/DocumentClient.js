@@ -53,6 +53,10 @@ MproDocumentClient.Prototype = function() {
     request('PUT', '/api/entities/' + entityId, entityData, cb);
   };
 
+  this.findEntities = function(value, restrictions, cb) {
+    var restrictionsRequest = encodeURIComponent(JSON.stringify(restrictions));
+    request('GET', '/api/entities/search?value=' + value + '&restrictions=' + restrictionsRequest, null, cb);
+  };
 };
 
 DocumentClient.extend(MproDocumentClient);

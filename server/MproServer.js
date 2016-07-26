@@ -26,6 +26,7 @@ MproServer.Prototype = function() {
     app.put(this.path + '/sources/:id', this._updateSource.bind(this));
     // Convert all accepted documents
     //app.get(this.path + '/sources/training', this._convertTrainingDocs.bind(this));
+    app.get(this.path + '/entities/search', this._searchEntity.bind(this));
     app.get(this.path + '/entities/:id', this._getEntity.bind(this));
     app.put(this.path + '/entities/:id', this._updateEntity.bind(this));
   };
@@ -138,6 +139,19 @@ MproServer.Prototype = function() {
     var entityData = req.body;
     this.engine.updateEntity(entityId, entityData).then(function() {
       res.json(null);
+    }).catch(function(err) {
+      return next(err);
+    });
+  };
+
+  /*
+    Search Entity
+  */
+  this._searchEntity = function(req, res, next) {
+    var pattern = req.query.value;
+    var restrictions = JSON.parse(req.query.restrictions);
+    this.engine.findEntity(pattern, restrictions).then(function(results) {
+      res.json(results);
     }).catch(function(err) {
       return next(err);
     });

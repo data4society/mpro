@@ -3,6 +3,7 @@
 var oo = require('substance/util/oo');
 var Err = require('substance/util/SubstanceError');
 var uuid = require('substance/util/uuid');
+var extend = require('lodash/extend');
 var isUndefined = require('lodash/isUndefined');
 var Promise = require("bluebird");
 
@@ -136,6 +137,31 @@ EntityStore.Prototype = function() {
           });
         }.bind(this));
       }.bind(this));
+  };
+
+  /*
+    Quick find an entity from the db using string matching
+
+    @param {String} pattern pattern to match
+    @param {String} restrictions query restrictions
+    @returns {Promise}
+  */
+  this.findEntity = function(pattern, restrictions) {
+    return new Promise(function(resolve, reject) {
+      var query = extend({'name ilike': '%' + pattern + '%'}, restrictions);
+      this.db.entities.find(
+        query,
+        {columns: ['entity_id', 'name'], limit: 10},
+        function(err, entities) {
+          if (err) {
+            reject(new Err('EntityStore.FindError', {
+              cause: err
+            }));
+          }
+          resolve(entities);
+        }
+      );
+    }.bind(this));
   };
 
   /*

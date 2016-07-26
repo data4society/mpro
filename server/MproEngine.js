@@ -93,6 +93,17 @@ MproEngine.Prototype = function() {
     return this.entityStore.updateEntity(entityId, entityData);
   };
 
+  /*
+    Find entity
+
+    @param {String} pattern pattern to match
+    @param {Object} restrictions query restrictions
+    @returns {Promise}
+  */
+  this.findEntity = function(pattern, restrictions) {
+    return this.entityStore.findEntity(pattern, restrictions);
+  };
+
 };
 
 oo.initClass(MproEngine);
