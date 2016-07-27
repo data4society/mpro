@@ -85,11 +85,12 @@ EditEntity.Prototype = function() {
     }.bind(this));
   };
 
-  this._updateEntity = function(data) {
+  this._updateEntity = function(data, name) {
     var entityId = this.props.entityId;
     var documentClient = this.context.documentClient;
     var entityData = {
-      data: data.toJSON()
+      data: data.toJSON(),
+      name: name
     };
     // Remove node props
     delete entityData.data.id;
@@ -110,7 +111,8 @@ EditEntity.Prototype = function() {
     var doc = this.state.doc;
     var entity = this.state.entity;
     var entityData = doc.get(entity.entity_class);
-    this._updateEntity(entityData);
+    var name = entityData.getName();
+    this._updateEntity(entityData, name);
   };
 };
 

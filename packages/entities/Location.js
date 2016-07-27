@@ -6,6 +6,13 @@ function Location() {
   Location.super.apply(this, arguments);
 }
 
+Location.Prototype = function() {
+  // Get entity name
+  this.getName = function() {
+    return this.name;
+  };
+};
+
 DocumentNode.extend(Location);
 
 Location.static.name = 'location';

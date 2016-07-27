@@ -6,6 +6,13 @@ function Act() {
   Act.super.apply(this, arguments);
 }
 
+Act.Prototype = function() {
+  // Get entity name
+  this.getName = function() {
+    return this.article + ' ' + this.code;
+  };
+};
+
 DocumentNode.extend(Act);
 
 Act.static.name = 'norm_act';

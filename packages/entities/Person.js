@@ -6,6 +6,13 @@ function Person() {
   Person.super.apply(this, arguments);
 }
 
+Person.Prototype = function() {
+  // Get entity name
+  this.getName = function() {
+    return this.lastname + ' ' + this.firstname;
+  };
+};
+
 DocumentNode.extend(Person);
 
 Person.static.name = 'person';

@@ -6,6 +6,13 @@ function Organization() {
   Organization.super.apply(this, arguments);
 }
 
+Organization.Prototype = function() {
+  // Get entity name
+  this.getName = function() {
+    return this.name;
+  };
+};
+
 DocumentNode.extend(Organization);
 
 Organization.static.name = 'org';
