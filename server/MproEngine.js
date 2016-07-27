@@ -73,6 +73,16 @@ MproEngine.Prototype = function() {
   };
 
   /*
+    Create entity
+
+    @param {Object} entityData new entity data
+    @returns {Promise}
+  */
+  this.createEntity = function(entityData) {
+    return this.entityStore.createEntity(entityData);
+  };
+
+  /*
     Load entity
 
     @param {String} entityId entity id
