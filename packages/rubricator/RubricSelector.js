@@ -130,7 +130,6 @@ RubricSelector.Prototype = function() {
     this.extendProps({
       rubrics: rubrics
     });
-    //this.send('saveTree');
   };
 };
 
