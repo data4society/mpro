@@ -123,10 +123,12 @@ Reference.Prototype = function() {
     this.refs.value.val('');
     setTimeout(function() {
       this.extendState({dropdown: false});
-    }.bind(this), 100);
+    }.bind(this), 300);
   };
 
   this.addValue = function(e) {
+    e.preventDefault();
+    e.stopPropagation();
     var config = this.getConfig();
     var id = e.target.dataset.id;
     var selected = this.state.selected;
