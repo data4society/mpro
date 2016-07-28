@@ -20,7 +20,7 @@ EntityCommand.Prototype = function() {
       return createAnnotation(tx, props);
     }.bind(this));
     return {
-      mode: 'create',
+      mode: 'edit',
       anno: newAnno
     };
   };

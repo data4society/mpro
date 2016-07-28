@@ -58,6 +58,10 @@ EntityTool.Prototype = function() {
     return el;
   };
 
+  this.getClassNames = function() {
+    return 'se-tool-' + this.getName();
+  };
+
   this.onClick = function(e) {
     e.preventDefault();
     e.stopPropagation();
@@ -71,10 +75,14 @@ EntityTool.Prototype = function() {
     this.setState({showModal: !showModal});
   };
 
-  this._createReference = function(ref) {
+  this._createReference = function(ref, newEntity) {
     var showModal = this.state.showModal;
+    var commandManager = this.context.commandManager;
     this.setState({showModal: !showModal, reference: ref});
-    if (!this.props.disabled && !this.state.showModal) this.performAction();
+    if (!this.props.disabled && !this.state.showModal) {
+      if(newEntity) commandManager['create-entity'] = true;
+      this.performAction();
+    }
   };
 
   this.getEntityClass = function() {

@@ -20,6 +20,15 @@ function EditEntityTool() {
 
 EditEntityTool.Prototype = function() {
 
+  this.willReceiveProps = function() {
+    if(this.context.commandManager['create-entity'] === true) {
+      this.setState({
+        edit: true
+      });
+      this.context.commandManager['create-entity'] = false;
+    }
+  };
+
   this.render = function($$) {
     var node = this.props.node;
     var el = $$('div').addClass('sc-edit-entity-tool');

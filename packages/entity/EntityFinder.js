@@ -157,13 +157,13 @@ EntityFinder.Prototype = function() {
       }
       
       var reference = res.entity_id;
-      this.send('createReference', reference);
+      this.send('createReference', reference, true);
     }.bind(this));
   };
 
   this._onClickDone = function(e) {
     e.preventDefault();
-    this.send('createReference', this.getValue());
+    this.send('createReference', this.getValue(), false);
   };
 };
 
