@@ -17,12 +17,15 @@
     .sc-tool-group {
       .se-tool > {
         button {
-          padding: 20px;
-          font-size: 18px;
+          width: 60px;
+          height: 60px;
           border-radius: 50%;
+          text-align: center;
+          line-height: 100px;
+          vertical-align: middle;
+          padding: 18px;
+          font-size: 18px;
           border: 1px solid #ccc;
-          min-height: inherit;
-          height: inherit;
           background: rgb(130, 148, 204);
           color: #fff;
           opacity: 0.9;
