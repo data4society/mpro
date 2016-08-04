@@ -22,7 +22,7 @@ var oc_spans = {"фамилия":"oc_span_last_name",
 	"имя":"oc_span_first_name",
 	"отчество":"oc_span_middle_name",
 	"ник":"oc_span_nickname",
-	"иностранное имя":"oc_span_foreign_name",
+	"иностранное_имя":"oc_span_foreign_name",
 	"должность":"oc_span_post",
 	"роль":"oc_span_role",
 	"статус":"oc_span_status"
@@ -100,7 +100,7 @@ ImportEngine.Prototype = function() {
             document: source.doc_id,
             entity_classes: entity_classes_arr,
 			name: new Date().toJSON() + " from Opencorpora",
-            type: 30
+            type: 40
           });
         }.bind(this)).then(function(markup) {
           // extract references and mentions
@@ -122,7 +122,7 @@ ImportEngine.Prototype = function() {
             return this.mentionStore.createMention(mention);
           }.bind(this));
         }.bind(this)).then(function() {
-          console.log('set has been imported');
+          console.log('set has been imported ' + set);
           //console.log('imported entities:', entities.length);
           console.log('imported references:', references.length);
           console.log('imported mentions:', mentions.length);
