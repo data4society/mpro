@@ -257,7 +257,7 @@ SourceEngine.Prototype = function() {
         "meta->>'accepted'": "true"
       }, {
         columns: ['document_id', 'schema_name', 'schema_version'],
-        limit: 1000
+        limit: 3000
       }, function(err, list) {
         if(err) {
           reject(err);
