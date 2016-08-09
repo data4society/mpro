@@ -113,8 +113,9 @@ MproServer.Prototype = function() {
   };
 
   this._convertTrainingDocs = function(req, res, next) {
+    res.send('conversion requested');
     this.sourceEngine.convertTrainingDocs().then(function() {
-      res.send('done');
+      //res.send('done');
     }).catch(function(err) {
       return next(err);
     });
