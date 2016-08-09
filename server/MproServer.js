@@ -25,7 +25,7 @@ MproServer.Prototype = function() {
     app.get(this.path + '/import', this._import.bind(this));
     app.put(this.path + '/sources/:id', this._updateSource.bind(this));
     // Convert all accepted documents
-    //app.get(this.path + '/sources/training', this._convertTrainingDocs.bind(this));
+    app.get(this.path + '/sources/training', this._convertTrainingDocs.bind(this));
     app.post(this.path + '/entities', this._createEntity.bind(this));
     app.get(this.path + '/entities/search', this._searchEntity.bind(this));
     app.get(this.path + '/entities/:id', this._getEntity.bind(this));
