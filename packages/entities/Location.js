@@ -1,21 +1,13 @@
-'use strict';
+import { DocumentNode } from 'substance'
 
-var DocumentNode = require('substance/model/DocumentNode');
-
-function Location() {
-  Location.super.apply(this, arguments);
+class Location extends DocumentNode {
+  // Get entity name
+  getName() {
+    return this.name
+  }
 }
 
-Location.Prototype = function() {
-  // Get entity name
-  this.getName = function() {
-    return this.name;
-  };
-};
-
-DocumentNode.extend(Location);
-
-Location.static.name = 'location';
+Location.type = 'location'
 
 /*
   Entities Location node.
@@ -26,9 +18,9 @@ Location.static.name = 'location';
     - loc_type Type type of location
 */
 
-Location.static.defineSchema({
+Location.define({
   name: { type: 'string', default: '', field: { type: "text", dataType: "text", placeholder: "Enter location name" }},
   loc_type: { type: 'string', default: '', field: { type: "select", options: ['страна', 'регион', 'населенный пункт', 'точный адрес', 'объект с адресом'], placeholder: "Pick a location type" }}
-});
+})
 
-module.exports = Location;
+export default Location

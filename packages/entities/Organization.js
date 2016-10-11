@@ -1,21 +1,13 @@
-'use strict';
+import { DocumentNode } from 'substance'
 
-var DocumentNode = require('substance/model/DocumentNode');
-
-function Organization() {
-  Organization.super.apply(this, arguments);
+class Organization extends DocumentNode {
+  // Get entity name
+  getName() {
+    return this.name
+  }
 }
 
-Organization.Prototype = function() {
-  // Get entity name
-  this.getName = function() {
-    return this.name;
-  };
-};
-
-DocumentNode.extend(Organization);
-
-Organization.static.name = 'org';
+Organization.type = 'org'
 
 /*
   Entities Organization node.
@@ -27,10 +19,10 @@ Organization.static.name = 'org';
     - location Locations of organization
 */
 
-Organization.static.defineSchema({
+Organization.define({
   name: { type: 'string', default: '', field: { type: "text", dataType: "text", placeholder: "Enter organization name" }},
   jurisdiction: { type: ['string'], default: [], field: { type: "reference", multiple: true, placeholder: "Enter parent organizations", restrictions: {"entity_class": "org"}}},
   location: { type: ['string'], default: [], field: { type: "reference", multiple: true, placeholder: "Enter organization locations", restrictions: {"entity_class": "location"}}}
-});
+})
 
-module.exports = Organization;
+export default Organization

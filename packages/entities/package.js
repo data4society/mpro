@@ -1,23 +1,21 @@
-'use strict';
+import Article from '../common/Article'
+import Person from './Person'
+import Act from './Act'
+import Location from './Location'
+import Organization from './Organization'
 
-var Article = require('../common/Article');
-var Person = require('./Person');
-var Act = require('./Act');
-var Location = require('./Location');
-var Organization = require('./Organization');
-
-module.exports = {
+export default {
   name: 'entities',
   configure: function(config) {
     config.defineSchema({
       name: 'mpro-entities',
       ArticleClass: Article,
       defaultTextType: 'paragraph'
-    });
+    })
 
-    config.addNode(Person);
-    config.addNode(Act);
-    config.addNode(Location);
-    config.addNode(Organization);
+    config.addNode(Person)
+    config.addNode(Act)
+    config.addNode(Location)
+    config.addNode(Organization)
   }
-};
+}
