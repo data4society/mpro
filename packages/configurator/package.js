@@ -1,20 +1,17 @@
-'use strict';
+import Configurator from './Configurator'
 
-var Configurator = require('./Configurator');
-
-module.exports = {
+export default {
   name: 'configurator',
   configure: function(config) {
-    config.addComponent('configurator', Configurator);
-    config.addStyle(__dirname, '_configurator');
+    config.addComponent('configurator', Configurator)
 
     config.addLabel('inbox-menu', {
       en: 'Inbox',
       ru: 'Входящие'
-    });
+    })
     config.addLabel('import-menu', {
       en: 'Import',
       ru: 'Импорт'
-    });
+    })
   }
-};
+}
