@@ -1,11 +1,8 @@
-'use strict';
+import Collaborators from './Collaborators'
 
-var Collaborators = require('./Collaborators');
-
-module.exports = {
+export default {
   name: 'collaborators',
   configure: function(config) {
-    config.addComponent('collaborators', Collaborators);
-    config.addStyle(__dirname, '_collaborators');
+    config.addComponent('collaborators', Collaborators)
   }
-};
+}
