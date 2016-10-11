@@ -1,13 +1,5 @@
-'use strict';
+import EntityTool from './EntityTool'
 
-var EntityTool = require('./EntityTool');
+class LocationTool extends EntityTool {}
 
-function LocationTool() {
-  LocationTool.super.apply(this, arguments);
-}
-
-EntityTool.extend(LocationTool);
-
-LocationTool.static.name = 'location';
-
-module.exports = LocationTool;
+export default LocationTool

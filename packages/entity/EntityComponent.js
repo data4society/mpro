@@ -1,26 +1,17 @@
-'use strict';
+import { AnnotationComponent } from 'substance'
 
-var AnnotationComponent = require('substance/ui/AnnotationComponent');
+class EntityComponent extends AnnotationComponent {
 
-function EntityComponent() {
-  EntityComponent.super.apply(this, arguments);
-}
-
-EntityComponent.Prototype = function() {
-
-  this.getClassNames = function() {
-    var entityClass = this.props.node.entityClass;
-    var classNames = 'sc-'+this.props.node.type;
+  getClassNames() {
+    let entityClass = this.props.node.entityClass
+    let classNames = 'sc-'+this.props.node.type
 
     if(entityClass) {
-      classNames += ' sc-entity-' + entityClass;
+      classNames += ' sc-entity-' + entityClass
     }
 
-    return classNames;
-  };
+    return classNames
+  }
+}
 
-};
-
-AnnotationComponent.extend(EntityComponent);
-
-module.exports = EntityComponent;
+export default EntityComponent

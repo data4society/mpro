@@ -1,13 +1,5 @@
-'use strict';
+import EntityTool from './EntityTool'
 
-var EntityTool = require('./EntityTool');
+class ActTool extends EntityTool {}
 
-function ActTool() {
-  ActTool.super.apply(this, arguments);
-}
-
-EntityTool.extend(ActTool);
-
-ActTool.static.name = 'norm_act';
-
-module.exports = ActTool;
+export default ActTool

@@ -1,13 +1,5 @@
-'use strict';
+import EntityCommand from './EntityCommand'
 
-var EntityCommand = require('./EntityCommand');
+class OrgCommand extends EntityCommand {}
 
-function OrgCommand() {
-  OrgCommand.super.apply(this, arguments);
-}
-
-EntityCommand.extend(OrgCommand);
-
-OrgCommand.static.name = 'org';
-
-module.exports = OrgCommand;
+export default OrgCommand

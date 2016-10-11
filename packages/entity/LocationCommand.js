@@ -1,13 +1,5 @@
-'use strict';
+import EntityCommand from './EntityCommand'
 
-var EntityCommand = require('./EntityCommand');
+class LocationCommand extends EntityCommand {}
 
-function LocationCommand() {
-  LocationCommand.super.apply(this, arguments);
-}
-
-EntityCommand.extend(LocationCommand);
-
-LocationCommand.static.name = 'location';
-
-module.exports = LocationCommand;
+export default LocationCommand

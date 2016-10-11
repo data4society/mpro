@@ -1,13 +1,5 @@
-'use strict';
+import EntityCommand from './EntityCommand'
 
-var EntityCommand = require('./EntityCommand');
+class ActCommand extends EntityCommand {}
 
-function ActCommand() {
-  ActCommand.super.apply(this, arguments);
-}
-
-EntityCommand.extend(ActCommand);
-
-ActCommand.static.name = 'norm_act';
-
-module.exports = ActCommand;
+export default ActCommand

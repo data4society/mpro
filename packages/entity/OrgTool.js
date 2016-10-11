@@ -1,13 +1,5 @@
-'use strict';
+import EntityTool from './EntityTool'
 
-var EntityTool = require('./EntityTool');
+class OrgTool extends EntityTool {}
 
-function OrgTool() {
-  OrgTool.super.apply(this, arguments);
-}
-
-EntityTool.extend(OrgTool);
-
-OrgTool.static.name = 'org';
-
-module.exports = OrgTool;
+export default OrgTool

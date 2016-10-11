@@ -1,7 +1,4 @@
-'use strict';
-
-var PropertyAnnotation = require('substance/model/PropertyAnnotation');
-var Fragmenter = require('substance/model/Fragmenter');
+import { Fragmenter, PropertyAnnotation } from 'substance'
 
 /**
   Entity Node.
@@ -9,20 +6,16 @@ var Fragmenter = require('substance/model/Fragmenter');
   Used for highlighting entity references inside documents.
 */
 
-function Entity() {
-  Entity.super.apply(this, arguments);
-}
+class Entity extends PropertyAnnotation {}
 
-PropertyAnnotation.extend(Entity);
+Entity.type = 'entity'
 
-Entity.static.name = 'entity';
-
-Entity.static.defineSchema({
+Entity.define({
   "reference": {type: "string", default: ""},
   "entityClass": {type: "string", default: ""}
-});
+})
 
 // in presence of overlapping annotations will try to render this as one element
-Entity.static.fragmentation = Fragmenter.SHOULD_NOT_SPLIT;
+Entity.fragmentation = Fragmenter.SHOULD_NOT_SPLIT
 
-module.exports = Entity;
+export default Entity

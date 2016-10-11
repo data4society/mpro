@@ -1,41 +1,37 @@
-'use strict';
+import Entity from './Entity'
+import ActTool from './ActTool'
+import LocationTool from './LocationTool'
+import OrgTool from './OrgTool'
+import PersonTool from './PersonTool'
+import EditEntityTool from './EditEntityTool'
+import EntityComponent from './EntityComponent'
+import EntityCommand from './EntityCommand'
+import ActCommand from './ActCommand'
+import LocationCommand from './LocationCommand'
+import OrgCommand from './OrgCommand'
+import PersonCommand from './PersonCommand'
+import FormsPackage from '../forms/package'
 
-var Entity = require('./Entity');
-var ActTool = require('./ActTool');
-var LocationTool = require('./LocationTool');
-var OrgTool = require('./OrgTool');
-var PersonTool = require('./PersonTool');
-var EditEntityTool = require('./EditEntityTool');
-var EntityComponent = require('./EntityComponent');
-var EntityCommand = require('./EntityCommand');
-var ActCommand = require('./ActCommand');
-var LocationCommand = require('./LocationCommand');
-var OrgCommand = require('./OrgCommand');
-var PersonCommand = require('./PersonCommand');
-var FormsPackage = require('../forms/package.js');
-
-module.exports = {
+export default {
   name: 'entity',
   configure: function(config) {
     config.addNode(Entity);
-    config.addComponent(Entity.static.name, EntityComponent);
-    config.addTool(ActTool, {viewer: true});
-    config.addTool(LocationTool, {viewer: true});
-    config.addTool(OrgTool, {viewer: true});
-    config.addTool(PersonTool, {viewer: true});
-    config.addTool(EditEntityTool, {overlay: true});
-    config.addCommand(EntityCommand);
-    config.addCommand(ActCommand);
-    config.addCommand(LocationCommand);
-    config.addCommand(OrgCommand);
-    config.addCommand(PersonCommand);
-    config.addIcon(ActCommand.static.name, { 'fontawesome': 'fa-balance-scale' });
-    config.addIcon(LocationCommand.static.name, { 'fontawesome': 'fa-globe' });
-    config.addIcon(OrgCommand.static.name, { 'fontawesome': 'fa-building' });
-    config.addIcon(PersonCommand.static.name, { 'fontawesome': 'fa-users' });
+    config.addComponent('entity', EntityComponent);
+    config.addTool('norm_act', ActTool, {viewer: true});
+    config.addTool('location', LocationTool, {viewer: true});
+    config.addTool('org', OrgTool, {viewer: true});
+    config.addTool('person', PersonTool, {viewer: true});
+    config.addTool('edit-entity', EditEntityTool, {overlay: true});
+    config.addCommand('norm_act', ActCommand);
+    config.addCommand('entity', EntityCommand);
+    config.addCommand('location', LocationCommand);
+    config.addCommand('org', OrgCommand);
+    config.addCommand('person', PersonCommand);
+    config.addIcon('norm_act', { 'fontawesome': 'fa-balance-scale' });
+    config.addIcon('location', { 'fontawesome': 'fa-globe' });
+    config.addIcon('org', { 'fontawesome': 'fa-building' });
+    config.addIcon('person', { 'fontawesome': 'fa-users' });
     config.addIcon('delete', { 'fontawesome': 'fa-trash' });
-    config.addStyle(__dirname, '_entity');
-    config.addStyle(__dirname, '_entity-finder');
     config.addLabel('entity', {
       en: 'Entity reference',
       ru: 'Упоминание сущности'
@@ -49,6 +45,6 @@ module.exports = {
       ru: 'Удалить упоминание'
     });
 
-    config.import(FormsPackage);
+    config.import(FormsPackage)
   }
-};
+}

@@ -1,13 +1,5 @@
-'use strict';
+import EntityCommand from './EntityCommand'
 
-var EntityCommand = require('./EntityCommand');
+class PersonCommand extends EntityCommand {}
 
-function PersonCommand() {
-  PersonCommand.super.apply(this, arguments);
-}
-
-EntityCommand.extend(PersonCommand);
-
-PersonCommand.static.name = 'person';
-
-module.exports = PersonCommand;
+export default PersonCommand
