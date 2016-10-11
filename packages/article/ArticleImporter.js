@@ -1,73 +1,58 @@
-'use strict';
+import sanitizeHtml from 'sanitize-html'
+import { DefaultDOMElement, HTMLImporter } from 'substance'
+import each from 'lodash/each'
+import find from 'lodash/find'
 
-var sanitizeHtml = require('sanitize-html');
-var HTMLImporter = require('substance/model/HTMLImporter');
-var DefaultDOMElement = require('substance/ui/DefaultDOMElement');
-var each = require('lodash/each');
-var find = require('lodash/find');
+class ArticleImporter extends HTMLImporter {
 
-var converters = [
-  require('substance/packages/paragraph/ParagraphHTMLConverter'),
-  require('substance/packages/blockquote/BlockquoteHTMLConverter'),
-  require('substance/packages/heading/HeadingHTMLConverter'),
-  require('substance/packages/strong/StrongHTMLConverter'),
-  require('substance/packages/emphasis/EmphasisHTMLConverter'),
-  require('substance/packages/link/LinkHTMLConverter')
-];
-
-function ArticleImporter(config) {
-  ArticleImporter.super.call(this, config);
-}
-
-ArticleImporter.Prototype = function() {
-
-  this.importDocument = function(html, source) {
+  importDocument(html, source) {
     // move all trailing spaces after tag closing first
     // e.g. " </strong>" should be turned to "</strong> "
-    html = html.replace(/\s+<\/([a-z]+)>/g,"</$1> ").replace(/<br ?\/?>|<\/p>|<\/div>/g, '\n');
+    html = html.replace(/\s+<\/([a-z]+)>/g,"</$1> ").replace(/<br ?\/?>|<\/p>|<\/div>/g, '\n')
 
-    var clean = sanitizeHtml(html, {
+
+    let clean = sanitizeHtml(html, {
       allowedTags: [ 'b', 'i', 'em', 'strong', 'a'],
       allowedAttributes: {
         'a': [ 'href' ]
       }
-    });
+    })
 
-    clean = clean.split('\n');
+    clean = clean.split('\n')
 
     for (var i = 0; i < clean.length; i++) {
-      clean[i] = clean[i].trim();
+      clean[i] = clean[i].trim()
       if (clean[i] === "") {         
-        clean.splice(i, 1);
-        i--;
+        clean.splice(i, 1)
+        i--
       }
     }
 
-    clean = clean.join('</p><p>');
-    clean = "<p>" + clean + "</p>";
+    clean = clean.join('</p><p>')
+    clean = "<p>" + clean + "</p>"
 
-    this.reset();
-    var parsed = DefaultDOMElement.parseHTML(clean);
-    this.convertDocument(parsed);
-    var doc = this.generateDocument();
+    this.reset()
+    let parsed = DefaultDOMElement.parseHTML(clean)
+    this.convertDocument(parsed)
+    let doc = this.generateDocument()
     // Create document metadata
-    this.convertMeta(doc, source);
+    this.convertMeta(doc, source)
 
-    this.convertEntities(doc, source.markup);
-    return doc;
-  };
+    this.convertEntities(doc, source.markup)
+    return doc
+  }
 
-  this.convertDocument = function(els) {
-    if (!els.length) els = [els];
-    this.convertContainer(els, 'body');
-  };
+  convertDocument(els) {
+    if (!els.length) els = [els]
+    this.convertContainer(els, 'body')
+  }
 
-  this.convertMeta = function(doc, source) {
-    var meta = source.meta;
-    var publisher = meta.publisher;
-    var published = new Date(source.published_date);
+  convertMeta(doc, source) {
+    let meta = source.meta
+    let publisher = meta.publisher
+    let published = new Date(source.published_date)
 
-    var metaNode = doc.get('meta');
+    let metaNode = doc.get('meta')
     if(!metaNode){
       doc.create({
         id: 'meta',
@@ -80,30 +65,30 @@ ArticleImporter.Prototype = function() {
         abstract: meta.abstract,
         cover: '',
         publisher: publisher.name
-      });
+      })
     }
-  };
+  }
 
-  this.convertEntities = function(doc, markup) {
-    var nodeList = doc.get(['body', 'nodes']);
-    var nodes = [];
+  convertEntities(doc, markup) {
+    let nodeList = doc.get(['body', 'nodes'])
+    let nodes = []
 
-    var pos = 0;
+    let pos = 0
 
     each(nodeList, function(nodeId) {
-      var node = doc.get(nodeId);
-      var length = node.content.length;
-      node.startPos = pos;
-      node.endPos = pos + length;
-      nodes.push(node);
-      pos += length; 
-    });
+      let node = doc.get(nodeId)
+      let length = node.content.length
+      node.startPos = pos
+      node.endPos = pos + length
+      nodes.push(node)
+      pos += length
+    })
 
     each(markup, function(ref, id) {
-      var node = find(nodes, function(n) { return n.startPos <= ref.start_offset && n.endPos >= ref.start_offset; });
+      let node = find(nodes, function(n) { return n.startPos <= ref.start_offset && n.endPos >= ref.start_offset; })
       if(node) {
-        var startOffset = ref.start_offset - node.startPos;
-        var endOffset = startOffset + ref.end_offset - ref.start_offset;
+        let startOffset = ref.start_offset - node.startPos
+        let endOffset = startOffset + ref.end_offset - ref.start_offset
         doc.create({
           id: 'entity-' + id,
           type: 'entity',
@@ -112,14 +97,10 @@ ArticleImporter.Prototype = function() {
           entityClass: ref.class,
           startOffset: startOffset,
           endOffset: endOffset
-        });
+        })
       }
-    });
-  };
-};
+    })
+  }
+}
 
-// Expose converters so we can reuse them in ArticleHtmlExporter
-ArticleImporter.converters = converters;
-
-HTMLImporter.extend(ArticleImporter);
-module.exports = ArticleImporter;
+export default ArticleImporter

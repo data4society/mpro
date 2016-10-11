@@ -1,22 +1,16 @@
-'use strict';
+import FeedItem from '../feed/FeedItem'
+import moment from 'moment'
 
-var FeedItem = require('../feed/FeedItem');
-var moment = require('moment');
+class ArticleFeedItem extends FeedItem {
 
-function ArticleFeedItem() {
-  FeedItem.apply(this, arguments);
-}
-
-ArticleFeedItem.Prototype = function() {
-
-  this.renderSourceInfo = function($$) {
-    var document = this.props.document;
-    var meta = document.meta;
-    var published = this.props.document.published;
-    var publisher = meta.publisher;
-    var source_name = meta.source.split('/')[2];
+  renderSourceInfo($$) {
+    let document = this.props.document
+    let meta = document.meta
+    let published = this.props.document.published
+    let publisher = meta.publisher
+    let source_name = meta.source.split('/')[2]
     
-    var el = $$('div').addClass('se-source-info');
+    let el = $$('div').addClass('se-source-info')
 
     el.append(
       $$('div').addClass('se-source-name').append(
@@ -28,12 +22,10 @@ ArticleFeedItem.Prototype = function() {
       $$('div').addClass('se-source-date').html(
         moment(published).format('DD.MM.YYYY HH:mm')
       )
-    );
+    )
 
-    return el;
-  };
-};
+    return el
+  }
+}
 
-FeedItem.extend(ArticleFeedItem);
-
-module.exports = ArticleFeedItem;
+export default ArticleFeedItem
