@@ -1,28 +1,23 @@
-'use strict';
-
-var oo = require('substance/util/oo');
-
 /*
   HTTP client for talking with DocumentServer
 */
-function FileClient(config) {
-  this.config = config;
-}
-
-FileClient.Prototype = function() {
+class FileClient {
+  constructor(config) {
+    this.config = config
+  }
 
   /*
     Upload file to the server
   */
-  this.uploadFile = function(file, cb) {
+  uploadFile(file, cb) {
 
     function transferComplete(e) {
       if(e.currentTarget.status === 200) {
-        var data = JSON.parse(e.currentTarget.response);
-        var path = '/media/' + data.name;
-        cb(null, path);
+        let data = JSON.parse(e.currentTarget.response)
+        let path = '/media/' + data.name
+        cb(null, path)
       } else {
-        cb(new Error(e.currentTarget.response));
+        cb(new Error(e.currentTarget.response))
       }
     }
 
@@ -33,17 +28,15 @@ FileClient.Prototype = function() {
       }
     }
 
-    var formData = new window.FormData();
-    formData.append("files", file);
-    var xhr = new window.XMLHttpRequest();
-    xhr.addEventListener("load", transferComplete);
-    xhr.upload.addEventListener("progress", updateProgress);
-    xhr.open('post', this.config.httpUrl, true);
-    xhr.send(formData);
-  };
+    let formData = new window.FormData()
+    formData.append("files", file)
+    let xhr = new window.XMLHttpRequest()
+    xhr.addEventListener("load", transferComplete)
+    xhr.upload.addEventListener("progress", updateProgress)
+    xhr.open('post', this.config.httpUrl, true)
+    xhr.send(formData)
+  }
 
-};
+}
 
-oo.initClass(FileClient);
-
-module.exports = FileClient;
+export default FileClient
