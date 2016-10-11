@@ -20,7 +20,7 @@ ArticleMeta.type = 'meta'
     - publisher Name of publisher
 */
 
-ArticleMeta.static.defineSchema({
+ArticleMeta.define({
   title: { type: 'string', default: 'Untitled article'},
   rubrics: { type: ['id'], default: [] },
   entities: { type: ['id'], default: [] },
