@@ -1,6 +1,4 @@
-'use strict';
-
-var Component = require('substance/ui/Component');
+import { Component } from 'substance'
 
 /**
   A split view layout component. Takes properties for configuration and 3 children via append.
@@ -23,63 +21,56 @@ var Component = require('substance/ui/Component');
   ```
 */
 
-function DoubleSplitPane() {
-  Component.apply(this, arguments);
-}
+class DoubleSplitPane extends Component {
 
-DoubleSplitPane.Prototype = function() {
-
-  this.render = function($$) {
+  render($$) {
     if (this.props.children.length !== 3) {
-      throw new Error('DoubleSplitPane only works with exactly three child elements');
+      throw new Error('DoubleSplitPane only works with exactly three child elements')
     }
 
-    var el = $$('div').addClass('sc-split-pane');
+    let el = $$('div').addClass('sc-split-pane')
     if (this.props.splitType === 'horizontal') {
-      el.addClass('sm-horizontal');
+      el.addClass('sm-horizontal')
     } else {
-      el.addClass('sm-vertical');
+      el.addClass('sm-vertical')
     }
 
-    var paneA = this.props.children[0];
-    var paneB = this.props.children[1];
-    var paneC = this.props.children[2];
+    let paneA = this.props.children[0]
+    let paneB = this.props.children[1]
+    let paneC = this.props.children[2]
 
     // Apply configured size to two of third panes.
     if (this.props.sizeA && this.props.sizeB) {
-      paneA.addClass('se-pane sm-sized');
-      paneA.css(this.getSizedStyle(this.props.sizeA));
-      paneB.addClass('se-pane sm-sized');
-      paneB.css(this.getSizedStyle(this.props.sizeB));
-      paneC.addClass('se-pane sm-auto-fill');
+      paneA.addClass('se-pane sm-sized')
+      paneA.css(this.getSizedStyle(this.props.sizeA))
+      paneB.addClass('se-pane sm-sized')
+      paneB.css(this.getSizedStyle(this.props.sizeB))
+      paneC.addClass('se-pane sm-auto-fill')
     } else {
-      paneA.addClass('se-pane sm-auto-fill');
-      paneB.addClass('se-pane sm-sized');
-      paneB.css(this.getSizedStyle(this.props.sizeB));
-      paneC.addClass('se-pane sm-sized');
-      paneC.css(this.getSizedStyle(this.props.sizeC));
+      paneA.addClass('se-pane sm-auto-fill')
+      paneB.addClass('se-pane sm-sized')
+      paneB.css(this.getSizedStyle(this.props.sizeB))
+      paneC.addClass('se-pane sm-sized')
+      paneC.css(this.getSizedStyle(this.props.sizeC))
     }
 
     el.append(
       paneA,
       paneB,
       paneC
-    );
-    return el;
-  };
+    )
+    return el
+  }
 
   // Accepts % and px units for size property
-  this.getSizedStyle = function(size) {
-    if (!size || size === 'inherit') return {};
+  getSizedStyle(size) {
+    if (!size || size === 'inherit') return {}
     if (this.props.splitType === 'horizontal') {
-      return {'height': size};
+      return {'height': size}
     } else {
-      return {'width': size};
+      return {'width': size}
     }
-  };
+  }
+}
 
-};
-
-Component.extend(DoubleSplitPane);
-
-module.exports = DoubleSplitPane;
+export default DoubleSplitPane

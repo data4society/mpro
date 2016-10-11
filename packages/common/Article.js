@@ -1,28 +1,22 @@
-'use strict';
-
-var Document = require('substance/model/Document');
+import { Document } from 'substance'
 
 /*
   Basic Article model.
 */
 
-function Article(schema) {
-  Document.call(this, schema);
-  this._initialize();
-}
+class Article extends Document {
+  constructor(...args) {
+    super(...args)
+    this._initialize()
+  }
 
-Article.Prototype = function() {
-
-  this._initialize = function() {
+  _initialize() {
     this.create({
       type: 'container',
       id: 'body',
       nodes: []
-    });
-  };
+    })
+  }
+}
 
-};
-
-Document.extend(Article);
-
-module.exports = Article;
+export default Article

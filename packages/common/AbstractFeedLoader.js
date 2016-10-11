@@ -1,10 +1,8 @@
-'use strict';
-
-var Component = require('substance/ui/Component');
-var isEqual = require('lodash/isEqual');
-var extend = require('lodash/extend');
-var concat = require('lodash/concat');
-var each = require('lodash/each');
+import { Component } from 'substance'
+import isEqual from 'lodash/isEqual'
+import extend from 'lodash/extend'
+import concat from 'lodash/concat'
+import each from 'lodash/each'
 
 /*
   Abstract Feed Loader class.
@@ -12,34 +10,32 @@ var each = require('lodash/each');
   Loads documents and rubrics.
 */
 
-function AbstractFeedLoader() {
-  Component.apply(this, arguments);
+class AbstractFeedLoader extends Component {
+  constructor(...args) {
+    super(...args)
+    this.handleActions({
+      'updateFeedItem': this._updateFeedItem
+    })
+  }
 
-  this.handleActions({
-    'updateFeedItem': this._updateFeedItem
-  });
-}
-
-AbstractFeedLoader.Prototype = function() {
-
-  this.didMount = function() {
-    this._loadRubrics();
-    this._loadDocuments();
+  didMount() {
+    this._loadRubrics()
+    this._loadDocuments()
     //this.pollTimer = setInterval(this._pollDocuments.bind(this), 60000);
-  };
+  }
 
-  this.dispose = function() {
-    clearInterval(this.pollTimer);
-  };
+  dispose() {
+    clearInterval(this.pollTimer)
+  }
 
-  this.willUpdateState = function(state) {
-    var oldFilters = this.state.filters;
-    var newFilters = state.filters;
+  willUpdateState(state) {
+    let oldFilters = this.state.filters
+    let newFilters = state.filters
     if(!isEqual(oldFilters, newFilters)) {
-      this._loadRubrics(state);
-      this._loadDocuments(state);
+      this._loadRubrics(state)
+      this._loadDocuments(state)
     }
-  };
+  }
 
   /*
     Initial state of component, contains:
@@ -53,7 +49,7 @@ AbstractFeedLoader.Prototype = function() {
     - rubrics: document with all rubrics (used internaly)
     - addNew: show button for adding a new document
   */
-  this.getInitialState = function() {
+  getInitialState() {
     return {
       filters: {'training': false, 'rubrics @>': []},
       perPage: 10,
@@ -65,53 +61,53 @@ AbstractFeedLoader.Prototype = function() {
       totalItems: 0,
       rubrics: {},
       addNew: false
-    };
-  };
+    }
+  }
 
   /*
     Rubrics loader.
 
     Loads rubrics and creates document with all rubrics.
   */
-  this._loadRubrics = function(newState) {
-    var state = newState || this.state;
-    var documentClient = this.context.documentClient;
-    var filters = state.filters;
+  _loadRubrics(newState) {
+    let state = newState || this.state
+    let documentClient = this.context.documentClient
+    let filters = state.filters
 
     documentClient.listRubrics(filters, {limit: 300}, function(err, result) {
       if (err) {
-        console.error(err);
+        console.error(err)
         this.setState({
           error: new Error('Rubrics loading failed')
-        });
-        return;
+        })
+        return
       }
       
-      var configurator = this.context.configurator;
-      var importer = configurator.createImporter('rubrics');
-      var facets = state.filters['rubrics @>'];
-      var rubrics = importer.importDocument(result, facets);
-      rubrics.on('document:changed', this._onRubricsChanged, this);
+      let configurator = this.context.configurator
+      let importer = configurator.createImporter('rubrics')
+      let facets = state.filters['rubrics @>']
+      let rubrics = importer.importDocument(result, facets)
+      rubrics.on('document:changed', this._onRubricsChanged, this)
 
       this.extendState({
         rubrics: rubrics
-      });
-    }.bind(this));
-  };
+      })
+    }.bind(this))
+  }
 
   /*
     Loads documents
   */
-  this._loadDocuments = function(newState) {
-    var state = newState || this.state;
-    var documentClient = this.context.documentClient;
-    var perPage = state.perPage;
-    var order = state.order;
-    var direction = state.direction;
-    var pagination = state.pagination;
-    var items = [];
+  _loadDocuments(newState) {
+    let state = newState || this.state
+    let documentClient = this.context.documentClient
+    let perPage = state.perPage
+    let order = state.order
+    let direction = state.direction
+    let pagination = state.pagination
+    let items = []
 
-    var filters = state.filters;
+    let filters = state.filters
 
     documentClient.listDocuments(
       filters,
@@ -122,39 +118,39 @@ AbstractFeedLoader.Prototype = function() {
       }, 
       function(err, documents) {
         if (err) {
-          console.error(err);
+          console.error(err)
           this.setState({
             error: new Error('Documents loading failed')
-          });
-          return;
+          })
+          return
         }
 
         if(pagination) {
-          items = concat(state.documentItems, documents.records);
+          items = concat(state.documentItems, documents.records)
         } else {
-          items = documents.records;
+          items = documents.records
         }
 
         this.extendState({
           documentItems: items,
           totalItems: documents.total,
           lastQueryTime: new Date()
-        });
+        })
       }.bind(this)
-    );
-  };
+    )
+  }
 
   /*
     Documents long polling.
     Will query for a new documents with setted up filters
     since last query time.
   */
-  this._pollDocuments = function() {
-    var documentClient = this.context.documentClient;
-    var filters = extend({}, this.state.filters, {"created >": this.state.lastQueryTime});
-    var order = this.state.order;
-    var direction = this.state.direction;
-    var items = [];
+  _pollDocuments() {
+    let documentClient = this.context.documentClient
+    let filters = extend({}, this.state.filters, {"created >": this.state.lastQueryTime})
+    let order = this.state.order
+    let direction = this.state.direction
+    let items = []
     documentClient.listDocuments(
       filters,
       {
@@ -162,73 +158,70 @@ AbstractFeedLoader.Prototype = function() {
       }, 
       function(err, documents) {
         if (err) {
-          console.error(err);
+          console.error(err)
           this.setState({
             error: new Error('Documents polling failed')
-          });
-          return;
+          })
+          return
         }
 
         if(documents.total > 0) {
-          items = concat(documents.records, this.state.documentItems);
+          items = concat(documents.records, this.state.documentItems)
           this.extendState({
             documentItems: items,
             totalItems: parseInt(documents.total, 10) + parseInt(this.state.totalItems, 10),
             lastQueryTime: new Date()
-          });
+          })
         }
       }.bind(this)
-    );
-  };
+    )
+  }
 
-
-  this._updateFeedItem = function(documentId, meta) {
-    var feed = this.refs.feed;
-    var feedItem = feed.refs[documentId];
+  _updateFeedItem(documentId, meta) {
+    let feed = this.refs.feed
+    let feedItem = feed.refs[documentId]
     if(feedItem) {
-      var document = extend({}, feedItem.props.document, {meta: meta});
-      feedItem.extendProps({document: document, update: true});
+      let document = extend({}, feedItem.props.document, {meta: meta})
+      feedItem.extendProps({document: document, update: true})
     }
-  };
+  }
 
   /*
     Called when something is changed on rubric model.
     If some of rubrics got active, then we will load
     rubrics again with new filters.
   */
-  this._onRubricsChanged = function(change) {
-    var facetChange = false;
+  _onRubricsChanged(change) {
+    let facetChange = false
     each(change.updated, function(val, key){
       if(key.indexOf('active') > -1) {
-        facetChange = true;
+        facetChange = true
       }
-    });
+    })
 
-    if(facetChange) this._applyFacets();
-  };
+    if(facetChange) this._applyFacets()
+  }
 
   /*
     Called when facets changed.
     Will change filters and load rubrics again.
   */
-  this._applyFacets = function() {
-    var defaultState = this.getInitialState();
-    var rubrics = this.state.rubrics;
-    var filters = this.state.filters;
-    var facets = rubrics.getActive();
-    var newFilters = {};
-    rubrics.off(this);
+  _applyFacets() {
+    let defaultState = this.getInitialState()
+    let rubrics = this.state.rubrics
+    let filters = this.state.filters
+    let facets = rubrics.getActive()
+    let newFilters = {}
+    rubrics.off(this)
 
-    newFilters['rubrics @>'] = facets;
+    newFilters['rubrics @>'] = facets
     this.extendState({
       filters: extend({}, filters, newFilters),
       pagination: defaultState.pagination,
       perPage: defaultState.perPage,
       documentItems: []
-    });
-  };
-};
+    })
+  }
+}
 
-Component.extend(AbstractFeedLoader);
-
-module.exports = AbstractFeedLoader;
+export default AbstractFeedLoader

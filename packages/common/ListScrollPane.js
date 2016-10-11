@@ -1,15 +1,10 @@
-'use strict';
+import ScrollPane from 'substance'
 
-var ScrollPane = require('substance/ui/ScrollPane');
+class ListScrollPane extends ScrollPane {
 
-function ListScrollPane() {
-  ScrollPane.apply(this, arguments);
-}
-
-ListScrollPane.Prototype = function() {
-  this.didMount = function() {
+  didMount() {
     if (this.props.highlights) {
-      this.props.highlights.on('highlights:updated', this.onHighlightsUpdated, this);
+      this.props.highlights.on('highlights:updated', this.onHighlightsUpdated, this)
     }
     // HACK: Scrollbar should use DOMMutationObserver instead
     if (this.refs.scrollbar) {
@@ -18,21 +13,19 @@ ListScrollPane.Prototype = function() {
 
     this.handleActions({
       'updateOverlayHints': this._updateOverlayHints
-    });
-  };
+    })
+  }
 
-  this.dispose = function() {
+  dispose() {
     if (this.props.highlights) {
-      this.props.highlights.off(this);
+      this.props.highlights.off(this)
     }
-  };
+  }
 
   // HACK: Scrollbar should use DOMMutationObserver instead
-  this.onListChange = function() {
-    this.refs.scrollbar.updatePositions();
-  };
-};
+  onListChange() {
+    this.refs.scrollbar.updatePositions()
+  }
+}
 
-ScrollPane.extend(ListScrollPane);
-
-module.exports = ListScrollPane;
+export default ListScrollPane

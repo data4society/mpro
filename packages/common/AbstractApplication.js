@@ -1,42 +1,39 @@
-'use strict';
-
-var ResponsiveApplication = require('substance/ui/ResponsiveApplication');
+import ResponsiveApplication from 'substance'
 
 /*
   Abstract Application class.
 */
 
-function AbstractApplication() {
-  AbstractApplication.super.apply(this, arguments);
-
-  this.handleActions({
-    'logout': this._logout,
-    'userSessionUpdated': this._updateUserSession
-  });
-}
-
-AbstractApplication.Prototype = function() {
+class AbstractApplication extends ResponsiveApplication {
+  constructor(...args) {
+    super(...args)
+    
+    this.handleActions({
+      'logout': this._logout,
+      'userSessionUpdated': this._updateUserSession
+    })
+  }
 
   /*
     Gets default app route.
   */
-  this.getDefaultPage = function() {
-    throw new Error("This method is abstract.");
-  };
+  getDefaultPage() {
+    throw new Error("This method is abstract.")
+  }
 
   /*
     Gets login route.
   */
-  this.getLoginPage = function() {
-    throw new Error("This method is abstract.");
-  };
+  getLoginPage() {
+    throw new Error("This method is abstract.")
+  }
 
   /*
     Gets application router.
   */
-  this.getRouter = function() {
-    throw new Error("This method is abstract.");
-  };
+  getRouter() {
+    throw new Error("This method is abstract.")
+  }
 
   /*
     Used to navigate the app based on given route.
@@ -44,116 +41,113 @@ AbstractApplication.Prototype = function() {
 
     Performs authentication before routing.
   */
-  this.navigate = function(route, opts) {
-    var loginData = this._getLoginData(route);
+  navigate(route, opts) {
+    let loginData = this._getLoginData(route)
 
     this._authenticate(loginData, function(err, userSession) {
       if (err) {
-        console.error(err);
-        route = {page: this.getLoginPage()};
+        console.error(err)
+        route = {page: this.getLoginPage()}
       }
 
       // Patch route not to include loginKey for security reasons
-      delete route.loginKey;
+      delete route.loginKey
 
       // Call hook to change route depends on userSession properties
-      route = this._onAuthentication(route, userSession);
+      route = this._onAuthentication(route, userSession)
 
       this.extendState({
         route: route,
         userSession: userSession
-      });
+      })
 
       this.router.writeRoute(route, opts);
-    }.bind(this));
-  };
+    }.bind(this))
+  }
 
   /*  
     Authenticate based on loginData object
 
     Returns current userSession if no loginData is given.
   */
-  this._authenticate = function(loginData, cb) {
-    if (!loginData) return cb(null, this.state.userSession);
+  _authenticate(loginData, cb) {
+    if (!loginData) return cb(null, this.state.userSession)
     this.authenticationClient.authenticate(loginData, function(err, userSession) {
       if (err) {
-        window.localStorage.removeItem('sessionToken');
-        return cb(err);
+        window.localStorage.removeItem('sessionToken')
+        return cb(err)
       }
-      this._setSessionToken(userSession.sessionToken);
-      cb(null, userSession);
-    }.bind(this));
-  };
+      this._setSessionToken(userSession.sessionToken)
+      cb(null, userSession)
+    }.bind(this))
+  }
 
   /*
     Used for session inspection and returning changed route.
   */
   // eslint-disable-next-line
-  this._onAuthentication = function(route, session) {
+  _onAuthentication(route, session) {
     // Inspect session here
-    return route;
-  };
+    return route
+  }
 
   /*
     Retrieves login data
 
     Returns login key either session token of logged in user.
   */
-  this._getLoginData = function(route) {
-    var loginKey = route.loginKey;
-    var storedToken = this._getSessionToken();
-    var loginData;
+  _getLoginData(route) {
+    let loginKey = route.loginKey
+    let storedToken = this._getSessionToken()
+    let loginData
 
     if (loginKey) {
-      loginData = {loginKey: loginKey};
+      loginData = {loginKey: loginKey}
     } else if (storedToken && !this.state.userSession) {
-      loginData = {sessionToken: storedToken};
+      loginData = {sessionToken: storedToken}
     }
-    return loginData;
-  };
+    return loginData
+  }
 
   /*
     Store session token in localStorage.
   */
-  this._setSessionToken = function(sessionToken) {
-    window.localStorage.setItem('sessionToken', sessionToken);
-  };
+  _setSessionToken(sessionToken) {
+    window.localStorage.setItem('sessionToken', sessionToken)
+  }
 
   /*
     Retrieve last session token from localStorage.
   */
-  this._getSessionToken = function() {
-    return window.localStorage.getItem('sessionToken');
-  };
+  _getSessionToken() {
+    return window.localStorage.getItem('sessionToken')
+  }
 
   /*
     Update user session with new data, for example new user name.
   */
-  this._updateUserSession = function(userSession) {
+  _updateUserSession(userSession) {
     this.extendState({
       userSession: userSession
-    });
+    })
 
-    this.navigate({page: this.getDefaultPage()});
-  };
+    this.navigate({page: this.getDefaultPage()})
+  }
 
   /*
     Logout, e.g. forget current user session.
   */
-  this._logout = function() {
+  _logout() {
     this.authenticationClient.logout(function(err) {
-      if (err) throw err;
+      if (err) throw err
 
-      window.localStorage.removeItem('sessionToken');
+      window.localStorage.removeItem('sessionToken')
       this.extendState({
         userSession: null
-      });
-      this.navigate({page: this.getLoginPage()});
-    }.bind(this));
-  };
+      })
+      this.navigate({page: this.getLoginPage()})
+    }.bind(this))
+  }
+}
 
-};
-
-ResponsiveApplication.extend(AbstractApplication);
-
-module.exports = AbstractApplication;
+export default AbstractApplication
