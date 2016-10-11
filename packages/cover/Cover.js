@@ -1,31 +1,24 @@
-'use strict';
+import { Component, TextPropertyEditor } from 'substance'
+import DocumentSummary from './Summary'
 
-var Component = require('substance/ui/Component');
-var TextPropertyEditor = require('substance/ui/TextPropertyEditor');
-var DocumentSummary = require('./Summary');
+class Cover extends Component {
 
-function Cover() {
-  Cover.super.apply(this, arguments);
-}
+  didMount() {
+    let doc = this.getDocument()
+    doc.on('document:changed', this._onDocumentChanged, this)
+  }
 
-Cover.Prototype = function() {
+  dispose() {
+    let doc = this.getDocument()
+    doc.off(this)
+  }
 
-  this.didMount = function() {
-    var doc = this.getDocument();
-    doc.on('document:changed', this._onDocumentChanged, this);
-  };
-
-  this.dispose = function() {
-    var doc = this.getDocument();
-    doc.off(this);
-  };
-
-  this.render = function($$) {
+  render($$) {
     // var documentInfo = this.props.documentInfo.props;
     // var authors = [documentInfo.author || documentInfo.userId];
     // authors = authors.concat(documentInfo.collaborators);
    
-    var el = $$("div").addClass("sc-cover");
+    let el = $$("div").addClass("sc-cover")
 
     el.append(
       // Editable title
@@ -41,38 +34,36 @@ Cover.Prototype = function() {
         rubrics: this.props.rubrics,
         editing: this.props.editing || 'full'
       })
-    );
+    )
 
-    return el;
-  };
+    return el
+  }
 
-  this._onDocumentChanged = function(change) {
-    var doc = this.props.doc;
-    var meta = doc.get('meta');
-    var documentInfo = this.props.documentInfo;
-    var documentId = documentInfo.props.documentId;
+  _onDocumentChanged(change) {
+    let doc = this.props.doc
+    let meta = doc.get('meta')
+    let documentInfo = this.props.documentInfo
+    let documentId = documentInfo.props.documentId
     
     // HACK: update the updatedAt property
-    documentInfo.props.updatedAt = new Date();
-    documentInfo.props.meta = {title: meta.title, rubrics: meta.rubrics};
+    documentInfo.props.updatedAt = new Date()
+    documentInfo.props.meta = {title: meta.title, rubrics: meta.rubrics}
 
     if (change.updated['meta,rubrics']) {
-      this.rerender();
+      this.rerender()
     }
 
-    var changed = Object.keys(change.updated)[0];
-    var metaChanged = changed.indexOf('meta') > -1;
+    let changed = Object.keys(change.updated)[0]
+    let metaChanged = changed.indexOf('meta') > -1
 
     if(metaChanged) {
-      this.send('updateFeedItem', documentId, meta.toJSON());
+      this.send('updateFeedItem', documentId, meta.toJSON())
     }
-  };
+  }
 
-  this.getDocument = function() {
-    return this.props.doc;
-  };
-};
+  getDocument() {
+    return this.props.doc
+  }
+}
 
-Component.extend(Cover);
-
-module.exports = Cover;
+export default Cover

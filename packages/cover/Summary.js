@@ -1,79 +1,69 @@
-'use strict';
+import { Component } from 'substance'
+import isEmpty from 'lodash/isEmpty'
+import groupBy from 'lodash/groupBy'
+import each from 'lodash/each'
+import map from 'lodash/map'
 
-var Component = require('substance/ui/Component');
-var isEmpty = require('lodash/isEmpty');
-var groupBy = require('lodash/groupBy');
-var each = require('lodash/each');
-var map = require('lodash/map');
+class Summary extends Component {
 
-function Summary() {
-  Summary.super.apply(this, arguments);
-}
+  render($$) {
+    let MetaSummary = this.getComponent('meta-summary')
 
-Summary.Prototype = function() {
-
-  this.render = function($$) {
-    var componentRegistry = this.context.componentRegistry;
-    var MetaSummary = componentRegistry.get('meta-summary');
-
-    var el = $$('div').addClass('sc-document-summary');
+    let el = $$('div').addClass('sc-document-summary')
     if (this.props.mobile) {
-      el.addClass('sm-mobile');
+      el.addClass('sm-mobile')
     }
     
-    var rubricsList = this.renderRubricsList($$);
+    let rubricsList = this.renderRubricsList($$)
 
     el.append(
       $$(MetaSummary),
       rubricsList,
       $$('div').addClass('se-separator')
-    );
+    )
 
-    return el;
-  };
+    return el
+  }
 
-  this.renderRubricsList = function($$) {
-    var document = this.context.doc;
-    var rubrics = this.props.rubrics;
-    var selectedRubrics = document.get(['meta', 'rubrics']);
-    var rubricsList = [];
+  renderRubricsList($$) {
+    let document = this.context.doc
+    let rubrics = this.props.rubrics
+    let selectedRubrics = document.get(['meta', 'rubrics'])
+    let rubricsList = []
 
-    var el = $$('div').addClass('se-rubrics');
-    if(isEmpty(rubrics)) return el;
+    let el = $$('div').addClass('se-rubrics')
+    if(isEmpty(rubrics)) return el
 
     each(selectedRubrics, function(id) {
-      var item = {
+      let item = {
         name: rubrics.get([id, 'name']),
         root: rubrics.getRootParent(id).name
-      };
-      rubricsList.push(item);
-    });
+      }
+      rubricsList.push(item)
+    })
 
-    el.append(this.context.iconProvider.renderIcon($$, 'rubrics'));
+    el.append(this.context.iconProvider.renderIcon($$, 'rubrics'))
 
-    var listEl = $$('div').addClass('sm-item');
+    let listEl = $$('div').addClass('sm-item')
 
     if(rubricsList.length > 0) {
-      var groupedList = groupBy(rubricsList, 'root');
+      let groupedList = groupBy(rubricsList, 'root')
 
       each(groupedList, function(list, key) {
-        var leaf = key.charAt(0).toUpperCase() + key.slice(1);
+        let leaf = key.charAt(0).toUpperCase() + key.slice(1)
         listEl.append(
           $$('div').addClass('sm-leaf-item').append(
             leaf + ': ' + map(list, 'name').join(', ')
           )
-        );
-      });
+        )
+      })
     } else {
-      listEl.append(this.getLabel('no-rubrics'));
+      listEl.append(this.getLabel('no-rubrics'))
     }
 
-    el.append(listEl);
-    return el;
-  };
+    el.append(listEl)
+    return el
+  }
+}
 
-};
-
-Component.extend(Summary);
-
-module.exports = Summary;
+export default Summary
