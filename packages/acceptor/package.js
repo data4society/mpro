@@ -1,15 +1,11 @@
-'use strict';
+import AcceptorTool from './AcceptorTool'
+import AcceptorCommand from './AcceptorCommand'
 
-var AcceptorTool = require('./AcceptorTool');
-var AcceptorCommand = require('./AcceptorCommand');
-
-
-module.exports = {
+export default {
   name: 'acceptor',
   configure: function(config) {
-    config.addTool(AcceptorTool, {editor: true});
-    config.addCommand(AcceptorCommand);
-    config.addIcon(AcceptorCommand.static.name, { 'fontawesome': 'fa-check' });
-    config.addStyle(__dirname, '_acceptor');
+    config.addTool('acceptor', AcceptorTool, {editor: true})
+    config.addCommand('acceptor', AcceptorCommand)
+    config.addIcon('acceptor', { 'fontawesome': 'fa-check' })
   }
-};
+}
