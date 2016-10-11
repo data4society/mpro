@@ -1,39 +1,34 @@
-.sc-document-editor {
+.sc-document-editor > .sc-split-pane {
+  width: 100%;
+}
 
-  > .sc-split-pane {
-    width: 100%;
-  }
+.sc-document-editor .sc-layout {
+  padding-top: 20px;
+}
 
-  .sc-layout {
-    padding-top: 20px;
-  }
+.sc-document-editor .sc-editor-toolbar {
+  position: absolute;
+  bottom: 10px;
+  right: 50px;
+  z-index: 99;
+}
 
-  .sc-editor-toolbar {
-    position: absolute;
-    bottom: 10px;
-    right: 50px;
-    z-index: 99;
+.sc-document-editor .se-tool button {
+  padding: 20px;
+  font-size: 18px;
+  border-radius: 50%;
+  border: 1px solid #ccc;
+  min-height: inherit;
+  height: inherit;
+  background: rgb(130, 148, 204);
+  color: #fff;
+  opacity: 0.9;
+}
 
-    .se-tool {
-      button {
-        padding: 20px;
-        font-size: 18px;
-        border-radius: 50%;
-        border: 1px solid #ccc;
-        min-height: inherit;
-        height: inherit;
-        background: rgb(130, 148, 204);
-        color: #fff;
-        opacity: 0.9;
-      }
-    }
-  }
+.sc-document-editor  .se-scrollable {
+  padding-right: 20px;
+}
 
-  .se-scrollable {
-    padding-right: 20px;
-  }
-
-  .sc-paragraph {
-    padding-bottom: 10px;
-  }
+.sc-document-editor  .sc-paragraph {
+  padding-bottom: 10px;
 }

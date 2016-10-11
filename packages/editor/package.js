@@ -1,18 +1,14 @@
-'use strict';
+import { Overlay } from 'substance'
+import CoverPackage from '../cover/package'
+import Editor from './Editor'
+import EditorToolbar from './EditorToolbar'
 
-var CoverPackage = require('../cover/package');
-var Editor = require('./Editor');
-var EditorToolbar = require('./EditorToolbar');
-var Overlay = require('substance/ui/Overlay');
-
-module.exports = {
+export default {
   name: 'editor',
   configure: function(config) {
-    config.import(CoverPackage);
-    config.addComponent('editor', Editor);
-    config.setToolbarClass(EditorToolbar);
-    config.addComponent('overlay', Overlay);
-    
-    config.addStyle(__dirname, '_editor');
+    config.import(CoverPackage)
+    config.addComponent('editor', Editor)
+    config.setToolbarClass(EditorToolbar)
+    config.addComponent('overlay', Overlay)
   }
-};
+}
