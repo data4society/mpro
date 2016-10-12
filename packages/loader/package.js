@@ -1,15 +1,12 @@
-'use strict';
+import Loader from './Loader'
 
-var Loader = require('./Loader');
-
-module.exports = {
+export default {
   name: 'loader',
   configure: function(config) {
-    config.addComponent('loader', Loader);
-    config.addStyle(__dirname, '_loader');
+    config.addComponent('loader', Loader)
     config.addLabel('no-document', {
       en: 'Click on document to open',
       ru: 'Нажмите на документ для открытия'
-    });
+    })
   }
-};
+}
