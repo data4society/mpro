@@ -1,38 +1,35 @@
-'use strict';
-
-var AbstractApplication = require('../common/AbstractApplication');
-var MproRouter = require('./MproRouter');
+import AbstractApplication from '../common/AbstractApplication'
+import MproRouter from './MproRouter'
 
 /*
   Mpro Application component.
 */
-function Mpro() {
-  Mpro.super.apply(this, arguments);
+class Mpro extends AbstractApplication {
+  constructor(...args) {
+    super(...args)
+  
+    let configurator = this.props.configurator
 
-  var configurator = this.props.configurator;
+    this.config = configurator.getAppConfig()
+    this.configurator = configurator
+    this.authenticationClient = configurator.getAuthenticationClient()
+    this.documentClient = configurator.getDocumentClient()
+    this.fileClient = configurator.getFileClient()
+    this.componentRegistry = configurator.getComponentRegistry()
+    this.iconProvider = configurator.getIconProvider()
+    this.labelProvider = configurator.getLabelProvider()
 
-  this.config = configurator.getAppConfig();
-  this.configurator = configurator;
-  this.authenticationClient = configurator.getAuthenticationClient();
-  this.documentClient = configurator.getDocumentClient();
-  this.fileClient = configurator.getFileClient();
-  this.componentRegistry = configurator.getComponentRegistry();
-  this.iconProvider = configurator.getIconProvider();
-  this.labelProvider = configurator.getLabelProvider();
+    this.addPage('welcome', this.componentRegistry.get('welcome'))
+    this.addPage('inbox', this.componentRegistry.get('inbox'))
+    this.addPage('configurator', this.componentRegistry.get('configurator'))
 
-  this.addPage('welcome', this.componentRegistry.get('welcome'));
-  this.addPage('inbox', this.componentRegistry.get('inbox'));
-  this.addPage('configurator', this.componentRegistry.get('configurator'));
+    this.handleActions({
+      'configurator': this._configurator,
+      'inbox': this._inbox
+    })
+  }
 
-  this.handleActions({
-    'configurator': this._configurator,
-    'inbox': this._inbox
-  });
-}
-
-Mpro.Prototype = function() {
-
-  this.getChildContext = function() {
+  getChildContext() {
     return {
       config: this.config,
       configurator: this.configurator,
@@ -43,45 +40,43 @@ Mpro.Prototype = function() {
       componentRegistry: this.componentRegistry,
       iconProvider: this.iconProvider,
       labelProvider: this.labelProvider
-    };
-  };
+    }
+  }
 
-  this.getDefaultPage = function() {
-    return 'inbox';
-  };
+  getDefaultPage() {
+    return 'inbox'
+  }
 
-  this.getLoginPage = function() {
-    return 'welcome';
-  };
+  getLoginPage() {
+    return 'welcome'
+  }
 
-  this.getRouter = function() {
-    return new MproRouter(this);
-  };
+  getRouter() {
+    return new MproRouter(this)
+  }
 
-  this._onAuthentication = function(route, session) {
+  _onAuthentication(route, session) {
     if(!session) {
-      route.page = 'welcome';
+      route.page = 'welcome'
     } 
     // else if (!session.user.name) {
     //   route.page = 'entername';
     // }
 
-    return route;
-  };
+    return route
+  }
 
-  this._configurator = function() {
+  _configurator() {
     this.navigate({
       page: 'configurator'
-    });
-  };
+    })
+  }
 
-  this._inbox = function() {
+  _inbox() {
     this.navigate({
       page: 'inbox'
-    });
-  };
-};
+    })
+  }
+}
 
-AbstractApplication.extend(Mpro);
-
-module.exports = Mpro;
+export default Mpro
