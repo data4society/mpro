@@ -1,69 +1,62 @@
-'use strict';
+import Field from './Field'
 
-var Field = require('./Field');
+class Toggle extends Field {
 
-function Toggle() {
-  Toggle.super.apply(this, arguments);
-}
+  getFieldValue() {
+    let value = this.props.value
+    return value
+  }
 
-Toggle.Prototype = function() {
+  render($$) {
+    let name = this.getName()
+    let config = this.getConfig()
+    let value = this.getValue()
 
-  this.getFieldValue = function() {
-    var value = this.props.value;
-    return value;
-  };
+    let el = $$('div')
+      .addClass('sc-field sc-field-toggle sc-field-' + name)
 
-  this.render = function($$) {
-    var name = this.getName();
-    var config = this.getConfig();
-    var value = this.getValue();
-
-    var el = $$('div')
-      .addClass('sc-field sc-field-toggle sc-field-' + name);
-
-    var on = $$('div').addClass('se-on').append('Yes')
-      .on('click', this._setOn);
-    var off = $$('div').addClass('se-off').append('No')
-      .on('click', this._setOff);
-    var unknown = $$('div').addClass('se-unknown').append('Unknown')
-      .on('click', this._setUnknown);
+    let on = $$('div').addClass('se-on').append('Yes')
+      .on('click', this._setOn)
+    let off = $$('div').addClass('se-off').append('No')
+      .on('click', this._setOff)
+    let unknown = $$('div').addClass('se-unknown').append('Unknown')
+      .on('click', this._setUnknown)
 
     if(value === true) {
-      on.addClass('active');
+      on.addClass('active')
     } else if (value === false) {
-      off.addClass('active');
+      off.addClass('active')
     } else {
-      unknown.addClass('active');
+      unknown.addClass('active')
     }
     
-    var item = $$('div').addClass('se-toggle-item').append(
+    let item = $$('div').addClass('se-toggle-item').append(
       on,
       off,
       unknown
-    );
+    )
 
-    el.append(item);
+    el.append(item)
 
-    if(config.placeholder) el.append($$('div').addClass('help').append(config.placeholder));
+    if(config.placeholder) el.append($$('div').addClass('help').append(config.placeholder))
 
-    return el;
-  };
+    return el
+  }
 
-  this._setOn = function() {
-    this.extendProps({value: true});
-    this.commit();
-  };
+  _setOn() {
+    this.extendProps({value: true})
+    this.commit()
+  }
 
-  this._setOff = function() {
-    this.extendProps({value: false});
-    this.commit();
-  };
+  _setOff() {
+    this.extendProps({value: false})
+    this.commit()
+  }
 
-  this._setUnknown = function() {
-    this.extendProps({value: null});
-    this.commit();
-  };
-};
+  _setUnknown() {
+    this.extendProps({value: null})
+    this.commit()
+  }
+}
 
-Field.extend(Toggle);
-module.exports = Toggle;
+export default Toggle

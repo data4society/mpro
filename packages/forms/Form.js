@@ -1,75 +1,71 @@
-'use strict';
+import { Component } from 'substance'
+import each from 'lodash/each'
 
-var Component = require('substance/ui/Component');
-var each = require('lodash/each');
+class Form extends Component {
+  constructor(...args) {
+    super(...args)
 
-function Form() {
-  Form.super.apply(this, arguments);
+    this.node = this.getNode()
+    this.schema = this.getSchema()
+    this.fields = {}
+  }
 
-  this.node = this.getNode();
-  this.schema = this.getSchema();
-  this.fields = {};
-}
 
-Form.Prototype = function() {
-
-  this.prepare = function($$) {
-    var self = this;
+  prepare($$) {
+    let self = this;
     each(this.schema, function(prop, id) {
       if(prop.field) {
-        var config = prop.field;
-        var value = self.node[id];
-        self.fields[id] = self.createField($$, id, config, value);
+        let config = prop.field
+        let value = self.node[id]
+        self.fields[id] = self.createField($$, id, config, value)
       }
-    });
-  };
+    })
+  }
 
-  this.getNode = function() {
-    return this.props.node;
-  };
+  getNode() {
+    return this.props.node
+  }
 
-  this.getSchema = function() {
-    var schema = this.node.constructor.static.schema;
+  getSchema() {
+    let schema = this.node.constructor.static.schema
     if (schema) {
-      return schema;
+      return schema
     } else {
-      throw new Error('Contract: Node.static.schema must have a value');
+      throw new Error('Contract: Node.static.schema must have a value')
     }
-  };
+  }
 
-  this.getField = function(type) {
-    var field = this.constructor.static.fields[type];
+  getField(type) {
+    let field = this.constructor.static.fields[type]
     if(field) {
-      return field;
+      return field
     } else {
-      throw new Error('No constructor for field type: ' + type);
+      throw new Error('No constructor for field type: ' + type)
     }
-  };
+  }
 
-  this.createField = function($$, id, config, value) {
-    var fieldType = config.type;
-    var Field = this.getField(fieldType);
-    var el = $$(Field, {id: id, config: config, value: value, form: this});
-    return el;
-  };
+  createField($$, id, config, value) {
+    let fieldType = config.type
+    let Field = this.getField(fieldType)
+    let el = $$(Field, {id: id, config: config, value: value, form: this})
+    return el
+  }
 
-  this.render = function($$) {
-    this.prepare($$);
+  render($$) {
+    this.prepare($$)
 
-    var el = $$('div')
-      .addClass('sc-form');
+    let el = $$('div')
+      .addClass('sc-form')
 
     each(this.fields, function(field) {
-      el.append(field);
-    });
+      el.append(field)
+    })
 
-    return el;
-  };
-};
+    return el
+  }
+}
 
-Component.extend(Form);
-
-Form.static.fields = {
+Form.fields = {
   text: require('./Text'),
   checkbox: require('./Checkbox'),
   select: require('./Select'),
@@ -80,6 +76,6 @@ Form.static.fields = {
   toggle: require('./Toggle'),
   multiple: require('./Multiple'),
   reference: require('./Reference')
-};
+}
 
-module.exports = Form;
+export default Form

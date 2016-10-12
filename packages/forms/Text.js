@@ -1,32 +1,25 @@
-'use strict';
+import Field from './Field'
 
-var Field = require('./Field');
+class Text extends Field {
+  
+  render($$) {
+    let name = this.getName()
+    let config = this.getConfig()
+    let value = this.getValue()
+    
+    let el = $$('div')
+      .addClass('sc-field sc-field-text sc-field-' + name)
 
-function Text() {
-  Text.super.apply(this, arguments);
+    let input = $$('input').addClass('sc-input').attr({type: config.dataType, placeholder: config.placeholder, value: value})
+      .ref('input')
+      .on('change', this.commit)
+    
+    el.append(input)
+
+    if(config.placeholder && value !== "") el.append($$('div').addClass('help').append(config.placeholder))
+    
+    return el
+  }
 }
 
-Text.Prototype = function() {
-  
-  this.render = function($$) {
-    var name = this.getName();
-    var config = this.getConfig();
-    var value = this.getValue();
-    
-    var el = $$('div')
-      .addClass('sc-field sc-field-text sc-field-' + name);
-    var input = $$('input').addClass('sc-input').attr({type: config.dataType, placeholder: config.placeholder, value: value})
-      .ref('input')
-      .on('change', this.commit);
-    
-    el.append(input);
-
-    if(config.placeholder && value !== "") el.append($$('div').addClass('help').append(config.placeholder));
-    
-    return el;
-  };
-};
-
-Field.extend(Text);
-
-module.exports = Text;
+export default Text

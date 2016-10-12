@@ -1,55 +1,47 @@
-'use strict';
+import { Component } from 'substance'
 
-var Component = require('substance/ui/Component');
+class Field extends Component {
 
-function Field() {
-  Field.super.apply(this, arguments);
-}
+  getName() {
+    return this.props.id
+  }
 
-Field.Prototype = function() {
+  getConfig() {
+    return this.props.config
+  }
 
-  this.getName = function() {
-    return this.props.id;
-  };
+  getValue() {
+    return this.props.value
+  }
 
-  this.getConfig = function() {
-    return this.props.config;
-  };
+  getFieldValue() {
+    return this.refs.input.val()
+  }
 
-  this.getValue = function() {
-    return this.props.value;
-  };
+  getSession() {
+    let form = this.props.form
+    return form.props.session
+  }
 
-  this.getFieldValue = function() {
-    return this.refs.input.val();
-  };
+  getNodeId() {
+    return this.props.form.node.id
+  }
 
-  this.getSession = function() {
-    var form = this.props.form;
-    return form.props.session;
-  };
-
-  this.getNodeId = function() {
-    return this.props.form.node.id;
-  };
-
-  this.commit = function() {
-    var session = this.getSession();
-    var nodeId = this.getNodeId();
-    var propId = this.props.id;
-    var value = this.getFieldValue();
+  commit() {
+    let session = this.getSession()
+    let nodeId = this.getNodeId()
+    let propId = this.props.id
+    let value = this.getFieldValue()
 
     session.transaction(function(tx) {
-      tx.set([nodeId, propId], value);
-    });
-  };
+      tx.set([nodeId, propId], value)
+    })
+  }
   
-  this.render = function($$) {
+  render($$) {
     return $$('div')
-      .addClass('sc-field');
-  };
-};
+      .addClass('sc-field')
+  }
+}
 
-Component.extend(Field);
-
-module.exports = Field;
+export default Field

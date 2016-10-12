@@ -1,94 +1,86 @@
-'use strict';
+import Field from './Field'
+import each from 'lodash/each'
 
-var Field = require('./Field');
-var each = require('lodash/each');
+class Multiple extends Field {
 
-function Multiple() {
-  Multiple.super.apply(this, arguments);
-}
-
-Multiple.Prototype = function() {
-
-  this.getInitialState = function() {
+  getInitialState() {
     return {
       values: this.props.value
-    };
-  };
+    }
+  }
 
-  this.getFieldValue = function() {
-    return this.state.values;
-  };
+  getFieldValue() {
+    return this.state.values
+  }
   
-  this.render = function($$) {
-    var name = this.getName();
-    var config = this.getConfig();
-    var values = this.getValue();
+  render($$) {
+    let name = this.getName()
+    let config = this.getConfig()
+    let values = this.getValue()
 
-    var el = $$('div').addClass('sc-field sc-field-multiple sc-field-' + name);
+    let el = $$('div').addClass('sc-field sc-field-multiple sc-field-' + name)
 
-    var multipleWidget = $$('div').addClass('se-multiple');
+    let multipleWidget = $$('div').addClass('se-multiple')
     
     each(values, function(value) {
-      multipleWidget.append($$('div').addClass('se-value').append(value).on('click', this.removeValue));
-    }.bind(this));
+      multipleWidget.append($$('div').addClass('se-value').append(value).on('click', this.removeValue))
+    }.bind(this))
 
     el.append(
       multipleWidget,
       $$('input').attr({type: 'text', placeholder: 'Add values'})
         .ref('value')
         .on('keyup', this.onKeyUp)
-    );
+    )
 
-    if(config.placeholder) el.append($$('div').addClass('help').append(config.placeholder));
+    if(config.placeholder) el.append($$('div').addClass('help').append(config.placeholder))
     
-    return el;
-  };
+    return el
+  }
 
-  this.onKeyUp = function(e) {
-    var key = e.keyCode || e.which;
-    var value;
+  onKeyUp(e) {
+    let key = e.keyCode || e.which
+    let value
     if (key === 13 || key === 188) {
-      value = this.refs.value.val().replace(',', '');
-      this.addValue(value);
-      return this.refs.value.val('');
+      value = this.refs.value.val().replace(',', '')
+      this.addValue(value)
+      return this.refs.value.val('')
     } else if (key === 8) {
       if (this.refs.value.val() === '') {
-        value = this.refs.value.val().replace(',', '');
-        return this.deleteValue(value);
+        value = this.refs.value.val().replace(',', '')
+        return this.deleteValue(value)
       }
     }
-  };
+  }
 
-  this.addValue = function(value) {
-    var values = this.state.values;
-    values.push(value);
-    this.extendState({values: values});
-    this.commit();
-  };
+  addValue(value) {
+    let values = this.state.values
+    values.push(value)
+    this.extendState({values: values})
+    this.commit()
+  }
 
-  this.removeValue = function(e) {
-    e.preventDefault();
-    var el = e.target;
-    var highlighted = el.classList.contains('se-hihglight-remove');
+  removeValue(e) {
+    e.preventDefault()
+    let el = e.target
+    let highlighted = el.classList.contains('se-hihglight-remove')
     if(highlighted) {
-      this.deleteValue(el.textContent);
+      this.deleteValue(el.textContent)
     } else {
-      each(el.parentElement.childNodes,function(node){
-        node.className = 'se-value';
-      });
-      el.className += ' se-hihglight-remove';
+      each(el.parentElement.childNodes, function(node) {
+        node.className = 'se-value'
+      })
+      el.className += ' se-hihglight-remove'
     }
-  };
+  }
 
-  this.deleteValue = function(value) {
-    var values = this.state.values;
-    var pos = values.indexOf(value);
-    values.splice(pos, 1);
-    this.extendState({values: values});
-    this.commit();
-  };
-};
+  deleteValue(value) {
+    let values = this.state.values
+    let pos = values.indexOf(value)
+    values.splice(pos, 1)
+    this.extendState({values: values})
+    this.commit()
+  }
+}
 
-Field.extend(Multiple);
-
-module.exports = Multiple;
+export default Multiple
