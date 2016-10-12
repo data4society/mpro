@@ -1,17 +1,11 @@
-'use strict';
+import { Component } from 'substance'
+import each from 'lodash/each'
 
-var Component = require('substance/ui/Component');
-var each = require('lodash/each');
+class Header extends Component {
 
-function Header() {
-  Component.apply(this, arguments);
-}
-
-Header.Prototype = function() {
-
-  this.render = function($$) {
-    var el = $$('div').addClass('sc-header');
-    var actionEls = [];
+  render($$) {
+    let el = $$('div').addClass('sc-header')
+    let actionEls = []
 
     if (this.props.actions) {
       each(this.props.actions, function(label, actionName) {
@@ -19,22 +13,21 @@ Header.Prototype = function() {
           $$('button').addClass('se-action')
             .append(label)
             .on('click', this.send.bind(this, actionName))
-        );
-      }.bind(this));
+        )
+      }.bind(this))
     }
 
-    var content = [];
+    let content = []
     if (this.props.content) {
-      content = content.concat(this.props.content);
+      content = content.concat(this.props.content)
     }
 
     el.append(
       $$('div').addClass('se-actions').append(actionEls),
       $$('div').addClass('se-content').append(content)
-    );
-    return el;
-  };
-};
+    )
+    return el
+  }
+}
 
-Component.extend(Header);
-module.exports = Header;
+export default Header
