@@ -1,16 +1,13 @@
-'use strict';
+import Inbox from './Inbox'
 
-var Inbox = require('./Inbox');
-
-module.exports = {
+export default {
   name: 'inbox',
   configure: function(config) {
-    config.addComponent('inbox', Inbox);
-    config.addStyle(__dirname, '_inbox');
+    config.addComponent('inbox', Inbox)
 
     config.addLabel('configurator-menu', {
       en: 'Configurator',
       ru: 'Конфигуратор'
-    });
+    })
   }
-};
+}
