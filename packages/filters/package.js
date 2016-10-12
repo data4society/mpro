@@ -1,11 +1,8 @@
-'use strict';
+import Filters from './Filters'
 
-var Filters = require('./Filters');
-
-module.exports = {
+export default {
   name: 'filters',
   configure: function(config) {
-    config.addComponent('filters', Filters);
-    config.addStyle(__dirname, '_filters');
+    config.addComponent('filters', Filters)
   }
-};
+}
