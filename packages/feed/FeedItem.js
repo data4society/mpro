@@ -1,37 +1,31 @@
-'use strict';
+import { Component } from 'substance'
+import isEmpty from 'lodash/isEmpty'
+import each from 'lodash/each'
+import moment from 'moment'
 
-var Component = require('substance/ui/Component');
-var isEmpty = require('lodash/isEmpty');
-var each = require('lodash/each');
-var moment = require('moment');
+class FeedItem extends Component {
 
-function FeedItem() {
-  Component.apply(this, arguments);
-}
-
-FeedItem.Prototype = function() {
-
-  this.shouldRerender = function(props) {
+  shouldRerender(props) {
     if(props.update) {
-      return true;
+      return true
     }
-    return false;
-  };
+    return false
+  }
 
-  this.render = function($$) {
-    var document = this.props.document;
-    var meta = document.meta;
-    var el = $$('div').addClass('sc-feed-item')
-      .on('click', this.send.bind(this, 'openDocument', document.documentId));
+  render($$) {
+    let document = this.props.document
+    let meta = document.meta
+    let el = $$('div').addClass('sc-feed-item')
+      .on('click', this.send.bind(this, 'openDocument', document.documentId))
 
-    var isActive = this.props.active === true;
+    let isActive = this.props.active === true
 
     if(isActive) {
-      el.addClass('active');
+      el.addClass('active')
     }
 
-    var rubrics = this.renderRubrics($$);
-    var source = this.renderSourceInfo($$);
+    let rubrics = this.renderRubrics($$)
+    let source = this.renderSourceInfo($$)
 
     el.append(
       rubrics,
@@ -42,52 +36,52 @@ FeedItem.Prototype = function() {
       el.append(
         $$('div').addClass('se-title')
           .append(meta.title)
-      );
+      )
     }
 
     el.append(
       $$('div').addClass('se-abstract')
         .append(meta.abstract),
       $$('div').addClass('se-separator')
-    );
+    )
 
-    return el;
-  };
+    return el
+  }
 
-  this.renderRubrics = function($$) {
-    var document = this.props.document;
-    var meta = document.meta;
-    var rubrics = this.props.rubrics;
-    var rubricsMeta = meta.rubrics;
-    var rubricsList = [];
+  renderRubrics($$) {
+    let document = this.props.document
+    let meta = document.meta
+    let rubrics = this.props.rubrics
+    let rubricsMeta = meta.rubrics
+    let rubricsList = []
 
     if(!isEmpty(rubrics)) {
       each(rubricsMeta, function(rubric) {
-        var item = rubrics.get(rubric);
-        rubricsList.push(item.name);
-      });
+        let item = rubrics.get(rubric)
+        rubricsList.push(item.name)
+      })
     }
 
-    var rubricsEl = $$('div').addClass('se-rubrics');
-    rubricsEl.append(this.context.iconProvider.renderIcon($$, 'rubrics'));
+    let rubricsEl = $$('div').addClass('se-rubrics')
+    rubricsEl.append(this.context.iconProvider.renderIcon($$, 'rubrics'))
 
     if(rubricsList.length > 0) {
-      rubricsEl.append(rubricsList.join(', '));
+      rubricsEl.append(rubricsList.join(', '))
     } else {
-      rubricsEl.append('No categories assigned');
+      rubricsEl.append('No categories assigned')
     }
 
-    return rubricsEl;
-  };
+    return rubricsEl
+  }
 
-  this.renderSourceInfo = function($$) {
-    var document = this.props.document;
-    var meta = document.meta;
-    var published = this.props.document.published;
-    var publisher = meta.publisher;
-    var source_name = meta.source.split('/')[2];
+  renderSourceInfo($$) {
+    let document = this.props.document
+    let meta = document.meta
+    let published = this.props.document.published
+    let publisher = meta.publisher
+    let source_name = meta.source.split('/')[2]
 
-    var el = $$('div').addClass('se-source-info');
+    let el = $$('div').addClass('se-source-info')
 
     el.append(
       $$('div').addClass('se-source-name').append(
@@ -102,12 +96,10 @@ FeedItem.Prototype = function() {
       $$('div').addClass('se-source-date').html(
         moment(published).format('DD.MM.YYYY HH:mm')
       )
-    );
+    )
 
-    return el;
-  };
-};
+    return el
+  }
+}
 
-Component.extend(FeedItem);
-
-module.exports = FeedItem;
+export default FeedItem
