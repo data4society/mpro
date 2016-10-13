@@ -1,9 +1,7 @@
-'use strict';
-
-var Document = require('substance/model/Document');
-var RubricsIndex = require('./RubricsIndex');
-var each = require('lodash/each');
-var map = require('lodash/map');
+import { Document } from 'substance'
+import each from 'lodash/each'
+import map from 'lodash/map'
+import RubricsIndex from './RubricsIndex'
 
 /*
   Rubrics model.
@@ -11,129 +9,127 @@ var map = require('lodash/map');
   Holds all rubrics.
 */
 
-function Rubrics(schema) {
-  Document.call(this, schema);
-  this.addIndex('rubrics', new RubricsIndex(this));
-}
+class Rubrics extends Document {
+  configurator(schema) {
+    super(schema)
 
-Rubrics.Prototype = function() {
+    this.addIndex('rubrics', new RubricsIndex(this))
+  }
   
   // Get children nodes for a given node
-  this.getChildren = function(nodeId) {
-    var index = this.getIndex('rubrics').index;
-    var children = index.get(nodeId);
+  getChildren(nodeId) {
+    let index = this.getIndex('rubrics').index
+    let children = index.get(nodeId)
 
     if(children) {
-      return children.rubric;
+      return children.rubric
     } else {
-      return {};
+      return {}
     }
-  };
+  }
 
   // Collect all children nodes of a node
   // returns list of ids
-  this.getAllChildren = function(nodeId) {
-    var childNodes = this.getChildren(nodeId);
-    if (childNodes.length === 0) return [];
-    var allChildren = map(childNodes, 'id');
+  getAllChildren(nodeId) {
+    let childNodes = this.getChildren(nodeId)
+    if (childNodes.length === 0) return []
+    let allChildren = map(childNodes, 'id')
     each(childNodes, function(childNode) {
-      allChildren = allChildren.concat(this.getAllChildren(childNode.id));
-    }.bind(this));
-    return allChildren;
-  };
+      allChildren = allChildren.concat(this.getAllChildren(childNode.id))
+    }.bind(this))
+    return allChildren
+  }
 
   // Get parent node for a given nodeId
-  this.getParent = function(nodeId) {
-    return this.get(nodeId).getParent();
-  };
+  getParent(nodeId) {
+    return this.get(nodeId).getParent()
+  }
 
   // Collect all parents of a given node
   // returns list of ids
-  this.getParents = function(nodeId) {
-    var node = this.get(nodeId);
-    var parents = [];
+  getParents(nodeId) {
+    let node = this.get(nodeId)
+    let parents = []
     while (node.hasParent()) {
-      node = node.getParent();
-      parents.push(node.id);
+      node = node.getParent()
+      parents.push(node.id)
     }
-    return parents;
-  };
+    return parents
+  }
 
   // Get root parent node
-  this.getRootParent = function(nodeId) {
-    return this.get(nodeId).getRoot();
-  };
+  getRootParent(nodeId) {
+    return this.get(nodeId).getRoot()
+  }
 
   // Get all root nodes
-  this.getRoots = function() {
-    var index = this.getIndex('rubrics').index;
-    var roots = [];
+  getRoots() {
+    let index = this.getIndex('rubrics').index
+    let roots = []
     each(index, function(node, nodeId) {
-      node = this.get(nodeId);
-      if(!node.hasParent()) roots.push(node);
-    }.bind(this));
-    return roots;
-  };
+      node = this.get(nodeId)
+      if(!node.hasParent()) roots.push(node)
+    }.bind(this))
+    return roots
+  }
 
   // Get ids of all active nodes
-  this.getActive = function() {
-    var active = [];
-    var rubricNodes = this.getIndex('type').get('rubric');
+  getActive() {
+    let active = []
+    let rubricNodes = this.getIndex('type').get('rubric')
     each(rubricNodes, function(node) {
-      if(node.active) active.push(node.id);
-    });
-    return active;
-  };
+      if(node.active) active.push(node.id)
+    })
+    return active
+  }
 
   // Whatever children of given node has active prop
-  this.hasActiveChildren = function(nodeId) {
-    var result = false;
-    var children = this.getAllChildren(nodeId);
+  hasActiveChildren(nodeId) {
+    let result = false
+    let children = this.getAllChildren(nodeId)
     each(children, function(childId) {
-      var node = this.get(childId);
+      let node = this.get(childId)
       if(node.active) {
-        result = true;
-        return false;
+        result = true
+        return false
       }
-    }.bind(this));
-    return result;
-  };
+    }.bind(this))
+    return result
+  }
 
   // Get ids of all selected nodes
-  this.getSelected = function() {
-    var selected = [];
-    var rubricNodes = this.getIndex('type').get('rubric');
+  getSelected() {
+    let selected = []
+    let rubricNodes = this.getIndex('type').get('rubric')
     each(rubricNodes, function(node) {
-      if(node.selected) selected.push(node.id);
-    });
-    return selected;
-  };
+      if(node.selected) selected.push(node.id)
+    })
+    return selected
+  }
 
   // Whatever children of given node has selected prop
-  this.hasSelectedChildren = function(nodeId) {
-    var result = false;
-    var children = this.getAllChildren(nodeId);
+  hasSelectedChildren(nodeId) {
+    let result = false
+    let children = this.getAllChildren(nodeId)
     each(children, function(childId) {
-      var node = this.get(childId);
+      let node = this.get(childId)
       if(node.selected) {
-        result = true;
-        return false;
+        result = true
+        return false
       }
-    }.bind(this));
-    return result;
-  };
+    }.bind(this))
+    return result
+  }
 
   // Resets selections for all nodes
-  this.resetSelection = function() {
-    var nodes = this.getNodes();
+  resetSelection() {
+    let nodes = this.getNodes()
     each(nodes, function(node) {
       if(node.selected) {
-        this.set([node.id, 'selected'], false);
+        this.set([node.id, 'selected'], false)
       }
-    }.bind(this));
-  };
-};
+    }.bind(this))
+  }
+}
 
-Document.extend(Rubrics);
-
-module.exports = Rubrics;
+export default Rubrics

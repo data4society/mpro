@@ -1,21 +1,19 @@
-'use strict';
+import Rubrics from './Rubrics'
+import Rubric from './Rubric'
+import RubricConverter from './RubricConverter'
+import RubricsImporter from './RubricsImporter'
 
-var Rubrics = require('./Rubrics');
-var Rubric = require('./Rubric');
-var RubricConverter = require('./RubricConverter');
-var RubricsImporter = require('./RubricsImporter');
-
-module.exports = {
+export default {
   name: 'rubric',
   configure: function(config) {
     config.defineSchema({
       name: 'mpro-rubrics',
       ArticleClass: Rubrics,
       defaultTextType: 'paragraph'
-    });
+    })
 
-    config.addNode(Rubric);
-    config.addConverter('rubrics', RubricConverter);
-    config.addImporter('rubrics', RubricsImporter);
+    config.addNode(Rubric)
+    config.addConverter('rubrics', RubricConverter)
+    config.addImporter('rubrics', RubricsImporter)
   }
-};
+}
