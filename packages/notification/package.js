@@ -1,11 +1,8 @@
-'use strict';
+import Notification from './Notification'
 
-var Notification = require('./Notification');
-
-module.exports = {
+export default {
   name: 'notification',
   configure: function(config) {
-    config.addComponent('notification', Notification);
-    config.addStyle(__dirname, '_notification');
+    config.addComponent('notification', Notification)
   }
-};
+}
