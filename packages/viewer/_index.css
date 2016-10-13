@@ -1,0 +1,44 @@
+.sc-document-viewer > .sc-split-pane {
+  width: 100%;
+}
+
+.sc-document-viewer .sc-layout {
+  padding-top: 20px;
+}
+
+.sc-document-viewer .sc-viewer-toolbar {
+  position: absolute;
+  bottom: 10px;
+  right: 50px;
+  z-index: 99;
+}
+
+.sc-document-viewer .sc-viewer-toolbar .sc-tool-group .se-tool > button {
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  text-align: center;
+  line-height: 100px;
+  vertical-align: middle;
+  padding: 18px;
+  font-size: 18px;
+  border: 1px solid #ccc;
+  background: rgb(130, 148, 204);
+  color: #fff;
+  opacity: 0.9;
+}
+
+.sc-document-viewer .sc-viewer-toolbar .sc-tool-group .se-tool.sm-annotation-tool .se-mode {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  font-size: 10px;
+}
+
+.sc-document-viewer .sc-viewer-toolbar .se-scrollable {
+  padding-right: 20px;
+}
+
+.sc-document-viewer .sc-viewer-toolbar .sc-paragraph {
+  padding-bottom: 10px;
+}

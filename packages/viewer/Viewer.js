@@ -1,26 +1,15 @@
-'use strict';
+import { ContainerEditor, Layout, ProseEditor, ProseEditorOverlay, ScrollPane, SplitPane } from 'substance'
 
-var ProseEditor = require('substance/packages/prose-editor/ProseEditor');
-var ContainerEditor = require('substance/ui/ContainerEditor');
-var SplitPane = require('substance/ui/SplitPane');
-var ScrollPane = require('substance/ui/ScrollPane');
-var Layout = require('substance/ui/Layout');
-var ProseEditorOverlay = require('substance/packages/prose-editor/ProseEditorOverlay');
+class Viewer extends ProseEditor {
 
-function Viewer() {
-  Viewer.super.apply(this, arguments);
-}
+  render($$) {
+    let el = $$('div').addClass('sc-document-viewer')
 
-Viewer.Prototype = function() {
+    let toolbar = this._renderToolbar($$)
+    let editor = this._renderEditor($$)
+    let cover = this._renderCover($$)
 
-  this.render = function($$) {
-    var el = $$('div').addClass('sc-document-viewer');
-
-    var toolbar = this._renderToolbar($$);
-    var editor = this._renderEditor($$);
-    var cover = this._renderCover($$);
-
-    var contentPanel = $$(ScrollPane, {
+    let contentPanel = $$(ScrollPane, {
       scrollbarType: 'substance',
       scrollbarPosition: 'right',
       overlay: ProseEditorOverlay,
@@ -31,19 +20,19 @@ Viewer.Prototype = function() {
         cover,
         editor
       )
-    ).ref('contentPanel');
+    ).ref('contentPanel')
 
     el.append(
       $$(SplitPane, {splitType: 'horizontal'}).append(
         toolbar,
         contentPanel
       )
-    );
-    return el;
-  };
+    )
+    return el
+  }
 
-  this._renderEditor = function($$) {
-    var configurator = this.props.configurator;
+  _renderEditor($$) {
+    let configurator = this.props.configurator
     return $$(ContainerEditor, {
       disabled: this.props.disabled,
       documentSession: this.documentSession,
@@ -51,23 +40,19 @@ Viewer.Prototype = function() {
       editing: 'selection',
       commands: configurator.getSurfaceCommandNames(),
       textTypes: configurator.getTextTypes()
-    }).ref('body');
-  };
+    }).ref('body')
+  }
 
-  this._renderCover = function($$) {
-    var componentRegistry = this.componentRegistry;
-    var Cover = componentRegistry.get('cover');
+  _renderCover($$) {
+    let Cover = this.getComponent('cover')
     return $$(Cover, {
       doc: this.doc,
       mobile: this.props.mobile,
       editing: 'readonly',
       documentInfo: this.props.documentInfo,
       rubrics: this.props.rubrics
-    }).ref('cover');
-  };
+    }).ref('cover')
+  }
+}
 
-};
-
-ProseEditor.extend(Viewer);
-
-module.exports = Viewer;
+export default Viewer

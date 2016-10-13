@@ -1,19 +1,12 @@
-'use strict';
+import { Toolbar, ToolGroup } from 'substance'
 
-var Toolbar = require('substance/ui/Toolbar');
-var ToolGroup = require('substance/ui/ToolGroup');
+class ViewerToolbar extends Toolbar {
 
-function ViewerToolbar() {
-  ViewerToolbar.super.apply(this, arguments);
-}
-
-ViewerToolbar.Prototype = function() {
-
-  this.render = function($$) {
-    var el = $$("div").addClass(this.getClassNames());
-    var commandStates = this.props.commandStates;
-    var toolRegistry = this.context.toolRegistry;
-    var tools = [];
+  render($$) {
+    let el = $$("div").addClass(this.getClassNames())
+    let commandStates = this.props.commandStates
+    let toolRegistry = this.context.toolRegistry
+    let tools = [];
     toolRegistry.forEach(function(tool, name) {
       if (!tool.options.overlay && tool.options.viewer) {
         tools.push(
@@ -25,14 +18,11 @@ ViewerToolbar.Prototype = function() {
       $$(ToolGroup).append(tools)
     );
     return el;
-  };
+  }
 
-  this.getClassNames = function() {
-    return 'sc-viewer-toolbar';
-  };
+  getClassNames() {
+    return 'sc-viewer-toolbar'
+  }
+}
 
-};
-
-Toolbar.extend(ViewerToolbar);
-
-module.exports = ViewerToolbar;
+export default ViewerToolbar
