@@ -1,26 +1,17 @@
-'use strict';
+import { Button, Component, Input } from 'substance'
 
-var Component = require('substance/ui/Component');
-var Button = require('substance/ui/Button');
-var Input = require('substance/ui/Input');
+class RequestLogin extends Component {
 
-function RequestLogin() {
-  Component.apply(this, arguments);
-}
+  render($$) {
+    let Notification = this.getComponent('notification')
 
-RequestLogin.Prototype = function() {
-
-  this.render = function($$) {
-    var componentRegistry = this.context.componentRegistry;
-    var Notification = componentRegistry.get('notification');
-
-    var el = $$('div').addClass('sc-request-login');
+    let el = $$('div').addClass('sc-request-login')
 
     if (this.state.requested) {
       el.append(
         $$('h1').append(this.i18n.t('sc-welcome.submitted-title')),
         $$('p').append(this.i18n.t('sc-welcome.submitted-instructions'))
-      );
+      )
     } else {
       el.append(
         $$('div').addClass('se-email').append(
@@ -31,31 +22,31 @@ RequestLogin.Prototype = function() {
             centered: true
           }).ref('email')
         )
-      );
+      )
 
       el.append(
         $$(Button, {
           disabled: Boolean(this.state.loading) // disable button when in loading state
         }).append(this.getLabel('welcome-submit'))
           .on('click', this._requestLoginLink)
-      );
+      )
 
       if (this.state.notification) {
-        el.append($$(Notification, this.state.notification));
+        el.append($$(Notification, this.state.notification))
       }
     }
-    return el;
-  };
+    return el
+  }
 
-  this._requestLoginLink = function() {
-    var email = this.refs.email.val();
-    var authenticationClient = this.context.authenticationClient;
+  _requestLoginLink() {
+    let email = this.refs.email.val()
+    let authenticationClient = this.context.authenticationClient
 
     // Set loading state
     this.setState({
       email: email,
       loading: true
-    });
+    })
 
     authenticationClient.requestLoginLink({
       email: email,
@@ -68,17 +59,16 @@ RequestLogin.Prototype = function() {
             type: 'error',
             message: 'Your request could not be processed. Make sure you provided a valid email.'
           }
-        });
+        })
       } else {
         this.setState({
           loading: false,
           requested: true
-        });
-        this.send('loginRequested');
+        })
+        this.send('loginRequested')
       }
-    }.bind(this));
-  };
-};
+    }.bind(this))
+  }
+}
 
-Component.extend(RequestLogin);
-module.exports = RequestLogin;
+export default RequestLogin
