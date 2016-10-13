@@ -2,8 +2,8 @@
   margin: 0px auto;
   text-align: center;
   padding: 10px;
+}
 
-  .sc-button {
-    width: 100%;
-  }
+.sc-pager .sc-button {
+  width: 100%;
 }
