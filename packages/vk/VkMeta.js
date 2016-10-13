@@ -1,14 +1,8 @@
-'use strict';
+import { DocumentNode } from 'substance'
 
-var DocumentNode = require('substance/model/DocumentNode');
+class VkMeta extends DocumentNode {}
 
-function VkMeta() {
-  VkMeta.super.apply(this, arguments);
-}
-
-DocumentNode.extend(VkMeta);
-
-VkMeta.static.name = 'meta';
+VkMeta.type = 'meta'
 
 /*
   Meta node.
@@ -27,7 +21,7 @@ VkMeta.static.name = 'meta';
     - attachments Post attachments
 */
 
-VkMeta.static.defineSchema({
+VkMeta.define({
   title: { type: 'string', default: '' },
   rubrics: { type: ['id'], default: [] },
   entities: { type: ['id'], default: [] },
@@ -38,6 +32,6 @@ VkMeta.static.defineSchema({
   post_type: { type: 'string', default: '' },
   author: { type: 'object', default: {} },
   attachments: { type: ['object'], default: [] }
-});
+})
 
-module.exports = VkMeta;
+export default VkMeta
