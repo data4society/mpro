@@ -1,32 +1,30 @@
-'use strict';
+let config = require('config')
+let extend = require('lodash/extend')
+let ServerConfig = extend({}, config.get('server'), {env: config.util.getEnv('NODE_ENV')})
 
-var config = require('config');
-var extend = require('lodash/extend');
-var ServerConfig = extend({}, config.get('server'), {env: config.util.getEnv('NODE_ENV')});
+let SubConfigurator = require('../common/SubConfigurator')
+let ArticlePackage = require('../article/package')
+let ArticleImporter = require('../article/ArticleImporter')
+let TngPackage = require('../tng/package')
+let TngImporter = require('../tng/TngImporter')
+let VkPackage = require('../vk/package')
+let VkImporter = require('../vk/VkImporter')
 
-var SubConfigurator = require('../common/SubConfigurator');
-var ArticlePackage = require('../article/package');
-var ArticleImporter = require('../article/ArticleImporter');
-var TngPackage = require('../tng/package');
-var TngImporter = require('../tng/TngImporter');
-var VkPackage = require('../vk/package');
-var VkImporter = require('../vk/VkImporter');
+let articleConfigurator = new SubConfigurator().import(ArticlePackage)
+articleConfigurator.addImporter('html', ArticleImporter)
 
-var articleConfigurator = new SubConfigurator().import(ArticlePackage);
-articleConfigurator.addImporter('html', ArticleImporter);
+let tngConfigurator = new SubConfigurator().import(TngPackage)
+tngConfigurator.addImporter('html', TngImporter)
 
-var tngConfigurator = new SubConfigurator().import(TngPackage);
-tngConfigurator.addImporter('html', TngImporter);
-
-var vkConfigurator = new SubConfigurator().import(VkPackage);
-vkConfigurator.addImporter('html', VkImporter);
+let vkConfigurator = new SubConfigurator().import(VkPackage)
+vkConfigurator.addImporter('html', VkImporter)
 
 module.exports = {
   name: 'server',
   configure: function(config) {
-    config.addConfigurator('mpro-article', articleConfigurator);
-    config.addConfigurator('mpro-tng', tngConfigurator);
-    config.addConfigurator('mpro-vk', vkConfigurator);
-    config.setAppConfig(ServerConfig);
+    config.addConfigurator('mpro-article', articleConfigurator)
+    config.addConfigurator('mpro-tng', tngConfigurator)
+    config.addConfigurator('mpro-vk', vkConfigurator)
+    config.setAppConfig(ServerConfig)
   }
-};
+}
