@@ -1,5 +1,5 @@
-import { Configurator } from 'substance'
-import each from 'lodash/each'
+let Configurator = require('substance').Configurator
+let each = require('lodash/each')
 
 class ServerConfigurator extends Configurator {
 
@@ -53,4 +53,4 @@ class ServerConfigurator extends Configurator {
   }
 }
 
-export default ServerConfigurator
+module.exports = ServerConfigurator

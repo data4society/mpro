@@ -2,7 +2,7 @@ let config = require('config')
 let extend = require('lodash/extend')
 let ServerConfig = extend({}, config.get('server'), {env: config.util.getEnv('NODE_ENV')})
 
-let SubConfigurator = require('../common/SubConfigurator')
+let SubConfigurator = require('./ServerConfigurator')
 let ArticlePackage = require('../article/package')
 let ArticleImporter = require('../article/ArticleImporter')
 let TngPackage = require('../tng/package')
