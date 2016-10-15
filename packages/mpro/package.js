@@ -39,8 +39,7 @@ tngEditorConfigurator.import(Tng)
 // Holds entity container document schema
 import Entities from '../entities/package'
 let entitiesConfigurator = new SubConfigurator().import(Entities)
-
-module.exports = {
+export default {
   name: 'mpro',
   configure: function(config) {
     config.import(BasePackage)
