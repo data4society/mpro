@@ -12,21 +12,21 @@ b.task('assets', function() {
 
 // this optional task makes it easier to work on Substance core
 b.task('substance', function() {
-  b.make('substance', 'clean', 'css', 'browser', 'server')
+  b.make('substance', 'clean', 'browser', 'server')
   b.copy('node_modules/substance/dist', './dist/substance')
 })
 
 function buildApp(app) {
   return function() {
-    b.copy('client/'+app+'/index.html', './dist/'+app+'/')
-    b.copy('client/'+app+'/assets', './dist/'+app+'/assets/')
-    b.copy('client/'+app+'/*.css', './dist/'+app+'/', { root: 'client/'+app })
-    b.js('client/'+app+'/app.js', {
+    b.copy('client/index.html', './dist/')
+    //b.copy('client/assets', './dist/assets/')
+    b.copy('client/*.css', './dist/', { root: 'client' })
+    b.js('client/app.js', {
       // need buble if we want to minify later
       // buble: true,
       external: ['substance'],
       commonjs: { include: ['node_modules/lodash/**', 'node_modules/moment/moment.js'] },
-      dest: './dist/'+app+'/app.js',
+      dest: './dist/app.js',
       format: 'umd',
       moduleName: app
     })
