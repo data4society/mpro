@@ -5,5 +5,9 @@
     "wsUrl": "ws://localhost:5000",
     "appUrl": "http://localhost:5000"
   },
+  "mail": {
+    "transport": "",
+    "sender": ""
+  },
   "db_url": "postgres://postgres:@localhost:5432/mpro"
 }
