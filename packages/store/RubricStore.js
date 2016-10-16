@@ -7,8 +7,8 @@ let find = require('lodash/find')
 let Promise = require("bluebird")
 
 // Massive internal libs
-let ArgTypes = require('../node_modules/massive/lib/arg_types')
-let Where = require('../node_modules/massive/lib/where')
+let ArgTypes = require('../../node_modules/massive/lib/arg_types')
+let Where = require('../../node_modules/massive/lib/where')
 
 /*
   Implements the Rubric Store API.
