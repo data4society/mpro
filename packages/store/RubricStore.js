@@ -16,7 +16,7 @@ let Where = require('../../node_modules/massive/lib/where')
 class RubricStore {
   constructor(config) {
     this.config = config
-    this.db = config.db.connection
+    this.db = config.db
   }
 
   /*

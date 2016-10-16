@@ -9,7 +9,7 @@ let isNull = require('lodash/isNull')
 class SnapshotStore {
   constructor(config) {
     this.config = config
-    this.db = config.db.connection
+    this.db = config.db
   }
 
   /*

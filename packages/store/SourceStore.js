@@ -7,9 +7,9 @@ let Promise = require("bluebird")
   Implements the Document Source Store API.
 */
 class SourceStore {
-  configurator(config) {
+  constructor(config) {
     this.config = config
-    this.db = config.db.connection
+    this.db = config.db
   }
 
   /*

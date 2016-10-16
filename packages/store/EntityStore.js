@@ -10,7 +10,7 @@ let Promise = require("bluebird")
 class EntityStore {
   constructor(config) {
     this.config = config
-    this.db = config.db.connection
+    this.db = config.db
   }
  
   /*

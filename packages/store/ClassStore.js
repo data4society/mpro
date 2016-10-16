@@ -7,7 +7,7 @@ let Promise = require("bluebird")
 class ClassStore {
   constructor(config) {
     this.config = config
-    this.db = config.db.connection
+    this.db = config.db
   }
 
   /*

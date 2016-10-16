@@ -9,7 +9,7 @@ let Promise = require("bluebird")
 class SessionStore {
   constructor(config) {
     this.config = config
-    this.db = config.db.connection
+    this.db = config.db
   }
 
   /*
