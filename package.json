@@ -20,6 +20,7 @@
     "sanitize-html": "^1.11.4",
     "substance": "substance/substance#develop",
     "substance-cheerio": "^0.1.0",
+    "substance-test": "^0.3.1",
     "ws": "^1.1.0"
   },
   "devDependencies": {
@@ -42,10 +43,11 @@
   },
   "browserify": {},
   "scripts": {
-    "bundle": "gulp bundle",
+    "bundle": "node make",
     "postinstall": "mkdir -p uploads",
     "seed": "node seed",
-    "test": "gulp test"
+    "start": "node server",
+    "test": "node test"
   },
   "version": "0.0.1"
 }

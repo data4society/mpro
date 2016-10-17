@@ -1,0 +1,8 @@
+require('./server/ChangeStore.test.js')
+require('./server/DocumentStore.test.js')
+require('./server/EntityStore.test.js')
+require('./server/RubricStore.test.js')
+require('./server/SessionStore.test.js')
+require('./server/SourceStore.test.js')
+require('./server/UserStore.test.js')
+require('./server/DocumentEngine.test.js')

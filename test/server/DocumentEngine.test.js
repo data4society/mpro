@@ -1,65 +1,64 @@
-'use strict';
+let testModule = require('substance-test').module
 
-var substanceTest = require('substance/test/test').module('server/DocumentEngine');
+let Configurator = require('../../packages/common/ServerConfigurator')
+let Database = require('../../packages/common/Database')
+let CJSpackage = require('../../packages/server/cjs/package')
+let StorePackage = require('../../packages/store/package')
+let DocumentEngine = require('../../packages/engine/MproDocumentEngine')
+let SnapshotEngine = require('../../packages/engine/MproSnapshotEngine')
 
-var Database = require('../../server/Database');
-var DocumentEngine = require('../../server/MproDocumentEngine');
-var ChangeStore = require('../../server/ChangeStore');
-var DocumentStore = require('../../server/DocumentStore');
-var UserStore = require('../../server/UserStore');
+const substanceTest = testModule('collab/DocumentEngine')
 
-/*
-  Config
-*/
-var ServerConfigurator = require('../../packages/server/ServerConfigurator');
-var ServerPackage = require('../../packages/server/package');
-var configurator = new ServerConfigurator().import(ServerPackage);
-var schemas = configurator.getSchemas();
+let db = new Database()
 
-var db, documentEngine, userStore, documentStore, changeStore;
+let configurator = new Configurator().import(CJSpackage)
+configurator.setDBConnection(db)
+configurator.import(StorePackage)
+
+let snapshotEngine = new SnapshotEngine({
+  db: db,
+  configurator: configurator,
+  changeStore: configurator.getStore('change'),
+  documentStore: configurator.getStore('document'),
+  snapshotStore: configurator.getStore('snapshot')
+})
+
+let documentEngine = new DocumentEngine({
+  db: db,
+  configurator: configurator,
+  changeStore: configurator.getStore('change'),
+  documentStore: configurator.getStore('document'),
+  snapshotEngine: snapshotEngine
+})
+
 
 function setup() {
-  db = new Database();
   return db.reset()
     .then(function() {
-      userStore = new UserStore({db: db});
-      return userStore.seed();
+      let userStore = configurator.getStore('user')
+      return userStore.seed()
     })
     .then(function() {
-      documentStore = new DocumentStore({ db: db });
-      return documentStore.seed();
+      let documentStore = configurator.getStore('document')
+      return documentStore.seed()
     })
     .then(function() {
-      changeStore = new ChangeStore({ db: db });
-      return changeStore.seed();
-    }).then(function(){
-      // we have to shutdown db connection and establish it again one time
-      // so massive will have all methods attached to it's DB object
-      // if we will not do it massive will not have methods atatched to table
-      // because there was no tables when we started first unit test
-      db.connection.end();
-      db = new Database();
-      changeStore = new ChangeStore({ db: db });
-      documentStore = new DocumentStore({ db: db });
-      documentEngine = new DocumentEngine({
-        changeStore: changeStore,
-        documentStore: documentStore,
-        schemas: schemas
-      });
-    });
+      let changeStore = configurator.getStore('change')
+      return changeStore.seed()
+    })
 }
 
 function teardown() {
-  db.connection.end();
+  db.shutdown()
 }
 
 function test(description, fn) {
   substanceTest(description, function (t) {
     setup().then(function(){
-      t.once('end', teardown);
-      fn(t);
-    });
-  });
+      t.once('end', teardown)
+      fn(t)
+    })
+  })
 }
 
 /*
@@ -67,151 +66,151 @@ function test(description, fn) {
 */
 
 test('Should create a new document', function(t) {
-  var args = {
+  let args = {
     documentId: 'new-doc',
     schemaName: 'mpro-article'
-  };
+  }
 
   documentEngine.createDocument(args, function(err, doc) {
-    t.isNil(err, 'Should not error');
-    t.equal(doc.documentId, args.documentId, 'Document id should equals documentId from argument');
-    t.isNotNil(doc, 'Document should exists');
-    t.equal(doc.schemaName, args.schemaName, 'Schema name should equals schemaName from argument');
-    t.end();
-  });
-});
+    t.isNil(err, 'Should not error')
+    t.equal(doc.documentId, args.documentId, 'Document id should equals documentId from argument')
+    t.isNotNil(doc, 'Document should exists')
+    t.equal(doc.schemaName, args.schemaName, 'Schema name should equals schemaName from argument')
+    t.end()
+  })
+})
 
 test('Should create a new document without documentId provided', function(t) {
-  var args = {
+  let args = {
     schemaName: 'mpro-article'
-  };
+  }
 
   documentEngine.createDocument(args, function(err, doc) {
-    t.isNil(err, 'Should not error');
-    t.isNotNil(doc, 'Document data should exists');
-    t.isNotNil(doc.documentId, 'Document id should exists');
-    t.end();
-  });
-});
+    t.isNil(err, 'Should not error')
+    t.isNotNil(doc, 'Document data should exists')
+    t.isNotNil(doc.documentId, 'Document id should exists')
+    t.end()
+  })
+})
 
 /*
   Create change
 */
 
 test('Should not allow adding a change to non existing document', function(t) {
-  var args = {
+  let args = {
     documentId: 'some-non-existent-doc',
     change: {'some': 'change'}
-  };
+  }
 
   documentEngine.addChange(args, function(err, version) {
-    t.isNotNil(err, 'Should error');
-    t.isNil(version, 'Version should not exists');
-    t.end();
-  });
-});
+    t.isNotNil(err, 'Should error')
+    t.isNil(version, 'Version should not exists')
+    t.end()
+  })
+})
 
 test('Should add a new change to existing document', function(t) {
-  var args = {
+  let args = {
     documentId: '1',
     change: {'some': 'change'}
-  };
+  }
 
   documentEngine.addChange(args, function(err, version) {
-    t.isNil(err, 'Should not error');
-    t.isNotNil(version, 'Version should exists');
-    t.equal(version, 5, 'Version should be 5');
+    t.isNil(err, 'Should not error')
+    t.isNotNil(version, 'Version should exists')
+    t.equal(version, 5, 'Version should be 5')
 
-    var args = {
+    let args = {
       documentId: '1',
       sinceVersion: 0
-    };
+    }
 
     documentEngine.getChanges(args, function(err, result) {
-      t.equal(result.changes.length, 5, 'Should return 5 changes');
-      t.equal(result.version, 5, 'Version should be 5');
+      t.equal(result.changes.length, 5, 'Should return 5 changes')
+      t.equal(result.version, 5, 'Version should be 5')
 
       documentEngine.documentStore.getDocument('1', function(err, doc) {
-        t.equal(doc.version, 5, 'Version should be 5');
-        t.end();
-      });
-    });
-  });
-});
+        t.equal(doc.version, 5, 'Version should be 5')
+        t.end()
+      })
+    })
+  })
+})
 
 /*
   Read document
 */
 
 test('Document should be valid', function(t) {
-  var documentId = '1';
+  let documentId = '1'
 
   documentEngine.getDocument({documentId: documentId}, function(err, doc) {
-    t.isNil(err, 'Should not error');
-    t.isNotNil(doc.data, 'Document data should exists');
-    t.isNotNil(doc.documentId, 'Document id should exists');
-    t.equal(doc.version, 4, 'Version should be 4');
-    t.end();
-  });
-});
+    t.isNil(err, 'Should not error')
+    t.isNotNil(doc.data, 'Document data should exists')
+    t.isNotNil(doc.documentId, 'Document id should exists')
+    t.equal(doc.version, 4, 'Version should be 4')
+    t.end()
+  })
+})
 
 test('Should return right version', function(t) {
   documentEngine.getVersion('1', function(err, version) {
-    t.isNil(err, 'Should not error');
-    t.isNotNil(version, 'Version should exists');
-    t.equal(version, 4, 'Version should be 4');
-    t.end();
-  });
-});
+    t.isNil(err, 'Should not error')
+    t.isNotNil(version, 'Version should exists')
+    t.equal(version, 4, 'Version should be 4')
+    t.end()
+  })
+})
 
 /*
   Read changes
 */
 
 test('Changes should be valid', function(t) {
-  var args = {
+  let args = {
     documentId: '1',
     sinceVersion: 0
-  };
+  }
 
   documentEngine.getChanges(args, function(err, result) {
-    t.isNil(err, 'Should not error');
-    t.isNotNil(result, 'Result should exists');
-    t.equal(result.changes.length, 4, 'Should return 4 changes');
-    t.equal(result.version, 4, 'Version should be 4');
-    t.end();
-  });
-});
+    t.isNil(err, 'Should not error')
+    t.isNotNil(result, 'Result should exists')
+    t.equal(result.changes.length, 4, 'Should return 4 changes')
+    t.equal(result.version, 4, 'Version should be 4')
+    t.end()
+  })
+})
 
 /*
   Remove document
 */
 
 test('Should remove a document', function(t) {
-  var documentId = '1';
+  let documentId = '1'
   
   documentEngine.deleteDocument(documentId, function(err, doc) {  
-    t.isNil(err, 'Should not error');
-    t.equal(doc.documentId, documentId, 'Document id should equals documentId from argument');
+    t.isNil(err, 'Should not error')
+    t.equal(doc.documentId, documentId, 'Document id should equals documentId from argument')
 
     documentEngine.getDocument({documentId: documentId}, function(err, doc) {
-      t.isNotNil(err, 'Should error');
-      t.isNil(doc, 'Document should not exists');
+      t.isNotNil(err, 'Should error')
+      t.isNil(doc, 'Document should not exists')
 
       // Test if there are still changes for that doc after deletion
-      var args = {
+      let args = {
         documentId: documentId,
         sinceVersion: 0
-      };
+      }
       documentEngine.getChanges(args, function(err) {
-        t.isNotNil(err, 'Should error');
+        t.isNotNil(err, 'Should error')
 
         documentEngine.changeStore.getChanges(args, function(err, result) {
-          t.equal(result.changes.length, 0, 'Should be no changes');
-          t.equal(result.version, 0, 'Version should be 0');
-          t.end();
-        });
-      });
-    });
-  });
-});
+          t.equal(result.changes.length, 0, 'Should be no changes')
+          t.equal(result.version, 0, 'Version should be 0')
+          t.end()
+        })
+      })
+    })
+  })
+})

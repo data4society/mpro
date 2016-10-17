@@ -1,4 +1,5 @@
-var b = require('substance-bundler');
+var b = require('substance-bundler')
+var TEST ='.test/'
 
 b.task('clean', function() {
   b.rm('./dist')
@@ -40,8 +41,36 @@ b.task('client', ['publisher'])
 // build all
 b.task('default', ['client'])
 
+b.task('test:server', function() {
+  // Cleanup
+  b.rm(TEST)
+  b.make('substance')
+
+  // TODO: it would be nice to treat such glob patterns
+  // differently, so that we do not need to specify glob root
+  b.copy('./node_modules/substance-test/dist/*', TEST, { root: './node_modules/substance-test/dist' })
+  b.copy('./test/**/*', TEST, { root: './test' })
+
+  b.js('./test/index.js', {
+    // buble necessary here, for nodejs
+    buble: true,
+    external: ['substance-test', 'substance'],
+    commonjs: {
+      include: [
+        '/**/lodash/**',
+        '/**/substance-cheerio/**'
+      ]
+    },
+    targets: [
+      { dest: TEST+'tests.cjs.js', format: 'cjs', sourceMapRoot: __dirname, sourceMapPrefix: 'test' }
+    ]
+  })
+})
+
+b.task('test', ['test:server'])
+
 // starts a server when CLI argument '-s' is set
 b.setServerPort(5001)
 b.serve({
   static: true, route: '/', folder: 'dist'
-});
+})
