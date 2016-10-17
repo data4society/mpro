@@ -12,9 +12,8 @@ module.exports = {
   name: 'mpro-engine',
   configure: function(config) {
     config.import(StorePackage)
-    config.import(MailerEngine)
 
-    let mailer = config.getEngine('mailer')
+    let mailer = new MailerEngine({})
 
     let authEngine = new AuthEngine({
       mailer: mailer,
@@ -64,6 +63,7 @@ module.exports = {
     config.addEngine('snapshot', snapshotEngine)
     config.addEngine('document', documentEngine)
     config.addEngine('import', importEngine)
+    config.addEngine('mailer', mailer)
     config.addEngine('mpro', mproEngine)
     config.addEngine('source', sourceEngine)
   }
