@@ -6,14 +6,19 @@ let StorePackage = require('../../packages/store/package')
 
 const substanceTest = testModule('collab/SourceStore')
 
-let configurator = new Configurator().import(StorePackage)
+let configurator = new Configurator()
 let sourceStore
 
 function setup() {
   let db = new Database()
-  configurator.setDBConnection(db)
-
+  
   return db.reset()
+    .then(function() {
+      db.shutdown()
+      db = new Database()
+      configurator.setDBConnection(db)
+      configurator.import(StorePackage)
+    })
     .then(function() {
       let userStore = configurator.getStore('user')
       return userStore.seed()

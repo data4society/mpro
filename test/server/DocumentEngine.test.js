@@ -9,31 +9,35 @@ let SnapshotEngine = require('../../packages/engine/MproSnapshotEngine')
 
 const substanceTest = testModule('collab/DocumentEngine')
 
-let db = new Database()
-
-let configurator = new Configurator().import(CJSpackage)
-configurator.setDBConnection(db)
-configurator.import(StorePackage)
-
-let snapshotEngine = new SnapshotEngine({
-  db: db,
-  configurator: configurator,
-  changeStore: configurator.getStore('change'),
-  documentStore: configurator.getStore('document'),
-  snapshotStore: configurator.getStore('snapshot')
-})
-
-let documentEngine = new DocumentEngine({
-  db: db,
-  configurator: configurator,
-  changeStore: configurator.getStore('change'),
-  documentStore: configurator.getStore('document'),
-  snapshotEngine: snapshotEngine
-})
-
+let configurator = new Configurator()
+let documentEngine
 
 function setup() {
+  let db = new Database()
+  
   return db.reset()
+    .then(function() {
+      db.shutdown()
+      db = new Database()
+      configurator.setDBConnection(db)
+      configurator.import(CJSpackage)
+      configurator.import(StorePackage)
+      let snapshotEngine = new SnapshotEngine({
+        db: db,
+        configurator: configurator,
+        changeStore: configurator.getStore('change'),
+        documentStore: configurator.getStore('document'),
+        snapshotStore: configurator.getStore('snapshot')
+      })
+
+      documentEngine = new DocumentEngine({
+        db: db,
+        configurator: configurator,
+        changeStore: configurator.getStore('change'),
+        documentStore: configurator.getStore('document'),
+        snapshotEngine: snapshotEngine
+      })
+    })
     .then(function() {
       let userStore = configurator.getStore('user')
       return userStore.seed()
@@ -49,7 +53,8 @@ function setup() {
 }
 
 function teardown() {
-  db.shutdown()
+  let db = configurator.getDBConnection()
+  db.end()
 }
 
 function test(description, fn) {
