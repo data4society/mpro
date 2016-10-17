@@ -9,26 +9,7 @@ let CollabServer = require('./CollabServer')
 let DocumentServer = require('./MproDocumentServer')
 let FileServer = require('./FileServer')
 let MproServer = require('./MproServer')
-
-// We will impor CommonJS versions of schemas as node.js 
-// still not support ES2015 import and export statements
-// TODO: switch back after node.js v7 release
-let SubConfigurator = require('../common/ServerConfigurator')
-let ArticlePackage = require('./schemas/article/package')
-let ArticleImporter = require('./schemas/article/ArticleImporter')
-let TngPackage = require('./schemas/tng/package')
-let TngImporter = require('./schemas/tng/TngImporter')
-let VkPackage = require('./schemas/vk/package')
-let VkImporter = require('./schemas/vk/VkImporter')
-
-let articleConfigurator = new SubConfigurator().import(ArticlePackage)
-articleConfigurator.addImporter('html', ArticleImporter)
-
-let tngConfigurator = new SubConfigurator().import(TngPackage)
-tngConfigurator.addImporter('html', TngImporter)
-
-let vkConfigurator = new SubConfigurator().import(VkPackage)
-vkConfigurator.addImporter('html', VkImporter)
+let CJSPackage = require('./cjs/package')
 
 let db = new Database()
 
@@ -37,12 +18,9 @@ module.exports = {
   configure: function(config) {
     config.setAppConfig(ServerConfig)
     config.setDBConnection(db)
-    
-    config.import(EnginePackage)
 
-    config.addConfigurator('mpro-article', articleConfigurator)
-    config.addConfigurator('mpro-tng', tngConfigurator)
-    config.addConfigurator('mpro-vk', vkConfigurator)
+    config.import(CJSPackage)
+    config.import(EnginePackage)
 
     let server = config.getServerApp()
     let socketServer = config.getWebSocketServer()
