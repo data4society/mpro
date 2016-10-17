@@ -35,10 +35,10 @@ let db = new Database()
 module.exports = {
   name: 'mpro-server',
   configure: function(config) {
-    config.import(EnginePackage)
-
     config.setAppConfig(ServerConfig)
     config.setDBConnection(db)
+    
+    config.import(EnginePackage)
 
     config.addConfigurator('mpro-article', articleConfigurator)
     config.addConfigurator('mpro-tng', tngConfigurator)
