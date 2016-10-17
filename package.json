@@ -3,6 +3,9 @@
   "repository": "data4society/mpro",
   "description": "Monitoring system",
   "license": "",
+  "engines": {
+    "node": ">=6"
+  },
   "dependencies": {
     "bluebird": "^3.3.5",
     "body-parser": "^1.15.1",
@@ -41,7 +44,6 @@
     "tape": "^4.6.0",
     "through2": "^2.0.1"
   },
-  "browserify": {},
   "scripts": {
     "bundle": "node make",
     "postinstall": "mkdir -p uploads",
