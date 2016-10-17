@@ -14,7 +14,8 @@ class MproDocumentEngine extends DocumentEngine {
     Returns the JSON serialized version, as a starting point
   */
   createDocument(args, cb) {
-    let schemaConfig = this.schemas[args.schemaName]
+    let schemas = this.configurator.getSchemas()
+    let schemaConfig = schemas[args.schemaName]
     if (!schemaConfig) {
       return cb(new Err('SchemaNotFoundError', {
         message: 'Schema not found for ' + args.schemaName

@@ -82,6 +82,22 @@ class MproSnapshotEngine extends SnapshotEngine {
       }.bind(this))
     }.bind(this))
   }
+
+  /*
+    Based on a given schema create a document instance based
+    on given schema configuration
+  */
+  _createDocumentInstance(schemaName) {
+    let subConfig = this.configurator.getConfigurator(schemaName)
+
+    if (!subConfig) {
+      throw new Err('SnapshotEngine.SchemaNotFoundError', {
+        message:'Schema ' + schemaName + ' not found'
+      })
+    }
+    let doc = subConfig.createArticle()
+    return doc
+  }
 }
 
 module.exports = MproSnapshotEngine

@@ -80,9 +80,7 @@ class ServerConfigurator extends Configurator {
     each(this.config.configurators, function(configurator) {
       let schema = configurator.getSchema()
       let seed = configurator.getSeed()
-      schema.documentFactory = {
-        createDocument: configurator.createArticle.bind(configurator, seed)
-      }
+      schema.createDocument = configurator.createArticle.bind(configurator, seed)
       schemas[schema.name] = schema
     })
 

@@ -22,22 +22,22 @@ module.exports = {
     })
 
     let db = config.getDBConnection()
-    let schemas = config.getSchemas()
+    //let schemas = config.getSchemas()
 
     let snapshotEngine = new SnapshotEngine({
       db: db,
+      configurator: config,
       changeStore: config.getStore('change'),
       documentStore: config.getStore('document'),
-      snapshotStore: config.getStore('snapshot'),
-      schemas: schemas
+      snapshotStore: config.getStore('snapshot')
     });
 
     let documentEngine = new DocumentEngine({
       db: db,
+      configurator: config,
       changeStore: config.getStore('change'),
       documentStore: config.getStore('document'),
-      snapshotEngine: snapshotEngine,
-      schemas: schemas
+      snapshotEngine: snapshotEngine
     })
 
     let importEngine = new ImportEngine({
