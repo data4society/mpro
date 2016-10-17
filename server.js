@@ -28,7 +28,7 @@ let config = configurator.getAppConfig()
 /*
   Serve app
 */
-app.use(config.publisherEndpoint, express.static(path.join(__dirname, '/dist')))
+app.use('/', express.static(path.join(__dirname, '/dist')))
 
 // Error handling
 // We send JSON to the client so they can display messages in the UI.
