@@ -3,7 +3,7 @@
   reuse for other Substance projects.
 */
 class AuthServer {
-  configurator(config) {
+  constructor(config) {
     this.engine = config.authEngine
     this.path = config.path
   }

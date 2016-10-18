@@ -4,7 +4,7 @@ let isEmpty = require('lodash/isEmpty')
   MPro Server module. Bound to an express instance.
 */
 class MproServer {
-  configurator(config) {
+  constructor(config) {
     this.engine = config.mproEngine;
     this.importEngine = config.importEngine;
     this.sourceEngine = config.sourceEngine;

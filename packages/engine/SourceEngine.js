@@ -12,7 +12,6 @@ let converter = new JSONConverter()
 */
 class SourceEngine {
   constructor(config) {
-    this.config = config
     // Gap between new conversion request
     // and end of old one (in minutes)
     this.gap = config.gap || 1

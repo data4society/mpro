@@ -55,8 +55,9 @@ module.exports = {
     })
 
     let sourceEngine = new SourceEngine({
+      configurator: config,
       documentStore: config.getStore('document'),
-      sourceStore: config.getStore('entity')
+      sourceStore: config.getStore('source')
     })
     
     config.addEngine('auth', authEngine)
