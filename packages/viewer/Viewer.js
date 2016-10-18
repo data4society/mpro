@@ -2,6 +2,10 @@ import { ContainerEditor, Layout, ProseEditor, ProseEditorOverlay, ScrollPane, S
 
 class Viewer extends ProseEditor {
 
+  getComponentRegistry() {
+    return this.props.configurator.getComponentRegistry()
+  }
+
   render($$) {
     let el = $$('div').addClass('sc-document-viewer')
 
@@ -45,6 +49,7 @@ class Viewer extends ProseEditor {
 
   _renderCover($$) {
     let Cover = this.getComponent('cover')
+
     return $$(Cover, {
       doc: this.doc,
       mobile: this.props.mobile,
