@@ -10,7 +10,7 @@ import RubricsIndex from './RubricsIndex'
 */
 
 class Rubrics extends Document {
-  configurator(schema) {
+  constructor(schema) {
     super(schema)
 
     this.addIndex('rubrics', new RubricsIndex(this))

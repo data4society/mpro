@@ -4,7 +4,7 @@ import { NodeIndex, TreeIndex } from 'substance'
   @class
  */
 class RubricIndex extends NodeIndex {
-  configurator(doc) {
+  constructor(doc) {
     super(doc)
 
     this.doc = doc

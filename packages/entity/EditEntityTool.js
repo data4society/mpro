@@ -6,7 +6,7 @@ import EditEntity from './EditEntity'
   Edit an entity reference in a prompt.
 */
 class EditEntityTool extends Component {
-  configurator(...args) {
+  constructor(...args) {
     super(...args)
     this.handleActions({
       'closeModal': this._doneEditing,
