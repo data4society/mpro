@@ -7,7 +7,7 @@ substanceGlobals.DEBUG_RENDERING = true
 let configurator = new MproConfigurator().import(MproPackage)
 
 window.onload = function() {
-  window.app = Mpro.static.mount({
+  window.app = Mpro.mount({
     configurator: configurator
-  }, document.body)
+  }, document.body);
 }

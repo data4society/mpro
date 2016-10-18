@@ -1,4 +1,4 @@
-import Configurator from 'substance'
+import { Configurator } from 'substance'
 
 class SubConfigurator extends Configurator {
 

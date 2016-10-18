@@ -1,4 +1,4 @@
-import { Component, DocumentSession } from 'substance/ui/Component'
+import { Component, DocumentSession } from 'substance'
 import extend from 'lodash/extend'
 
 /*

@@ -12,9 +12,6 @@ export default {
     // Use the default Mpro package
     config.import(MproPackage)
 
-    // Add app's root style
-    config.addStyle(__dirname, 'app.scss')
-
     config.setAppConfig({
       protocol: appConfig.protocol,
       host: appConfig.host,

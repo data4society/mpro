@@ -1,4 +1,4 @@
-import Button from 'substance'
+import { Button } from 'substance'
 import moment from 'moment'
 import FeedItem from '../feed/FeedItem'
 

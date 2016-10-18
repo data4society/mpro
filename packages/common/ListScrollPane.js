@@ -1,4 +1,4 @@
-import ScrollPane from 'substance'
+import { ScrollPane } from 'substance'
 
 class ListScrollPane extends ScrollPane {
 

@@ -1,5 +1,4 @@
-import Toolbar from 'substance'
-import ToolGroup from 'substance'
+import { Toolbar, ToolGroup } from 'substance'
 
 class EditorToolbar extends Toolbar {
 

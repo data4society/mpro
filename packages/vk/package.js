@@ -3,7 +3,7 @@ import VkMeta from './VkMeta'
 import VkMetaComponent from './VkMetaComponent'
 import VkSeed from './VkSeed'
 
-import { BlockquotePackage, EmphasisPackage, HeadingPackage, LinkPackage, ListPackage, ParagraphPackage, StrongPackage } from 'substance'
+import { BlockquotePackage, EmphasisPackage, HeadingPackage, LinkPackage, ParagraphPackage, StrongPackage } from 'substance'
 
 import EntityPackage from '../entity/package'
 import RubricatorPackage from '../rubricator/package'
@@ -24,7 +24,6 @@ export default {
     config.import(ParagraphPackage)
     config.import(HeadingPackage)
     config.import(BlockquotePackage)
-    config.import(ListPackage)
     config.import(EmphasisPackage)
     config.import(StrongPackage)
     config.import(LinkPackage)

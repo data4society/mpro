@@ -1,4 +1,4 @@
-import Tool from 'substance'
+import { Tool } from 'substance'
 
 class AcceptorTool extends Tool {
 

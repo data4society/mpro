@@ -1,4 +1,4 @@
-import Configurator from 'substance'
+import { Configurator } from 'substance'
 import each from 'lodash/each'
 import uniq from 'lodash/uniq'
 

@@ -1,11 +1,11 @@
-import { Component, Modal, Prompt } from 'substance'
+import { Modal, Prompt, Tool } from 'substance'
 import clone from 'lodash/clone'
 import EditEntity from './EditEntity'
 
 /*
   Edit an entity reference in a prompt.
 */
-class EditEntityTool extends Component {
+class EditEntityTool extends Tool {
   constructor(...args) {
     super(...args)
     this.handleActions({

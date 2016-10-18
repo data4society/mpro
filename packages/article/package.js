@@ -3,7 +3,7 @@ import ArticleMeta from './ArticleMeta'
 import ArticleMetaComponent from './ArticleMetaComponent'
 import ArticleSeed from './ArticleSeed'
 
-import { BlockquotePackage, EmphasisPackage, HeadingPackage, LinkPackage, ListPackage, ParagraphPackage, StrongPackage } from 'substance'
+import { BlockquotePackage, EmphasisPackage, HeadingPackage, LinkPackage, ParagraphPackage, StrongPackage } from 'substance'
 
 import EntityPackage from '../entity/package'
 import RubricatorPackage from '../rubricator/package'
@@ -23,7 +23,6 @@ export default {
     config.import(ParagraphPackage)
     config.import(HeadingPackage)
     config.import(BlockquotePackage)
-    config.import(ListPackage)
     config.import(EmphasisPackage)
     config.import(StrongPackage)
     config.import(LinkPackage)

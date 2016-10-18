@@ -1,5 +1,15 @@
 import { Component } from 'substance'
 import each from 'lodash/each'
+import Text from './Text'
+import Checkbox from './Checkbox'
+import Select from './Select'
+import DateField from './Date'
+import Radio from './Radio'
+import Checkboxes from './Checkboxes'
+import Prose from './Prose'
+import Toggle from './Toggle'
+import Multiple from './Multiple'
+import Reference from './Reference'
 
 class Form extends Component {
   constructor(...args) {
@@ -66,16 +76,16 @@ class Form extends Component {
 }
 
 Form.fields = {
-  text: require('./Text'),
-  checkbox: require('./Checkbox'),
-  select: require('./Select'),
-  date: require('./Date'),
-  radio: require('./Radio'),
-  checkboxes: require('./Checkboxes'),
-  prose: require('./Prose'),
-  toggle: require('./Toggle'),
-  multiple: require('./Multiple'),
-  reference: require('./Reference')
+  text: Text,
+  checkbox: Checkbox,
+  select: Select,
+  date: DateField,
+  radio: Radio,
+  checkboxes: Checkboxes,
+  prose: Prose,
+  toggle: Toggle,
+  multiple: Multiple,
+  reference: Reference
 }
 
 export default Form

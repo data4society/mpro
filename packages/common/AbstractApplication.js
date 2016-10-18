@@ -1,4 +1,4 @@
-import ResponsiveApplication from 'substance'
+import { ResponsiveApplication } from 'substance'
 
 /*
   Abstract Application class.

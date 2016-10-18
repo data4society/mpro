@@ -1,4 +1,4 @@
-import { Modal, Tool } from 'substance/'
+import { Modal, Tool } from 'substance'
 import extend from 'lodash/extend'
 import each from 'lodash/each'
 import RubricSelector from './RubricSelector'
