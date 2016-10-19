@@ -8,7 +8,7 @@ class ArticleFeedItem extends FeedItem {
     let meta = document.meta
     let published = this.props.document.published
     let publisher = meta.publisher
-    let source_name = meta.source.split('/')[2]
+    let source_name = meta.source ? meta.source.split('/')[2] : ''
     
     let el = $$('div').addClass('se-source-info')
 
