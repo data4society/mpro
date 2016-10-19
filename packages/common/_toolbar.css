@@ -1,5 +1,8 @@
 /* Toolbar style overrides */
-.sc-toolbar { border-bottom: 1px solid var(--border-color); }
+.sc-toolbar { 
+  border-bottom: 1px solid var(--border-color);
+  margin-left: 18px; 
+}
 
 .sc-toolbar .sc-tool-group.sm-target-document {
   border-right: 1px solid var(--border-color);

@@ -1,5 +1,7 @@
 .se-tool-acceptor button {
   background: #cc8282!important;
+  border: none!important;
+  color: #fff;
 }
 
 .se-tool-acceptor.sm-accepted button {

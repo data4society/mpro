@@ -16,7 +16,6 @@
   line-height: 10px;
   width: 180px;
   white-space: nowrap;
-  overflow: hidden;
   text-overflow: ellipsis;
   display: inline-block;
 }
@@ -46,6 +45,7 @@
   padding: 10px 20px;
   text-transform: capitalize;
   font-size: 14px;
-  font-weight: 100;
+  font-weight: 200;
   cursor: default;
+  color: #fff;
 }
