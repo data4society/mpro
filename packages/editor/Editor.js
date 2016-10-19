@@ -57,7 +57,7 @@ class Editor extends ProseEditor {
     }).ref('cover')
   }
 
-  _documentSessionUpdated(update) {
+  documentSessionUpdated(update) {
     if(!isUndefined(update.change)) {
       let accepted = this.doc.get(['meta', 'accepted'])
       if(update.change.updated['meta,accepted'] === true) {
@@ -73,10 +73,10 @@ class Editor extends ProseEditor {
       }
     }
 
-    let toolbar = this.getToolbar();
+    let toolbar = this.refs.toolbar
     if (toolbar) {
       let commandStates = this.commandManager.getCommandStates()
-      this.refs.toolbar.setProps({
+      toolbar.setProps({
         commandStates: commandStates
       })
     }

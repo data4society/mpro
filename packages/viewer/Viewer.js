@@ -1,4 +1,7 @@
 import { ContainerEditor, Layout, ProseEditor, ProseEditorOverlayTools, ScrollPane, SplitPane } from 'substance'
+import each from 'lodash/each'
+import isUndefined from 'lodash/isUndefined'
+import uniq from 'lodash/uniq'
 
 class Viewer extends ProseEditor {
 
@@ -57,6 +60,47 @@ class Viewer extends ProseEditor {
       documentInfo: this.props.documentInfo,
       rubrics: this.props.rubrics
     }).ref('cover')
+  }
+
+  documentSessionUpdated(update) {
+    if(!isUndefined(update.change)) {
+      let ops = update.change.ops
+      let entityChange = false
+      each(ops, function(op) {
+        if(op.val.type === 'entity') {
+          entityChange = true
+          return
+        }
+      })
+
+      if(entityChange) {
+        this.updateEntitiesList()
+      }
+    }
+
+    let toolbar = this.refs.toolbar
+    if (toolbar) {
+      let commandStates = this.commandManager.getCommandStates()
+      toolbar.setProps({
+        commandStates: commandStates
+      })
+    }
+  }
+
+  updateEntitiesList() {
+    let doc = this.doc
+    let entities = []
+    let entityAnnos = doc.getIndex('annotations').byType.entity
+    each(entityAnnos, function(anno) {
+      entities.push(anno.reference)
+    })
+    entities = uniq(entities)
+
+    let surface = this.surfaceManager.getFocusedSurface()
+    surface.transaction(function(tx, args) {
+      tx.set(['meta', 'entities'], entities)
+      return args
+    })
   }
 }
 

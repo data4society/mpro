@@ -194,6 +194,7 @@ class SourceEngine {
           edited: new Date().toJSON(),
           training: training,
           rubrics: meta.rubrics,
+          entities: meta.entities,
           source: sourceId,
           content: data,
           meta: meta

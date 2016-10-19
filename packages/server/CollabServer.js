@@ -96,14 +96,14 @@ class MproCollabServer extends CollabServer {
         if(!isUndefined(accepted)) {
           extend(meta, {accepted: accepted})
         }
-
         // commit and connect method take optional documentInfo argument
         message.documentInfo = {
           updatedAt: updatedAt,
           updatedBy: req.session.userId,
           title: title,
           meta: meta,
-          rubrics: rubrics
+          rubrics: rubrics,
+          entities: entities
         }
         req.setEnhanced()
         this.next(req, res)
