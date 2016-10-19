@@ -19,8 +19,7 @@ b.task('substance', function() {
 function buildApp(app) {
   return function() {
     b.copy('client/index.html', './dist/')
-    //b.copy('client/assets', './dist/assets/')
-    //b.copy('client/*.css', './dist/', { root: 'client' })
+    b.copy('client/assets', './dist/assets/')
     b.css('./client/app.css', 'dist/mpro.css', {variables: true})
     b.css('./node_modules/substance/dist/substance-pagestyle.css', 'dist/mpro-pagestyle.css', {variables: true})
     b.css('./node_modules/substance/dist/substance-reset.css', 'dist/mpro-reset.css', {variables: true})
