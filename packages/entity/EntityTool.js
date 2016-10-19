@@ -1,5 +1,4 @@
 import { AnnotationTool, Modal } from 'substance'
-import extend from 'lodash/extend'
 import EntityFinder from './EntityFinder'
 
 class EntityTool extends AnnotationTool {
@@ -42,7 +41,7 @@ class EntityTool extends AnnotationTool {
 
       el.append(
         $$(Modal, {
-          width: 'middle'
+          width: 'medium'
         }).append(
           $$(EntityFinder, {
             entityClass: this.getEntityClass()
