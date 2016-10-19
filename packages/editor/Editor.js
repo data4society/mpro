@@ -1,4 +1,4 @@
-import { ContainerEditor, Layout, ProseEditor, ProseEditorOverlay, ScrollPane, SplitPane } from 'substance'
+import { ContainerEditor, Layout, ProseEditor, ProseEditorOverlayTools, ScrollPane, SplitPane } from 'substance'
 import isUndefined from 'lodash/isUndefined'
 import each from 'lodash/each'
 
@@ -14,7 +14,7 @@ class Editor extends ProseEditor {
     let contentPanel = $$(ScrollPane, {
       scrollbarType: 'substance',
       scrollbarPosition: 'right',
-      overlay: ProseEditorOverlay,
+      overlay: ProseEditorOverlayTools,
     }).append(
       $$(Layout, {
         width: 'large'
