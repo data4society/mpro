@@ -1,4 +1,4 @@
-import { ContainerEditor, Layout, ProseEditor, ProseEditorOverlay, ScrollPane, SplitPane } from 'substance'
+import { ContainerEditor, Layout, ProseEditor, ProseEditorOverlayTools, ScrollPane, SplitPane } from 'substance'
 
 class Viewer extends ProseEditor {
 
@@ -16,7 +16,7 @@ class Viewer extends ProseEditor {
     let contentPanel = $$(ScrollPane, {
       scrollbarType: 'substance',
       scrollbarPosition: 'right',
-      overlay: ProseEditorOverlay,
+      overlay: ProseEditorOverlayTools,
     }).append(
       $$(Layout, {
         width: 'large'
