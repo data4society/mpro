@@ -23,29 +23,11 @@ class Welcome extends Component {
       textAlign: 'center'
     })
 
-    if (this.state.requested) {
-      layout.append(
-        $$('h1').append(this.getLabel('welcome-title')),
-        $$('p').append(this.getLabel('welcome-instructions'))
-      )
-    } else {
-      layout.append(
-        $$('h1').append(
-          this.getLabel('welcome-title'),
-          $$('span').addClass('se-cursor')
-        ),
-        $$('p').append(this.getLabel('welcome-about')),
-        $$('h2').append(this.getLabel('welcome-no-passwords')),
-        $$('p').html(this.getLabel('welcome-howto-login')),
-        $$('p').append(this.getLabel('welcome-enter-email'))
-      )
+    layout.append(
+      $$(RequestLogin)
+    )
 
-      layout.append(
-        $$(RequestLogin)
-      )
-    }
-
-    el.append(layout)
+    el.append(layout);
     return el
   }
 
