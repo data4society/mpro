@@ -1,4 +1,4 @@
-import EntityTool from './EntityTool'
+import EntityTool from '../EntityTool'
 
 class ActTool extends EntityTool {}
 

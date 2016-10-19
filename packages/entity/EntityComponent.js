@@ -3,7 +3,7 @@ import { AnnotationComponent } from 'substance'
 class EntityComponent extends AnnotationComponent {
 
   getClassNames() {
-    let entityClass = this.props.node.entityClass
+    let entityClass = this.props.node.referenceType
     let classNames = 'sc-'+this.props.node.type
 
     if(entityClass) {

@@ -63,7 +63,7 @@ class EntityTool extends AnnotationTool {
     e.stopPropagation()
     let showModal = this.state.showModal
     this.setState({showModal: !showModal})
-    if (!this.props.disabled && this.props.mode !== 'create') this.performAction()
+    if (!this.props.disabled && this.props.mode !== 'create') this.executeCommand()
   }
 
   _onModalClose() {
@@ -77,25 +77,18 @@ class EntityTool extends AnnotationTool {
     this.setState({showModal: !showModal, reference: ref})
     if (!this.props.disabled && !this.state.showModal) {
       if(newEntity) commandManager['create-entity'] = true
-      this.performAction()
+      let props = {
+        node: {
+          entityClass: this.getEntityClass(),
+          reference: this.state.reference
+        }
+      }
+      this.executeCommand(props)
     }
   }
 
   getEntityClass() {
     return this.getName()
-  }
-
-  /**
-    Executes the associated command
-  */
-  performAction(props) {
-    this.context.commandManager.executeCommand(this.getCommandName(), extend({
-      mode: this.props.mode,
-      node: {
-        entityClass: this.getEntityClass(),
-        reference: this.state.reference
-      }
-    }, props))
   }
 }
 

@@ -1,4 +1,4 @@
-import { Modal, Prompt, Tool } from 'substance'
+import { Tool } from 'substance'
 import clone from 'lodash/clone'
 import EditEntity from './EditEntity'
 
@@ -13,35 +13,34 @@ class EditEntityTool extends Tool {
       'doneEditing': this._doneEditing
     })
   }
-
-  willReceiveProps() {
-    if(this.context.commandManager['create-entity'] === true) {
-      this.setState({
-        edit: true
-      })
-      this.context.commandManager['create-entity'] = false
-    }
-  }
-
+  
   render($$) {
+    let Modal = this.getComponent('modal')
+    let Button = this.getComponent('button')
+
     let node = this.props.node
     let el = $$('div').addClass('sc-edit-entity-tool')
 
     el.append(
-      $$(Prompt).append(
-        $$(Prompt.Label, {label: node.entityClass}),
-        $$(Prompt.Separator),
-        $$(Prompt.Action, {name: 'edit', title: this.getLabel('edit-entity')})
-          .on('click', this._onEdit),
-        $$(Prompt.Action, {name: 'delete', title: this.getLabel('delete-ref')})
-          .on('click', this._onDelete)
-      )
+      $$('div').addClass('se-label').append(node.entityClass),
+      $$(Button, {
+        icon: 'edit',
+        style: this.props.style
+      })
+      .attr('title', this.getLabel('edit-entity'))
+      .on('click', this._onEdit),
+      $$(Button, {
+        icon: 'delete',
+        style: this.props.style
+      })
+      .attr('title', this.getLabel('delete-ref'))
+      .on('click', this._onDelete)
     )
 
     if (this.state.edit) {
       el.append(
         $$(Modal, {
-          width: 'middle'
+          width: 'medium'
         }).append(
           $$(EditEntity, {entityId: node.reference, node: node})
         )
@@ -61,6 +60,7 @@ class EditEntityTool extends Tool {
       edit: false
     })
   }
+
 
   _onDelete(e) {
     e.preventDefault()

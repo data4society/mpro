@@ -1,4 +1,4 @@
-import EntityTool from './EntityTool'
+import EntityTool from '../EntityTool'
 
 class LocationTool extends EntityTool {}
 

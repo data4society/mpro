@@ -1,4 +1,4 @@
-import EntityCommand from './EntityCommand'
+import EntityCommand from '../EntityCommand'
 
 class LocationCommand extends EntityCommand {}
 

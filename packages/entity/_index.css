@@ -1,2 +1,11 @@
 @import './entity.css';
 @import './entity-finder.css';
+
+.sc-edit-entity-tool > * {
+  display: inline-block;
+  margin-right: 5px;
+}
+
+.sc-edit-entity-tool .se-label {
+  color: rgba(255,255,255, 0.8);
+}
