@@ -1,5 +1,6 @@
 import AbstractApplication from '../common/AbstractApplication'
 import MproRouter from './MproRouter'
+import forEach from 'lodash/forEach'
 
 /*
   Mpro Application component.
@@ -19,13 +20,15 @@ class Mpro extends AbstractApplication {
     this.iconProvider = configurator.getIconProvider()
     this.labelProvider = configurator.getLabelProvider()
 
-    this.addPage('welcome', this.componentRegistry.get('welcome'))
-    this.addPage('inbox', this.componentRegistry.get('inbox'))
-    this.addPage('configurator', this.componentRegistry.get('configurator'))
+    let pages = this.configurator.getPages()
+    forEach(pages, function(page) {
+      this.addPage(page, this.componentRegistry.get(page))
+    }.bind(this))
 
     this.handleActions({
       'configurator': this._configurator,
-      'inbox': this._inbox
+      'inbox': this._inbox,
+      'home': this._home
     })
   }
 
@@ -57,13 +60,18 @@ class Mpro extends AbstractApplication {
 
   _onAuthentication(route, session) {
     if(!session) {
-      route.page = 'welcome'
-    } 
-    // else if (!session.user.name) {
-    //   route.page = 'entername';
-    // }
+      route.page = this.getLoginPage()
+    } else if (!session.user.name) {
+      route.page = 'entername'
+    }
 
     return route
+  }
+
+  _home() {
+    this.navigate({
+      page: this.getDefaultPage()
+    })
   }
 
   _configurator() {

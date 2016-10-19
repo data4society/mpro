@@ -3,7 +3,7 @@ import Configurator from './Configurator'
 export default {
   name: 'configurator',
   configure: function(config) {
-    config.addComponent('configurator', Configurator)
+    config.addPage('configurator', Configurator)
 
     config.addLabel('inbox-menu', {
       en: 'Inbox',

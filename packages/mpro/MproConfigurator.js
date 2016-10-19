@@ -1,13 +1,19 @@
 import { Configurator } from 'substance'
-import each from 'lodash/each'
-import uniq from 'lodash/uniq'
 
 /*
   Top-level configurator for mpro. Has sub-configurators for
   all available modules (editor, viewer etc).
 */
 class MproConfigurator extends Configurator {
-  
+
+  constructor(...args) {
+    super(...args)
+    // Extend config
+    this.config.configurators = {}
+    this.config.pages = []
+  }
+
+
   /*
     Set app config
   */
@@ -93,9 +99,6 @@ class MproConfigurator extends Configurator {
     receive their own configurator)
   */
   addConfigurator(name, configurator) {
-    if (!this.config.configurators) {
-      this.config.configurators = {}
-    }
     this.config.configurators[name] = configurator
   }
 
@@ -109,19 +112,13 @@ class MproConfigurator extends Configurator {
     return this.config.configurators[name]
   }
 
-  /*
-    Get styles from all configurators
-  */
-  getStyles() {
-    let styles = [].concat(this.config.styles)
+  addPage(pageName, component) {
+    this.addComponent(pageName, component)
+    this.config.pages.push(pageName)
+  }
 
-    each(this.config.configurators, function(configurator) {
-      styles = styles.concat(configurator.getStyles())
-    })
-
-    // Remove duplicates with _.uniq, since publisher, author,
-    // reader use a lot of shared styles
-    return uniq(styles)
+  getPages() {
+    return this.config.pages
   }
 }
 
