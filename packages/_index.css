@@ -1,0 +1,24 @@
+/* Common */
+@import './collaborators/_index.css';
+@import './common/_index.css';
+@import './cover/_index.css';
+@import './facets/_index.css';
+@import './feed/_index.css';
+@import './filters/_index.css';
+@import './forms/_index.css';
+@import './header/_index.css';
+@import './loader/_index.css';
+@import './notification/_index.css';
+@import './pager/_index.css';
+@import './rubricator/_index.css';
+@import './welcome/_index.css';
+
+/* Viewer*/
+@import './editor/_index.css';
+@import './entity/_index.css';
+@import './inbox/_index.css';
+@import './viewer/_index.css';
+
+/* Configurator */
+@import './acceptor/_index.css';
+@import './configurator/_index.css';

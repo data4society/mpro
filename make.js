@@ -7,7 +7,6 @@ b.task('clean', function() {
 
 // copy assets
 b.task('assets', function() {
-  b.copy('packages/**/*.css', './dist/')
   b.copy('node_modules/font-awesome', './dist/font-awesome')
 })
 
@@ -21,10 +20,13 @@ function buildApp(app) {
   return function() {
     b.copy('client/index.html', './dist/')
     //b.copy('client/assets', './dist/assets/')
-    b.copy('client/*.css', './dist/', { root: 'client' })
+    //b.copy('client/*.css', './dist/', { root: 'client' })
+    b.css('./client/app.css', 'dist/mpro.css', {variables: true})
+    b.css('./node_modules/substance/dist/substance-pagestyle.css', 'dist/mpro-pagestyle.css', {variables: true})
+    b.css('./node_modules/substance/dist/substance-reset.css', 'dist/mpro-reset.css', {variables: true})
     b.js('client/app.js', {
       // need buble if we want to minify later
-      // buble: true,
+      buble: true,
       external: ['substance'],
       commonjs: { include: ['node_modules/lodash/**', 'node_modules/moment/moment.js'] },
       dest: './dist/app.js',
@@ -34,9 +36,7 @@ function buildApp(app) {
   }
 }
 
-b.task('publisher', ['clean', 'substance', 'assets'], buildApp('publisher'))
-
-b.task('client', ['publisher'])
+b.task('client', ['clean', 'substance', 'assets'], buildApp('mpro'))
 
 // build all
 b.task('default', ['client'])
