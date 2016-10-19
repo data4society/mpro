@@ -21,18 +21,21 @@ import WelcomePackage from '../welcome/package'
 // Holds article schema
 import Article from '../article/package'
 let articleViewerConfigurator = new SubConfigurator().import(ViewerPackage)
+articleViewerConfigurator.import(BasePackage)
 articleViewerConfigurator.import(Article)
 
 // Vk configurator
 // Holds vkontakte posts schema
 import Vk from '../vk/package'
 let vkViewerConfigurator = new SubConfigurator().import(ViewerPackage)
+vkViewerConfigurator.import(BasePackage)
 vkViewerConfigurator.import(Vk)
 
 // Tng configurator
 // Holds training articles schema
 import Tng from '../tng/package'
 let tngEditorConfigurator = new SubConfigurator().import(EditorPackage)
+tngEditorConfigurator.import(BasePackage)
 tngEditorConfigurator.import(Tng)
 
 // Entities configurator
