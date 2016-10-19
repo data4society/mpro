@@ -30,7 +30,6 @@ class Inbox extends AbstractFeedLoader {
     let Loader = this.getComponent('loader')
     let Notification = this.getComponent('notification')
     let Collaborators = this.getComponent('collaborators')
-    let LoginStatus = this.getComponent('login-status')
 
     let el = $$('div').addClass('sc-inbox')
 
@@ -41,7 +40,6 @@ class Inbox extends AbstractFeedLoader {
     })
 
     header.outlet('content').append(
-      $$(LoginStatus),
       $$(Notification, {}).ref('notification'),
       $$(Collaborators, {}).ref('collaborators')
     )

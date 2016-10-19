@@ -1,9 +1,11 @@
 import { Component } from 'substance'
+import LoginStatus from './LoginStatus'
 import each from 'lodash/each'
 
 class Header extends Component {
 
   render($$) {
+    let authenticationClient = this.context.authenticationClient
     let el = $$('div').addClass('sc-header')
     let actionEls = []
 
@@ -24,6 +26,9 @@ class Header extends Component {
 
     el.append(
       $$('div').addClass('se-actions').append(actionEls),
+      $$(LoginStatus, {
+        user: authenticationClient.getUser()
+      }),
       $$('div').addClass('se-content').append(content)
     )
     return el

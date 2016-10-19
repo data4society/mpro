@@ -59,3 +59,39 @@
   background-color: #51726a;
   color: #8EF1CC;
 }
+
+.sc-header .sc-login-status {
+  float: right;
+  padding: 0px 15px;
+  color: rgba(255,255,255, 0.7);
+  line-height: 40px;
+  border-left: 1px solid rgba(255, 255, 255, 0.4);
+}
+
+.sc-header .se-dropdown .se-caret {
+  padding-left: 10px;
+  font-size: 24px;
+  position: relative;
+  top: 3px;
+  color: rgba(255,255,255, 0.7);
+}
+
+.sc-header .se-dropdown ul {
+  display: none;
+  position: absolute;
+  background: #3B4749;
+  padding: 0px 15px;
+  margin: 0px -15px;
+  list-style: none;
+  z-index: 99;
+  width: 100%;
+}
+
+.sc-header .se-dropdown ul li {
+  width: 100px;
+  cursor: pointer;
+}
+
+.sc-header .se-dropdown:hover ul {
+  display: block;
+}

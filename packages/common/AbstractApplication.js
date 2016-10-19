@@ -1,17 +1,26 @@
 import { ResponsiveApplication } from 'substance'
+import cloneDeep from 'lodash/cloneDeep'
+import isNull from 'lodash/isNull'
 
 /*
   Abstract Application class.
 */
 
 class AbstractApplication extends ResponsiveApplication {
+
   constructor(...args) {
     super(...args)
-    
+
     this.handleActions({
       'logout': this._logout,
       'userSessionUpdated': this._updateUserSession
     })
+  }
+
+  willUpdateState(newState) {
+    if(isNull(newState.userSession)) {
+      this.navigate({page: this.getLoginPage()})
+    }
   }
 
   /*
@@ -61,8 +70,16 @@ class AbstractApplication extends ResponsiveApplication {
         userSession: userSession
       })
 
-      this.router.writeRoute(route, opts);
+      this.router.writeRoute(route, opts)
     }.bind(this))
+  }
+
+  _getPageProps() {
+    var props = cloneDeep(this.state.route)
+    delete props.page
+    props.mobile = this.state.mobile
+    props.userSession = this.state.userSession
+    return props
   }
 
   /*  
@@ -97,9 +114,9 @@ class AbstractApplication extends ResponsiveApplication {
     Returns login key either session token of logged in user.
   */
   _getLoginData(route) {
-    let loginKey = route.loginKey
-    let storedToken = this._getSessionToken()
-    let loginData
+    var loginKey = route.loginKey
+    var storedToken = this._getSessionToken()
+    var loginData
 
     if (loginKey) {
       loginData = {loginKey: loginKey}
@@ -142,10 +159,10 @@ class AbstractApplication extends ResponsiveApplication {
       if (err) throw err
 
       window.localStorage.removeItem('sessionToken')
+
       this.extendState({
         userSession: null
-      })
-      this.navigate({page: this.getLoginPage()})
+      });
     }.bind(this))
   }
 }
