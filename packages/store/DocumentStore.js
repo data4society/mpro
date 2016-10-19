@@ -49,11 +49,12 @@ class DocumentStore {
       schema_version: props.schema_version || props.schemaVersion,
       version: props.version || 1,
       rubrics: props.rubrics || [],
+      entities: props.entities || [],
       published: props.published,
       created: props.created || new Date(),
       edited: props.edited || new Date(),
       source: props.source,
-      meta: props.meta || {title: props.title, rubrics: []},
+      meta: props.meta || {title: props.title, rubrics: [], entities: []},
       content: props.content,
       info: props.info
     }
@@ -136,6 +137,7 @@ class DocumentStore {
       if(!isUndefined(props.info.title)) props.title = props.info.title
       if(props.info.meta) props.meta = props.info.meta
       if(props.info.rubrics) props.rubrics = props.info.rubrics
+      if(props.info.entities) props.entities = props.info.entities
     }
 
     if(isUndefined(props.edited)) props.edited = new Date()

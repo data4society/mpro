@@ -3,6 +3,7 @@ let DefaultDOMElement = require('substance').DefaultDOMElement
 let HTMLImporter = require('substance').HTMLImporter
 let each = require('lodash/each')
 let find = require('lodash/find')
+let uniq = require('lodash/uniq')
 
 class ArticleImporter extends HTMLImporter {
 
@@ -36,10 +37,11 @@ class ArticleImporter extends HTMLImporter {
     let parsed = DefaultDOMElement.parseHTML(clean)
     this.convertDocument(parsed)
     let doc = this.generateDocument()
+
+    this.convertEntities(doc, source.markup)
     // Create document metadata
     this.convertMeta(doc, source)
 
-    this.convertEntities(doc, source.markup)
     return doc
   }
 
@@ -53,6 +55,13 @@ class ArticleImporter extends HTMLImporter {
     let publisher = meta.publisher
     let published = new Date(source.published_date)
 
+    let entities = []
+    let entityAnnos = doc.getIndex('annotations').byType.entity
+    each(entityAnnos, function(anno) {
+      entities.push(anno.reference)
+    })
+    entities = uniq(entities)
+
     let metaNode = doc.get('meta')
     if(!metaNode){
       doc.create({
@@ -62,7 +71,7 @@ class ArticleImporter extends HTMLImporter {
         source: source.guid,
         published: published.toJSON(),
         rubrics: source.rubric_ids,
-        entities: [],
+        entities: entities,
         abstract: meta.abstract,
         cover: '',
         publisher: publisher.name

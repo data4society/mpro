@@ -4,6 +4,7 @@ let HTMLImporter = require('substance').HTMLImporter
 let each = require('lodash/each')
 let find = require('lodash/find')
 let map = require('lodash/map')
+let uniq = require('lodash/uniq')
 
 class VkImporter extends HTMLImporter {
 
@@ -35,10 +36,11 @@ class VkImporter extends HTMLImporter {
     let parsed = DefaultDOMElement.parseHTML(clean)
     this.convertDocument(parsed)
     let doc = this.generateDocument()
+
+    this.convertEntities(doc, source.markup)
     // Create document metadata
     this.convertMeta(doc, source)
 
-    this.convertEntities(doc, source.markup)
     return doc
   }
 
@@ -70,6 +72,13 @@ class VkImporter extends HTMLImporter {
       }
     })
 
+    let entities = []
+    let entityAnnos = doc.getIndex('annotations').byType.entity
+    each(entityAnnos, function(anno) {
+      entities.push(anno.reference)
+    })
+    entities = uniq(entities)
+
     let published = new Date(source.published_date)
     let abstract = source.doc_source.substr(0, source.doc_source.indexOf('<br>'))
     abstract = this.truncate(abstract, 200, true)
@@ -82,7 +91,7 @@ class VkImporter extends HTMLImporter {
         source: source.guid,
         published: published.toJSON(),
         rubrics: source.rubric_ids,
-        entities: source.entity_ids,
+        entities: entities,
         abstract: abstract,
         post_type: meta.vk_post_type,
         author: {
