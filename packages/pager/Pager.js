@@ -9,7 +9,7 @@ class Pager extends Component {
 
     let el = $$('div').addClass('sc-pager');
 
-    let btn = $$(Button, {disabled: isLastPage}).append('Load more')
+    let btn = $$(Button, {disabled: isLastPage, label: 'Load more', style: 'default'})
       .on('click', this._loadMore)
 
     el.append(btn)

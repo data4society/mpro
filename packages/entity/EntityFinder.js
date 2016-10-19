@@ -36,7 +36,7 @@ class EntityFinder extends Component {
 
       el.append(
         multipleWidget,
-        $$(Button).addClass('se-button-done').append('Done')
+        $$(Button, {label: 'Done', style: 'default'}).addClass('se-button-done')
           .on('click', this._onClickDone)
       )
     } else {
@@ -45,7 +45,7 @@ class EntityFinder extends Component {
           .ref('value')
           .on('keyup', this.onKeyUp)
           .on('blur', this.onBlur),
-        $$(Button).addClass('se-button-create').append('+ Add')
+        $$(Button, {label: '+ Add', style: 'default'}).addClass('se-button-create')
           .on('click', this._createEntity)
       )
     }

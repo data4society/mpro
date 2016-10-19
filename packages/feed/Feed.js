@@ -61,7 +61,7 @@ class Feed extends Component {
 
     if(this.props.addNew) {
       el.append(
-        $$(Button).addClass('se-new-document-button').append(this.getLabel('new-document'))
+        $$(Button, {label: 'new-document', style: 'default'}).addClass('se-new-document-button')
           .on('click', this.send.bind(this, 'newDocument'))
       )
     }
