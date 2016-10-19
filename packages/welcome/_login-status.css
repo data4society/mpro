@@ -30,6 +30,6 @@
   cursor: pointer;
 }
 
-.sc-login-status:hover ul
+.sc-login-status:hover ul {
   display: block;
 }

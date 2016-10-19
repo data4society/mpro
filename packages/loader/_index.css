@@ -2,3 +2,9 @@
   text-align: center;
   padding-top: 60px;
 }
+
+.sc-edit-document .sc-scroll-pane.sm-substance-scrollbar.sm-scrollbar-position-right .sc-scrollbar {
+  right: 0px;
+}
+
+.sc-edit-document .sc-container-editor > * { margin-bottom: 20px; }

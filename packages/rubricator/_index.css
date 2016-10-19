@@ -21,21 +21,12 @@
   cursor: pointer;
 }
 
-/*$nodePaddingLeft: 25px;
-
-&.hide-expand {
-  padding-left: $nodePaddingLeft + 16px;
-}
-
-@for $i from 2 through 6 {
-  &.level-#{$i} {
-    padding-left: $nodePaddingLeft * $i;
-  }
-}
-
-&.level-2 {
-
-}*/
+.sc-rubricator .se-tree-node.level-1 { padding-left: 25px; }
+.sc-rubricator .se-tree-node.level-2 { padding-left: 41px; }
+.sc-rubricator .se-tree-node.level-3 { padding-left: 57px; }
+.sc-rubricator .se-tree-node.level-4 { padding-left: 73px; }
+.sc-rubricator .se-tree-node.level-5 { padding-left: 89px; }
+.sc-rubricator .se-tree-node.level-6 { padding-left: 105px; }
 
 .sc-rubricator .se-tree-node.sm-selected {
   border-left: 4px solid #91bb04;
