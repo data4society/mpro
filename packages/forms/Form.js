@@ -37,16 +37,16 @@ class Form extends Component {
   }
 
   getSchema() {
-    let schema = this.node.constructor.static.schema
+    let schema = this.node.constructor.schema
     if (schema) {
       return schema
     } else {
-      throw new Error('Contract: Node.static.schema must have a value')
+      throw new Error('Contract: Node.schema must have a value')
     }
   }
 
   getField(type) {
-    let field = this.constructor.static.fields[type]
+    let field = this.constructor.fields[type]
     if(field) {
       return field
     } else {
