@@ -192,7 +192,6 @@ class UserStore {
   _createUser(userData) {
     // TODO: at some point we should make this more secure
     // e.g. generate a hash-like-thing in separate method and store it
-    let password = uuid()
     let loginKey = userData.loginKey || uuid()
 
     let record = {
@@ -201,13 +200,15 @@ class UserStore {
       email: userData.email,
       created: new Date(),
       login_key: loginKey,
-      password: password
+      password: userData.password,
+      access: userData.access,
+      super: userData.super
     }
 
     return new Promise(function(resolve, reject) {
       this.db.users.insert(record, function(err, user) {
         if (err) {
-          reject(new Err('UserStore.CreateError', {
+          return reject(new Err('UserStore.CreateError', {
             cause: err
           }))
         }

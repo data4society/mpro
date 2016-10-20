@@ -66,9 +66,9 @@ class MproConfigurator extends Configurator {
   /*
     Get Document Client instance
   */
-  getDocumentClient() {
+  getDocumentClient(authClient) {
     let DocumentClientClass = this.config.DocumentClientClass
-    return new DocumentClientClass({httpUrl: this.config.documentServerUrl})
+    return new DocumentClientClass({httpUrl: this.config.documentServerUrl, authClient: authClient})
   }
 
   /*
@@ -89,9 +89,9 @@ class MproConfigurator extends Configurator {
   /*
     Get File Client instance
   */
-  getFileClient() {
+  getFileClient(authClient) {
     let FileClientClass = this.config.fileClient
-    return new FileClientClass({httpUrl: this.config.fileServerUrl})
+    return new FileClientClass({httpUrl: this.config.fileServerUrl, authClient: authClient})
   }
 
   /*

@@ -5,6 +5,34 @@ import { DocumentClient, request } from 'substance'
 */
 
 class MproDocumentClient extends DocumentClient {
+  constructor(config) {
+    super(config)
+
+    this.config = config
+    this.authClient = config.authClient
+  }
+
+  request(method, url, data, cb) {
+    let request = new XMLHttpRequest();
+    request.open(method, url, true)
+    request.setRequestHeader('Content-Type', 'application/json; charset=UTF-8')
+    request.setRequestHeader('x-access-token', this.authClient.getSessionToken())
+    request.onload = function() {
+      if (request.status >= 200 && request.status < 400) {
+        let res = request.responseText;
+        if(isJson(res)) res = JSON.parse(res);
+        cb(null, res);
+      } else {
+        return cb(new Error('Request failed. Returned status: ' + request.status))
+      }
+    }
+
+    if (data) {
+      request.send(JSON.stringify(data))
+    } else {
+      request.send()
+    }
+  }
 
   listDocuments(filters, options, cb) {
     // TODO: send filters and options to server
@@ -54,6 +82,15 @@ class MproDocumentClient extends DocumentClient {
     let restrictionsRequest = encodeURIComponent(JSON.stringify(restrictions))
     request('GET', '/api/entities/search?value=' + value + '&restrictions=' + restrictionsRequest, null, cb)
   }
+}
+
+function isJson(str) {
+  try {
+    JSON.parse(str)
+  } catch (e) {
+    return false
+  }
+  return true
 }
 
 export default MproDocumentClient

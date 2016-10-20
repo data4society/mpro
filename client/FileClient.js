@@ -4,6 +4,7 @@
 class FileClient {
   constructor(config) {
     this.config = config
+    this.authClient = config.authClient
   }
 
   /*
@@ -34,6 +35,7 @@ class FileClient {
     xhr.addEventListener("load", transferComplete)
     xhr.upload.addEventListener("progress", updateProgress)
     xhr.open('post', this.config.httpUrl, true)
+    xhr.setRequestHeader('x-access-token', this.authClient.getSessionToken())
     xhr.send(formData)
   }
 

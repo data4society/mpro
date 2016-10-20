@@ -14,8 +14,8 @@ class Mpro extends AbstractApplication {
     this.config = configurator.getAppConfig()
     this.configurator = configurator
     this.authenticationClient = configurator.getAuthenticationClient()
-    this.documentClient = configurator.getDocumentClient()
-    this.fileClient = configurator.getFileClient()
+    this.documentClient = configurator.getDocumentClient(this.authenticationClient)
+    this.fileClient = configurator.getFileClient(this.authenticationClient)
     this.componentRegistry = configurator.getComponentRegistry()
     this.iconProvider = configurator.getIconProvider()
     this.labelProvider = configurator.getLabelProvider()

@@ -5,7 +5,7 @@ import { request } from 'substance'
 */
 
 class AuthenticationClient {
-  constructor (config) {
+  constructor(config) {
     this.config = config;
     this._requests = {};
   }
