@@ -246,7 +246,7 @@ class AuthEngine {
   _enrichSession(session) {
     let userStore = this.userStore
     return new Promise(function(resolve, reject) {
-      userStore.getUser(session.user_id).then(function(user) {
+      userStore.getUser(session.userId).then(function(user) {
         session.user = user
         resolve(session)
       }).catch(function(err) {
@@ -265,7 +265,7 @@ class AuthEngine {
     if(!token) return res.status(403).end('forbidden')
 
     this.sessionStore.getSession(token).then(function(session) {
-      return this.userStore.getUser(session.user_id)
+      return this.userStore.getUser(session.userId)
     }.bind(this)).then(function(user) {
       req.user = user
       if(user.access) {
@@ -284,7 +284,7 @@ class AuthEngine {
     if(!token) return res.status(403).end('forbidden')
 
     this.sessionStore.getSession(token).then(function(session) {
-      return this.userStore.getUser(session.user_id)
+      return this.userStore.getUser(session.userId)
     }.bind(this)).then(function(user) {
       req.user = user
       if(user.super) {
