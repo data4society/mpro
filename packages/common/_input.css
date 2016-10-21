@@ -7,3 +7,8 @@
   border: 1px solid var(--border-color);
   border-radius: 3px;
 }
+
+.sc-edit-link-tool {
+  width: initial;
+  height: 30px;
+}
