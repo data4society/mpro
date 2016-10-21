@@ -1,44 +1,36 @@
-'use strict';
+import Field from './Field'
 
-var Field = require('./Field');
+class Checkbox extends Field {
 
-function Checkbox() {
-  Checkbox.super.apply(this, arguments);
-}
-
-Checkbox.Prototype = function() {
-
-  this.getFieldValue = function() {
-    var value = this.refs.input.$el[0].checked;
-    return value;
-  };
+  getFieldValue() {
+    let value = this.refs.input.$el[0].checked
+    return value
+  }
   
-  this.render = function($$) {
-    var name = this.getName();
-    var config = this.getConfig();
-    var value = this.getValue();
+  render($$) {
+    let name = this.getName()
+    let config = this.getConfig()
+    let value = this.getValue()
     
-    var el = $$('div')
-      .addClass('sc-field sc-field-checkbox sc-field-' + name);
+    let el = $$('div')
+      .addClass('sc-field sc-field-checkbox sc-field-' + name)
 
-    var input = $$('input').attr({type: "checkbox"})
+    let input = $$('input').attr({type: "checkbox"})
       .ref('input')
-      .on('change', this.commit);
+      .on('change', this.commit)
 
     if(value) {
-      input.attr({checked: "checked"});
+      input.attr({checked: "checked"})
     }
 
-    var label = $$('label')
+    let label = $$('label')
       .append(input)
-      .append(config.placeholder);
+      .append(config.placeholder)
 
-    el.append(label);
+    el.append(label)
     
-    return el;
-  };
-};
+    return el
+  }
+}
 
-Field.extend(Checkbox);
-
-module.exports = Checkbox;
+export default Checkbox

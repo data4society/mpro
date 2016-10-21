@@ -1,11 +1,8 @@
-'use strict';
+import Header from './Header'
 
-var Header = require('./Header');
-
-module.exports = {
+export default {
   name: 'header',
   configure: function(config) {
-    config.addComponent('header', Header);
-    config.addStyle(__dirname, '_header');
+    config.addComponent('header', Header)
   }
-};
+}

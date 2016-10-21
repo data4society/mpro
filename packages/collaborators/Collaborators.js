@@ -1,67 +1,59 @@
-'use strict';
+import { Component } from 'substance'
+import each from 'lodash/each'
 
-var Component = require('substance/ui/Component');
-var each = require('lodash/each');
+class Collaborators extends Component {
 
-function Collaborators() {
-  Component.apply(this, arguments);
-}
+  didMount() {
+    this._init()
+  }
 
-Collaborators.Prototype = function() {
+  willReceiveProps() {
+    this.dispose()
+    this._init()
+  }
 
-  this.didMount = function() {
-    this._init();
-  };
-
-  this.willReceiveProps = function() {
-    this.dispose();
-    this._init();
-  };
-
-  this._init = function() {
+  _init() {
     if(this.props.session) {
-      this.props.session.on('collaborators:changed', this.rerender, this);
+      this.props.session.on('collaborators:changed', this.rerender, this)
     }
-  };
+  }
 
-  this.dispose = function() {
+  dispose() {
     if(this.props.session) {
-      this.props.session.off(this);
+      this.props.session.off(this)
     }
-  };
+  }
 
-  this.render = function($$) {
+  render($$) {
     if(!this.props.session) {
-      var emptyEl = $$('div').addClass('sc-empty-collaborators');
-      return emptyEl;
+      let emptyEl = $$('div').addClass('sc-empty-collaborators')
+      return emptyEl
     }
-    
-    var el = $$('div').addClass('sc-collaborators');
+   
+    let el = $$('div').addClass('sc-collaborators')
 
-    var collaborators = this.props.session.collaborators;
+    let collaborators = this.props.session.collaborators
     each(collaborators, function(collaborator) {
-      var initials = this._extractInitials(collaborator);
+      let initials = this._extractInitials(collaborator)
       el.append(
         $$('div').addClass('se-collaborator sm-collaborator-'+collaborator.colorIndex).attr({title: collaborator.name || 'Anonymous'}).append(
           initials
         )
-      );
-    }.bind(this));
-    return el;
-  };
+      )
+    }.bind(this))
+    return el
+  }
 
-  this._extractInitials = function(collaborator) {
-    var name = collaborator.name;
+  _extractInitials(collaborator) {
+    let name = collaborator.name
     if (!name) {
-      return 'A';
+      return 'A'
     }
-    var parts = name.split(' ');
+    let parts = name.split(' ')
     return parts.map(function(part) {
-      return part[0].toUpperCase(); // only use the first letter of a part
-    });
-  };
-};
+      return part[0].toUpperCase() // only use the first letter of a part
+    })
+  }
+}
 
-Component.extend(Collaborators);
-
-module.exports = Collaborators;
+export default Collaborators

@@ -1,61 +1,82 @@
-'use strict';
+import { Component, Button, Input } from 'substance'
 
-var Component = require('substance/ui/Component');
-var Button = require('substance/ui/Button');
-var Input = require('substance/ui/Input');
+class RequestLogin extends Component {
 
-function RequestLogin() {
-  Component.apply(this, arguments);
-}
+  render($$) {
+    let Notification = this.getComponent('notification')
+    let el = $$('div').addClass('sc-request-login')
 
-RequestLogin.Prototype = function() {
+    el.append(
+      $$('div').addClass('se-email').append(
+        $$(Input, {
+          type: 'email',
+          value: this.state.email,
+          placeholder: this.getLabel('enter-email-placeholder'),
+          centered: true
+        }).ref('email')
+      ),
+      $$('div').addClass('se-password').append(
+        $$(Input, {
+          type: 'password',
+          placeholder: this.getLabel('enter-password-placeholder'),
+          centered: true
+        }).ref('password')
+      )
+    )
 
-  this.render = function($$) {
-    var componentRegistry = this.context.componentRegistry;
-    var Notification = componentRegistry.get('notification');
+    el.append(
+      $$(Button, {
+        disabled: Boolean(this.state.loading), // disable button when in loading state
+        label: 'login'
+      }).on('click', this._login)
+    )
 
-    var el = $$('div').addClass('sc-request-login');
-
-    if (this.state.requested) {
-      el.append(
-        $$('h1').append(this.i18n.t('sc-welcome.submitted-title')),
-        $$('p').append(this.i18n.t('sc-welcome.submitted-instructions'))
-      );
-    } else {
-      el.append(
-        $$('div').addClass('se-email').append(
-          $$(Input, {
-            type: 'text',
-            value: this.state.email,
-            placeholder: 'Enter your email here',
-            centered: true
-          }).ref('email')
-        )
-      );
-
-      el.append(
-        $$(Button, {
-          disabled: Boolean(this.state.loading) // disable button when in loading state
-        }).append(this.getLabel('welcome-submit'))
-          .on('click', this._requestLoginLink)
-      );
-
-      if (this.state.notification) {
-        el.append($$(Notification, this.state.notification));
-      }
+    if (this.state.notification) {
+      el.append($$(Notification, this.state.notification))
     }
-    return el;
-  };
 
-  this._requestLoginLink = function() {
-    var email = this.refs.email.val();
-    var authenticationClient = this.context.authenticationClient;
+    return el
+  }
+
+  _login() {
+    let email = this.refs.email.val()
+    let password = this.refs.password.val()
+    let authenticationClient = this.context.authenticationClient
 
     // Set loading state
     this.setState({
       email: email,
       loading: true
-    });
+    })
+
+    authenticationClient.authenticate({
+      email: email,
+      password: password
+    }, function(err, session) {
+      if (err) {
+        this.setState({
+          loading: false,
+          notification: {
+            type: 'error',
+            message: 'Sorry. Make sure you provided a valid email and password.'
+          }
+        });
+      } else {
+        window.localStorage.setItem('sessionToken', session.sessionToken)
+        this.send('home')
+      }
+    }.bind(this))
+  }
+
+  _requestLoginLink() {
+    let email = this.refs.email.val()
+    let authenticationClient = this.context.authenticationClient
+
+    // Set loading state
+    this.setState({
+      email: email,
+      loading: true
+    })
 
     authenticationClient.requestLoginLink({
       email: email,
@@ -68,17 +89,16 @@ RequestLogin.Prototype = function() {
             type: 'error',
             message: 'Your request could not be processed. Make sure you provided a valid email.'
           }
-        });
+        })
       } else {
         this.setState({
           loading: false,
           requested: true
-        });
+        })
         this.send('loginRequested');
       }
-    }.bind(this));
-  };
-};
+    }.bind(this))
+  }
+}
 
-Component.extend(RequestLogin);
-module.exports = RequestLogin;
+export default RequestLogin

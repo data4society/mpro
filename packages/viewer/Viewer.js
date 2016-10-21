@@ -1,29 +1,25 @@
-'use strict';
+import { ContainerEditor, Layout, ProseEditor, ProseEditorOverlayTools, ScrollPane, SplitPane } from 'substance'
+import each from 'lodash/each'
+import isUndefined from 'lodash/isUndefined'
+import uniq from 'lodash/uniq'
 
-var ProseEditor = require('substance/packages/prose-editor/ProseEditor');
-var ContainerEditor = require('substance/ui/ContainerEditor');
-var SplitPane = require('substance/ui/SplitPane');
-var ScrollPane = require('substance/ui/ScrollPane');
-var Layout = require('substance/ui/Layout');
-var ProseEditorOverlay = require('substance/packages/prose-editor/ProseEditorOverlay');
+class Viewer extends ProseEditor {
 
-function Viewer() {
-  Viewer.super.apply(this, arguments);
-}
+  getComponentRegistry() {
+    return this.props.configurator.getComponentRegistry()
+  }
 
-Viewer.Prototype = function() {
+  render($$) {
+    let el = $$('div').addClass('sc-document-viewer')
 
-  this.render = function($$) {
-    var el = $$('div').addClass('sc-document-viewer');
+    let toolbar = this._renderToolbar($$)
+    let editor = this._renderEditor($$)
+    let cover = this._renderCover($$)
 
-    var toolbar = this._renderToolbar($$);
-    var editor = this._renderEditor($$);
-    var cover = this._renderCover($$);
-
-    var contentPanel = $$(ScrollPane, {
+    let contentPanel = $$(ScrollPane, {
       scrollbarType: 'substance',
       scrollbarPosition: 'right',
-      overlay: ProseEditorOverlay,
+      overlay: ProseEditorOverlayTools,
     }).append(
       $$(Layout, {
         width: 'large'
@@ -31,19 +27,19 @@ Viewer.Prototype = function() {
         cover,
         editor
       )
-    ).ref('contentPanel');
+    ).ref('contentPanel')
 
     el.append(
       $$(SplitPane, {splitType: 'horizontal'}).append(
         toolbar,
         contentPanel
       )
-    );
-    return el;
-  };
+    )
+    return el
+  }
 
-  this._renderEditor = function($$) {
-    var configurator = this.props.configurator;
+  _renderEditor($$) {
+    let configurator = this.props.configurator
     return $$(ContainerEditor, {
       disabled: this.props.disabled,
       documentSession: this.documentSession,
@@ -51,23 +47,61 @@ Viewer.Prototype = function() {
       editing: 'selection',
       commands: configurator.getSurfaceCommandNames(),
       textTypes: configurator.getTextTypes()
-    }).ref('body');
-  };
+    }).ref('body')
+  }
 
-  this._renderCover = function($$) {
-    var componentRegistry = this.componentRegistry;
-    var Cover = componentRegistry.get('cover');
+  _renderCover($$) {
+    let Cover = this.getComponent('cover')
+
     return $$(Cover, {
       doc: this.doc,
       mobile: this.props.mobile,
       editing: 'readonly',
       documentInfo: this.props.documentInfo,
       rubrics: this.props.rubrics
-    }).ref('cover');
-  };
+    }).ref('cover')
+  }
 
-};
+  documentSessionUpdated(update) {
+    if(!isUndefined(update.change)) {
+      let ops = update.change.ops
+      let entityChange = false
+      each(ops, function(op) {
+        if(op.val.type === 'entity') {
+          entityChange = true
+          return
+        }
+      })
 
-ProseEditor.extend(Viewer);
+      if(entityChange) {
+        this.updateEntitiesList()
+      }
+    }
 
-module.exports = Viewer;
+    let toolbar = this.refs.toolbar
+    if (toolbar) {
+      let commandStates = this.commandManager.getCommandStates()
+      toolbar.setProps({
+        commandStates: commandStates
+      })
+    }
+  }
+
+  updateEntitiesList() {
+    let doc = this.doc
+    let entities = []
+    let entityAnnos = doc.getIndex('annotations').byType.entity
+    each(entityAnnos, function(anno) {
+      entities.push(anno.reference)
+    })
+    entities = uniq(entities)
+
+    let surface = this.surfaceManager.getFocusedSurface()
+    surface.transaction(function(tx, args) {
+      tx.set(['meta', 'entities'], entities)
+      return args
+    })
+  }
+}
+
+export default Viewer

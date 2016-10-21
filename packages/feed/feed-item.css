@@ -1,0 +1,70 @@
+.sc-feed-item.active {
+  background: #2473DA;
+  color: #fff;
+  margin-right: 0px;
+  margin-top: -1px;
+}
+
+.sc-feed-item.active .se-abstract {
+  color: rgba(253, 253, 253, 0.75);
+}
+
+.sc-feed-item.active .se-source-url {
+  color: inherit;
+}
+
+.sc-feed-item .se-source-info {
+  font-size: 14px;
+  height: 20px;
+}
+
+.sc-feed-item .se-source-info .se-source-name {
+  text-align: left;
+  float: left;
+  width: 33.3%;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.sc-feed-item .se-source-info .se-source-url {
+  text-align: center;
+  float: left;
+  width: 33.3%;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.sc-feed-item .se-source-info .se-source-date {
+  text-align: right;
+  float: left;
+  width: 33.3%;
+  font-size: 12px;
+  line-height: 23px;
+}
+
+.sc-feed-item .se-title {
+  font-size: 17px;
+  line-height: 20px;
+  padding: 10px 0px;
+}
+
+.sc-feed-item .se-rubrics {
+  font-size: 12px;
+  padding-bottom: 5px;
+}
+
+.sc-feed-item .se-rubrics i {
+  padding-right: 5px;
+}
+
+.sc-feed-item .se-abstract {
+  color: rgba(0,0,0,0.75);
+  font-size: 12px;
+}
+
+.sc-feed-item .se-separator {
+  border-bottom: 1px rgba(90, 95, 101, 0.5) solid;
+  padding-bottom: 15px;
+}

@@ -1,16 +1,13 @@
-'use strict';
+import Pager from './Pager'
 
-var Pager = require('./Pager');
-
-module.exports = {
+export default {
   name: 'pager',
   configure: function(config) {
-    config.addComponent('pager', Pager);
-    config.addStyle(__dirname, '_pager');
+    config.addComponent('pager', Pager)
 
     config.addLabel('load-more', {
       en: 'Load more',
       ru: 'Загрузить еще'
-    });
+    })
   }
-};
+}

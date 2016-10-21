@@ -1,121 +1,112 @@
-'use strict';
-
-var Component = require('substance/ui/Component');
-var DocumentSession = require('substance/model/DocumentSession');
-var extend = require('lodash/extend');
+import { Component, DocumentSession } from 'substance'
+import extend from 'lodash/extend'
 
 /*
   Editing of Entity
 */
-function EditEntity() {
-  EditEntity.super.apply(this, arguments);
-}
+class EditEntity extends Component {
 
-EditEntity.Prototype = function() {
+  didMount() {
+    this._loadEntity()
+  }
 
-  this.didMount = function() {
-    this._loadEntity();
-  };
-
-  this.dispose = function() {
-    var doc = this.state.doc;
+  dispose() {
+    let doc = this.state.doc
     if(doc) {
-      doc.off(this);
+      doc.off(this)
     }
-  };
+  }
 
-  this.render = function($$) {
-    var doc = this.state.doc;
-    var entity = this.state.entity;
-    var controller = this.context.controller;
-    var componentRegistry = controller.props.configurator.getComponentRegistry();
-    var Form = componentRegistry.get('form');
+  render($$) {
+    let doc = this.state.doc
+    let entity = this.state.entity
+    let controller = this.context.controller
+    let componentRegistry = controller.props.configurator.getComponentRegistry()
+    let Form = componentRegistry.get('form')
 
-    var el = $$('div').addClass('sc-entity-editor');
+    let el = $$('div').addClass('sc-entity-editor')
 
     if(entity && doc) {
-      var entityData = doc.get(entity.entity_class);
-      var form = $$(Form, {node: entityData, session: this.state.session});
+      let entityData = doc.get(entity.entity_class)
+      let form = $$(Form, {node: entityData, session: this.state.session})
 
-      el.append(form);
+      el.append(form)
     } else {
-      el.append('There is no handler for this entity class, sorry');
+      el.append('There is no handler for this entity class, sorry')
     }
 
-    return el;
-  };
+    return el
+  }
 
-  this._loadEntity = function() {
-    var entityId = this.props.entityId;
-    var mproConfigurator = this.context.configurator;
-    var configurator = mproConfigurator.getConfigurator('mpro-entities');
-    var documentClient = this.context.documentClient;
+  _loadEntity() {
+    let entityId = this.props.entityId
+    let mproConfigurator = this.context.configurator
+    let configurator = mproConfigurator.getConfigurator('mpro-entities')
+    let documentClient = this.context.documentClient
 
     documentClient.getEntity(entityId, function(err, entity) {
       if(err) {
-        console.error(err);
+        console.error(err)
         this.setState({
           error: new Error('Entity loading failed')
-        });
-        return;
+        })
+        return
       }
 
-      var entityClass = entity.entity_class;
-      var container = configurator.createArticle();
+      let entityClass = entity.entity_class
+      let container = configurator.createArticle()
 
       if(container.schema.getNodeClass(this.props.node.entityClass)) {
-        var entityData = {
+        let entityData = {
           id: entityClass,
           type: entityClass
-        };
+        }
 
-        entityData = extend(entityData, entity.data);
-        container.create(entityData);
+        entityData = extend(entityData, entity.data)
+        container.create(entityData)
 
-        container.on('document:changed', this._onDocumentChanged, this);
+        container.on('document:changed', this._onDocumentChanged, this)
 
-        var session = new DocumentSession(container);
+        let session = new DocumentSession(container)
 
         this.setState({
           doc: container,
           session: session,
           entity: entity
-        });
+        })
       }
-    }.bind(this));
-  };
+    }.bind(this))
+  }
 
-  this._updateEntity = function(data, name) {
-    var entityId = this.props.entityId;
-    var documentClient = this.context.documentClient;
-    var entityData = {
+  _updateEntity(data, name) {
+    let entityId = this.props.entityId
+    let documentClient = this.context.documentClient
+    let entityData = {
       data: data.toJSON(),
       name: name
-    };
+    }
     // Remove node props
-    delete entityData.data.id;
-    delete entityData.data.type;
+    delete entityData.data.id
+    delete entityData.data.type
 
     documentClient.updateEntity(entityId, entityData, function(err) {
       if(err) {
         console.error(err);
         this.setState({
           error: new Error('Entity update failed')
-        });
-        return;
+        })
+        return
       }
-    }.bind(this));
-  };
+    }.bind(this))
+  }
 
-  this._onDocumentChanged = function() {
-    var doc = this.state.doc;
-    var entity = this.state.entity;
-    var entityData = doc.get(entity.entity_class);
-    var name = entityData.getName();
-    this._updateEntity(entityData, name);
-  };
-};
+  _onDocumentChanged() {
+    let doc = this.state.doc
+    let entity = this.state.entity
+    let entityData = doc.get(entity.entity_class)
+    let name = entityData.getName()
+    this._updateEntity(entityData, name)
+  }
+}
 
-Component.extend(EditEntity);
-
-module.exports = EditEntity;
+export default EditEntity

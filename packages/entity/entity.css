@@ -1,0 +1,31 @@
+.sc-entity {
+  background: rgba(255, 235, 59, 0.4);
+}
+
+.sc-entity.sc-entity-person {
+  background: rgba(139, 195, 74, 0.4);
+}
+
+.sc-entity.sc-entity-location {
+  background: rgba(156, 39, 176, 0.4);
+}
+
+.sc-entity.sc-entity-org {
+  background: rgba(3, 169, 244, 0.4);
+}
+
+.sc-entity.sc-entity-norm_act {
+  background: rgba(244, 67, 54, 0.4);
+}
+
+.sc-entity.sc-entity-adr {
+  background: rgba(0, 188, 212, 0.4);
+}
+
+.sc-entity.sc-entity-prof {
+  background: rgba(205, 220, 57, 0.4);
+}
+
+.sc-entity.sc-entity-date {
+  background: rgba(96, 125, 139, 0.4);
+}

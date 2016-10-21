@@ -1,32 +1,24 @@
-'use strict';
+import Field from './Field'
 
-var Field = require('./Field');
+class Prose extends Field {
+  
+  render($$) {
+    let name = this.getName()
+    let config = this.getConfig()
+    let value = this.getValue()
+    
+    let el = $$('div')
+      .addClass('sc-field sc-field-prose sc-field-' + name)
+    let input = $$('textarea').addClass('sc-textarea').attr({rows: 5}).append(value)
+      .ref('input')
+      .on('change', this.commit)
+    
+    el.append(input)
 
-function Prose() {
-  Prose.super.apply(this, arguments);
+    if(config.placeholder) el.append($$('div').addClass('help').append(config.placeholder))
+    
+    return el
+  }
 }
 
-Prose.Prototype = function() {
-  
-  this.render = function($$) {
-    var name = this.getName();
-    var config = this.getConfig();
-    var value = this.getValue();
-    
-    var el = $$('div')
-      .addClass('sc-field sc-field-prose sc-field-' + name);
-    var input = $$('textarea').addClass('sc-textarea').attr({rows: 5}).append(value)
-      .ref('input')
-      .on('change', this.commit);
-    
-    el.append(input);
-
-    if(config.placeholder) el.append($$('div').addClass('help').append(config.placeholder));
-    
-    return el;
-  };
-};
-
-Field.extend(Prose);
-
-module.exports = Prose;
+export default Prose

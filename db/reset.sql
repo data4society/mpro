@@ -17,7 +17,9 @@ CREATE TABLE "users" (
   name varchar(255),
   created timestamp,
   login_key varchar(40) UNIQUE,
-  password varchar(255)
+  password varchar(255),
+  access boolean,
+  super boolean
 );
 
 CREATE TABLE "documents" (

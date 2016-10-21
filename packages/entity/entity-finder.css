@@ -1,0 +1,89 @@
+.sc-entity-finder {
+  position: relative;
+  padding: 10px;
+}
+
+.sc-entity-finder input {
+  margin: 10px 0 0px;
+  width: 100%;
+  font-size: 14px;
+  border: 1px solid #ddd;
+  min-width: auto;
+  padding: 0 23px 0 10px;
+}
+
+.sc-entity-finder .se-results .se-value {
+  display: block;
+  float: left;
+  background-color: rgba(52, 152, 219, 0.5);
+  padding: 10px 15px;
+  border-radius: 3px;
+  margin-right: 5px;
+  margin-top: 5px;
+  cursor: pointer;
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+      
+.sc-entity-finder .se-results .se-value.se-hihglight-remove {
+  background-color: red;
+  color: #fff;
+}
+        
+.sc-entity-finder .se-results .se-value.se-hihglight-remove::after {
+  content: "×";
+  margin-left: 5px;
+}
+
+.sc-entity-finder .se-dropdown-list {
+  color: #444;
+  position: relative;
+  overflow-x: hidden;
+  overflow-y: auto;
+  margin: 0px;
+  padding: 0px;
+  max-height: 240px;
+  z-index: 1010;
+  width: 100%;
+  border: 1px solid #aaa;
+  border-top: 0;
+  background: #fff;
+  box-shadow: 0 4px 5px rgba(0, 0, 0, 0.15);
+}
+
+.sc-entity-finder .se-dropdown-item {
+  padding: 4px 10px;
+  font-size: 13px;
+}
+
+.sc-entity-finder .se-dropdown-item:hover {
+  background: #ccc;
+  cursor: pointer;
+}
+
+.sc-entity-finder .se-dropdown-item.se-disabled-item {
+  color: #ccc;
+}
+
+.sc-entity-finder .se-dropdown-item.se-disabled-item:hover {
+  background: inherit;
+  cursor: default;
+}
+
+.sc-entity-finder > button.se-button-done {
+  position: absolute;
+  right: 10px;
+}
+
+.sc-entity-finder > button.se-button-create {
+  position: absolute;
+  right: 8px;
+  top: 18px;
+  height: 24px;
+}
+
+.sc-entity-finder .help {
+  padding: 10px 0px 0px;
+  clear: both;
+}

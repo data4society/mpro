@@ -1,27 +1,21 @@
-'use strict';
+import { Component } from 'substance'
+import moment from 'moment'
 
-var Component = require('substance/ui/Component');
-var moment = require('moment');
+class VkMetaComponent extends Component {
 
-function VkMetaComponent() {
-  VkMetaComponent.super.apply(this, arguments);
-}
-
-VkMetaComponent.Prototype = function() {
-
-  this.render = function($$) {
-    var document = this.context.doc;
-    var meta = document.get('meta');
-    var el = $$('div').addClass('sc-meta-summary');
-    var published = $$('div').addClass('se-published').append(
+  render($$) {
+    let document = this.context.doc
+    let meta = document.get('meta')
+    let el = $$('div').addClass('sc-meta-summary')
+    let published = $$('div').addClass('se-published').append(
       this.context.iconProvider.renderIcon($$, 'published'),
       $$('div').addClass('sm-item').append(
         this.getLabel('published-by') + ' ' + meta.author.name,
         this.getLabel('published-date') + ' ',
         moment(meta.published).format('DD.MM.YYYY HH:mm')
       )
-    );
-    var source = $$('div').addClass('se-source').append(
+    )
+    let source = $$('div').addClass('se-source').append(
       this.context.iconProvider.renderIcon($$, 'source'),
       $$('div').addClass('sm-item').append(
         this.getLabel('source') + ' ',
@@ -32,17 +26,15 @@ VkMetaComponent.Prototype = function() {
             meta.source
           )
       )
-    );
+    )
 
     el.append(
       published,
       source
-    );
+    )
 
-    return el;
-  };
-};
+    return el
+  }
+}
 
-Component.extend(VkMetaComponent);
-
-module.exports = VkMetaComponent;
+export default VkMetaComponent

@@ -1,19 +1,15 @@
-'use strict';
+import Cover from './Cover'
+import Summary from './Summary'
 
-var Cover = require('./Cover');
-var Summary = require('./Summary');
-
-module.exports = {
+export default {
   name: 'cover',
   configure: function(config) {
-    config.addComponent('cover', Cover);
-    config.addComponent('summary', Summary);
-    config.addStyle(__dirname, '_cover');
-    config.addStyle(__dirname, '_summary');
-    config.addIcon('rubrics', { 'fontawesome': 'fa-tags' });
+    config.addComponent('cover', Cover)
+    config.addComponent('summary', Summary)
+    config.addIcon('rubrics', { 'fontawesome': 'fa-tags' })
     config.addLabel('no-rubrics', {
       en: 'No rubrics were attached to this document',
       ru: 'Этот документ не связан ни с одной рубрикой'
-    });
+    })
   }
-};
+}

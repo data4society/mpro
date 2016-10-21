@@ -1,0 +1,29 @@
+/* Toolbar style overrides */
+.sc-toolbar { 
+  border-bottom: 1px solid var(--border-color);
+  margin-left: 18px; 
+}
+
+.sc-toolbar .sc-tool-group.sm-target-document {
+  border-right: 1px solid var(--border-color);
+  border-left: 1px solid var(--border-color);
+  padding-right: 5px;
+}
+
+.sc-toolbar .sc-tool-group.sm-target-text {
+  display: none;
+}
+
+.sc-toolbar .sc-tool-group.sm-target-annotations {
+}
+
+.sc-toolbar .sc-tool-group.sm-target-entity {
+  border-left: 1px solid var(--border-color);
+  margin-left: 5px;
+}
+
+.sc-toolbar .sm-target-default {
+  padding-left: 7px;
+  margin-left: 5px;
+  border-left: 1px solid var(--border-color);
+}

@@ -1,6 +1,6 @@
-'use strict';
+'use strict'
 
-module.exports = {
+export default {
   type: 'rubric',
   tagName: 'rubric'
-};
+}

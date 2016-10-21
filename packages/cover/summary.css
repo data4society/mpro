@@ -1,0 +1,28 @@
+.sc-document-summary {
+  font-size: 14px;
+  padding: 10px 0px;
+}
+
+.sc-document-summary .sc-meta-summary > * {
+  padding: 5px 0px;
+  position: relative;
+}
+
+.sc-document-summary .se-rubrics {
+  padding: 5px 0px;
+  position: relative;
+}
+
+.sc-document-summary .se-rubrics .sm-leaf-item {
+  padding-bottom: 3px;
+}
+
+.sc-document-summary .sm-item {
+  position: relative;
+  padding-left: 30px;
+}
+
+.sc-document-summary .fa {
+  float: left;
+  padding-top: 4px;
+}

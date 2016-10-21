@@ -1,62 +1,54 @@
-'use strict';
+import Field from './Field'
+import each from 'lodash/each'
 
-var each = require('lodash/each');
-var Field = require('./Field');
+class Radio extends Field {
 
-function Radio() {
-  Radio.super.apply(this, arguments);
-}
-
-Radio.Prototype = function() {
-
-  this.getFieldValue = function() {
-    var config = this.getConfig();
-    var options = config.options;
-    var result = "";
-    var radios = this.refs.radio.getChildren();
+  getFieldValue() {
+    let config = this.getConfig()
+    let options = config.options
+    let result = ""
+    let radios = this.refs.radio.getChildren()
     each(radios, function(radio, i) {
-      var value = radio.children[0].$el[0].checked;
-      if(value) result = options[i];
-    });
-    return result;
-  };
+      let value = radio.children[0].$el[0].checked
+      if(value) result = options[i]
+    })
+    return result
+  }
   
-  this.render = function($$) {
-    var self = this;
+  render($$) {
+    let self = this
 
-    var name = this.getName();
-    var config = this.getConfig();
-    var value = this.getValue();
+    let name = this.getName()
+    let config = this.getConfig()
+    let value = this.getValue()
 
-    var el = $$('div')
-      .addClass('sc-field sc-field-radio sc-field-' + name);
+    let el = $$('div')
+      .addClass('sc-field sc-field-radio sc-field-' + name)
 
-    var radios = $$('div').ref('radio');
+    let radios = $$('div').ref('radio')
 
     each(config.options, function(option) {
 
-      var input = $$('input').attr({type: "radio", name: name})
-        .on('change', self.commit);
+      let input = $$('input').attr({type: "radio", name: name})
+        .on('change', self.commit)
 
       if(value.indexOf(option) > -1) {
-        input.attr({checked: "checked"});
+        input.attr({checked: "checked"})
       }
 
-      var label = $$('label')
+      let label = $$('label')
         .append(input)
-        .append(option);
+        .append(option)
 
-      radios.append(label);
+      radios.append(label)
 
-    });
-    el.append(radios); 
+    })
+    el.append(radios)
     
-    if(config.placeholder) el.append($$('div').addClass('help').append(config.placeholder));   
+    if(config.placeholder) el.append($$('div').addClass('help').append(config.placeholder))
     
-    return el;
-  };
-};
+    return el
+  }
+}
 
-Field.extend(Radio);
-
-module.exports = Radio;
+export default Radio

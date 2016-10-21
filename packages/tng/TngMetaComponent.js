@@ -1,19 +1,11 @@
-'use strict';
+import { Component } from 'substance'
 
-var Component = require('substance/ui/Component');
+class TngMetaComponent extends Component {
 
-function TngMetaComponent() {
-  TngMetaComponent.super.apply(this, arguments);
+  render($$) {
+    let el = $$('div').addClass('sc-meta-summary')
+    return el
+  }
 }
 
-TngMetaComponent.Prototype = function() {
-
-  this.render = function($$) {
-    var el = $$('div').addClass('sc-meta-summary');
-    return el;
-  };
-};
-
-Component.extend(TngMetaComponent);
-
-module.exports = TngMetaComponent;
+export default TngMetaComponent

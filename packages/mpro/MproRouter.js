@@ -1,28 +1,24 @@
-'use strict';
+import { Router } from 'substance'
 
-var Router = require('substance/ui/Router');
+class MproRouter extends Router {
+  constructor(app) {
+    super(app)
 
-function MproRouter(app) {
-  Router.call(this);
-  this.app = app;
-}
-
-MproRouter.Prototype = function() {
+    this.app = app
+  }
 
   // URL helpers
-  this.openDocument = function(documentId) {
+  openDocument(documentId) {
     return '#' + Router.objectToRouteString({
       page: 'inbox',
       documentId: documentId
-    });
-  };
+    })
+  }
 
-  this.getRoute = function() {
-    var routerString = this.getRouteString();
-    return Router.routeStringToObject(routerString);
-  };
-};
+  getRoute() {
+    let routerString = this.getRouteString()
+    return Router.routeStringToObject(routerString)
+  }
+}
 
-Router.extend(MproRouter);
-
-module.exports = MproRouter;
+export default MproRouter

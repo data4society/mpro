@@ -1,14 +1,8 @@
-'use strict';
+import { DocumentNode } from 'substance'
 
-var DocumentNode = require('substance/model/DocumentNode');
+class ArticleMeta extends DocumentNode {}
 
-function ArticleMeta() {
-  ArticleMeta.super.apply(this, arguments);
-}
-
-DocumentNode.extend(ArticleMeta);
-
-ArticleMeta.static.name = 'meta';
+ArticleMeta.type = 'meta'
 
 /*
   Meta node.
@@ -26,7 +20,7 @@ ArticleMeta.static.name = 'meta';
     - publisher Name of publisher
 */
 
-ArticleMeta.static.defineSchema({
+ArticleMeta.define({
   title: { type: 'string', default: 'Untitled article'},
   rubrics: { type: ['id'], default: [] },
   entities: { type: ['id'], default: [] },
@@ -36,6 +30,6 @@ ArticleMeta.static.defineSchema({
   created: { type: 'string', default: '' },
   abstract: { type: 'string', default: ''},
   publisher: { type: 'string', default: ''}
-});
+})
 
-module.exports = ArticleMeta;
+export default ArticleMeta

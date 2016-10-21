@@ -1,58 +1,51 @@
-'use strict';
+import Article from '../common/Article'
+import VkMeta from './VkMeta'
+import VkMetaComponent from './VkMetaComponent'
+import VkSeed from './VkSeed'
 
-var BasePackage = require('substance/packages/base/BasePackage');
-var ParagraphPackage = require('substance/packages/paragraph/ParagraphPackage');
-var HeadingPackage = require('substance/packages/heading/HeadingPackage');
-var BlockquotePackage = require('substance/packages/blockquote/BlockquotePackage');
-var ListPackage = require('substance/packages/list/ListPackage');
-var LinkPackage = require('substance/packages/link/LinkPackage');
-var EmphasisPackage = require('substance/packages/emphasis/EmphasisPackage');
-var StrongPackage = require('substance/packages/strong/StrongPackage');
-var EntityPackage = require('../entity/package');
-var RubricatorPackage = require('../rubricator/package');
+import { BlockquotePackage, EmphasisPackage, HeadingPackage, LinkPackage, ParagraphPackage, StrongPackage } from 'substance'
 
-var Article = require('../common/Article');
-var VkMeta = require('./VkMeta');
-var VkMetaComponent = require('./VkMetaComponent');
-var VkSeed = require('./VkSeed');
+import EntityPackage from '../entity/package'
+import RubricatorPackage from '../rubricator/package'
 
-module.exports = {
+export default {
   name: 'vk',
   configure: function(config) {
     config.defineSchema({
       name: 'mpro-vk',
       ArticleClass: Article,
       defaultTextType: 'paragraph'
-    });
+    })
 
-    config.addNode(VkMeta);
-    config.addSeed(VkSeed);
+    config.addNode(VkMeta)
+    config.addSeed(VkSeed)
 
-    config.addComponent('meta-summary', VkMetaComponent);
+    // Import Substance Core packages
+    config.import(ParagraphPackage)
+    config.import(HeadingPackage)
+    config.import(BlockquotePackage)
+    config.import(EmphasisPackage)
+    config.import(StrongPackage)
+    config.import(LinkPackage)
+
+    // Import mpro specific packages    
+    config.import(EntityPackage)
+    config.import(RubricatorPackage)
+
+    config.addComponent('meta-summary', VkMetaComponent)
     config.addIcon('published', { 'fontawesome': 'fa-clock-o' });
     config.addIcon('source', { 'fontawesome': 'fa-chain' });
     config.addLabel('published-by', {
       en: 'Published by',
       ru: 'Опубликовано'
-    });
+    })
     config.addLabel('published-date', {
       en: ' on',
       ru: ','
-    });
+    })
     config.addLabel('source', {
       en: 'Original source:',
       ru: 'Источник:'
-    });
-
-    config.import(BasePackage);
-    config.import(ParagraphPackage);
-    config.import(HeadingPackage);
-    config.import(BlockquotePackage);
-    config.import(ListPackage);
-    config.import(EmphasisPackage);
-    config.import(StrongPackage);
-    config.import(LinkPackage);
-    config.import(EntityPackage);
-    config.import(RubricatorPackage);
+    })
   }
-};
+}

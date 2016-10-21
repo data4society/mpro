@@ -1,35 +1,25 @@
-'use strict';
+import { Button, Component } from 'substance'
 
-var Component = require('substance/ui/Component');
-var Button = require('substance/ui/Button');
+class Pager extends Component {
 
-function Pager() {
-  Component.apply(this, arguments);
+  render($$) {
+    let total = this.props.total;
+    let loaded = this.props.loaded;
+    let isLastPage = loaded >= total;
+
+    let el = $$('div').addClass('sc-pager');
+
+    let btn = $$(Button, {disabled: isLastPage, label: 'Load more', style: 'default'})
+      .on('click', this._loadMore)
+
+    el.append(btn)
+
+    return el
+  }
+
+  _loadMore() {
+    this.send('loadMore')
+  }
 }
 
-Pager.Prototype = function() {
-
-  this.render = function($$) {
-    var total = this.props.total;
-    var loaded = this.props.loaded;
-    var isLastPage = loaded >= total;
-
-    var el = $$('div').addClass('sc-pager');
-
-    var btn = $$(Button, {disabled: isLastPage}).append('Load more')
-      .on('click', this._loadMore);
-
-    el.append(btn);
-
-    return el;
-  };
-
-  this._loadMore = function() {
-    this.send('loadMore');
-  };
-
-};
-
-Component.extend(Pager);
-
-module.exports = Pager;
+export default Pager

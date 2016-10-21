@@ -1,23 +1,14 @@
-'use strict';
+import { Configurator } from 'substance'
 
-var ProseEditorConfigurator = require('substance/packages/prose-editor/ProseEditorConfigurator');
+class SubConfigurator extends Configurator {
 
-function SubConfigurator() {
-  SubConfigurator.super.apply(this, arguments);
+  addSeed(seed) {
+    this.config.seed = seed
+  }
+
+  getSeed() {
+    return this.config.seed
+  }
 }
 
-SubConfigurator.Prototype = function() {
-
-  this.addSeed = function(seed) {
-    this.config.seed = seed;
-  };
-
-  this.getSeed = function() {
-    return this.config.seed;
-  };
-
-};
-
-ProseEditorConfigurator.extend(SubConfigurator);
-
-module.exports = SubConfigurator;
+export default SubConfigurator

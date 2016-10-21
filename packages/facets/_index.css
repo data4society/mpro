@@ -1,0 +1,51 @@
+.sc-facets .se-tree-node {
+  padding-left: 15px;
+  font-weight: 700;
+  color: rgba(255, 255, 255, 0.9);
+  font-size: 12px;
+  min-height: 25px;
+  display: block;
+  padding: 5px 20px;
+  position: relative;
+  line-height: 15px;
+  border-bottom: 1px solid rgba(121,121,121,0.1);
+  cursor: pointer;
+}
+
+.sc-facets .se-tree-node .se-tree-node-name {
+  line-height: 10px;
+  width: 180px;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  display: inline-block;
+}
+
+.sc-facets .se-tree-node .se-tree-node-counter {
+  position: absolute;
+  top: 0;
+  right: 12px;
+  bottom: 0;
+  width: 34px;
+  line-height: 28px;
+  padding: 0 15px;
+  text-align: right;
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.sc-facets .se-tree-node .expansion {
+  width: 12px;
+}
+
+.sc-facets .se-tree-node.active {
+  background: #4a7b18;
+}
+
+.sc-facets .se-tree-node.se-tree-title {
+  padding: 10px 20px;
+  text-transform: capitalize;
+  font-size: 14px;
+  font-weight: 200;
+  cursor: default;
+  color: #fff;
+}

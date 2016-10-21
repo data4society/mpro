@@ -1,0 +1,8 @@
+.sc-inbox .sc-header {
+  background: #565656;
+  background: linear-gradient(to right bottom, #565656, #293f50);
+}
+
+.sc-inbox > .sc-split-pane {
+  top: 40px;
+}

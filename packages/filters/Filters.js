@@ -1,28 +1,18 @@
-'use strict';
+import { Component } from 'substance'
 
-var Component = require('substance/ui/Component');
+class Filters extends Component {
 
-function Filters() {
-  Component.apply(this, arguments);
-}
+  render($$) {
+    let Facets = this.getComponent('facets')
 
-Filters.Prototype = function() {
-
-  this.render = function($$) {
-    var componentRegistry = this.context.componentRegistry;
-    var Facets = componentRegistry.get('facets');
-
-    var el = $$('div').addClass('sc-filters');
+    let el = $$('div').addClass('sc-filters')
 
     el.append(
       $$(Facets, this.props)
-    );
+    )
 
-    return el;
-  };
+    return el
+  }
+}
 
-};
-
-Component.extend(Filters);
-
-module.exports = Filters;
+export default Filters

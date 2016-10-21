@@ -1,8 +1,6 @@
-'use strict';
-
-var ListScrollPane = require('../common/ListScrollPane');
-var DoubleSplitPane = require('../common/DoubleSplitPane');
-var AbstractFeedLoader = require('../common/AbstractFeedLoader');
+import ListScrollPane from '../common/ListScrollPane'
+import DoubleSplitPane from '../common/DoubleSplitPane'
+import AbstractFeedLoader from '../common/AbstractFeedLoader'
 
 /*
   Represents Inbox page.
@@ -12,43 +10,39 @@ var AbstractFeedLoader = require('../common/AbstractFeedLoader');
   - Feed
   - Document Viewer
 */
-function Inbox() {
-  AbstractFeedLoader.apply(this, arguments);
+class Inbox extends AbstractFeedLoader {
+  constructor(...args) {
+    super(...args)
 
-  this.handleActions({
-    'loadMore': this._loadMore,
-    'openDocument': this._openDocument,
-    'notify': this._notify,
-    'connectSession': this._connectSession
-  });
-}
+    this.handleActions({
+      'loadMore': this._loadMore,
+      'openDocument': this._openDocument,
+      'notify': this._notify,
+      'connectSession': this._connectSession
+    })
+  }
 
-Inbox.Prototype = function() {
+  render($$) {
+    let authenticationClient = this.context.authenticationClient
+    let Header = this.getComponent('header')
+    let Feed = this.getComponent('feed')
+    let Filters = this.getComponent('filters')
+    let Loader = this.getComponent('loader')
+    let Notification = this.getComponent('notification')
+    let Collaborators = this.getComponent('collaborators')
 
-  this.render = function($$) {
-    var authenticationClient = this.context.authenticationClient;
-    var componentRegistry = this.context.componentRegistry;
-    var Header = componentRegistry.get('header');
-    var Feed = componentRegistry.get('feed');
-    var Filters = componentRegistry.get('filters');
-    var Loader = componentRegistry.get('loader');
-    var Notification = componentRegistry.get('notification');
-    var Collaborators = componentRegistry.get('collaborators');
-    var LoginStatus = componentRegistry.get('login-status');
+    let el = $$('div').addClass('sc-inbox')
 
-    var el = $$('div').addClass('sc-inbox');
-
-    var header = $$(Header, {
+    let header = $$(Header, {
       actions: {
         'configurator': this.getLabel('configurator-menu')
       }
-    });
+    })
 
     header.outlet('content').append(
-      $$(LoginStatus),
       $$(Notification, {}).ref('notification'),
       $$(Collaborators, {}).ref('collaborators')
-    );
+    )
 
     el.append(
       header,
@@ -67,46 +61,44 @@ Inbox.Prototype = function() {
           userSession: authenticationClient.getSession()
         }).ref('loader')
       )
-    );
+    )
 
-    return el;
-  };
+    return el
+  }
 
-  this._openDocument = function(documentId) {
-    var loader = this.refs.loader;
-    var feed = this.refs.feed;
+  _openDocument(documentId) {
+    let loader = this.refs.loader
+    let feed = this.refs.feed
 
-    this.extendState({documentId: documentId});
-    feed.setActiveItem(documentId);
-    this.updateUrl(documentId);
+    this.extendState({documentId: documentId})
+    feed.setActiveItem(documentId)
+    this.updateUrl(documentId)
     
     loader.extendProps({
       documentId: documentId
-    });
-  };
+    })
+  }
 
-  this.updateUrl = function(documentId) {
-    var urlHelper = this.context.urlHelper;
-    urlHelper.writeRoute({page: 'inbox', documentId: documentId});
-  };
+  updateUrl(documentId) {
+    let urlHelper = this.context.urlHelper
+    urlHelper.writeRoute({page: 'inbox', documentId: documentId})
+  }
 
-  this._loadMore = function() {
+  _loadMore() {
     this.extendState({
       pagination: true
-    });
-    this._loadDocuments();
-  };
+    })
+    this._loadDocuments()
+  }
 
-  this._notify = function(msg) {
-    this.refs.notification.extendProps(msg);
-  };
+  _notify(msg) {
+    this.refs.notification.extendProps(msg)
+  }
 
-  this._connectSession = function(session) {
-    this.refs.collaborators.extendProps(session);
-  };
+  _connectSession(session) {
+    this.refs.collaborators.extendProps(session)
+  }
 
-};
+}
 
-AbstractFeedLoader.extend(Inbox);
-
-module.exports = Inbox;
+export default Inbox

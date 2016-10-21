@@ -1,110 +1,94 @@
-'use strict';
+import { AnnotationTool, Modal } from 'substance'
+import EntityFinder from './EntityFinder'
 
-var AnnotationTool = require('substance/ui/AnnotationTool');
-var Modal = require('substance/ui/Modal');
-var extend = require('lodash/extend');
-var EntityFinder = require('./EntityFinder');
+class EntityTool extends AnnotationTool {
+  constructor(...args) {
+    super(...args)
 
-function EntityTool() {
-  EntityTool.super.apply(this, arguments);
+    this.handleActions({
+      'closeModal': this._onModalClose,
+      'createReference': this._createReference
+    })
+  }
 
-  this.handleActions({
-    'closeModal': this._onModalClose,
-    'createReference': this._createReference
-  });
-}
+  render($$) {
+    let el = $$('div')
+      .addClass('se-tool sm-annotation-tool')
 
-EntityTool.Prototype = function() {
-
-  this.render = function($$) {
-    var el = $$('div')
-      .addClass('se-tool sm-annotation-tool');
-
-    var customClassNames = this.getClassNames();
+    let customClassNames = this.getClassNames()
     if (customClassNames) {
-      el.addClass(customClassNames);
+      el.addClass(customClassNames)
     }
 
-    var title = this.getTitle();
+    let title = this.getTitle()
     if (title) {
-      el.attr('title', title);
-      el.attr('aria-label', title);
+      el.attr('title', title)
+      el.attr('aria-label', title)
     }
     //.sm-disabled
     if (this.props.disabled) {
-      el.addClass('sm-disabled');
+      el.addClass('sm-disabled')
     }
     // .sm-active
     if (this.props.active) {
-      el.addClass('sm-active');
+      el.addClass('sm-active')
     }
 
     // button
-    el.append(this.renderButton($$));
+    el.append(this.renderButton($$))
     
     if(this.state.showModal && this.props.mode === 'create') {
 
       el.append(
         $$(Modal, {
-          width: 'middle'
+          width: 'medium'
         }).append(
           $$(EntityFinder, {
             entityClass: this.getEntityClass()
           }).ref('selector')
         )
-      );
+      )
     }
 
-    return el;
-  };
+    return el
+  }
 
-  this.getClassNames = function() {
-    return 'se-tool-' + this.getName();
-  };
+  getClassNames() {
+    return 'se-tool-' + this.getName()
+  }
 
-  this.onClick = function(e) {
-    e.preventDefault();
-    e.stopPropagation();
-    var showModal = this.state.showModal;
-    this.setState({showModal: !showModal});
-    if (!this.props.disabled && this.props.mode !== 'create') this.performAction();
-  };
+  onClick(e) {
+    e.preventDefault()
+    e.stopPropagation()
+    let showModal = this.state.showModal
+    this.setState({showModal: !showModal})
+    if (!this.props.disabled && this.props.mode !== 'create') this.executeCommand()
+  }
 
-  this._onModalClose = function() {
-    var showModal = this.state.showModal;
-    this.setState({showModal: !showModal});
-  };
+  _onModalClose() {
+    let showModal = this.state.showModal
+    this.setState({showModal: !showModal})
+  }
 
-  this._createReference = function(ref, newEntity) {
-    var showModal = this.state.showModal;
-    var commandManager = this.context.commandManager;
-    this.setState({showModal: !showModal, reference: ref});
+  _createReference(ref, newEntity) {
+    let showModal = this.state.showModal
+    let commandManager = this.context.commandManager
+    this.setState({showModal: !showModal, reference: ref})
     if (!this.props.disabled && !this.state.showModal) {
-      if(newEntity) commandManager['create-entity'] = true;
-      this.performAction();
-    }
-  };
-
-  this.getEntityClass = function() {
-    return this.getName();
-  };
-
-  /**
-    Executes the associated command
-  */
-  this.performAction = function(props) {
-    this.context.commandManager.executeCommand(this.getCommandName(), extend({
-      mode: this.props.mode,
-      node: {
-        entityClass: this.getEntityClass(),
-        reference: this.state.reference
+      if(newEntity) commandManager['create-entity'] = true
+      let props = {
+        node: {
+          entityClass: this.getEntityClass(),
+          reference: this.state.reference
+        }
       }
-    }, props));
-  };
-};
+      this.executeCommand(props)
+    }
+  }
 
-AnnotationTool.extend(EntityTool);
+  getEntityClass() {
+    return this.getName()
+  }
+}
 
-EntityTool.static.name = 'entity';
-
-module.exports = EntityTool;
+export default EntityTool

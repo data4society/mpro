@@ -1,136 +1,125 @@
-'use strict';
-
-var Configurator = require('substance/util/Configurator');
-var each = require('lodash/each');
-var uniq = require('lodash/uniq');
+import { Configurator } from 'substance'
 
 /*
   Top-level configurator for mpro. Has sub-configurators for
   all available modules (editor, viewer etc).
 */
-function MproConfigurator() {
-  MproConfigurator.super.apply(this, arguments);
-}
+class MproConfigurator extends Configurator {
 
-MproConfigurator.Prototype = function() {
+  constructor(...args) {
+    super(...args)
+    // Extend config
+    this.config.configurators = {}
+    this.config.pages = []
+  }
+
 
   /*
     Set app config
   */
-  this.setAppConfig = function(config) {
-    this.config.app = config;
-  };
+  setAppConfig(config) {
+    this.config.app = config
+  }
 
   /*
     Get app config
   */
-  this.getAppConfig = function() {
-    return this.config.app;
-  };
+  getAppConfig() {
+    return this.config.app
+  }
 
   /*
     Set Authentication Server url
   */
-  this.setAuthenticationServerUrl = function(url) {
-    this.config.authenticationServerUrl = url;
-  };
+  setAuthenticationServerUrl(url) {
+    this.config.authenticationServerUrl = url
+  }
 
   /*
     Set Document Server url
   */
-  this.setDocumentServerUrl = function(url) {
-    this.config.documentServerUrl = url;
-  };
+  setDocumentServerUrl(url) {
+    this.config.documentServerUrl = url
+  }
 
   /*
     Set File Server url
   */
-  this.setFileServerUrl = function(url) {
-    this.config.fileServerUrl = url;
-  };
+  setFileServerUrl(url) {
+    this.config.fileServerUrl = url
+  }
 
   /*
     Set File Client class
   */
-  this.setFileClient = function(fileClient) {
-    this.config.fileClient = fileClient;
-  };
+  setFileClient(fileClient) {
+    this.config.fileClient = fileClient
+  }
 
   /*
     Set Document Client class
   */
-  this.setDocumentClient = function(DocumentClientClass) {
-    this.config.DocumentClientClass = DocumentClientClass;
-  };
+  setDocumentClient(DocumentClientClass) {
+    this.config.DocumentClientClass = DocumentClientClass
+  }
 
   /*
     Get Document Client instance
   */
-  this.getDocumentClient = function() {
-    var DocumentClientClass = this.config.DocumentClientClass;
-    return new DocumentClientClass({httpUrl: this.config.documentServerUrl});
-  };
+  getDocumentClient(authClient) {
+    let DocumentClientClass = this.config.DocumentClientClass
+    return new DocumentClientClass({httpUrl: this.config.documentServerUrl, authClient: authClient})
+  }
 
   /*
     Set Authentication Client class
   */
-  this.setAuthenticationClient = function(AuthenticationClientClass) {
-    this.config.AuthenticationClientClass = AuthenticationClientClass;
-  };
+  setAuthenticationClient(AuthenticationClientClass) {
+    this.config.AuthenticationClientClass = AuthenticationClientClass
+  }
 
   /*
     Get Authentication Client instance
   */
-  this.getAuthenticationClient = function() {
-    var AuthenticationClientClass = this.config.AuthenticationClientClass;
-    return new AuthenticationClientClass({httpUrl: this.config.authenticationServerUrl});
-  };
+  getAuthenticationClient() {
+    let AuthenticationClientClass = this.config.AuthenticationClientClass
+    return new AuthenticationClientClass({httpUrl: this.config.authenticationServerUrl})
+  }
 
   /*
     Get File Client instance
   */
-  this.getFileClient = function() {
-    var FileClientClass = this.config.fileClient;
-    return new FileClientClass({httpUrl: this.config.fileServerUrl});
-  };
+  getFileClient(authClient) {
+    let FileClientClass = this.config.fileClient
+    return new FileClientClass({httpUrl: this.config.fileServerUrl, authClient: authClient})
+  }
 
   /*
     Provision of sub configurators (e.g. editor, viewer etc
     receive their own configurator)
   */
-  this.addConfigurator = function(name, configurator) {
-    if (!this.config.configurators) {
-      this.config.configurators = {};
-    }
-    this.config.configurators[name] = configurator;
-  };
+  addConfigurator(name, configurator) {
+    this.config.configurators[name] = configurator
+  }
 
   /*
     Get sub confgiurator
   */
-  this.getConfigurator = function(name) {
+  getConfigurator(name) {
     if (!this.config.configurators) {
-      return undefined;
+      return undefined
     }
-    return this.config.configurators[name];
-  };
+    return this.config.configurators[name]
+  }
 
-  /*
-    Get styles from all configurators
-  */
-  this.getStyles = function() {
-    var styles = [].concat(this.config.styles);
+  addPage(pageName, component) {
+    this.addComponent(pageName, component)
+    this.config.pages.push(pageName)
+  }
 
-    each(this.config.configurators, function(configurator) {
-      styles = styles.concat(configurator.getStyles());
-    });
+  getPages() {
+    return this.config.pages
+  }
+}
 
-    // Remove duplicates with _.uniq, since publisher, author,
-    // reader use a lot of shared styles
-    return uniq(styles);
-  };
-};
-
-Configurator.extend(MproConfigurator);
-
-module.exports = MproConfigurator;
+export default MproConfigurator

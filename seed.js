@@ -1,43 +1,37 @@
-'use strict';
+let Database = require('./packages/common/Database')
+let Configurator = require('./packages/common/ServerConfigurator')
+let StorePackage = require('./packages/store/package')
 
-var ChangeStore = require('./server/ChangeStore');
-var DocumentStore = require('./server/DocumentStore');
-var ClassStore = require('./server/ClassStore');
-var EntityStore = require('./server/EntityStore');
-var RubricStore = require('./server/RubricStore');
-var SessionStore = require('./server/SessionStore');
-var SourceStore = require('./server/SourceStore');
-var UserStore = require('./server/UserStore');
-
-var Database = require('./server/Database');
-var db = new Database();
+let configurator = new Configurator().import(StorePackage)
+let db = new Database()
+configurator.setDBConnection(db)
 
 db.reset() // Clear the database, set up the schema
   .then(function() {
-    var userStore = new UserStore({ db: db });
-    return userStore.seed();
+    let userStore = configurator.getStore('user')
+    return userStore.seed()
   }).then(function() {
-    var sessionStore = new SessionStore({ db: db });
-    return sessionStore.seed();
+    let sessionStore = configurator.getStore('session')
+    return sessionStore.seed()
   }).then(function() {
-    var classStore = new ClassStore({ db: db });
-    return classStore.seed();
+    let classStore = configurator.getStore('class')
+    return classStore.seed()
   }).then(function() {
-    var entityStore = new EntityStore({ db: db });
-    return entityStore.seed();
+    let entityStore = configurator.getStore('entity')
+    return entityStore.seed()
   }).then(function() {
-    var thematicStore = new RubricStore({ db: db });
-    return thematicStore.seed();
+    let rubricStore = configurator.getStore('rubric')
+    return rubricStore.seed()
   }).then(function() {
-    var sourceStore = new SourceStore({ db: db });
-    return sourceStore.seed();
+    let sourceStore = configurator.getStore('source')
+    return sourceStore.seed()
   }).then(function() {
-    var documentStore = new DocumentStore({ db: db });
-    return documentStore.seed();
+    let documentStore = configurator.getStore('document')
+    return documentStore.seed()
   }).then(function() {
-    var changeStore = new ChangeStore({ db: db });
-    return changeStore.seed();
+    let changeStore = configurator.getStore('change')
+    return changeStore.seed()
   }).then(function() {
-    console.log('Done seeding.'); // eslint-disable-line
-    db.connection.end();
-  });
+    console.log('Done seeding.') // eslint-disable-line
+    db.connection.end()
+  })

@@ -1,0 +1,74 @@
+.sc-rubricator {
+  max-height: 600px;
+  overflow: auto;
+
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  -o-user-select: none;
+  user-select: none;
+}
+
+.sc-rubricator .se-tree-node {
+  position: relative;
+  font-size: 14px;
+  text-transform: uppercase;
+  border-bottom: 1px solid #E0E4E4;
+  padding: 20px;
+  background: #fafafa;
+  border-bottom: 1px solid #ddd;
+  border-left: 4px solid transparent;
+  cursor: pointer;
+}
+
+.sc-rubricator .se-tree-node.level-1 { padding-left: 25px; }
+.sc-rubricator .se-tree-node.level-2 { padding-left: 41px; }
+.sc-rubricator .se-tree-node.level-3 { padding-left: 57px; }
+.sc-rubricator .se-tree-node.level-4 { padding-left: 73px; }
+.sc-rubricator .se-tree-node.level-5 { padding-left: 89px; }
+.sc-rubricator .se-tree-node.level-6 { padding-left: 105px; }
+
+.sc-rubricator .se-tree-node.sm-selected {
+  border-left: 4px solid #91bb04;
+  background: #fff;
+}
+
+.sc-rubricator .se-tree-node .se-tree-node-name {
+  padding-left: 20px;
+}
+
+.sc-rubricator .se-tree-node .selection {
+  float: right;
+  font-size: 23px;
+  padding: 17px 20px;
+  top: 0px;
+  position: absolute;
+  right: 0px;
+}
+
+.sc-rubricator .se-tree-node .selection.fa-square-o {
+  padding: 17px 23px;
+}
+
+.sc-rubricator .se-tree-node .expansion {
+  font-size: 23px;
+  position: absolute;
+  top: 17px;
+}
+
+.sc-rubricator .se-tree-node .help {
+  font-size: 13px;
+  padding-left: 10px;
+}
+
+.sc-rubricator .se-tree-node .se-node-help {
+  position: absolute;
+  font-size: 10px;
+  left: 260px;
+  top: 6px;
+  right: 60px;
+  background: rgba(255, 255, 255, 0.8);
+  padding: 10px;
+  border: 1px dotted #000;
+  z-index: 99;
+}

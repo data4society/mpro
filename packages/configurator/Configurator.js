@@ -1,10 +1,8 @@
-'use strict';
-
-var filter = require('lodash/filter');
-var concat = require('lodash/concat');
-var ListScrollPane = require('../common/ListScrollPane');
-var DoubleSplitPane = require('../common/DoubleSplitPane');
-var AbstractFeedLoader = require('../common/AbstractFeedLoader');
+import filter from 'lodash/filter'
+import concat from 'lodash/concat'
+import ListScrollPane from '../common/ListScrollPane'
+import DoubleSplitPane from '../common/DoubleSplitPane'
+import AbstractFeedLoader from '../common/AbstractFeedLoader'
 
 /*
   Represents Configurator page.
@@ -14,22 +12,21 @@ var AbstractFeedLoader = require('../common/AbstractFeedLoader');
   - Feed
   - Document Viewer
 */
-function Configurator() {
-  AbstractFeedLoader.apply(this, arguments);
+class Configurator extends AbstractFeedLoader {
+  constructor(...args) {
+    super(...args)
+    
+    this.handleActions({
+      'loadMore': this._loadMore,
+      'openDocument': this._openDocument,
+      'newDocument': this._newDocument,
+      'deleteDocument': this._deleteDocument,
+      'notify': this._notify,
+      'connectSession': this._connectSession
+    })
+  }
 
-  this.handleActions({
-    'loadMore': this._loadMore,
-    'openDocument': this._openDocument,
-    'newDocument': this._newDocument,
-    'deleteDocument': this._deleteDocument,
-    'notify': this._notify,
-    'connectSession': this._connectSession
-  });
-}
-
-Configurator.Prototype = function() {
-
-  this.getInitialState = function() {
+  getInitialState() {
     return {
       filters: {'training': true, 'rubrics @>': []},
       perPage: 10,
@@ -41,34 +38,31 @@ Configurator.Prototype = function() {
       totalItems: 0,
       rubrics: {},
       addNew: true
-    };
-  };
+    }
+  }
 
-  this.render = function($$) {
-    var authenticationClient = this.context.authenticationClient;
-    var componentRegistry = this.context.componentRegistry;
-    var Header = componentRegistry.get('header');
-    var Feed = componentRegistry.get('feed');
-    var Filters = componentRegistry.get('filters');
-    var Loader = componentRegistry.get('loader');
-    var Notification = componentRegistry.get('notification');
-    var Collaborators = componentRegistry.get('collaborators');
-    var LoginStatus = componentRegistry.get('login-status');
+  render($$) {
+    let authenticationClient = this.context.authenticationClient
+    let Header = this.getComponent('header')
+    let Feed = this.getComponent('feed')
+    let Filters = this.getComponent('filters')
+    let Loader = this.getComponent('loader')
+    let Notification = this.getComponent('notification')
+    let Collaborators = this.getComponent('collaborators')
 
-    var el = $$('div').addClass('sc-configurator');
+    let el = $$('div').addClass('sc-configurator')
 
-    var header = $$(Header, {
+    let header = $$(Header, {
       actions: {
         'inbox': this.getLabel('inbox-menu'),
         'import': this.getLabel('import-menu')
       }
-    });
+    })
 
     header.outlet('content').append(
-      $$(LoginStatus),
       $$(Notification, {}).ref('notification'),
       $$(Collaborators, {}).ref('collaborators')
-    );
+    )
 
     el.append(
       header,
@@ -87,32 +81,32 @@ Configurator.Prototype = function() {
           userSession: authenticationClient.getSession()
         }).ref('loader')
       )
-    );
+    )
 
-    return el;
-  };
+    return el
+  }
 
-  this._openDocument = function(documentId) {
-    var loader = this.refs.loader;
-    var feed = this.refs.feed;
+  _openDocument(documentId) {
+    let loader = this.refs.loader
+    let feed = this.refs.feed
 
-    this.extendState({documentId: documentId});
-    feed.setActiveItem(documentId);
-    this.updateUrl(documentId);
+    this.extendState({documentId: documentId})
+    feed.setActiveItem(documentId)
+    this.updateUrl(documentId)
     
     loader.extendProps({
       documentId: documentId
-    });
-  };
+    })
+  }
 
   /*
     Creates a new training document
   */
-  this._newDocument = function() {
-    var documentClient = this.context.documentClient;
-    var authenticationClient = this.context.authenticationClient;
-    var user = authenticationClient.getUser();
-    var userId = user.user_id;
+  _newDocument() {
+    let documentClient = this.context.documentClient
+    let authenticationClient = this.context.authenticationClient
+    let user = authenticationClient.getUser()
+    let userId = user.user_id
 
     documentClient.createDocument({
       schemaName: 'mpro-tng',
@@ -130,58 +124,55 @@ Configurator.Prototype = function() {
         accepted: false
       }
     }, function(err, result) {
-      var documentItems = concat(result, this.state.documentItems);
-      var totalItems = parseInt(this.state.totalItems, 10) + 1;
+      let documentItems = concat(result, this.state.documentItems)
+      let totalItems = parseInt(this.state.totalItems, 10) + 1
       this.extendState({
         documentItems: documentItems,
         totalItems: totalItems
-      });
-      this._openDocument(result.documentId);
-    }.bind(this));
-  };
+      })
+      this._openDocument(result.documentId)
+    }.bind(this))
+  }
 
   /*
     Removes a document
   */
 
-  this._deleteDocument = function(documentId) {
-    var documentClient = this.context.documentClient;
+  _deleteDocument(documentId) {
+    let documentClient = this.context.documentClient
     documentClient.deleteDocument(documentId, function(/*err, result*/) {
-      var documentItems = this.state.documentItems;
-      var cleanedItems = filter(documentItems, function(i) { 
-        return i.documentId !== documentId;
-      });
-      var totalItems = parseInt(this.state.totalItems, 10) - 1;
+      let documentItems = this.state.documentItems
+      let cleanedItems = filter(documentItems, function(i) { 
+        return i.documentId !== documentId
+      })
+      let totalItems = parseInt(this.state.totalItems, 10) - 1
       this.extendState({
         documentId: '',
         documentItems: cleanedItems,
         totalItems: totalItems
-      });
-    }.bind(this));
-  };
+      })
+    }.bind(this))
+  }
 
-  this.updateUrl = function(documentId) {
-    var urlHelper = this.context.urlHelper;
-    urlHelper.writeRoute({page: 'configurator', documentId: documentId});
-  };
+  updateUrl(documentId) {
+    let urlHelper = this.context.urlHelper
+    urlHelper.writeRoute({page: 'configurator', documentId: documentId})
+  }
 
-  this._loadMore = function() {
+  _loadMore() {
     this.extendState({
       pagination: true
     });
-    this._loadDocuments();
-  };
+    this._loadDocuments()
+  }
 
-  this._notify = function(msg) {
-    this.refs.notification.extendProps(msg);
-  };
+  _notify(msg) {
+    this.refs.notification.extendProps(msg)
+  }
 
-  this._connectSession = function(session) {
-    this.refs.collaborators.extendProps(session);
-  };
+  _connectSession(session) {
+    this.refs.collaborators.extendProps(session)
+  }
+}
 
-};
-
-AbstractFeedLoader.extend(Configurator);
-
-module.exports = Configurator;
+export default Configurator

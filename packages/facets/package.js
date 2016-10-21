@@ -1,14 +1,11 @@
-'use strict';
+import Facets from './Facets'
 
-var Facets = require('./Facets');
-
-module.exports = {
+export default {
   name: 'facets',
   configure: function(config) {
-    config.addComponent('facets', Facets);
-    config.addStyle(__dirname, '_facets');
+    config.addComponent('facets', Facets)
 
-    config.addIcon('collapsed', { 'fontawesome': 'fa-caret-right' });
-    config.addIcon('expanded', { 'fontawesome': 'fa-caret-down' });
+    config.addIcon('collapsed', { 'fontawesome': 'fa-caret-right' })
+    config.addIcon('expanded', { 'fontawesome': 'fa-caret-down' })
   }
-};
+}

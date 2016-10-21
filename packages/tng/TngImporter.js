@@ -1,73 +1,57 @@
-'use strict';
+import { DefaultDOMElement, HTMLImporter } from 'substance'
+import sanitizeHtml from 'sanitize-html'
 
-var sanitizeHtml = require('sanitize-html');
-var HTMLImporter = require('substance/model/HTMLImporter');
-var DefaultDOMElement = require('substance/ui/DefaultDOMElement');
+class TngImporter extends HTMLImporter {
 
-var converters = [
-  require('substance/packages/paragraph/ParagraphHTMLConverter'),
-  require('substance/packages/blockquote/BlockquoteHTMLConverter'),
-  require('substance/packages/heading/HeadingHTMLConverter'),
-  require('substance/packages/strong/StrongHTMLConverter'),
-  require('substance/packages/emphasis/EmphasisHTMLConverter'),
-  require('substance/packages/link/LinkHTMLConverter')
-];
+  importDocument(html, source) {
 
-function TngImporter(config) {
-  TngImporter.super.call(this, config);
-}
+    html = html.replace(/&#13;/g, '').replace(/<br ?\/?>|<\/p>|<\/div>/g, '\n')
 
-TngImporter.Prototype = function() {
-
-  this.importDocument = function(html, source) {
-
-    html = html.replace(/&#13;/g, '').replace(/<br ?\/?>|<\/p>|<\/div>/g, '\n');
-
-    var clean = sanitizeHtml(html, {
+    let clean = sanitizeHtml(html, {
       allowedTags: [ /*'p',*/ 'b', 'i', 'em', 'strong', 'a' ],
       allowedAttributes: {
         'a': [ 'href' ]
       }
-    });
+    })
 
-    clean = clean.split('\n');
+    clean = clean.split('\n')
 
-    for (var i = 0; i < clean.length; i++) {
-      clean[i] = clean[i].trim();
+    for (let i = 0; i < clean.length; i++) {
+      clean[i] = clean[i].trim()
       if (clean[i] === "") {         
-        clean.splice(i, 1);
-        i--;
+        clean.splice(i, 1)
+        i--
       }
     }
 
-    clean = clean.join('</p><p>');
-    clean = "<p>" + clean + "</p>";
+    clean = clean.join('</p><p>')
+    clean = "<p>" + clean + "</p>"
 
-    this.reset();
-    var parsed = DefaultDOMElement.parseHTML(clean);
-    this.convertDocument(parsed);
-    var doc = this.generateDocument();
+    this.reset()
+    let parsed = DefaultDOMElement.parseHTML(clean)
+    this.convertDocument(parsed)
+    let doc = this.generateDocument()
     // Create document metadata
-    this.convertMeta(doc, source);
-    return doc;
-  };
+    this.convertMeta(doc, source)
+    return doc
+  }
 
-  this.convertDocument = function(els) {
-    if (!els.length) els = [els];
-    this.convertContainer(els, 'body');
-  };
+  convertDocument(els) {
+    if (!els.length) els = [els]
+    this.convertContainer(els, 'body')
+  }
 
-  this.convertMeta = function(doc, source) {
-    var meta = source.meta;
+  convertMeta(doc, source) {
+    let meta = source.meta
 
     // Hack, should be replaced
-    var source_type = source.guid.indexOf('vk.com') > -1 ? 'vk' : 'article'; 
-    var abstract = source.doc_source.substr(0, source.doc_source.indexOf('<br>'));
-    abstract = this.truncate(abstract, 200, true);
+    let source_type = source.guid.indexOf('vk.com') > -1 ? 'vk' : 'article'
+    let abstract = source.doc_source.substr(0, source.doc_source.indexOf('<br>'))
+    abstract = this.truncate(abstract, 200, true)
 
-    if(meta.abstract) abstract = meta.abstract;
+    if(meta.abstract) abstract = meta.abstract
 
-    var metaNode = doc.get('meta');
+    let metaNode = doc.get('meta')
     if(!metaNode){
       doc.create({
         id: 'meta',
@@ -78,20 +62,16 @@ TngImporter.Prototype = function() {
         entities: [],
         abstract: abstract,
         accepted: false
-      });
+      })
     }
-  };
+  }
 
-  this.truncate = function(string, n, useWordBoundary) {
-    var isTooLong = string.length > n;
-    var s_ = isTooLong ? string.substr(0,n-1) : string;
-    s_ = (useWordBoundary && isTooLong) ? s_.substr(0,s_.lastIndexOf(' ')) : s_;
-    return isTooLong ? s_ + '&hellip;' : s_;
-  };
-};
+  truncate(string, n, useWordBoundary) {
+    let isTooLong = string.length > n
+    let s_ = isTooLong ? string.substr(0,n-1) : string
+    s_ = (useWordBoundary && isTooLong) ? s_.substr(0,s_.lastIndexOf(' ')) : s_
+    return isTooLong ? s_ + '&hellip;' : s_
+  }
+}
 
-// Expose converters so we can reuse them in ArticleHtmlExporter
-TngImporter.converters = converters;
-
-HTMLImporter.extend(TngImporter);
-module.exports = TngImporter;
+export default TngImporter

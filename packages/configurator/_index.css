@@ -1,0 +1,38 @@
+.sc-configurator .sc-header {
+  background: #565656;
+  background: linear-gradient(to right bottom, #565656, #293f50);
+}
+
+.sc-configurator > .sc-split-pane {
+  top: 40px;
+}
+
+.sc-configurator .sc-feed-item {
+  position: relative;
+}
+
+.sc-configurator .sc-feed-item > div {
+  padding-right: 100px;
+}
+
+.sc-configurator .sc-feed-item .se-title {
+  padding: 0px;
+}
+
+.sc-configurator .sc-feed-item .se-source-info {
+  padding-bottom: 30px;
+}
+
+.sc-configurator .sc-feed-item .se-delete-document {
+  position: absolute;
+  right: 20px;
+  top: 35px;
+  color: rgba(177, 0, 0, 0.75);
+  border: 1px solid rgba(177, 0, 0, 0.75);
+}
+
+.sc-configurator .sc-feed-item.active .se-delete-document {
+  right: 30px;
+  color: #fff;
+  border-color: #fff;
+}

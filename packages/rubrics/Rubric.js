@@ -1,6 +1,4 @@
-'use strict';
-
-var DocumentNode = require('substance/model/DocumentNode');
+import { DocumentNode } from 'substance'
 
 /**
   Rubric Node.
@@ -8,21 +6,17 @@ var DocumentNode = require('substance/model/DocumentNode');
   Holds rubric data.
 */
 
-function Rubric() {
-  Rubric.super.apply(this, arguments);
-}
+class Rubric extends DocumentNode {}
 
-DocumentNode.extend(Rubric);
+Rubric.type = 'rubric'
 
-Rubric.static.name = 'rubric';
-
-Rubric.static.defineSchema({
+Rubric.define({
   parent: { type: 'id', optional: true },
   name: 'string',
   count: { type: 'string', default: '0' },
   description: { type: 'string', optional: true },
   active: { type: 'boolean', default: false },
   expanded: { type: 'boolean', default: false }
-});
+})
 
-module.exports = Rubric;
+export default Rubric

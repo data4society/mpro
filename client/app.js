@@ -1,15 +1,13 @@
-'use strict';
+import { substanceGlobals } from 'substance'
+import Mpro from '../packages/mpro/Mpro'
+import MproConfigurator from '../packages/mpro/MproConfigurator'
+import MproPackage from './package'
 
-var substanceGlobals = require('substance/util/substanceGlobals');
-substanceGlobals.DEBUG_RENDERING = true;
-
-var Mpro = require('../packages/mpro/Mpro');
-var MproConfigurator = require('../packages/mpro/MproConfigurator');
-var MproPackage = require('./package');
-var configurator = new MproConfigurator().import(MproPackage);
+substanceGlobals.DEBUG_RENDERING = true
+let configurator = new MproConfigurator().import(MproPackage)
 
 window.onload = function() {
-  window.app = Mpro.static.mount({
+  window.app = Mpro.mount({
     configurator: configurator
   }, document.body);
-};
+}

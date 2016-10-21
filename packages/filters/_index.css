@@ -1,0 +1,9 @@
+.sc-filters {
+  background: #282b2f;
+  z-index: 99;
+  overflow: auto;
+}
+
+.sc-filters::-webkit-scrollbar { 
+  width: 0 !important 
+}

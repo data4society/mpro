@@ -1,0 +1,15 @@
+.sc-document-editor > .sc-split-pane {
+  width: 100%;
+}
+
+.sc-document-editor .sc-layout {
+  padding-top: 20px;
+}
+
+.sc-document-editor .se-scrollable {
+  padding-right: 20px;
+}
+
+.sc-document-editor  .sc-paragraph {
+  padding-bottom: 10px;
+}

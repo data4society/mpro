@@ -1,23 +1,18 @@
-'use strict';
+import { HTMLImporter } from 'substance'
+import each from 'lodash/each'
 
-var HTMLImporter = require('substance/model/HTMLImporter');
-var each = require('lodash/each');
-var converters = [];
+let converters = []
 
-function RubricsImporter(config) {
-  RubricsImporter.super.call(this, config);
-}
+class RubricsImporter extends HTMLImporter {
 
-RubricsImporter.Prototype = function() {
-
-  this.importDocument = function(rubricsData, facets) {
-    this.reset();
+  importDocument(rubricsData, facets) {
+    this.reset()
     //this.convertDocument(articleEl);
-    var doc = this.generateDocument();
+    let doc = this.generateDocument()
     each(rubricsData, function(rubric) {
-      var active = false;
+      let active = false
       if(facets.indexOf(rubric.rubric_id) > -1) {
-        active = true;
+        active = true
       }
       doc.create({
         id: rubric.rubric_id,
@@ -27,24 +22,22 @@ RubricsImporter.Prototype = function() {
         description: rubric.description,
         parent: rubric.parent_id,
         active: active
-      });
-    });
+      })
+    })
 
-    return doc;
-  };
+    return doc
+  }
 
   /*
     Takes an HTML string.
   */
-  this.convertDocument = function(bodyEls) {
+  convertDocument(bodyEls) {
     // Just to make sure we always get an array of elements
-    if (!bodyEls.length) bodyEls = [bodyEls];
-    this.convertContainer(bodyEls, 'body');
-  };
-};
+    if (!bodyEls.length) bodyEls = [bodyEls]
+    this.convertContainer(bodyEls, 'body')
+  }
+}
 
-HTMLImporter.extend(RubricsImporter);
+RubricsImporter.converters = converters
 
-RubricsImporter.converters = converters;
-
-module.exports = RubricsImporter;
+export default RubricsImporter
