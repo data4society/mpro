@@ -3,7 +3,8 @@ import AuthenticationClient from './AuthenticationClient'
 import DocumentClient from './DocumentClient'
 import FileClient from './FileClient'
 
-let appConfig = '{"protocol":"http","host":"localhost","port":5000}'
+//let appConfig = '{"protocol":"http","host":"localhost","port":5000}'
+let appConfig = '{"protocol":"https","host":"mpro.d4s.io","port":443}'
 appConfig = JSON.parse(appConfig)
 
 export default {
