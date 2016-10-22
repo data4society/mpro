@@ -23,7 +23,7 @@ let documentStore = configurator.getStore('document')
 
 /* CONFIGURATION */
 
-let stepSize = 2
+let stepSize = 10
 
 
 /* ------------- */
@@ -136,6 +136,6 @@ getTotal()
         })
     })
     .then(function(){
-      db.shutdown()
+      //db.shutdown()
     })
   })
