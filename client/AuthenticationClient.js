@@ -31,7 +31,7 @@ class AuthenticationClient {
 
     let path = this.config.httpUrl + 'changename'
     request('POST', path, {
-      user_id: userId,
+      userId: userId,
       name: name
     }, function(err, res) {
       // Skip if there has been another request in the meanwhile

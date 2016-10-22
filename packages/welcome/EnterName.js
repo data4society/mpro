@@ -83,7 +83,7 @@ class EnterName extends Component {
       })
     }
 
-    authenticationClient.changeName(userSession.user.userId, name, function(err) {
+    authenticationClient.changeName(userSession.user.user_id, name, function(err) {
       if(err) {
         this.setState({
           notification: {
