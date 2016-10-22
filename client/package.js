@@ -12,11 +12,7 @@ export default {
     // Use the default Mpro package
     config.import(MproPackage)
 
-    config.setAppConfig({
-      protocol: appConfig.protocol,
-      host: appConfig.host,
-      port: appConfig.port
-    })
+    config.setAppConfig(appConfig)
 
     // Define Authentication Client
     config.setAuthenticationServerUrl(appConfig.protocol + '://'+appConfig.host+':'+appConfig.port+'/api/auth/')
