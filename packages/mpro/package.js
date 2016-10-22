@@ -15,6 +15,7 @@ import ViewerPackage from '../viewer/package'
 import EditorPackage from '../editor/package'
 import NotificationPackage from '../notification/package'
 import CollaboratorsPackage from '../collaborators/package'
+import UsersPackage from '../users/package'
 import WelcomePackage from '../welcome/package'
 
 // Article configurator
@@ -57,6 +58,7 @@ export default {
     config.import(LoaderPackage)
     config.import(NotificationPackage)
     config.import(CollaboratorsPackage)
+    config.import(UsersPackage)
     config.import(WelcomePackage)
     
     // Default configuration for available modes

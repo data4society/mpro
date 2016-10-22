@@ -35,7 +35,8 @@ class Inbox extends AbstractFeedLoader {
 
     let header = $$(Header, {
       actions: {
-        'configurator': this.getLabel('configurator-menu')
+        'configurator': this.getLabel('configurator-menu'),
+        'users': this.getLabel('configurator-users')
       }
     })
 

@@ -1,0 +1,62 @@
+.se-user-form-modal .se-body {
+  width: 500px; 
+}
+
+.sc-user-form {
+  padding: 10px;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+
+.sc-user-form .se-access {
+  padding: 10px 0px 0px;
+  width: 480px;
+  display: block;
+}
+
+.sc-user-form .se-access input {
+  width: initial;
+  height: inherit;
+}
+
+
+.sc-user-form .se-super {
+  padding: 10px 0px 0px;
+  width: 480px;
+  display: block;
+}
+
+.sc-user-form .se-super input {
+  width: initial;
+  height: inherit;
+}
+
+.sc-user-form .se-actions {
+  text-align: center;
+}
+
+.sc-user-form .se-actions button {
+  margin: 10px;
+}
+
+.sc-user-form .se-invite-user {
+  margin: 15px 177px;
+}
+
+.se-cell .se-access i,
+.se-cell .se-super i {
+  padding: 0px 10px;
+  font-size: 17px;
+  top: 2px;
+  position: relative;
+}
+
+.sc-users .se-intro {
+  padding: 10px;
+}
+
+.sc-users .se-intro .se-items-count {
+  float: right;
+}

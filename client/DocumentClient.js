@@ -82,6 +82,29 @@ class MproDocumentClient extends DocumentClient {
     let restrictionsRequest = encodeURIComponent(JSON.stringify(restrictions))
     request('GET', '/api/entities/search?value=' + value + '&restrictions=' + restrictionsRequest, null, cb)
   }
+
+  /*
+    Create a user
+  */
+  createUser(data, cb) {
+    this.request('POST', this.config.httpUrl + 'users', data, cb)
+  }
+
+  /*
+    Update a user
+  */
+  updateUser(userId, data, cb) {
+    this.request('PUT', this.config.httpUrl + 'users/' + userId, data, cb)
+  }
+
+  /*
+    Get users from the server
+  */
+  listUsers(filters, options, cb) {
+    let filtersRequest = encodeURIComponent(JSON.stringify(filters))
+    let optionsRequest = encodeURIComponent(JSON.stringify(options))
+    this.request('GET', this.config.httpUrl + 'users?filters=' + filtersRequest + '&options=' + optionsRequest, null, cb)
+  }
 }
 
 function isJson(str) {
