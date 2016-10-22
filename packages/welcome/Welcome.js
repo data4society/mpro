@@ -11,8 +11,10 @@ class Welcome extends Component {
   }
 
   render($$) {
-    let el = $$('div').addClass('sc-welcome')
-
+    let picture = Math.floor(Math.random() * 5) + 1  
+    let el = $$('div').addClass('sc-welcome').attr({
+      style: "background-image: -webkit-gradient(linear, left top, right top, from(rgba(72, 85, 99,0.5)), to(rgba(41, 50, 60,.25))), url('/assets/" + picture + ".jpg');"
+    })
     // Topbar with branding
     el.append(
       $$('div').addClass('se-topbar').html('')
