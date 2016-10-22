@@ -1,4 +1,6 @@
 var b = require('substance-bundler')
+var fs = require('fs')
+var config = require('config')
 var TEST ='.test/'
 
 b.task('clean', function() {
@@ -32,6 +34,18 @@ function buildApp(app) {
       format: 'umd',
       moduleName: app
     })
+    b.custom('injecting config', {
+      src: './dist/app.js',
+      dest: './dist/mpro.js',
+      execute: function(file) {
+        const code = fs.readFileSync(file[0], 'utf8')
+        const result = code.replace(/MPROCONFIG/g, JSON.stringify(config.get('app')))
+        fs.writeFileSync(this.outputs[0], result, 'utf8')
+      }      
+    })
+    b.copy('./dist/app.js.map', './dist/mpro.js.map')
+    b.rm('./dist/app.js')
+    b.rm('./dist/app.js.map')
   }
 }
 
