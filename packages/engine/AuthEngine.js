@@ -30,19 +30,24 @@ class AuthEngine {
       }.bind(this))
   }
 
-  requestNewUser (userData) {
+  requestNewUser(userData) {
     let userStore = this.userStore
     let password = generatePassword()
+    let createdUser = {}
     return new Promise(function(resolve, reject) {
       bcrypt.hash(password, 10, function(err, bcryptedPassword) {
         if(err) return reject(err)
         userData.password = bcryptedPassword
         return userStore.createUser(userData).bind(this)
           .then(function(user) {
+            createdUser = user
             return this._sendInvitation(user, password)
           }.bind(this))
-          .then(function(user) {
-            resolve(user)
+          .then(function(info) {
+            resolve(createdUser)
+          })
+          .catch(function(err) {
+            reject(err)
           })
       }.bind(this))
     }.bind(this))
@@ -91,15 +96,7 @@ class AuthEngine {
     Send an invitation via email
   */
   _sendInvitation(user, password) {
-    return new Promise(function(resolve, reject) {
-      this.mailer.send('invite', {email: user.email, password: password}, function(err) {
-        if(err) {
-          return reject(err)
-        }
-
-        resolve(user)
-      })
-    }.bind(this))
+    return this.mailer.invite({email: user.email, password: password})
   }
 
   /*
@@ -280,7 +277,7 @@ class AuthEngine {
     Check if user has super access
   */
   hasSuperAccess(req, res, next) {
-    let token = req.headers['x-access-token'];
+    let token = req.headers['x-access-token']
     if(!token) return res.status(403).end('forbidden')
 
     this.sessionStore.getSession(token).then(function(session) {

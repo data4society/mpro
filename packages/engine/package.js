@@ -51,7 +51,8 @@ module.exports = {
     let mproEngine = new MproEngine({
       entityStore: config.getStore('entity'),
       rubricStore: config.getStore('rubric'),
-      classStore: config.getStore('class')
+      classStore: config.getStore('class'),
+      userStore: config.getStore('user')
     })
 
     let sourceEngine = new SourceEngine({
