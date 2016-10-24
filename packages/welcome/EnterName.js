@@ -66,7 +66,16 @@ class EnterName extends Component {
 
   renderHeader($$) {
     let Header = this.getComponent('header')
-    return $$(Header)
+    let header = $$(Header, {
+      actions: {
+        'inbox': this.getLabel('inbox-menu'),
+        'configurator': this.getLabel('configurator-menu'),
+        'import': this.getLabel('import-menu'),
+        'users': this.getLabel('configurator-users')
+      }
+    })
+
+    return header
   }
 
   _updateUserName() {

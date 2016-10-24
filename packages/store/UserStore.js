@@ -218,6 +218,32 @@ class UserStore {
     }.bind(this))
   }
 
+  listUsers(filters, options, cb) {
+    let output = {}
+
+    // Default limit for number of returned records
+    if(!options.limit) options.limit = 100
+
+    this.db.users.count(filters, function(err, count) {
+      if (err) {
+        return cb(new Err('UserStore.ListError', {
+          cause: err
+        }))
+      }
+      output.total = count
+      
+      this.db.users.find(filters, options, function(err, users) {
+        if (err) {
+          return cb(new Err('UserStore.ListError', {
+            cause: err
+          }))
+        }
+        output.records = users
+        cb(null, output)
+      })
+    }.bind(this))
+  }
+
   /*
     Check if user exists
 

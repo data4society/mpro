@@ -11,6 +11,7 @@
 @import './notification/_index.css';
 @import './pager/_index.css';
 @import './rubricator/_index.css';
+@import './users/_index.css';
 @import './welcome/_index.css';
 
 /* Viewer*/

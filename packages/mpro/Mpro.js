@@ -26,6 +26,7 @@ class Mpro extends AbstractApplication {
     }.bind(this))
 
     this.handleActions({
+      'users': this._users,
       'configurator': this._configurator,
       'inbox': this._inbox,
       'home': this._home
@@ -71,6 +72,12 @@ class Mpro extends AbstractApplication {
   _home() {
     this.navigate({
       page: this.getDefaultPage()
+    })
+  }
+
+  _users() {
+    this.navigate({
+      page: 'users'
     })
   }
 

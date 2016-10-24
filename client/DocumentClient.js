@@ -14,7 +14,7 @@ class MproDocumentClient extends DocumentClient {
 
   request(method, url, data, cb) {
     let request = new XMLHttpRequest();
-    request.open(method, url, true)
+    request.open(method, url, true) 
     request.setRequestHeader('Content-Type', 'application/json; charset=UTF-8')
     request.setRequestHeader('x-access-token', this.authClient.getSessionToken())
     request.onload = function() {
@@ -81,6 +81,29 @@ class MproDocumentClient extends DocumentClient {
   findEntities(value, restrictions, cb) {
     let restrictionsRequest = encodeURIComponent(JSON.stringify(restrictions))
     request('GET', '/api/entities/search?value=' + value + '&restrictions=' + restrictionsRequest, null, cb)
+  }
+
+  /*
+    Create a user
+  */
+  createUser(data, cb) {
+    this.request('POST', '/api/users', data, cb)
+  }
+
+  /*
+    Update a user
+  */
+  updateUser(userId, data, cb) {
+    this.request('PUT', '/api/users/' + userId, data, cb)
+  }
+
+  /*
+    Get users from the server
+  */
+  listUsers(filters, options, cb) {
+    let filtersRequest = encodeURIComponent(JSON.stringify(filters))
+    let optionsRequest = encodeURIComponent(JSON.stringify(options))
+    this.request('GET', '/api/users?filters=' + filtersRequest + '&options=' + optionsRequest, null, cb)
   }
 }
 

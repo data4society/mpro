@@ -9,6 +9,7 @@ let CollabServer = require('./CollabServer')
 let DocumentServer = require('./MproDocumentServer')
 let FileServer = require('./FileServer')
 let MproServer = require('./MproServer')
+let UserServer = require('./UserServer')
 let CJSPackage = require('./cjs/package')
 
 let db = new Database()
@@ -58,6 +59,12 @@ module.exports = {
       path: '/api/files'
     })
 
+    let userServer = new UserServer({
+      authEngine: authEngine,
+      engine: mproEngine,
+      path: '/api/users'
+    })
+
     let mproServer = new MproServer({
       mproEngine: mproEngine,
       importEngine: importEngine,
@@ -69,6 +76,7 @@ module.exports = {
     collabServer.bind(socketServer)
     documentServer.bind(server)
     fileServer.bind(server)
+    userServer.bind(server)
     mproServer.bind(server)
   }
 }

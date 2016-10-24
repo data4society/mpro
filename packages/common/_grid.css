@@ -1,0 +1,13 @@
+.se-row {
+  border-bottom: solid 1px #DDDDDD;
+}
+
+.se-row:hover {
+  background: #EEEEEE;
+}
+
+.se-cell {
+  min-height: 30px;
+  padding: 15px 10px;
+  font-size: 13px;
+}

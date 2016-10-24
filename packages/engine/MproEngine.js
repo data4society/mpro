@@ -10,6 +10,7 @@ class MproEngine {
     this.entityStore = config.entityStore
     this.rubricStore = config.rubricStore
     this.classStore = config.classStore
+    this.userStore = config.userStore
   }
 
   /*
@@ -108,6 +109,31 @@ class MproEngine {
   */
   findEntity(pattern, restrictions) {
     return this.entityStore.findEntity(pattern, restrictions)
+  }
+
+  /* Users API */
+
+  /** 
+   * Updates User's record from json object
+   *
+   * @param {string} userId - The user_id of target user record
+   * @param {string} data - JSON object with updated properties
+   */
+
+  updateUser(userId, data) {
+    return this.userStore.updateUser(userId, data)
+  }
+
+  /** 
+   * List users with given filters and options
+   *
+   * @param {object} filters - Order id
+   * @param {object} option - Order id
+   * @param {callback} cb - The callback that handles the results 
+   */
+
+  listUsers(filters, options, cb) {
+    this.userStore.listUsers(filters, options, cb)
   }
 
 }
