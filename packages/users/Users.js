@@ -28,7 +28,9 @@ class Users extends Component {
     let Header = this.getComponent('header')
     let header = $$(Header, {
       actions: {
+        'inbox': this.getLabel('inbox-menu'),
         'configurator': this.getLabel('configurator-menu'),
+        'import': this.getLabel('import-menu'),
         'users': this.getLabel('configurator-users')
       }
     })

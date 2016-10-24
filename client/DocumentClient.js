@@ -14,7 +14,7 @@ class MproDocumentClient extends DocumentClient {
 
   request(method, url, data, cb) {
     let request = new XMLHttpRequest();
-    request.open(method, url, true)
+    request.open(method, url, true) 
     request.setRequestHeader('Content-Type', 'application/json; charset=UTF-8')
     request.setRequestHeader('x-access-token', this.authClient.getSessionToken())
     request.onload = function() {
@@ -87,14 +87,14 @@ class MproDocumentClient extends DocumentClient {
     Create a user
   */
   createUser(data, cb) {
-    this.request('POST', this.config.httpUrl + 'users', data, cb)
+    this.request('POST', '/api/users', data, cb)
   }
 
   /*
     Update a user
   */
   updateUser(userId, data, cb) {
-    this.request('PUT', this.config.httpUrl + 'users/' + userId, data, cb)
+    this.request('PUT', '/api/users/' + userId, data, cb)
   }
 
   /*
@@ -103,7 +103,7 @@ class MproDocumentClient extends DocumentClient {
   listUsers(filters, options, cb) {
     let filtersRequest = encodeURIComponent(JSON.stringify(filters))
     let optionsRequest = encodeURIComponent(JSON.stringify(options))
-    this.request('GET', this.config.httpUrl + 'users?filters=' + filtersRequest + '&options=' + optionsRequest, null, cb)
+    this.request('GET', '/api/users?filters=' + filtersRequest + '&options=' + optionsRequest, null, cb)
   }
 }
 

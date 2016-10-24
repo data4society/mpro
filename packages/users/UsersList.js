@@ -1,4 +1,5 @@
 import { Component, Button, Grid, Modal, SubstanceError as Err } from 'substance'
+import concat from 'lodash/concat'
 import moment from 'moment'
 import UserForm from './UserForm'
 
@@ -7,7 +8,7 @@ class UsersList extends Component {
     super(...args)
 
     this.handleActions({
-      'changePage': this._changePage,
+      'loadMore': this._loadMore,
       'toggleAccess': this._toggleAccess,
       'addUser': this._createUser,
       'closeModal': this._hideUserDialog
@@ -29,8 +30,9 @@ class UsersList extends Component {
       dialog: false,
       perPage: 30,
       page: 1,
-      order: '"userId"',
-      direction: 'desc'
+      order: 'user_id',
+      direction: 'desc',
+      userItems: []
     }
   }
 
@@ -95,8 +97,6 @@ class UsersList extends Component {
   renderFull($$) {
     let items = this.state.userItems
     let total = this.state.totalItems
-    let page = this.state.page
-    let perPage = this.state.perPage
     let Pager = this.getComponent('pager')
     let el = $$('div').addClass('se-list-not-empty')
 
@@ -108,31 +108,31 @@ class UsersList extends Component {
         let accessCheckbox = $$('div').addClass('se-access').append(
           'доступ',
           $$('i').addClass('fa ' + accessCheckboxIcon)
-        ).on('click', this._toggleAccess.bind(this, item.userId, 'access'))
+        ).on('click', this._toggleAccess.bind(this, item.user_id, 'access'))
 
         let superCheckboxIcon = item.super ? 'fa-check-square-o' : 'fa-square-o'
         let superCheckbox = $$('div').addClass('se-super').append(
           'админ',
           $$('i').addClass('fa ' + superCheckboxIcon)
-        ).on('click', this._toggleAccess.bind(this, item.userId, 'super'))
+        ).on('click', this._toggleAccess.bind(this, item.user_id, 'super'))
 
         let created = moment(item.created).format("DD.MM.YYYY HH:mm")
         
         grid.append(
-          $$(Grid.Row, {user: item}).ref(item.userId).append(
-            $$(Grid.Cell, {columns: 2}).append('#'+item.userId),
+          $$(Grid.Row, {user: item}).ref(item.user_id).append(
+            $$(Grid.Cell, {columns: 2}).append('#'+item.user_id),
             $$(Grid.Cell, {columns: 3}).append(item.email),
             $$(Grid.Cell, {columns: 3}).append(item.name || 'Anonymous'),
             $$(Grid.Cell, {columns: 2}).append(created),
             $$(Grid.Cell, {columns: 1}).append(accessCheckbox),
             $$(Grid.Cell, {columns: 1}).append(superCheckbox)
-          ).ref(item.userId)
+          ).ref(item.user_id)
         )
       }.bind(this))
 
       el.append(
         grid,
-        $$(Pager, {total: total, page: page, perPage: perPage})
+        $$(Pager, {total: total, loaded: items.length})
       )
     }
     return el
@@ -146,19 +146,19 @@ class UsersList extends Component {
     this.extendState({'dialog': false})
   }
 
-  _changePage(page) {
+  _loadMore() {
     this.extendState({
-      page: page
+      pagination: true
     })
     this._loadUsers()
   }
 
   _toggleAccess(userId, prop) {
-    let reportClient = this.context.reportClient
+    let documentClient = this.context.documentClient
     let user = this.refs[userId].props.user
     let update = {}
     update[prop] = !user[prop];
-    reportClient.updateUser(userId, update, function(err, result) {
+    documentClient.updateUser(userId, update, function(err, result) {
       if (err) {
         this.setState({
           error: new Err('UserList.UpdateError', {
@@ -202,14 +202,16 @@ class UsersList extends Component {
     let filters = this.state.filters
     let perPage = this.state.perPage
     let page = this.state.page
+    let pagination = this.state.pagination
     let order = this.state.order
     let direction = this.state.direction
+    let items= []
     //var userId = this._getUserId();
 
     documentClient.listUsers(filters,
       {
         limit: perPage, 
-        offset: perPage * (page - 1),
+        offset: this.state.userItems.length,
         order: order + ' ' + direction
       }, function(err, results) {
         if (err) {
@@ -223,9 +225,15 @@ class UsersList extends Component {
           return
         }
 
+        if(pagination) {
+          items = concat(this.state.userItems, results.records)
+        } else {
+          items = results.records
+        }
+
         self.extendState({
-          userItems: results.records,
-          totalItems: results.total_count
+          userItems: items,
+          totalItems: results.total
         });
       }.bind(this))
   }
