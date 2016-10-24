@@ -52,7 +52,7 @@ class TngFeedItem extends FeedItem {
 
   renderSourceInfo($$) {
     let meta = this.props.document.meta
-    let issue_date = this.props.document.issue_date
+    let issue_date = this.props.document.created
     let el = $$('div').addClass('se-source-info')
 
     el.append(
