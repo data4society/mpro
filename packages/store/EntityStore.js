@@ -140,6 +140,7 @@ class EntityStore {
 
     // Default limit for number of returned records
     if(!options.limit) options.limit = 100
+    if(!options.columns) options.columns = ['entity_id', 'name', 'created', 'edited', 'author', 'entity_class']
 
     return new Promise(function(resolve, reject) {
       this.db.entities.count(filters, function(err, count) {
