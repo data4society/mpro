@@ -29,7 +29,7 @@ class ResourcesList extends Component {
       filters: {},
       search: null,
       dialog: false,
-      perPage: 30,
+      perPage: 10,
       page: 1,
       order: 'created',
       direction: 'desc',
@@ -87,7 +87,9 @@ class ResourcesList extends Component {
   renderFull($$) {
     let items = this.state.items
     let total = this.state.totalItems
-    let Pager = this.getComponent('pager')
+    let page = this.state.page
+    let perPage = this.state.perPage
+    let Pager = this.getComponent('simple-pager')
     let el = $$('div').addClass('se-list-not-empty')
 
     let grid = $$(Grid)
@@ -111,7 +113,7 @@ class ResourcesList extends Component {
 
       el.append(
         grid,
-        $$(Pager, {total: total, loaded: items.length})
+        $$(Pager, {total: total, page: page, perPage: perPage})
       )
     }
     return el

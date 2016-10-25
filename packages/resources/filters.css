@@ -1,4 +1,8 @@
-.sc-input-filter {
+.sc-list .sc-filters {
+  background: none;
+}
+
+.sc-filters .sc-input-filter {
   position: relative;
   width: 248px;
   height: 30px;
@@ -6,7 +10,7 @@
   display: inline-block;
 }
 
-.sc-input-filter .search {
+.sc-filters .sc-input-filter .search {
   position: absolute;
   top: 50%;
   left: 6px;
@@ -19,7 +23,7 @@
           box-sizing: content-box;
 }
 
-.sc-input-filter .search::before {
+.sc-filters .sc-input-filter .search::before {
   position: absolute;
   top: 50%;
   left: 0;
@@ -37,7 +41,7 @@
           box-sizing: content-box;
 }
 
-.sc-input-filter .search::after {
+.sc-filters .sc-input-filter .search::after {
   position: absolute;
   top: 50%;
   left: 10px;
@@ -56,7 +60,7 @@
           box-sizing: content-box;
 }
 
-.sc-input-filter .clear {
+.sc-filters .sc-input-filter .clear {
   position: absolute;
   width: 16px;
   height: 30px;
@@ -76,7 +80,7 @@
   cursor: pointer;
 }
 
-.sc-input-filter input {
+.sc-filters .sc-input-filter input {
   display: inline-block;
   width: 206px;
   height: 20px;
@@ -108,75 +112,15 @@
   padding-left: 22px;
 }
 
-.sc-input-filter input::-ms-clear {
+.sc-filters .sc-input-filter input::-ms-clear {
   display: none;
 }
 
-.sc-input-filter input::-webkit-search-cancel-button {
+.sc-filters .sc-input-filter input::-webkit-search-cancel-button {
   -webkit-appearance: none;
 }
 
-.sc-input-filter input::-moz-focus-inner {
-  padding: 0;
-  border: 0;
-}
-
-
-.se-date-filters {
-  display: inline-block;
-  margin: 10px;
-}
-
-.se-date-filters .sc-date-time-input-filter {
-  position: relative;
-  display: inline-block;
-}
-
-.se-date-filters .sc-date-time-input-filter >* {
-  display: inline-block;
-}
-
-.se-date-filters .sc-date-time-input-filter input {
-  display: inline-block;
-  width: 206px;
-  height: 20px;
-  font-weight: normal;
-  color: #555;
-  vertical-align: middle;
-  background-color: #fff;
-  border: 1px solid #ccc;
-  -webkit-border-radius: 4px;
-     -moz-border-radius: 4px;
-          border-radius: 4px;
-  -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
-     -moz-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
-          box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
-  -webkit-transition: border linear 0.2s, box-shadow linear 0.2s;
-     -moz-transition: border linear 0.2s, box-shadow linear 0.2s;
-       -o-transition: border linear 0.2s, box-shadow linear 0.2s;
-          transition: border linear 0.2s, box-shadow linear 0.2s;
-  margin: 0;
-  font-family: inherit;
-  font-size: 100%;
-  line-height: normal;
-  outline: none;
-  -webkit-box-sizing: content-box;
-     -moz-box-sizing: content-box;
-          box-sizing: content-box;
-  -webkit-appearance: none;
-  padding-right: 18px;
-  padding-left: 22px;
-}
-
-.se-date-filters .sc-date-time-input-filter input::-ms-clear {
-  display: none;
-}
-
-.se-date-filters .sc-date-time-input-filter input::-webkit-search-cancel-button {
-  -webkit-appearance: none;
-}
-
-.se-date-filters .sc-date-time-input-filter input::-moz-focus-inner {
+.sc-filters .sc-input-filter input::-moz-focus-inner {
   padding: 0;
   border: 0;
 }
