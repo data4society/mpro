@@ -1,13 +1,18 @@
 import { Component, Button, Grid, Modal, SubstanceError as Err } from 'substance'
 import concat from 'lodash/concat'
+import each from 'lodash/each'
+import extend from 'lodash/extend'
+import isEmpty from 'lodash/isEmpty'
 import moment from 'moment'
+import Filters from './Filters'
 
 class ResourcesList extends Component {
   constructor(...args) {
     super(...args)
 
     this.handleActions({
-      'loadMore': this._loadMore
+      'filterList': this._filterList,
+      'changePage': this._changePage
     })
   }
 
@@ -41,6 +46,8 @@ class ResourcesList extends Component {
     }
 
     el.append(this.renderIntro($$))
+
+    el.append($$(Filters, this.state.filters).ref('filters'))
 
     if (items.length > 0) {
       el.append(this.renderFull($$))
@@ -110,11 +117,62 @@ class ResourcesList extends Component {
     return el
   }
 
-  _loadMore() {
+  _changePage(page) {
     this.extendState({
-      pagination: true
+      page: page
     })
-    this._loadUsers()
+    this._loadData()
+  }
+
+  _filterList(property, value) {
+    let state = this.getState()
+    let filters = state.filters
+    let updatedFilters = {}
+    updatedFilters[property] = value
+    updatedFilters = extend({}, filters, updatedFilters)
+
+    this.extendState({
+      filters: updatedFilters
+    })
+    this._loadData()
+  }
+
+  _prepareFilters() {
+    let filters = this.state.filters
+    let query = {}
+    each(filters, function(filter) {
+      let name = filter.name
+      let op = filter.op
+      let value = filter.value
+      if(name && !isEmpty(value)) {
+        // props with @ means same prop, but different queries
+        // for example we need to filter by sum using
+        // gte and lte quieries 
+        if(name.split('@').length > 0) {
+          name = name.split('@')[0]
+        }
+
+        // complex or query
+        if(filter.multi) {
+          query['or'] = []
+          each(filter.multi, function(subprop) {
+            let subQuery = {}
+            let prop = op ? subprop + ' ' + op : subprop
+            subQuery[prop] = value
+            // Regex ilike
+            if(op === '~~*') subQuery[prop] = '%' + value + '%'
+            query['or'].push(subQuery)
+          })
+        } else {
+          let prop = op ? name + ' ' + op : name
+          query[prop] = value
+          // Regex ilike
+          if(op === '~~*') query[prop] = '%' + value + '%'
+        }
+      }
+    })
+
+    return query
   }
 
   /*
@@ -123,7 +181,7 @@ class ResourcesList extends Component {
   _loadData() {
     let self = this
     let documentClient = this.context.documentClient
-    let filters = this.state.filters
+    let filters = this._prepareFilters()
     let perPage = this.state.perPage
     let page = this.state.page
     let pagination = this.state.pagination
@@ -135,7 +193,7 @@ class ResourcesList extends Component {
     documentClient.listEntities(filters,
       {
         limit: perPage, 
-        offset: this.state.items.length,
+        offset: perPage * (page - 1),
         order: order + ' ' + direction
       }, function(err, results) {
         if (err) {
