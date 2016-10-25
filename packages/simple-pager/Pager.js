@@ -11,7 +11,7 @@ class Pager extends Component {
     let isFirstPage = page === 1
     let isLastPage = page * perPage >= total
 
-    let el = $$('div').addClass('sc-pager')
+    let el = $$('div').addClass('sc-simple-pager')
 
     if(!isSinglePage) {
       let firstBtnDisabled = false;
@@ -29,14 +29,14 @@ class Pager extends Component {
         lastBtnDisabled = true;
       }
 
-      let firstBtn = $$(Button, {disabled: firstBtnDisabled})
-        .addClass('se-first').on('click', this.goToFirstPage).append('<< First')
-      let prevBtn = $$(Button, {disabled: prevBtnDisabled})
-        .addClass('se-prev').on('click', this.goToPrevPage).append('< Prev')
-      let nextBtn = $$(Button, {disabled: nextBtnDisabled})
-        .addClass('se-next').on('click', this.goToNextPage).append('Next >')
-      let lastBtn = $$(Button, {disabled: lastBtnDisabled})
-        .addClass('se-last').on('click', this.goToLastPage).append('Last >>')
+      let firstBtn = $$(Button, {disabled: firstBtnDisabled, style: 'default', label: '<< First'})
+        .addClass('se-first').on('click', this.goToFirstPage)
+      let prevBtn = $$(Button, {disabled: prevBtnDisabled, style: 'default', label: '< Prev'})
+        .addClass('se-prev').on('click', this.goToPrevPage)
+      let nextBtn = $$(Button, {disabled: nextBtnDisabled, style: 'default', label: 'Next >'})
+        .addClass('se-next').on('click', this.goToNextPage)
+      let lastBtn = $$(Button, {disabled: lastBtnDisabled, style: 'default', label: 'Last >>'})
+        .addClass('se-last').on('click', this.goToLastPage)
 
       el.append(
         firstBtn,
@@ -71,7 +71,10 @@ class Pager extends Component {
     let total = this.props.total
     let perPage = this.props.perPage
     let lastPage = Math.floor(total/perPage)
-    this.send('changePage', lastPage + 1)
+    if(total%perPage !== 0) {
+      lastPage = lastPage + 1
+    }
+    this.send('changePage', lastPage)
   }
 
 }

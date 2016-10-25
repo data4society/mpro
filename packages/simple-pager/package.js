@@ -1,8 +1,8 @@
 import Pager from './Pager'
 
 export default {
-  name: 'pager',
+  name: 'simple-pager',
   configure: function(config) {
-    config.addComponent('pager', Pager)
+    config.addComponent('simple-pager', Pager)
   }
 }

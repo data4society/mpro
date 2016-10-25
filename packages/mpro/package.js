@@ -7,6 +7,7 @@ import FacetsPackage from '../facets/package'
 import RubricsPackage from '../rubrics/package'
 import HeaderPackage from '../header/package'
 import FeedPackage from '../feed/package'
+import SimplePagerPackage from '../simple-pager/package'
 import PagerPackage from '../pager/package'
 import InboxPackage from '../inbox/package'
 import ConfiguratorPackage from '../configurator/package'
@@ -53,6 +54,7 @@ export default {
     config.import(HeaderPackage)
     config.import(FeedPackage)
     config.import(PagerPackage)
+    config.import(SimplePagerPackage)
     config.import(RubricsPackage)
     config.import(FiltersPackage)
     config.import(FacetsPackage)
