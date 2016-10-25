@@ -101,6 +101,17 @@ class MproEngine {
   }
 
   /*
+    List entities
+
+    @param {Object} filters filters
+    @param {Object} options options
+    @returns {Promise}
+  */
+  listEntities(filters, options) {
+    return this.entityStore.listEntities(filters, options)
+  }
+
+  /*
     Find entity
 
     @param {String} pattern pattern to match
@@ -127,8 +138,8 @@ class MproEngine {
   /** 
    * List users with given filters and options
    *
-   * @param {object} filters - Order id
-   * @param {object} option - Order id
+   * @param {Object} filters filters
+   * @param {Object} options options
    * @param {callback} cb - The callback that handles the results 
    */
 

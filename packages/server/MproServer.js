@@ -23,6 +23,7 @@ class MproServer {
     // Convert all accepted documents
     app.get(this.path + '/sources/training', this._convertTrainingDocs.bind(this))
     app.post(this.path + '/entities', this._createEntity.bind(this))
+    app.get(this.path + '/entities', this._listEntities.bind(this))
     app.get(this.path + '/entities/search', this._searchEntity.bind(this))
     app.get(this.path + '/entities/:id', this._getEntity.bind(this))
     app.put(this.path + '/entities/:id', this._updateEntity.bind(this))
@@ -149,6 +150,23 @@ class MproServer {
     let entityData = req.body
     this.engine.updateEntity(entityId, entityData).then(function() {
       res.json(null)
+    }).catch(function(err) {
+      return next(err)
+    })
+  }
+
+  /*
+    List entities with given filters and options
+  */
+  _listEntities(req, res, next) {
+    let filters = req.query.filters || {}
+    let options = req.query.options || {}
+
+    if(!isEmpty(filters)) filters = JSON.parse(filters)
+    if(!isEmpty(options)) options = JSON.parse(options)
+    
+    this.engine.listEntities(filters, options).then(function(result) {
+      res.json(result)
     }).catch(function(err) {
       return next(err)
     })

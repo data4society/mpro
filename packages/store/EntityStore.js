@@ -135,6 +135,36 @@ class EntityStore {
       }.bind(this))
   }
 
+  listEntities(filters, options) {
+    let output = {}
+
+    // Default limit for number of returned records
+    if(!options.limit) options.limit = 100
+
+    return new Promise(function(resolve, reject) {
+      this.db.entities.count(filters, function(err, count) {
+        if (err) {
+          return reject(new Err('EntityStore.ListError', {
+            cause: err
+          }))
+        }
+        output.total = count
+        
+        this.db.entities.find(filters, options, function(err, entities) {
+          if (err) {
+            return reject(new Err('EntityStore.ListError', {
+              cause: err
+            }))
+          }
+          output.records = entities
+          
+          resolve(output)
+        })
+      }.bind(this))
+    }.bind(this))
+  }
+
+
   /*
     Quick find an entity from the db using string matching
 
