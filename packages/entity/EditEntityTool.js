@@ -1,6 +1,5 @@
 import { Tool } from 'substance'
 import clone from 'lodash/clone'
-import EditEntity from './EditEntity'
 
 /*
   Edit an entity reference in a prompt.
@@ -17,6 +16,7 @@ class EditEntityTool extends Tool {
   render($$) {
     let Modal = this.getComponent('modal')
     let Button = this.getComponent('button')
+    let EntityEditor = this.getComponent('entity-editor')
 
     let node = this.props.node
     let el = $$('div').addClass('sc-edit-entity-tool')
@@ -42,7 +42,7 @@ class EditEntityTool extends Tool {
         $$(Modal, {
           width: 'medium'
         }).append(
-          $$(EditEntity, {entityId: node.reference, node: node})
+          $$(EntityEditor, {entityId: node.reference, node: node})
         )
       )
     }
