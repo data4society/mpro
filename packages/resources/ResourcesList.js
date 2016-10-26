@@ -105,12 +105,12 @@ class ResourcesList extends Component {
         
         grid.append(
           $$(Grid.Row, {entity: item}).ref(item.entity_id).append(
-            $$(Grid.Cell, {columns: 2}).append('#'+item.entity_id),
+            $$(Grid.Cell, {columns: 3}).append('#'+item.entity_id),
             $$(Grid.Cell, {columns: 2}).append(item.name),
             $$(Grid.Cell, {columns: 2}).append(item.entity_class),
             $$(Grid.Cell, {columns: 2}).append(created),
             $$(Grid.Cell, {columns: 2}).append(edited),
-            $$(Grid.Cell, {columns: 2}).append(item.author)
+            $$(Grid.Cell, {columns: 1}).append(item.author)
           ).ref(item.entity_id).on('click', this._openEditor.bind(this, item))
         )
       }.bind(this))
