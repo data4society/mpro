@@ -71,6 +71,7 @@ class EnterName extends Component {
         'inbox': this.getLabel('inbox-menu'),
         'configurator': this.getLabel('configurator-menu'),
         'import': this.getLabel('import-menu'),
+        'resources': this.getLabel('configurator-resources'),
         'users': this.getLabel('configurator-users')
       }
     })

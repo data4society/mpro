@@ -1,4 +1,4 @@
-import { Component, Button, Grid, Modal, SubstanceError as Err } from 'substance'
+import { Component, Grid, Modal, SubstanceError as Err } from 'substance'
 import concat from 'lodash/concat'
 import each from 'lodash/each'
 import extend from 'lodash/extend'
