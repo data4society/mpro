@@ -33,7 +33,7 @@ class ResourcesList extends Component {
       filters: {},
       search: null,
       dialog: false,
-      perPage: 10,
+      perPage: 30,
       page: 1,
       order: 'created',
       direction: 'desc',
