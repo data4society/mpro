@@ -10,6 +10,8 @@
 @import './loader/_index.css';
 @import './notification/_index.css';
 @import './pager/_index.css';
+@import './simple-pager/_index.css';
+@import './resources/_index.css';
 @import './rubricator/_index.css';
 @import './users/_index.css';
 @import './welcome/_index.css';

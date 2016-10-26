@@ -11,3 +11,19 @@
   padding: 15px 10px;
   font-size: 13px;
 }
+
+.sc-list .se-intro {
+  padding: 10px;
+  height: 50px;
+  line-height: 30px;
+  float: right;
+}
+
+.sc-list .se-list-not-empty {
+  clear: both;
+  overflow: scroll;
+  height: 100%;
+  width: 100%;
+  position: relative;
+  padding-bottom: 100px;
+}

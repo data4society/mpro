@@ -1,16 +1,12 @@
 import { EditAnnotationCommand } from 'substance'
-
 import ActPackage from './act/package'
 import LocationPackage from './location/package'
 import OrgPackage from './org/package'
 import PersonPackage from './person/package'
-
-
+import EntityEditorPackage from '../entity-editor/package'
 import Entity from './Entity'
-
 import EditEntityTool from './EditEntityTool'
 import EntityComponent from './EntityComponent'
-import FormsPackage from '../forms/package'
 
 export default {
   name: 'entity',
@@ -21,6 +17,7 @@ export default {
     config.import(LocationPackage)
     config.import(OrgPackage)
     config.import(PersonPackage)
+    config.import(EntityEditorPackage)
 
     config.addCommand('edit-entity', EditAnnotationCommand, { nodeType: Entity.type })
     config.addTool('edit-entity', EditEntityTool, { target: 'overlay' })
@@ -43,6 +40,6 @@ export default {
       ru: 'Удалить упоминание'
     })
 
-    config.import(FormsPackage)
+    //config.import(FormsPackage)
   }
 }

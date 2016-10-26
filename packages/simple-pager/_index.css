@@ -1,0 +1,13 @@
+.sc-simple-pager {
+  text-align: center;
+  padding: 20px;
+}
+
+.sc-simple-pager .sc-button {
+    margin: 10px;
+    display: inline-block;
+}
+
+.sc-simple-pager .sc-button:nth-child(3n) {
+  margin-left: 100px;
+}

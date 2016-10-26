@@ -7,6 +7,7 @@ import FacetsPackage from '../facets/package'
 import RubricsPackage from '../rubrics/package'
 import HeaderPackage from '../header/package'
 import FeedPackage from '../feed/package'
+import SimplePagerPackage from '../simple-pager/package'
 import PagerPackage from '../pager/package'
 import InboxPackage from '../inbox/package'
 import ConfiguratorPackage from '../configurator/package'
@@ -15,6 +16,7 @@ import ViewerPackage from '../viewer/package'
 import EditorPackage from '../editor/package'
 import NotificationPackage from '../notification/package'
 import CollaboratorsPackage from '../collaborators/package'
+import ResourcesPackage from '../resources/package'
 import UsersPackage from '../users/package'
 import WelcomePackage from '../welcome/package'
 
@@ -52,12 +54,14 @@ export default {
     config.import(HeaderPackage)
     config.import(FeedPackage)
     config.import(PagerPackage)
+    config.import(SimplePagerPackage)
     config.import(RubricsPackage)
     config.import(FiltersPackage)
     config.import(FacetsPackage)
     config.import(LoaderPackage)
     config.import(NotificationPackage)
     config.import(CollaboratorsPackage)
+    config.import(ResourcesPackage)
     config.import(UsersPackage)
     config.import(WelcomePackage)
     

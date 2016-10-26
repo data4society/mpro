@@ -66,18 +66,39 @@ class MproDocumentClient extends DocumentClient {
     request('PUT', '/api/sources/' + documentId, sourceData, cb)
   }
 
+  /*
+    Create an entity
+  */
   createEntity(entityData, cb) {
     request('POST', '/api/entities', entityData, cb)
   }
 
+  /*
+    Read an entity
+  */
   getEntity(entityId, cb) {
     request('GET', '/api/entities/' + entityId, null, cb)
   }
 
+  /*
+    Update an entity
+  */
   updateEntity(entityId, entityData, cb) {
     request('PUT', '/api/entities/' + entityId, entityData, cb)
   }
 
+  /*
+    Get entities from the server
+  */
+  listEntities(filters, options, cb) {
+    let filtersRequest = encodeURIComponent(JSON.stringify(filters))
+    let optionsRequest = encodeURIComponent(JSON.stringify(options))
+    this.request('GET', '/api/entities?filters=' + filtersRequest + '&options=' + optionsRequest, null, cb)
+  }
+
+  /*
+    Find an entity
+  */
   findEntities(value, restrictions, cb) {
     let restrictionsRequest = encodeURIComponent(JSON.stringify(restrictions))
     request('GET', '/api/entities/search?value=' + value + '&restrictions=' + restrictionsRequest, null, cb)

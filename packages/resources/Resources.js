@@ -1,10 +1,10 @@
 import { Component, Layout } from 'substance'
-import UsersList from './UsersList'
+import ResourcesList from './ResourcesList'
 
-class Users extends Component {
+class Resources extends Component {
 
   render($$) {
-    let el = $$('div').addClass('sc-users sc-container')
+    let el = $$('div').addClass('sc-resources sc-container')
 
     let header = this.renderHeader($$)
     el.append(header)
@@ -16,7 +16,7 @@ class Users extends Component {
     })
 
     layout.append(
-      $$(UsersList, this.props).ref('list')
+      $$(ResourcesList, this.props).ref('list')
     )
 
     el.append(layout)
@@ -40,4 +40,4 @@ class Users extends Component {
   }
 }
 
-export default Users
+export default Resources

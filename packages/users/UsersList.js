@@ -120,8 +120,8 @@ class UsersList extends Component {
         
         grid.append(
           $$(Grid.Row, {user: item}).ref(item.user_id).append(
-            $$(Grid.Cell, {columns: 2}).append('#'+item.user_id),
-            $$(Grid.Cell, {columns: 3}).append(item.email),
+            $$(Grid.Cell, {columns: 3}).append('#'+item.user_id),
+            $$(Grid.Cell, {columns: 2}).append(item.email),
             $$(Grid.Cell, {columns: 3}).append(item.name || 'Anonymous'),
             $$(Grid.Cell, {columns: 2}).append(created),
             $$(Grid.Cell, {columns: 1}).append(accessCheckbox),
