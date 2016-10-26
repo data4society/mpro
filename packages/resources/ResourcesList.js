@@ -12,7 +12,9 @@ class ResourcesList extends Component {
 
     this.handleActions({
       'filterList': this._filterList,
-      'changePage': this._changePage
+      'changePage': this._changePage,
+      'closeModal': this._doneEditing,
+      'doneEditing': this._doneEditing
     })
   }
 
@@ -26,6 +28,8 @@ class ResourcesList extends Component {
 
   getInitialState() {
     return {
+      edit: false,
+      active: {},
       filters: {},
       search: null,
       dialog: false,
@@ -89,9 +93,9 @@ class ResourcesList extends Component {
     let total = this.state.totalItems
     let page = this.state.page
     let perPage = this.state.perPage
+    let EntityEditor = this.getComponent('entity-editor')
     let Pager = this.getComponent('simple-pager')
     let el = $$('div').addClass('se-list-not-empty')
-
     let grid = $$(Grid)
 
     if (items) {
@@ -107,9 +111,20 @@ class ResourcesList extends Component {
             $$(Grid.Cell, {columns: 2}).append(created),
             $$(Grid.Cell, {columns: 2}).append(edited),
             $$(Grid.Cell, {columns: 2}).append(item.author)
-          ).ref(item.entity_id)
+          ).ref(item.entity_id).on('click', this._openEditor.bind(this, item))
         )
-      })
+      }.bind(this))
+
+      if (this.state.edit) {
+        let node = this.state.active
+        el.append(
+          $$(Modal, {
+            width: 'medium'
+          }).append(
+            $$(EntityEditor, {entityId: node.entity_id, node: {'entityClass': node.entity_class}})
+          )
+        )
+      }
 
       el.append(
         grid,
@@ -117,6 +132,21 @@ class ResourcesList extends Component {
       )
     }
     return el
+  }
+
+  _openEditor(node) {
+    this.extendState({
+      edit: true,
+      active: node
+    })
+  }
+
+  _doneEditing() {
+    this.extendState({
+      edit: false,
+      active: {}
+    })
+    this._loadData()
   }
 
   _changePage(page) {
