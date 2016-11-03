@@ -22,6 +22,13 @@ class MproServer {
     app.put(this.path + '/sources/:id', this._updateSource.bind(this))
     // Convert all accepted documents
     app.get(this.path + '/sources/training', this._convertTrainingDocs.bind(this))
+    // Collections CRUD
+    app.post(this.path + '/collections', this._createCollection.bind(this))
+    app.get(this.path + '/collections', this._listCollections.bind(this))
+    app.get(this.path + '/collections/search', this._searchCollection.bind(this))
+    app.get(this.path + '/collections/:id', this._getCollection.bind(this))
+    app.put(this.path + '/collections/:id', this._updateCollection.bind(this))
+    // Entities CRUD
     app.post(this.path + '/entities', this._createEntity.bind(this))
     app.get(this.path + '/entities', this._listEntities.bind(this))
     app.get(this.path + '/entities/search', this._searchEntity.bind(this))
@@ -179,6 +186,73 @@ class MproServer {
     let pattern = req.query.value
     let restrictions = JSON.parse(req.query.restrictions)
     this.engine.findEntity(pattern, restrictions).then(function(results) {
+      res.json(results)
+    }).catch(function(err) {
+      return next(err)
+    })
+  }
+
+  /*
+    Create Collection
+  */
+  _createCollection(req, res, next) {
+    let collectionData = req.body
+    this.engine.createCollection(collectionData).then(function(collection) {
+      res.json(collection)
+    }).catch(function(err) {
+      return next(err)
+    })
+  }
+
+  /*
+    Get Collection
+  */
+  _getCollection(req, res, next) {
+    let collectionId = req.params.id
+    this.engine.getCollection(collectionId).then(function(result) {
+      res.json(result)
+    }).catch(function(err) {
+      return next(err)
+    })
+  }
+
+  /*
+    Update Collection
+  */
+  _updateCollection(req, res, next) {
+    let collectionId = req.params.id
+    let collectionData = req.body
+    this.engine.updateCollection(collectionId, collectionData).then(function() {
+      res.json(null)
+    }).catch(function(err) {
+      return next(err)
+    })
+  }
+
+  /*
+    List collections with given filters and options
+  */
+  _listCollection(req, res, next) {
+    let filters = req.query.filters || {}
+    let options = req.query.options || {}
+
+    if(!isEmpty(filters)) filters = JSON.parse(filters)
+    if(!isEmpty(options)) options = JSON.parse(options)
+    
+    this.engine.listCollections(filters, options).then(function(result) {
+      res.json(result)
+    }).catch(function(err) {
+      return next(err)
+    })
+  }
+
+  /*
+    Search Collection
+  */
+  _searchCollection(req, res, next) {
+    let pattern = req.query.value
+    let restrictions = JSON.parse(req.query.restrictions)
+    this.engine.findCollection(pattern, restrictions).then(function(results) {
       res.json(results)
     }).catch(function(err) {
       return next(err)

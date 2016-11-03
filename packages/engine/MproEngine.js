@@ -147,6 +147,61 @@ class MproEngine {
     this.userStore.listUsers(filters, options, cb)
   }
 
+  /* Collections API */
+
+  /*
+    Create collection
+
+    @param {Object} collectionData new collection data
+    @returns {Promise}
+  */
+  createCollection(collectionData) {
+    return this.collectionStore.createCollection(collectionData)
+  }
+
+  /*
+    Load entity
+
+    @param {String} entityId entity id
+    @returns {Promise}
+  */
+  getCollection(collectionId) {
+    return this.collectionStore.getCollection(collectionId)
+  }
+
+  /*
+    Update entity
+
+    @param {String} entityId entity id
+    @param {Object} entityData entity data to update
+    @returns {Promise}
+  */
+  updateCollection(collectionId, collectionData) {
+    return this.collectionStore.updateCollection(collectionId, collectionData)
+  }
+
+  /*
+    List entities
+
+    @param {Object} filters filters
+    @param {Object} options options
+    @returns {Promise}
+  */
+  listCollections(filters, options) {
+    return this.collectionStore.listCollections(filters, options)
+  }
+
+  /*
+    Find entity
+
+    @param {String} pattern pattern to match
+    @param {Object} restrictions query restrictions
+    @returns {Promise}
+  */
+  findCollection(pattern, restrictions) {
+    return this.collectionStore.findCollection(pattern, restrictions)
+  }
+
 }
 
 module.exports = MproEngine

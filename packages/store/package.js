@@ -1,5 +1,6 @@
 let ChangeStore = require('./ChangeStore')
 let ClassStore = require('./ClassStore')
+let CollectionStore = require('./CollectionStore')
 let DocumentStore = require('./DocumentStore')
 let EntityStore = require('./EntityStore')
 let FileStore = require('./FileStore')
@@ -16,6 +17,7 @@ module.exports = {
   configure: function(config) {
     config.addStore('change', ChangeStore)
     config.addStore('class', ClassStore)
+    config.addStore('collection', CollectionStore)
     config.addStore('document', DocumentStore)
     config.addStore('entity', EntityStore)
     config.addStore('file', FileStore)
