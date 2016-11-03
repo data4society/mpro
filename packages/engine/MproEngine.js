@@ -7,6 +7,7 @@ let Promise = require("bluebird")
 class MproEngine {
   constructor(config) {
     this.config = config
+    this.collectionStore = config.collectionStore
     this.entityStore = config.entityStore
     this.rubricStore = config.rubricStore
     this.classStore = config.classStore

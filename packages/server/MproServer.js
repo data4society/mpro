@@ -232,7 +232,7 @@ class MproServer {
   /*
     List collections with given filters and options
   */
-  _listCollection(req, res, next) {
+  _listCollections(req, res, next) {
     let filters = req.query.filters || {}
     let options = req.query.options || {}
 
