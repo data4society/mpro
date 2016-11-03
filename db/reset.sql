@@ -1,6 +1,7 @@
 -- Reset database:
 
 drop table if exists "changes";
+drop table if exists "collections";
 drop table if exists "references";
 drop table if exists "entities";
 drop table if exists "entity_classes";
@@ -66,6 +67,15 @@ CREATE TABLE "changes" (
   created timestamp,
   owner varchar(40) REFERENCES users,
   PRIMARY KEY(document_id, version)
+);
+
+CREATE TABLE "collections" (
+  collection_id varchar(40) UNIQUE PRIMARY KEY,
+  name varchar(255),
+  created timestamp,
+  edited timestamp,
+  author varchar(40) REFERENCES users,
+  description text
 );
 
 CREATE TABLE "entity_classes" (
