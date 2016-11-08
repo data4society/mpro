@@ -17,6 +17,10 @@ class Feed extends Component {
   }
 
   render($$) {
+    if(!this.activeItem && this.props.documentId) {
+      this.activeItem = this.props.documentId
+    }
+
     let Pager = this.getComponent('pager')
 
     let documentItems = this.props.documentItems
