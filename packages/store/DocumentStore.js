@@ -50,6 +50,7 @@ class DocumentStore {
       version: props.version || 1,
       rubrics: props.rubrics || [],
       entities: props.entities || [],
+      collections: props.collections || [],
       published: props.published,
       created: props.created || new Date(),
       edited: props.edited || new Date(),
@@ -138,6 +139,7 @@ class DocumentStore {
       if(props.info.meta) props.meta = props.info.meta
       if(props.info.rubrics) props.rubrics = props.info.rubrics
       if(props.info.entities) props.entities = props.info.entities
+      if(props.info.collections) props.collections = props.info.collections
     }
 
     if(isUndefined(props.edited)) props.edited = new Date()

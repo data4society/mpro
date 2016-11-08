@@ -1,6 +1,5 @@
-import { Modal, Tool } from 'substance'
+import { Tool } from 'substance'
 import extend from 'lodash/extend'
-import each from 'lodash/each'
 import CollectionSelector from './CollectionSelector'
 
 /*
@@ -12,13 +11,16 @@ class CollectorTool extends Tool {
     super(...args)
 
     this.handleActions({
-      'closeModal': this._onModalClose
+      'listChanged': this._onListChanged
     })
   }
 
   getInitialState() {
+    let doc = this.context.doc
+    let collectionsMeta = doc.get(['meta','collections'])
     return {
-      showModal: false
+      openDropDown: false,
+      selected: collectionsMeta
     }
   }
 
@@ -48,17 +50,12 @@ class CollectorTool extends Tool {
     // button
     el.append(this.renderButton($$))
     
-    if(this.state.showModal) {
-      let doc = this.context.doc;
-      let collectionsMeta = doc.get(['meta','collections'])
-
+    if(this.state.openDropDown) {
       el.append(
-        $$(Modal, {
-          width: 'large'
-        }).append(
+        $$('div').addClass('sc-tool-dropdown').append(
           $$(CollectionSelector, {
-            collections: collectionsMeta
-          }).ref('selector')
+            collections: this.state.selected
+          }).addClass('se-options').ref('selector')
         )
       )
     }
@@ -69,22 +66,19 @@ class CollectorTool extends Tool {
   onClick(e) {
     e.preventDefault()
     e.stopPropagation()
-    let showModal = this.state.showModal
-    this.setState({showModal: !showModal})
+    let openDropDown = this.state.openDropDown
+    if(openDropDown) this.performAction(this.state.selected)
+    this.extendState({openDropDown: !openDropDown})
   }
 
-  _onModalClose() {
-    let showModal = this.state.showModal
-    this.setState({showModal: !showModal})
-    if (!this.props.disabled && !this.state.showModal) this.performAction()
+  _onListChanged(collections) {
+    this.extendState({selected: collections})
   }
 
-  performAction(props) {
-    let rubrics = this.context.controller.props.rubrics
-    this.context.commandManager.executeCommand(this.getCommandName(), extend({
-      mode: this.props.mode,
-      rubrics: rubrics.getSelected()
-    }, props))
+  performAction(collections) {
+    this.context.commandManager.executeCommand(this.getCommandName(), {
+      collections: collections
+    })
   }
 }
 

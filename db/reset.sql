@@ -53,6 +53,7 @@ CREATE TABLE "records" (
   training boolean,
   rubrics varchar(40)[],
   entities varchar(40)[],
+  collections varchar(40)[],
   source varchar(40) REFERENCES documents,
   content jsonb,
   meta jsonb,

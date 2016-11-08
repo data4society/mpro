@@ -5,6 +5,7 @@ import ArticleSeed from './ArticleSeed'
 
 import { BlockquotePackage, EmphasisPackage, HeadingPackage, LinkPackage, ParagraphPackage, StrongPackage } from 'substance'
 
+import CollectorPackage from '../collector/package'
 import EntityPackage from '../entity/package'
 import RubricatorPackage from '../rubricator/package'
 
@@ -27,7 +28,8 @@ export default {
     config.import(StrongPackage)
     config.import(LinkPackage)
 
-    // Import mpro specific packages    
+    // Import mpro specific packages  
+    config.import(CollectorPackage)  
     config.import(EntityPackage)
     config.import(RubricatorPackage)
 

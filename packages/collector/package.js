@@ -6,7 +6,7 @@ export default {
   configure: function(config) {
     config.addTool('collector', CollectorTool, { target: 'collector' })
     config.addCommand('collector', CollectorCommand)
-    config.addIcon('collector', { 'fontawesome': 'fa-tags' })
+    config.addIcon('collector', { 'fontawesome': 'fa-bookmark-o' })
     config.addIcon('collector-checked', { 'fontawesome': 'fa-check-square-o' })
     config.addIcon('collector-unchecked', { 'fontawesome': 'fa-square-o' })
     config.addIcon('helper-on', { 'fontawesome': 'fa-question-circle' })

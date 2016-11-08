@@ -51,6 +51,7 @@ class MproCollabServer extends CollabServer {
         let meta = docRecord.content ? find(docRecord.content.nodes, { 'id': 'meta'}) : docRecord.meta
         let rubrics = meta.rubrics
         let entities = meta.entities
+        let collections = meta.collections
         let accepted
 
         if (message.change) {
@@ -75,6 +76,12 @@ class MproCollabServer extends CollabServer {
           })
 
           change.ops.forEach(function(op) {
+            if(op.path[0] === 'meta' && op.path[1] === 'collections') {
+              collections = op.val
+            }
+          })
+
+          change.ops.forEach(function(op) {
             if(op.path[0] === 'meta' && op.path[1] === 'accepted') {
               accepted = op.val
             }
@@ -91,7 +98,7 @@ class MproCollabServer extends CollabServer {
         }
 
         // update meta object with modified properties
-        extend(meta, {title: title, rubrics: rubrics, entities: entities})
+        extend(meta, {title: title, rubrics: rubrics, entities: entities, collections: collections})
 
         if(!isUndefined(accepted)) {
           extend(meta, {accepted: accepted})
@@ -103,7 +110,8 @@ class MproCollabServer extends CollabServer {
           title: title,
           meta: meta,
           rubrics: rubrics,
-          entities: entities
+          entities: entities,
+          collections: collections
         }
         req.setEnhanced()
         this.next(req, res)

@@ -10,8 +10,8 @@ class RubricatorCommand extends Command {
   }
 
   execute(props) {
-    var documentSession = props.documentSession
-    var rubrics = props.rubrics
+    let documentSession = props.documentSession
+    let rubrics = props.rubrics
     documentSession.transaction(function(tx) {
       tx.set(['meta', 'rubrics'], rubrics)
     })

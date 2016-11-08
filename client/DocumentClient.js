@@ -105,6 +105,44 @@ class MproDocumentClient extends DocumentClient {
   }
 
   /*
+    Create a collection
+  */
+  createCollection(collectionData, cb) {
+    request('POST', '/api/collections', collectionData, cb)
+  }
+
+  /*
+    Read a collection
+  */
+  getCollection(collectionId, cb) {
+    request('GET', '/api/collections/' + collectionId, null, cb)
+  }
+
+  /*
+    Update a collection
+  */
+  updateCollection(collectionId, collectionData, cb) {
+    request('PUT', '/api/collections/' + collectionId, collectionData, cb)
+  }
+
+  /*
+    Get collections from the server
+  */
+  listCollections(filters, options, cb) {
+    let filtersRequest = encodeURIComponent(JSON.stringify(filters))
+    let optionsRequest = encodeURIComponent(JSON.stringify(options))
+    this.request('GET', '/api/collections?filters=' + filtersRequest + '&options=' + optionsRequest, null, cb)
+  }
+
+  /*
+    Find a collection
+  */
+  findCollections(value, restrictions, cb) {
+    let restrictionsRequest = encodeURIComponent(JSON.stringify(restrictions))
+    request('GET', '/api/collections/search?value=' + value + '&restrictions=' + restrictionsRequest, null, cb)
+  }
+
+  /*
     Create a user
   */
   createUser(data, cb) {

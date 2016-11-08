@@ -25,6 +25,7 @@ VkMeta.define({
   title: { type: 'string', default: '' },
   rubrics: { type: ['id'], default: [] },
   entities: { type: ['id'], default: [] },
+  collections: { type: ['id'], default: [] },
   source: { type: 'string', default: '' },
   published: { type: 'string', default: '' },
   created: { type: 'string', default: '' },

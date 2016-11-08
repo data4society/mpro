@@ -10,8 +10,8 @@ class CollectorCommand extends Command {
   }
 
   execute(props) {
-    var documentSession = props.documentSession
-    var collections = props.collections
+    let documentSession = props.documentSession
+    let collections = props.collections
     documentSession.transaction(function(tx) {
       tx.set(['meta', 'collections'], collections)
     })
