@@ -67,7 +67,12 @@ class CollectorTool extends Tool {
     e.preventDefault()
     e.stopPropagation()
     let openDropDown = this.state.openDropDown
-    if(openDropDown) this.performAction(this.state.selected)
+    if(openDropDown) {
+      this.performAction(this.state.selected)
+      this.extendProps({icon: 'collector'})
+    } else {
+      this.extendProps({icon: 'collector-active'})
+    }
     this.extendState({openDropDown: !openDropDown})
   }
 

@@ -174,20 +174,33 @@ class CollectionStore {
     @returns {Promise}
   */
   findCollection(pattern, restrictions) {
+    let output = {}
+
     return new Promise(function(resolve, reject) {
       let query = extend({'name ilike': '%' + pattern + '%'}, restrictions)
-      this.db.collections.find(
-        query,
-        {columns: ['collection_id', 'name'], limit: 10},
-        function(err, collections) {
-          if (err) {
-            reject(new Err('CollectionStore.FindError', {
-              cause: err
-            }))
-          }
-          resolve(collections)
+      this.db.collections.count(query, function(err, count) {
+        if (err) {
+          return reject(new Err('CollectionStore.ListError', {
+            cause: err
+          }))
         }
-      )
+        output.total = count
+
+        this.db.collections.find(
+          query,
+          {columns: ['collection_id', 'name'], limit: 10},
+          function(err, collections) {
+            if (err) {
+              return reject(new Err('CollectionStore.ListError', {
+                cause: err
+              }))
+            }
+            output.records = collections
+            
+            resolve(output)
+          }
+        )
+      }.bind(this))
     }.bind(this))
   }
 
