@@ -16,7 +16,7 @@ export default {
     config.addIcon('helper-on', { 'fontawesome': 'fa-question-circle' })
     config.addIcon('helper-off', { 'fontawesome': 'fa-question-circle-o' })
 
-    config.addLabel('collection-search-placeholder', {
+    config.addLabel('collector-search-placeholder', {
       en: 'Search collection',
       ru: 'Поиск коллекции'
     })

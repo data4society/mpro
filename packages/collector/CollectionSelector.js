@@ -36,7 +36,7 @@ class CollectionSelector extends Component {
     let searchInput = $$('div').addClass('se-collector-search').append(
       $$(Input, {
         type: 'search',
-        placeholder: this.getLabel('collection-search-placeholder'),
+        placeholder: this.getLabel('collector-search-placeholder'),
         centered: true
       })
       .on('search', this._searchCollections)
