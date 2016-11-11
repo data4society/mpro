@@ -52,15 +52,7 @@ class Configurator extends AbstractFeedLoader {
 
     let el = $$('div').addClass('sc-configurator')
 
-    let header = $$(Header, {
-      actions: {
-        'inbox': this.getLabel('inbox-menu'),
-        'configurator': this.getLabel('configurator-menu'),
-        'import': this.getLabel('import-menu'),
-        'resources': this.getLabel('configurator-resources'),
-        'users': this.getLabel('configurator-users')
-      }
-    })
+    let header = $$(Header)
 
     header.outlet('content').append(
       $$(Notification, {}).ref('notification'),

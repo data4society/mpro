@@ -9,15 +9,22 @@ class Header extends Component {
     let el = $$('div').addClass('sc-header')
     let actionEls = []
 
-    if (this.props.actions) {
-      each(this.props.actions, function(label, actionName) {
-        actionEls.push(
-          $$('button').addClass('se-action')
-            .append(label)
-            .on('click', this.send.bind(this, actionName))
-        )
-      }.bind(this))
+    let actions = {
+      'inbox': this.getLabel('inbox-menu'),
+      'collections': this.getLabel('collections-menu'),
+      'configurator': this.getLabel('configurator-menu'),
+      'import': this.getLabel('import-menu'),
+      'resources': this.getLabel('configurator-resources'),
+      'users': this.getLabel('configurator-users')
     }
+
+    each(actions, function(label, actionName) {
+      actionEls.push(
+        $$('button').addClass('se-action')
+          .append(label)
+          .on('click', this.send.bind(this, actionName))
+      )
+    }.bind(this))
 
     let content = []
     if (this.props.content) {
