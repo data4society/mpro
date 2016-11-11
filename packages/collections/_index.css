@@ -1,0 +1,47 @@
+.sc-collections-list {
+  background: #282b2f;
+  color: rgba(255, 255, 255, 0.9);
+  z-index: 99;
+  overflow: auto;
+}
+
+.sc-collections-list > .se-collections-search {
+  border-bottom: 1px solid #e6e8eb;
+  margin-bottom: 5px;
+}
+
+.sc-collections-list > .se-collections-search > input {
+  border: none;
+}
+
+.sc-collections-list > .se-collection-item {
+  display: block;
+  padding: 5px 20px;
+  position: relative;
+  line-height: 15px;
+  border-bottom: 1px solid rgba(121,121,121,0.1);
+  cursor: pointer;
+}
+
+.sc-collections-list > .se-collection-item.sm-selected {
+  background: #d5d7da;
+  color: rgba(0,0,0,0.75);
+}
+
+.sc-collections-list > .se-collection-item > .se-collection-item-name {
+  line-height: 24px;
+}
+
+.sc-collections-list > .se-collection-item > .se-collection-item-description {
+  display: block;
+  clear: both;
+  font-size: 12px;
+}
+
+.sc-collections-list > .sc-pager > .sc-button {
+  border: 1px solid rgba(255, 255, 255, 0.9);
+}
+
+.sc-collections-list > .sc-pager .se-label {
+  color: rgba(255, 255, 255, 0.9);
+}
