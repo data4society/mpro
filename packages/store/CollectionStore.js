@@ -188,7 +188,7 @@ class CollectionStore {
 
         this.db.collections.find(
           query,
-          {columns: ['collection_id', 'name'], limit: 10},
+          {columns: ['collection_id', 'name', 'description'], limit: 10},
           function(err, collections) {
             if (err) {
               return reject(new Err('CollectionStore.ListError', {
