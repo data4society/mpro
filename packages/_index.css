@@ -26,3 +26,6 @@
 /* Configurator */
 @import './acceptor/_index.css';
 @import './configurator/_index.css';
+
+/* Collections */
+@import './collections/_index.css';
