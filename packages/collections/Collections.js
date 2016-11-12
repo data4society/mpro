@@ -98,7 +98,7 @@ class Collections extends AbstractFeedLoader {
     let loader = this.refs.loader
     let feed = this.refs.feed
 
-    this.extendState({documentId: documentId})
+    //this.extendState({documentId: documentId})
     feed.setActiveItem(documentId)
     this.updateUrl(documentId)
     
