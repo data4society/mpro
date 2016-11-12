@@ -82,7 +82,7 @@ CREATE TABLE "collections" (
 
 CREATE TABLE "rules" (
   rule_id varchar(40) UNIQUE PRIMARY KEY,
-  collection_id varchar(40) REFERENCES collections ,
+  collection_id varchar(40) REFERENCES collections,
   rubrics varchar(40)[],
   entities varchar(40)[]
 );
