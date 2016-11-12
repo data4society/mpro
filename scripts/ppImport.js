@@ -41,7 +41,7 @@ function prepareEntity(data) {
     name: data.name,
     created: new Date(),
     edited: new Date(),
-    entity_class: 'Person',
+    entity_class: 'person',
     labels: [data.name],
     external_data: {
       pp_id: data._id
@@ -58,7 +58,7 @@ function prepareEntity(data) {
     occupation.splice(index, 1)
   }
   occupation.push('политпреследуемый')
-  entity.data.occupation = occupation
+  entity.data.role = occupation
   return entity
 }
 
