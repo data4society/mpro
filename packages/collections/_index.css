@@ -14,6 +14,21 @@
   border: none;
 }
 
+.sc-collections-list > .se-collections-header {
+  padding: 10px;
+  border-bottom: 1px solid rgba(121,121,121,0.1);
+}
+
+.sc-collections-list > .se-collections-header > .se-collections-actions {
+  float: right;
+}
+
+.sc-collections-list > .se-collections-header > .se-collections-actions > i {
+  font-size: 17px;
+  padding: 2px 4px;
+  cursor: pointer;
+}
+
 .sc-collections-list > .se-collection-item {
   display: block;
   padding: 5px 20px;
@@ -32,6 +47,11 @@
   line-height: 24px;
 }
 
+.sc-collections-list > .se-collection-item > .se-collection-counter {
+  float: right;
+  line-height: 24px;
+}
+
 .sc-collections-list > .se-collection-item > .se-collection-item-description {
   display: block;
   clear: both;
@@ -44,4 +64,9 @@
 
 .sc-collections-list > .sc-pager .se-label {
   color: rgba(255, 255, 255, 0.9);
+}
+
+.sc-collection-editor > * {
+  text-align: center;
+  padding: 10px;
 }
