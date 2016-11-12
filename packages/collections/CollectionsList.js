@@ -1,14 +1,17 @@
-import { Component, Input } from 'substance'
+import { Component, Input, Modal } from 'substance'
 import each from 'lodash/each'
 import concat from 'lodash/concat'
+import findIndex from 'lodash/findIndex'
 import isEmpty from 'lodash/isEmpty'
+import CollectionEditor from './CollectionEditor'
 
 class CollectionsList extends Component {
   constructor(...args) {
     super(...args)
 
     this.handleActions({
-      'loadMore': this._loadMore
+      'loadMore': this._loadMore,
+      'closeModal': this._onModalClose
     })
   }
 
@@ -20,7 +23,8 @@ class CollectionsList extends Component {
       pagination: true,
       totalItems: 0,
       order: "created",
-      direction: 'desc'
+      direction: 'desc',
+      edit: false
     }
   }
 
@@ -33,6 +37,21 @@ class CollectionsList extends Component {
 
     let collections = this.state.list 
     let Pager = this.getComponent('pager')
+
+    if(this.state.edit) {
+      let activeIndex = findIndex(this.state.list, function(item) {
+        return item.collection_id === this.state.active
+      }.bind(this))
+
+      el.append(
+        $$(Modal, {
+          width: 'medium'
+        }).append(
+          $$(CollectionEditor, this.state.list[activeIndex]).ref('editor')
+        )
+      ) 
+    }
+
     let searchInput = $$('div').addClass('se-collections-search').append(
       $$(Input, {
         type: 'search',
@@ -44,6 +63,19 @@ class CollectionsList extends Component {
     )
 
     el.append(searchInput)
+
+    el.append(
+      $$('div').addClass('se-collections-header').append(
+        $$('span').addClass('se-collections-stats').append(
+          this.state.totalItems + ' collections'
+        ),
+        $$('span').addClass('se-collections-actions').append(
+          this.context.iconProvider.renderIcon($$, 'collection-edit')
+            .on('click', this._editCollection),
+          this.context.iconProvider.renderIcon($$, 'collection-add')
+        )
+      )
+    )
     
     if(!isEmpty(collections)) {
       each(collections, function(col) {
@@ -58,6 +90,7 @@ class CollectionsList extends Component {
         }
         item.append(
           $$('span').addClass('se-collection-item-name').append(col.name),
+          $$('span').addClass('se-collection-counter').append(col.count),
           $$('span').addClass('se-collection-item-description').append(col.description)
         )
         el.append(item)
@@ -84,6 +117,14 @@ class CollectionsList extends Component {
       active: id
     })
     this.send('openCollection', id)
+  }
+
+  _editCollection() {
+    this.extendState({edit: true})
+  }
+
+  _onModalClose() {
+    this.extendState({edit: false})
   }
 
   _loadMore() {
