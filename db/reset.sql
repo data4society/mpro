@@ -99,6 +99,8 @@ CREATE TABLE "entities" (
   edited timestamp,
   author varchar(40) REFERENCES users,
   entity_class varchar(255),
+  labels text[],
+  external_data jsonb,
   data jsonb,
   tsv tsvector
 );
