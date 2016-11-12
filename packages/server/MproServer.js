@@ -34,6 +34,12 @@ class MproServer {
     app.get(this.path + '/entities/search', this._searchEntity.bind(this))
     app.get(this.path + '/entities/:id', this._getEntity.bind(this))
     app.put(this.path + '/entities/:id', this._updateEntity.bind(this))
+    // Rules CRUD
+    app.post(this.path + '/rules', this._createRule.bind(this))
+    app.get(this.path + '/rules', this._listRules.bind(this))
+    app.get(this.path + '/collections/:id', this._getRule.bind(this))
+    app.put(this.path + '/collections/:id', this._updateRule.bind(this))
+    app.delete(this.path + '/collections/:id', this._removeRule.bind(this))
   }
 
   /*
@@ -254,6 +260,72 @@ class MproServer {
     let restrictions = JSON.parse(req.query.restrictions)
     this.engine.findCollection(pattern, restrictions).then(function(results) {
       res.json(results)
+    }).catch(function(err) {
+      return next(err)
+    })
+  }
+
+  /*
+    Create Rule
+  */
+  _createRule(req, res, next) {
+    let rulesData = req.body
+    this.engine.createRule(rulesData).then(function(rule) {
+      res.json(rule)
+    }).catch(function(err) {
+      return next(err)
+    })
+  }
+
+  /*
+    Get Rule
+  */
+  _getRule(req, res, next) {
+    let ruleId = req.params.id
+    this.engine.getRule(ruleId).then(function(rule) {
+      res.json(rule)
+    }).catch(function(err) {
+      return next(err)
+    })
+  }
+
+  /*
+    Update Rule
+  */
+  _updateRule(req, res, next) {
+    let ruleId = req.params.id
+    let ruleData = req.body
+    this.engine.updateRule(ruleId, ruleData).then(function() {
+      res.json(null)
+    }).catch(function(err) {
+      return next(err)
+    })
+  }
+
+  /*
+    Remove Rule
+  */
+  _removeRule(req, res, next) {
+    let ruleId = req.params.id
+    this.engine.removeRule(ruleId).then(function(rule) {
+      res.json(rule)
+    }).catch(function(err) {
+      return next(err)
+    })
+  }
+
+  /*
+    List rules with given filters and options
+  */
+  _listRules(req, res, next) {
+    let filters = req.query.filters || {}
+    let options = req.query.options || {}
+
+    if(!isEmpty(filters)) filters = JSON.parse(filters)
+    if(!isEmpty(options)) options = JSON.parse(options)
+    
+    this.engine.listRules(filters, options).then(function(result) {
+      res.json(result)
     }).catch(function(err) {
       return next(err)
     })

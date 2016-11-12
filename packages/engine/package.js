@@ -52,6 +52,7 @@ module.exports = {
       collectionStore: config.getStore('collection'),
       entityStore: config.getStore('entity'),
       rubricStore: config.getStore('rubric'),
+      ruleStore: config.getStore('rule'),
       classStore: config.getStore('class'),
       userStore: config.getStore('user')
     })

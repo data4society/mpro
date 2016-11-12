@@ -10,6 +10,7 @@ class MproEngine {
     this.collectionStore = config.collectionStore
     this.entityStore = config.entityStore
     this.rubricStore = config.rubricStore
+    this.ruleStore = config.ruleStore
     this.classStore = config.classStore
     this.userStore = config.userStore
   }
@@ -161,9 +162,9 @@ class MproEngine {
   }
 
   /*
-    Load entity
+    Load collection
 
-    @param {String} entityId entity id
+    @param {String} collectionId collection id
     @returns {Promise}
   */
   getCollection(collectionId) {
@@ -171,10 +172,10 @@ class MproEngine {
   }
 
   /*
-    Update entity
+    Update collection
 
-    @param {String} entityId entity id
-    @param {Object} entityData entity data to update
+    @param {String} collectionId collection id
+    @param {Object} collectionData collection data to update
     @returns {Promise}
   */
   updateCollection(collectionId, collectionData) {
@@ -182,7 +183,17 @@ class MproEngine {
   }
 
   /*
-    List entities
+    Remove collection
+
+    @param {String} collectionId collection id
+    @returns {Promise}
+  */
+  removeCollection(collectionId) {
+    return this.collectionStore.deleteCollection(collectionId)
+  }
+
+  /*
+    List collections
 
     @param {Object} filters filters
     @param {Object} options options
@@ -193,7 +204,7 @@ class MproEngine {
   }
 
   /*
-    Find entity
+    Find collection
 
     @param {String} pattern pattern to match
     @param {Object} restrictions query restrictions
@@ -201,6 +212,71 @@ class MproEngine {
   */
   findCollection(pattern, restrictions) {
     return this.collectionStore.findCollection(pattern, restrictions)
+  }
+
+  /* Rules API */
+
+  /*
+    Create rule
+
+    @param {Object} ruleData new rule data
+    @returns {Promise}
+  */
+  createRule(ruleData) {
+    return this.ruleStore.createRule(ruleData)
+  }
+
+  /*
+    Load rule
+
+    @param {String} ruleId rule id
+    @returns {Promise}
+  */
+  getRule(ruleId) {
+    return this.ruleStore.getRule(ruleId)
+  }
+
+  /*
+    Update rule
+
+    @param {String} ruleId rule id
+    @param {Object} ruleData rule data to update
+    @returns {Promise}
+  */
+  updateRule(ruleId, ruleData) {
+    return this.ruleStore.updateRule(ruleId, ruleData)
+  }
+
+  /*
+    Remove rule
+
+    @param {String} ruleId rule id
+    @returns {Promise}
+  */
+  removeRule(ruleId) {
+    return this.ruleStore.deleteRule(ruleId)
+  }
+
+  /*
+    List rules
+
+    @param {Object} filters filters
+    @param {Object} options options
+    @returns {Promise}
+  */
+  listRules(filters, options) {
+    return this.ruleStore.listRules(filters, options)
+  }
+
+  /*
+    Check what collections matches given rubrics and entities
+
+    @param {Array} rubrics rubrics
+    @param {Array} entities entities
+    @returns {Promise}
+  */
+  matchCollections(rubrics, entities) {
+    return this.ruleStore.matchCollections(rubrics, entities)
   }
 
 }
