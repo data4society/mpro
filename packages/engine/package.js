@@ -49,6 +49,7 @@ module.exports = {
     })
 
     let mproEngine = new MproEngine({
+      db: db,
       collectionStore: config.getStore('collection'),
       entityStore: config.getStore('entity'),
       rubricStore: config.getStore('rubric'),
@@ -60,6 +61,7 @@ module.exports = {
     let sourceEngine = new SourceEngine({
       configurator: config,
       documentStore: config.getStore('document'),
+      ruleStore: config.getStore('rule'),
       sourceStore: config.getStore('source')
     })
     

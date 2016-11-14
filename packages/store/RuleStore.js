@@ -1,7 +1,8 @@
 let Err = require('substance').SubstanceError
 let uuid = require('substance').uuid
 let isUndefined = require('lodash/isUndefined')
-let Promise = require("bluebird")
+let map = require('lodash/map')
+let Promise = require('bluebird')
 
 /*
   Implements the Rule Store API.
@@ -224,6 +225,7 @@ OR rubrics = '{}' AND entities::text[] <@ $2`
             cause: err
           }))
         }
+        result = map(result, 'collection_id')
         resolve(result)
       })
     }.bind(this))
