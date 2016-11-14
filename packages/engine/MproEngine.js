@@ -320,6 +320,7 @@ class MproEngine {
       }.bind(this))
       .then(function(docs) {
         return Promise.map(docs, function(doc) {
+          if(doc.collections === null) doc.collections = []
           if(doc.collections.indexOf(collectionId) > -1) {
             return false 
           }
