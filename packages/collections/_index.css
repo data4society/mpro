@@ -4,7 +4,7 @@
   background: #282b2f;
   color: rgba(255, 255, 255, 0.9);
   z-index: 99;
-  overflow: auto;
+  overflow: visible;
 }
 
 .sc-collections-list > .se-collections-search {
