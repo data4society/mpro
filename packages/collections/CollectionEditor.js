@@ -1,6 +1,15 @@
 import { Component, Input } from 'substance'
+import RulesEditor from './RulesEditor'
 
 class CollectionsEditor extends Component {
+
+  getInitialState() {
+    return {
+      name: this.props.name,
+      description: this.props.description
+    }
+  }
+
   render($$) {
     let el = $$('div').addClass('sc-collection-editor')
 
@@ -9,8 +18,9 @@ class CollectionsEditor extends Component {
         type: 'text',
         placeholder: this.getLabel('collection-name-placeholder'),
         centered: true,
-        value: this.props.name
+        value: this.state.name
       })
+      .on('change', this._commit)
       .ref('nameInput')
     )
 
@@ -18,16 +28,25 @@ class CollectionsEditor extends Component {
       $$('textarea').addClass('sc-textarea').attr({
         placeholder: this.getLabel('collection-description-placeholder')
       })
+      .append(this.state.description)
+      .on('change', this._commit)
       .ref('descriptionInput')
-      .append(this.props.description)
     )
 
     el.append(
       nameInput,
-      descriptionInput
+      descriptionInput,
+      $$(RulesEditor, {collectionId: this.props.collection_id})
     )
 
     return el
+  }
+
+  _commit() {
+    this.setState({
+      name: this.refs['nameInput'].val(),
+      description: this.refs['descriptionInput'].val()
+    })
   }
 }
 

@@ -1,3 +1,5 @@
+@import './_rules-editor.css';
+
 .sc-collections-list {
   background: #282b2f;
   color: rgba(255, 255, 255, 0.9);
@@ -6,12 +8,15 @@
 }
 
 .sc-collections-list > .se-collections-search {
-  border-bottom: 1px solid #e6e8eb;
-  margin-bottom: 5px;
+  border-bottom: 1px solid rgba(121,121,121,0.1);
 }
 
 .sc-collections-list > .se-collections-search > input {
   border: none;
+  border-radius: 0px;
+  height: 20px;
+  background: #282b2f;
+  color: rgba(255, 255, 255, 0.9);
 }
 
 .sc-collections-list > .se-collections-header {
@@ -64,6 +69,10 @@
 
 .sc-collections-list > .sc-pager .se-label {
   color: rgba(255, 255, 255, 0.9);
+}
+
+.sc-collection-editor {
+  color: rgba(0,0,0,0.75);
 }
 
 .sc-collection-editor > * {

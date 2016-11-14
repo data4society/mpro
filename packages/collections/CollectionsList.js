@@ -1,4 +1,4 @@
-import { Component, Input, Modal } from 'substance'
+import { Component, Input, Modal, uuid } from 'substance'
 import each from 'lodash/each'
 import concat from 'lodash/concat'
 import findIndex from 'lodash/findIndex'
@@ -22,7 +22,7 @@ class CollectionsList extends Component {
       perPage: 30,
       pagination: true,
       totalItems: 0,
-      order: "created",
+      order: "edited",
       direction: 'desc',
       edit: false
     }
@@ -73,6 +73,7 @@ class CollectionsList extends Component {
           this.context.iconProvider.renderIcon($$, 'collection-edit')
             .on('click', this._editCollection),
           this.context.iconProvider.renderIcon($$, 'collection-add')
+            .on('click', this._createCollection)
         )
       )
     )
@@ -120,11 +121,55 @@ class CollectionsList extends Component {
   }
 
   _editCollection() {
-    this.extendState({edit: true})
+    if(this.state.active) {
+      this.extendState({edit: true})
+    }
+  }
+
+  _createCollection() {
+    let authClient = this.context.authenticationClient
+    let user = authClient.getUser()
+    let dataClient = this.context.documentClient
+    let collection = {
+      collection_id: uuid(),
+      name: 'New collection',
+      description: 'No description available',
+      author: user.user_id
+    }
+
+    dataClient.createCollection(collection, function(err, col) {
+      if (err) {
+        console.error(err)
+        return
+      }
+
+      let list = this.state.list
+      list.unshift(col)
+      let total = parseInt(this.state.totalItems, 10) + 1
+      
+      this.extendState({list: list, totalItems: total})
+    }.bind(this))
   }
 
   _onModalClose() {
-    this.extendState({edit: false})
+    let updated = this.refs['editor'].state
+    let list = this.state.list
+    let activeIndex = findIndex(list, function(item) {
+      return item.collection_id === this.state.active
+    }.bind(this))
+    list[activeIndex].name = updated.name
+    list[activeIndex].description = updated.description
+
+    let collectionId = list[activeIndex].collection_id
+    let dataClient = this.context.documentClient
+    dataClient.updateCollection(collectionId, updated, function(err) {
+      if (err) {
+        console.error(err)
+        return
+      }
+
+      this.extendState({list: list, edit: false})
+    }.bind(this))
   }
 
   _loadMore() {
