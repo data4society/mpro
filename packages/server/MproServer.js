@@ -37,9 +37,9 @@ class MproServer {
     // Rules CRUD
     app.post(this.path + '/rules', this._createRule.bind(this))
     app.get(this.path + '/rules', this._listRules.bind(this))
-    app.get(this.path + '/collections/:id', this._getRule.bind(this))
-    app.put(this.path + '/collections/:id', this._updateRule.bind(this))
-    app.delete(this.path + '/collections/:id', this._removeRule.bind(this))
+    app.get(this.path + '/rules/:id', this._getRule.bind(this))
+    app.put(this.path + '/rules/:id', this._updateRule.bind(this))
+    app.delete(this.path + '/rules/:id', this._removeRule.bind(this))
   }
 
   /*
