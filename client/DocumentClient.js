@@ -173,6 +173,13 @@ class MproDocumentClient extends DocumentClient {
   }
 
   /*
+    Update documents with given rule
+  */
+  reapplyRule(ruleId, cb) {
+    this.request('GET', '/api/rules/' + ruleId + '/reapply', null, cb)
+  }
+
+  /*
     Create a user
   */
   createUser(data, cb) {

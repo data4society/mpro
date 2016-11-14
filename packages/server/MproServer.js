@@ -37,6 +37,7 @@ class MproServer {
     // Rules CRUD
     app.post(this.path + '/rules', this._createRule.bind(this))
     app.get(this.path + '/rules', this._listRules.bind(this))
+    app.get(this.path + '/rules/:id/reapply', this._reapplyRule.bind(this))
     app.get(this.path + '/rules/:id', this._getRule.bind(this))
     app.put(this.path + '/rules/:id', this._updateRule.bind(this))
     app.delete(this.path + '/rules/:id', this._removeRule.bind(this))
@@ -326,6 +327,18 @@ class MproServer {
     
     this.engine.listRules(filters, options).then(function(result) {
       res.json(result)
+    }).catch(function(err) {
+      return next(err)
+    })
+  }
+
+  /*
+    Reapply Rule
+  */
+  _reapplyRule(req, res, next) {
+    let ruleId = req.params.id
+    this.engine.reapplyRule(ruleId).then(function() {
+      res.json(200)
     }).catch(function(err) {
       return next(err)
     })

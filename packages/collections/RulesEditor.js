@@ -158,7 +158,14 @@ class CollectionsEditor extends Component {
   }
 
   _reapplyRule(id) {
-
+    let dataClient = this.context.documentClient
+    let ruleId = this.state.rules[id].rule_id
+    dataClient.reapplyRule(ruleId, function(err) {
+      if (err) {
+        console.error(err)
+        return
+      }
+    })
   }
 
   _loadCollectionRules() {
