@@ -105,6 +105,81 @@ class MproDocumentClient extends DocumentClient {
   }
 
   /*
+    Create a collection
+  */
+  createCollection(collectionData, cb) {
+    request('POST', '/api/collections', collectionData, cb)
+  }
+
+  /*
+    Read a collection
+  */
+  getCollection(collectionId, cb) {
+    request('GET', '/api/collections/' + collectionId, null, cb)
+  }
+
+  /*
+    Update a collection
+  */
+  updateCollection(collectionId, collectionData, cb) {
+    request('PUT', '/api/collections/' + collectionId, collectionData, cb)
+  }
+
+  /*
+    Get collections from the server
+  */
+  listCollections(filters, options, cb) {
+    let filtersRequest = encodeURIComponent(JSON.stringify(filters))
+    let optionsRequest = encodeURIComponent(JSON.stringify(options))
+    this.request('GET', '/api/collections?filters=' + filtersRequest + '&options=' + optionsRequest, null, cb)
+  }
+
+  /*
+    Find a collection
+  */
+  findCollections(value, restrictions, cb) {
+    let restrictionsRequest = encodeURIComponent(JSON.stringify(restrictions))
+    request('GET', '/api/collections/search?value=' + value + '&restrictions=' + restrictionsRequest, null, cb)
+  }
+
+  /*
+    Create a rule
+  */
+  createRule(ruleData, cb) {
+    request('POST', '/api/rules', ruleData, cb)
+  }
+
+  /*
+    Update a rule
+  */
+  updateRule(ruleId, ruleData, cb) {
+    request('PUT', '/api/rules/' + ruleId, ruleData, cb)
+  }
+
+  /*
+    Delete a rule
+  */
+  removeRule(ruleId, cb) {
+    request('DELETE', '/api/rules/' + ruleId, null, cb)
+  }
+
+  /*
+    Get rules from the server
+  */
+  listRules(filters, options, cb) {
+    let filtersRequest = encodeURIComponent(JSON.stringify(filters))
+    let optionsRequest = encodeURIComponent(JSON.stringify(options))
+    this.request('GET', '/api/rules?filters=' + filtersRequest + '&options=' + optionsRequest, null, cb)
+  }
+
+  /*
+    Update documents with given rule
+  */
+  reapplyRule(ruleId, cb) {
+    this.request('GET', '/api/rules/' + ruleId + '/reapply', null, cb)
+  }
+
+  /*
     Create a user
   */
   createUser(data, cb) {

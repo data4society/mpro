@@ -1,32 +1,64 @@
 import ListScrollPane from '../common/ListScrollPane'
 import DoubleSplitPane from '../common/DoubleSplitPane'
 import AbstractFeedLoader from '../common/AbstractFeedLoader'
+import CollectionsList from './CollectionsList'
+import extend from 'lodash/extend'
+import isEqual from 'lodash/isEqual'
 
 /*
-  Represents Inbox page.
+  Represents Collections page.
 
   Component splits into three parts:
-  - Filters
+  - CollectionsList
   - Feed
   - Document Viewer
 */
-class Inbox extends AbstractFeedLoader {
+class Collections extends AbstractFeedLoader {
   constructor(...args) {
     super(...args)
 
     this.handleActions({
       'loadMore': this._loadMore,
+      'openCollection': this._openCollection,
       'openDocument': this._openDocument,
       'notify': this._notify,
       'connectSession': this._connectSession
     })
   }
 
+  didMount() {
+    this._loadDocuments()
+  }
+
+  willUpdateState(state) {
+    let oldFilters = this.state.filters
+    let newFilters = state.filters
+    if(!isEqual(oldFilters, newFilters)) {
+      this._loadDocuments(state)
+    }
+  }
+
+  getInitialState() {
+    let collectionId = this.props.collectionId || ''
+    return {
+      filters: {'training': false, 'collections @>': [collectionId]},
+      perPage: 10,
+      order: 'created',
+      direction: 'desc',
+      collectionId: collectionId,
+      documentId: this.props.documentId,
+      documentItems: [],
+      pagination: false,
+      totalItems: 0,
+      rubrics: {},
+      addNew: false
+    }
+  }
+
   render($$) {
     let authenticationClient = this.context.authenticationClient
     let Header = this.getComponent('header')
     let Feed = this.getComponent('feed')
-    let Filters = this.getComponent('filters')
     let Loader = this.getComponent('loader')
     let Notification = this.getComponent('notification')
     let Collaborators = this.getComponent('collaborators')
@@ -43,7 +75,7 @@ class Inbox extends AbstractFeedLoader {
     el.append(
       header,
       $$(DoubleSplitPane, {splitType: 'vertical', sizeA: '300px', sizeB: '38%'}).append(
-        $$(Filters, {rubrics: this.state.rubrics}).ref('filters'),
+        $$(CollectionsList, {collectionId: this.state.collectionId}),
         $$(ListScrollPane, {
           scrollbarType: 'substance',
           scrollbarPosition: 'left'
@@ -66,7 +98,7 @@ class Inbox extends AbstractFeedLoader {
     let loader = this.refs.loader
     let feed = this.refs.feed
 
-    this.extendState({documentId: documentId})
+    //this.extendState({documentId: documentId})
     feed.setActiveItem(documentId)
     this.updateUrl(documentId)
     
@@ -75,9 +107,31 @@ class Inbox extends AbstractFeedLoader {
     })
   }
 
+  _openCollection(collectionId) {
+    let defaultState = this.getInitialState()
+    let filters = this.state.filters
+    let newFilters = {}
+    newFilters['collections @>'] = [collectionId]
+
+    this.extendState({
+      filters: extend({}, filters, newFilters),
+      collectionId: collectionId,
+      pagination: defaultState.pagination,
+      perPage: defaultState.perPage,
+      documentItems: []
+    })
+
+    this.updateUrlCollection(collectionId)
+  }
+
   updateUrl(documentId) {
     let urlHelper = this.context.urlHelper
-    urlHelper.writeRoute({page: 'inbox', documentId: documentId})
+    urlHelper.writeRoute({page: 'collections', collectionId: this.state.collectionId, documentId: documentId})
+  }
+
+  updateUrlCollection(collectionId) {
+    let urlHelper = this.context.urlHelper
+    urlHelper.writeRoute({page: 'collections', collectionId: collectionId, documentId: this.state.documentId})
   }
 
   _loadMore() {
@@ -97,4 +151,4 @@ class Inbox extends AbstractFeedLoader {
 
 }
 
-export default Inbox
+export default Collections

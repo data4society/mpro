@@ -44,10 +44,9 @@ class Cover extends Component {
     let meta = doc.get('meta')
     let documentInfo = this.props.documentInfo
     let documentId = documentInfo.props.documentId
-    
     // HACK: update the updatedAt property
     documentInfo.props.updatedAt = new Date()
-    documentInfo.props.meta = {title: meta.title, rubrics: meta.rubrics}
+    documentInfo.props.meta = {title: meta.title, rubrics: meta.rubrics, collections: meta.collections}
 
     if (change.updated['meta,rubrics']) {
       this.rerender()

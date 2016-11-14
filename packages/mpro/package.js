@@ -10,6 +10,7 @@ import FeedPackage from '../feed/package'
 import SimplePagerPackage from '../simple-pager/package'
 import PagerPackage from '../pager/package'
 import InboxPackage from '../inbox/package'
+import CollectionsPackage from '../collections/package'
 import ConfiguratorPackage from '../configurator/package'
 import LoaderPackage from '../loader/package'
 import ViewerPackage from '../viewer/package'
@@ -50,6 +51,7 @@ export default {
   configure: function(config) {
     config.import(BasePackage)
     config.import(InboxPackage)
+    config.import(CollectionsPackage)
     config.import(ConfiguratorPackage)
     config.import(HeaderPackage)
     config.import(FeedPackage)

@@ -22,11 +22,25 @@ class MproServer {
     app.put(this.path + '/sources/:id', this._updateSource.bind(this))
     // Convert all accepted documents
     app.get(this.path + '/sources/training', this._convertTrainingDocs.bind(this))
+    // Collections CRUD
+    app.post(this.path + '/collections', this._createCollection.bind(this))
+    app.get(this.path + '/collections', this._listCollections.bind(this))
+    app.get(this.path + '/collections/search', this._searchCollection.bind(this))
+    app.get(this.path + '/collections/:id', this._getCollection.bind(this))
+    app.put(this.path + '/collections/:id', this._updateCollection.bind(this))
+    // Entities CRUD
     app.post(this.path + '/entities', this._createEntity.bind(this))
     app.get(this.path + '/entities', this._listEntities.bind(this))
     app.get(this.path + '/entities/search', this._searchEntity.bind(this))
     app.get(this.path + '/entities/:id', this._getEntity.bind(this))
     app.put(this.path + '/entities/:id', this._updateEntity.bind(this))
+    // Rules CRUD
+    app.post(this.path + '/rules', this._createRule.bind(this))
+    app.get(this.path + '/rules', this._listRules.bind(this))
+    app.get(this.path + '/rules/:id/reapply', this._reapplyRule.bind(this))
+    app.get(this.path + '/rules/:id', this._getRule.bind(this))
+    app.put(this.path + '/rules/:id', this._updateRule.bind(this))
+    app.delete(this.path + '/rules/:id', this._removeRule.bind(this))
   }
 
   /*
@@ -180,6 +194,151 @@ class MproServer {
     let restrictions = JSON.parse(req.query.restrictions)
     this.engine.findEntity(pattern, restrictions).then(function(results) {
       res.json(results)
+    }).catch(function(err) {
+      return next(err)
+    })
+  }
+
+  /*
+    Create Collection
+  */
+  _createCollection(req, res, next) {
+    let collectionData = req.body
+    this.engine.createCollection(collectionData).then(function(collection) {
+      res.json(collection)
+    }).catch(function(err) {
+      return next(err)
+    })
+  }
+
+  /*
+    Get Collection
+  */
+  _getCollection(req, res, next) {
+    let collectionId = req.params.id
+    this.engine.getCollection(collectionId).then(function(result) {
+      res.json(result)
+    }).catch(function(err) {
+      return next(err)
+    })
+  }
+
+  /*
+    Update Collection
+  */
+  _updateCollection(req, res, next) {
+    let collectionId = req.params.id
+    let collectionData = req.body
+    this.engine.updateCollection(collectionId, collectionData).then(function() {
+      res.json(null)
+    }).catch(function(err) {
+      return next(err)
+    })
+  }
+
+  /*
+    List collections with given filters and options
+  */
+  _listCollections(req, res, next) {
+    let filters = req.query.filters || {}
+    let options = req.query.options || {}
+
+    if(!isEmpty(filters)) filters = JSON.parse(filters)
+    if(!isEmpty(options)) options = JSON.parse(options)
+    
+    this.engine.listCollections(filters, options).then(function(result) {
+      res.json(result)
+    }).catch(function(err) {
+      return next(err)
+    })
+  }
+
+  /*
+    Search Collection
+  */
+  _searchCollection(req, res, next) {
+    let pattern = req.query.value
+    let restrictions = JSON.parse(req.query.restrictions)
+    this.engine.findCollection(pattern, restrictions).then(function(results) {
+      res.json(results)
+    }).catch(function(err) {
+      return next(err)
+    })
+  }
+
+  /*
+    Create Rule
+  */
+  _createRule(req, res, next) {
+    let rulesData = req.body
+    this.engine.createRule(rulesData).then(function(rule) {
+      res.json(rule)
+    }).catch(function(err) {
+      return next(err)
+    })
+  }
+
+  /*
+    Get Rule
+  */
+  _getRule(req, res, next) {
+    let ruleId = req.params.id
+    this.engine.getRule(ruleId).then(function(rule) {
+      res.json(rule)
+    }).catch(function(err) {
+      return next(err)
+    })
+  }
+
+  /*
+    Update Rule
+  */
+  _updateRule(req, res, next) {
+    let ruleId = req.params.id
+    let ruleData = req.body
+    this.engine.updateRule(ruleId, ruleData).then(function() {
+      res.json(null)
+    }).catch(function(err) {
+      return next(err)
+    })
+  }
+
+  /*
+    Remove Rule
+  */
+  _removeRule(req, res, next) {
+    let ruleId = req.params.id
+    this.engine.removeRule(ruleId).then(function(rule) {
+      res.json(rule)
+    }).catch(function(err) {
+      return next(err)
+    })
+  }
+
+  /*
+    List rules with given filters and options
+  */
+  _listRules(req, res, next) {
+    let filters = req.query.filters || {}
+    let options = req.query.options || {}
+
+    if(!isEmpty(filters)) filters = JSON.parse(filters)
+    if(!isEmpty(options)) options = JSON.parse(options)
+    
+    this.engine.listRules(filters, options).then(function(result) {
+      res.json(result)
+    }).catch(function(err) {
+      return next(err)
+    })
+  }
+
+  /*
+    Reapply Rule
+  */
+  _reapplyRule(req, res, next) {
+    let ruleId = req.params.id
+    this.engine.reapplyRule(ruleId).then(function() {
+      res.json(200)
     }).catch(function(err) {
       return next(err)
     })

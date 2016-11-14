@@ -26,15 +26,7 @@ class Users extends Component {
 
   renderHeader($$) {
     let Header = this.getComponent('header')
-    let header = $$(Header, {
-      actions: {
-        'inbox': this.getLabel('inbox-menu'),
-        'configurator': this.getLabel('configurator-menu'),
-        'import': this.getLabel('import-menu'),
-        'resources': this.getLabel('configurator-resources'),
-        'users': this.getLabel('configurator-users')
-      }
-    })
+    let header = $$(Header)
 
     return header
   }

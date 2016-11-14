@@ -1,6 +1,6 @@
 import { Command } from 'substance'
 
-class RubricatorCommand extends Command {
+class CollectorCommand extends Command {
 
   getCommandState() {
     return {
@@ -11,12 +11,12 @@ class RubricatorCommand extends Command {
 
   execute(props) {
     let documentSession = props.documentSession
-    let rubrics = props.rubrics
+    let collections = props.collections
     documentSession.transaction(function(tx) {
-      tx.set(['meta', 'rubrics'], rubrics)
+      tx.set(['meta', 'collections'], collections)
     })
     return true
   }
 }
 
-export default RubricatorCommand
+export default CollectorCommand

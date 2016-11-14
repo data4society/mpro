@@ -6,9 +6,12 @@ let Promise = require("bluebird")
 */
 class MproEngine {
   constructor(config) {
+    this.db = config.db
     this.config = config
+    this.collectionStore = config.collectionStore
     this.entityStore = config.entityStore
     this.rubricStore = config.rubricStore
+    this.ruleStore = config.ruleStore
     this.classStore = config.classStore
     this.userStore = config.userStore
   }
@@ -145,6 +148,207 @@ class MproEngine {
 
   listUsers(filters, options, cb) {
     this.userStore.listUsers(filters, options, cb)
+  }
+
+  /* Collections API */
+
+  /*
+    Create collection
+
+    @param {Object} collectionData new collection data
+    @returns {Promise}
+  */
+  createCollection(collectionData) {
+    return this.collectionStore.createCollection(collectionData)
+  }
+
+  /*
+    Load collection
+
+    @param {String} collectionId collection id
+    @returns {Promise}
+  */
+  getCollection(collectionId) {
+    return this.collectionStore.getCollection(collectionId)
+  }
+
+  /*
+    Update collection
+
+    @param {String} collectionId collection id
+    @param {Object} collectionData collection data to update
+    @returns {Promise}
+  */
+  updateCollection(collectionId, collectionData) {
+    return this.collectionStore.updateCollection(collectionId, collectionData)
+  }
+
+  /*
+    Remove collection
+
+    @param {String} collectionId collection id
+    @returns {Promise}
+  */
+  removeCollection(collectionId) {
+    return this.collectionStore.deleteCollection(collectionId)
+  }
+
+  /*
+    List collections
+
+    @param {Object} filters filters
+    @param {Object} options options
+    @returns {Promise}
+  */
+  listCollections(filters, options) {
+    return this.collectionStore.listCollections(filters, options)
+  }
+
+  /*
+    Find collection
+
+    @param {String} pattern pattern to match
+    @param {Object} restrictions query restrictions
+    @returns {Promise}
+  */
+  findCollection(pattern, restrictions) {
+    return this.collectionStore.findCollection(pattern, restrictions)
+  }
+
+  /* Rules API */
+
+  /*
+    Create rule
+
+    @param {Object} ruleData new rule data
+    @returns {Promise}
+  */
+  createRule(ruleData) {
+    return this.ruleStore.createRule(ruleData)
+  }
+
+  /*
+    Load rule
+
+    @param {String} ruleId rule id
+    @returns {Promise}
+  */
+  getRule(ruleId) {
+    return this.ruleStore.getRule(ruleId)
+  }
+
+  /*
+    Update rule
+
+    @param {String} ruleId rule id
+    @param {Object} ruleData rule data to update
+    @returns {Promise}
+  */
+  updateRule(ruleId, ruleData) {
+    return this.ruleStore.updateRule(ruleId, ruleData)
+  }
+
+  /*
+    Remove rule
+
+    @param {String} ruleId rule id
+    @returns {Promise}
+  */
+  removeRule(ruleId) {
+    return this.ruleStore.deleteRule(ruleId)
+  }
+
+  /*
+    List rules
+
+    @param {Object} filters filters
+    @param {Object} options options
+    @returns {Promise}
+  */
+  listRules(filters, options) {
+    return this.ruleStore.listRules(filters, options)
+  }
+
+  /*
+    Check what collections matches given rubrics and entities
+
+    @param {Array} rubrics rubrics
+    @param {Array} entities entities
+    @returns {Promise}
+  */
+  matchCollections(rubrics, entities) {
+    return this.ruleStore.matchCollections(rubrics, entities)
+  }
+
+  /*
+    Reaply rule
+    E.g. apply rule to all existed records
+    TODO: for simple rules and large record sets
+    this could cause memory problems
+  */
+  reapplyRule(ruleId) {
+    let collectionId
+    return this.ruleStore.getRule(ruleId)
+      .then(function(rule) {
+        collectionId = rule.collection_id
+        let query = 'SELECT document_id, collections, meta, content from records WHERE '
+        let vars = []
+        if (rule.rubrics.length > 0 && rule.entities.length > 0) {
+          vars.push(rule.rubrics)
+          vars.push(rule.entities)
+          query += 'rubrics::text[] @> $1 AND entities::text[] @> $2'
+        } else {
+          if (rule.rubrics.length > 0) {
+            vars.push(rule.rubrics)
+            query += 'rubrics::text[] @> $1' 
+          }
+          if (rule.entities.length > 0) {
+            vars.push(rule.entities)
+            query += 'entities::text[] @> $1'
+          }
+        }
+        return new Promise(function(resolve, reject) {
+          this.db.run(query, vars, function(err, res){
+            if(err) {
+              return reject(new Err('RubricsListError', {
+                cause: err
+              }))
+            }
+            resolve(res)
+          })
+        }.bind(this))
+      }.bind(this))
+      .then(function(docs) {
+        return Promise.map(docs, function(doc) {
+          if(doc.collections.indexOf(collectionId) > -1) {
+            return false 
+          }
+          doc.collections.push(collectionId)
+          if(doc.meta.collections) {
+            doc.meta.collections.push(collectionId)
+          } else {
+            doc.meta.collections = [collectionId]
+          }
+          
+          doc.content.nodes.forEach(function(node, id) {
+            if(node.type === 'meta') doc.content.nodes[id] = doc.meta
+          })
+
+          return new Promise(function(resolve, reject) {
+            this.db.records.save(doc, function(err) {
+              if(err) {
+                return reject(new Err('RubricsListError', {
+                  cause: err
+                }))
+              }
+              resolve()
+            })
+          }.bind(this))
+        }.bind(this), {concurrency: 10})
+      }.bind(this))
+      .then(function(){
+        console.log('Collection', collectionId, 'has been reapplyed')
+      })
   }
 
 }

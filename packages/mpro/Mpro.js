@@ -29,6 +29,7 @@ class Mpro extends AbstractApplication {
       'users': this._users,
       'resources': this._resources,
       'configurator': this._configurator,
+      'collections': this._collections,
       'inbox': this._inbox,
       'home': this._home
     })
@@ -91,6 +92,12 @@ class Mpro extends AbstractApplication {
   _configurator() {
     this.navigate({
       page: 'configurator'
+    })
+  }
+
+  _collections() {
+    this.navigate({
+      page: 'collections'
     })
   }
 

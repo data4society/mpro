@@ -29,6 +29,14 @@ class EntityStore {
       entityData.name = ''
     }
 
+    if (isUndefined(entityData.labels)) {
+      entityData.labels = []
+    }
+
+    if (isUndefined(entityData.external_data)) {
+      entityData.external_data = {}
+    }
+
     if (isUndefined(entityData.data)) {
       entityData.data = {}
     }
@@ -206,6 +214,8 @@ class EntityStore {
       edited: new Date(),
       author: entityData.author,
       entity_class: entityData.entity_class,
+      labels: entityData.labels,
+      external_data: entityData.external_data,
       data: entityData.data
     }
 

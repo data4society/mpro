@@ -1,6 +1,8 @@
 -- Reset database:
 
 drop table if exists "changes";
+drop table if exists "rules";
+drop table if exists "collections";
 drop table if exists "references";
 drop table if exists "entities";
 drop table if exists "entity_classes";
@@ -52,6 +54,7 @@ CREATE TABLE "records" (
   training boolean,
   rubrics varchar(40)[],
   entities varchar(40)[],
+  collections varchar(40)[],
   source varchar(40) REFERENCES documents,
   content jsonb,
   meta jsonb,
@@ -68,6 +71,22 @@ CREATE TABLE "changes" (
   PRIMARY KEY(document_id, version)
 );
 
+CREATE TABLE "collections" (
+  collection_id varchar(40) UNIQUE PRIMARY KEY,
+  name varchar(255),
+  created timestamp,
+  edited timestamp,
+  author varchar(40) REFERENCES users,
+  description text
+);
+
+CREATE TABLE "rules" (
+  rule_id varchar(40) UNIQUE PRIMARY KEY,
+  collection_id varchar(40) REFERENCES collections,
+  rubrics varchar(40)[],
+  entities varchar(40)[]
+);
+
 CREATE TABLE "entity_classes" (
   class_id varchar(40) UNIQUE PRIMARY KEY,
   name varchar(255)
@@ -80,6 +99,8 @@ CREATE TABLE "entities" (
   edited timestamp,
   author varchar(40) REFERENCES users,
   entity_class varchar(255),
+  labels text[],
+  external_data jsonb,
   data jsonb,
   tsv tsvector
 );

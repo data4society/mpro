@@ -19,6 +19,7 @@ class SourceEngine {
     this.concurrency = config.concurrency || 5
     this.sourceStore = config.sourceStore
     this.documentStore = config.documentStore
+    this.ruleStore = config.ruleStore
     this.configurator = config.configurator
 
     this.scheduleConversion()
@@ -164,11 +165,15 @@ class SourceEngine {
     @returns {Promise}
   */
   convert(sourceId) {
+    let doc = {}
+    let docSource = {}
+
     return this.sourceStore.getSource(sourceId)
       .then(function(source) {
         return this.validateSource(source)
       }.bind(this))
       .then(function(source) {
+        docSource = source
         let recordBody = source.doc_source
         let type = source.type
         let importer = this.configurator.getConfigurator('mpro-' + type).createImporter('html')
@@ -179,20 +184,29 @@ class SourceEngine {
           })
         }
 
-        let doc = importer.importDocument(recordBody, source)
+        doc = importer.importDocument(recordBody, source)
+        let meta = doc.get('meta')
+
+        return this.ruleStore.matchCollections(meta.rubrics, meta.entities)
+      }.bind(this))
+      .then(function(collections) {
+        if(docSource.type !== 'tng') {
+          doc.set(['meta', 'collections'], collections)
+        }
         let data = converter.exportDocument(doc)
         let schema = doc.schema
-        let training = source.type === 'tng' ? true: false
+        let training = docSource.type === 'tng' ? true: false
         let meta = doc.get('meta')
         let document = {
           title: meta.title,
-          guid: source.guid,
+          guid: docSource.guid,
           schema_name: schema.name,
           schema_version: schema.version,
           published: meta.published,
           created: new Date().toJSON(), // should be parsed source.created someday
           edited: new Date().toJSON(),
           training: training,
+          collections: meta.collections,
           rubrics: meta.rubrics,
           entities: meta.entities,
           source: sourceId,

@@ -1,0 +1,51 @@
+.sc-tool-group.sm-target-collector {
+  float: right;
+  padding-right: 3px;
+}
+
+.sc-tool-dropdown > .sc-collector.se-options {
+  background: rgba(255, 255, 255, 0.9);
+  top: 10px;
+  left: -170px;
+  width: 200px;
+  max-height: 300px;
+  overflow-y: auto;
+  border-radius: 3px;
+  box-shadow: 0 0 0 1px rgba(0,0,0,0.2),0 8px 16px rgba(0, 0, 0, 0.15);
+}
+
+.sc-collector > .se-collection-node {
+  color: rgba(0,0,0,0.75);
+}
+
+.sc-collector > .se-collection-node > .sm-selection {
+  padding: 5px;
+  float: left;
+}
+
+.sc-collector > .se-collection-node > .se-collection-node-description {
+  display: block;
+  clear: both;
+  font-size: 12px;
+  padding: 2px 5px;
+}
+
+.sc-collector > .se-collector-search {
+  border-bottom: 1px solid #e6e8eb;
+  margin-bottom: 5px;
+}
+
+.sc-collector > .se-collector-search > input {
+  border: none;
+}
+
+.sc-collector > .sc-pager {
+  padding: 0px;
+}
+
+.sc-collector > .sc-pager > button {
+  border: none;
+  border-top: 1px solid #e6e8eb;
+  margin-top: 5px;
+  height: 30px;
+}

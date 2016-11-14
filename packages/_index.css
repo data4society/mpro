@@ -17,6 +17,7 @@
 @import './welcome/_index.css';
 
 /* Viewer*/
+@import './collector/_index.css';
 @import './editor/_index.css';
 @import './entity/_index.css';
 @import './inbox/_index.css';
@@ -25,3 +26,6 @@
 /* Configurator */
 @import './acceptor/_index.css';
 @import './configurator/_index.css';
+
+/* Collections */
+@import './collections/_index.css';

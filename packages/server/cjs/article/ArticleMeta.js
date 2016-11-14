@@ -24,6 +24,7 @@ ArticleMeta.define({
   title: { type: 'string', default: 'Untitled article'},
   rubrics: { type: ['id'], default: [] },
   entities: { type: ['id'], default: [] },
+  collections: { type: ['id'], default: [] },
   cover: { type: 'string', default: ''},
   source: { type: 'string', default: ''},
   published: { type: 'string', default: '' },

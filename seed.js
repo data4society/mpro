@@ -32,6 +32,12 @@ db.reset() // Clear the database, set up the schema
     let changeStore = configurator.getStore('change')
     return changeStore.seed()
   }).then(function() {
+    let collectionStore = configurator.getStore('collection')
+    return collectionStore.seed()
+  }).then(function() {
+    let ruleStore = configurator.getStore('rule')
+    return ruleStore.seed()
+  }).then(function() {
     console.log('Done seeding.') // eslint-disable-line
     db.connection.end()
   })

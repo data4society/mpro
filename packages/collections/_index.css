@@ -1,0 +1,81 @@
+@import './_rules-editor.css';
+
+.sc-collections-list {
+  background: #282b2f;
+  color: rgba(255, 255, 255, 0.9);
+  z-index: 99;
+  overflow: visible;
+}
+
+.sc-collections-list > .se-collections-search {
+  border-bottom: 1px solid rgba(121,121,121,0.1);
+}
+
+.sc-collections-list > .se-collections-search > input {
+  border: none;
+  border-radius: 0px;
+  height: 20px;
+  background: #282b2f;
+  color: rgba(255, 255, 255, 0.9);
+}
+
+.sc-collections-list > .se-collections-header {
+  padding: 10px;
+  border-bottom: 1px solid rgba(121,121,121,0.1);
+}
+
+.sc-collections-list > .se-collections-header > .se-collections-actions {
+  float: right;
+}
+
+.sc-collections-list > .se-collections-header > .se-collections-actions > i {
+  font-size: 17px;
+  padding: 2px 4px;
+  cursor: pointer;
+}
+
+.sc-collections-list > .se-collection-item {
+  display: block;
+  padding: 5px 20px;
+  position: relative;
+  line-height: 15px;
+  border-bottom: 1px solid rgba(121,121,121,0.1);
+  cursor: pointer;
+}
+
+.sc-collections-list > .se-collection-item.sm-selected {
+  background: #d5d7da;
+  color: rgba(0,0,0,0.75);
+}
+
+.sc-collections-list > .se-collection-item > .se-collection-item-name {
+  line-height: 24px;
+}
+
+.sc-collections-list > .se-collection-item > .se-collection-counter {
+  float: right;
+  line-height: 24px;
+}
+
+.sc-collections-list > .se-collection-item > .se-collection-item-description {
+  display: block;
+  clear: both;
+  font-size: 12px;
+}
+
+.sc-collections-list > .sc-pager > .sc-button {
+  border: 1px solid rgba(255, 255, 255, 0.9);
+}
+
+.sc-collections-list > .sc-pager .se-label {
+  color: rgba(255, 255, 255, 0.9);
+}
+
+.sc-collection-editor {
+  color: rgba(0,0,0,0.75);
+}
+
+.sc-collection-editor > * {
+  text-align: center;
+  padding: 10px;
+}
