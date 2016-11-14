@@ -42,7 +42,10 @@ function prepareEntity(data) {
     created: new Date(),
     edited: new Date(),
     entity_class: 'person',
-    labels: [data.name],
+    labels: [
+      data.surname + ' ' + data.firstname,
+      data.firstname + ' ' + data.surname
+    ],
     external_data: {
       pp_id: data._id
     },
