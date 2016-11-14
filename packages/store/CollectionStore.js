@@ -41,7 +41,7 @@ class CollectionStore {
           })
         }
 
-        return this._createcollection(collectionData)
+        return this._createCollection(collectionData)
       }.bind(this))
   }
 
