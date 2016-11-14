@@ -32,7 +32,7 @@ class RuleStore {
           })
         }
 
-        return this._createrule(ruleData)
+        return this._createRule(ruleData)
       }.bind(this))
   }
 
@@ -127,8 +127,12 @@ class RuleStore {
   listRules(filters, options) {
     let output = {}
 
+    let entitiesNamesQuery = '(SELECT array(SELECT name FROM unnest(entities) entity LEFT JOIN entities r on r.entity_id=entity)) AS entities_names'
+    let rubricNamesQuery = '(SELECT array(SELECT name FROM unnest(rubrics) rubric LEFT JOIN rubrics r on r.rubric_id=rubric)) AS rubrics_names'
+
     // Default limit for number of returned records
     if(!options.limit) options.limit = 100
+    if(!options.columns) options.columns = ['rule_id', 'collection_id', 'rubrics', 'entities', entitiesNamesQuery, rubricNamesQuery]
 
     return new Promise(function(resolve, reject) {
       this.db.rules.count(filters, function(err, count) {
