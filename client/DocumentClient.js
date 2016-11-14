@@ -143,6 +143,36 @@ class MproDocumentClient extends DocumentClient {
   }
 
   /*
+    Create a rule
+  */
+  createRule(ruleData, cb) {
+    request('POST', '/api/rules', ruleData, cb)
+  }
+
+  /*
+    Update a rule
+  */
+  updateRule(ruleId, ruleData, cb) {
+    request('PUT', '/api/rules/' + ruleId, ruleData, cb)
+  }
+
+  /*
+    Delete a rule
+  */
+  removeRule(ruleId, cb) {
+    request('DELETE', '/api/rules/' + ruleId, null, cb)
+  }
+
+  /*
+    Get rules from the server
+  */
+  listRules(filters, options, cb) {
+    let filtersRequest = encodeURIComponent(JSON.stringify(filters))
+    let optionsRequest = encodeURIComponent(JSON.stringify(options))
+    this.request('GET', '/api/rules?filters=' + filtersRequest + '&options=' + optionsRequest, null, cb)
+  }
+
+  /*
     Create a user
   */
   createUser(data, cb) {
