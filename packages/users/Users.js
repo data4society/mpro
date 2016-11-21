@@ -26,7 +26,7 @@ class Users extends Component {
 
   renderHeader($$) {
     let Header = this.getComponent('header')
-    let header = $$(Header)
+    let header = $$(Header, this.props)
 
     return header
   }

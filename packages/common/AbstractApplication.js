@@ -65,6 +65,9 @@ class AbstractApplication extends ResponsiveApplication {
       // Call hook to change route depends on userSession properties
       route = this._onAuthentication(route, userSession)
 
+      // Add current app to route
+      route.app = this.state.appId
+
       this.extendState({
         route: route,
         userSession: userSession
@@ -79,6 +82,8 @@ class AbstractApplication extends ResponsiveApplication {
     delete props.page
     props.mobile = this.state.mobile
     props.userSession = this.state.userSession
+    if(!props.app) props.app = this.state.appId
+
     return props
   }
 

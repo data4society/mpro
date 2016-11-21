@@ -65,7 +65,7 @@ class Collections extends AbstractFeedLoader {
 
     let el = $$('div').addClass('sc-inbox')
 
-    let header = $$(Header)
+    let header = $$(Header, this.props)
 
     header.outlet('content').append(
       $$(Notification, {}).ref('notification'),
