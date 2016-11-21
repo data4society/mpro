@@ -1,5 +1,7 @@
 import AbstractApplication from '../common/AbstractApplication'
 import MproRouter from './MproRouter'
+import extend from 'lodash/extend'
+import find from 'lodash/find'
 import forEach from 'lodash/forEach'
 
 /*
@@ -25,7 +27,10 @@ class Mpro extends AbstractApplication {
       this.addPage(page, this.componentRegistry.get(page))
     }.bind(this))
 
+    this._loadAppsConfig()
+
     this.handleActions({
+      'switchApp': this._switchApp,
       'users': this._users,
       'resources': this._resources,
       'configurator': this._configurator,
@@ -71,6 +76,10 @@ class Mpro extends AbstractApplication {
     return route
   }
 
+  _switchApp(appId) {
+    this.extendState({appId: appId})
+  }
+
   _home() {
     this.navigate({
       page: this.getDefaultPage()
@@ -105,6 +114,22 @@ class Mpro extends AbstractApplication {
     this.navigate({
       page: 'inbox'
     })
+  }
+
+  _loadAppsConfig() {
+    this.documentClient.getConfig(function(err, config) {
+      if(err) {
+        console.log(error)
+      }
+      extend(this.config, {apps: config})
+      if(!this.state.appId) {
+        let defaultApp = find(this.config.apps, function(app) {
+          return app.default
+        })
+
+        this.extendState({appId: defaultApp.appId})
+      }
+    }.bind(this))
   }
 }
 

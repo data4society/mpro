@@ -14,7 +14,7 @@
   position: absolute;
   top: 50%;
   left: 6px;
-  z-index: 1000;
+  z-index: 99;
   width: 10px;
   height: 20px;
   margin-top: -10px;

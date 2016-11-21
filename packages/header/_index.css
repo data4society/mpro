@@ -95,3 +95,120 @@
 .sc-header .se-dropdown:hover ul {
   display: block;
 }
+
+.sc-header .se-app-selector {
+  position: relative;
+  display: inline-block;
+  text-align: left;
+  width: 160px;
+  float: left;
+  z-index: 100;
+}
+
+.sc-header .se-app-selector-text {
+  cursor: pointer;
+  position: relative;
+  text-indent: 10px;
+  line-height: 32px;
+  border-right: 1px solid rgba(255, 255, 255, 0.4);
+  width: 100%;
+}
+
+.sc-header .se-selected-app-name {
+  overflow: hidden;
+  width: 90px;
+  height: 40px;
+}
+
+.sc-header .se-app-selector-text .fa {
+  float: left;
+  padding: 12px 0px;
+}
+
+.sc-header .se-app-selector-text:after {
+  position: absolute;
+  right: 15px;
+  top: 18px;
+  content: '';
+  width: 0px;
+  height: 0px;
+  border-style: solid;
+  border-width: 5px 4px 0 4px;
+  border-color: rgba(255,255,255, 0.7) transparent transparent transparent;
+}
+
+.sc-header .se-app-selector-text,
+.sc-header .se-app-selector-content a {
+  padding: 0px 15px;
+  color: rgba(255,255,255, 0.7);
+  line-height: 40px;
+}
+
+.sc-header .se-app-selector-toggle {
+  font-size: 0;
+  z-index: 1;
+  cursor: pointer;
+  position: absolute;
+  top: 0;
+  border: none;
+  padding: 0;
+  margin: 0 0 0 1px;
+  background: transparent;
+  text-indent: -10px;
+  height: 40px;
+  width: 100%;
+}
+
+.sc-header .se-app-selector-toggle:focus {
+  outline: 0;
+}
+
+.sc-header .se-app-selector-content {
+  -webkit-transition: all .25s ease;
+  -moz-transition: all .25s ease;
+  -ms-transition: all .25s ease;
+  -o-transition: all .25s ease;
+  transition: all .25s ease;
+  list-style-type: none;
+  position: absolute;
+  top: 32px;
+  padding: 0;
+  margin: 0;
+  opacity: 0;
+  visibility:hidden;
+  border-radius: 3px;
+  text-indent: 10px;
+  line-height: 32px;
+  background-color: #565656;
+  width: 200px;
+}
+
+.sc-header .se-app-selector-content a {
+  display: block;
+}
+
+.sc-header .se-app-selector-content a:hover {
+  background: #e8e8e8;
+  color: #565656;
+}
+
+
+.sc-header .se-app-selector-toggle:hover ~ .se-app-selector-text,
+.sc-header .se-app-selector-toggle:focus ~ .se-app-selector-text {
+}
+
+.sc-header .se-app-selector-toggle:focus ~ .se-app-selector-text {
+  z-index: 2;
+}
+
+.sc-header .se-app-selector-toggle:focus ~ .se-app-selector-text:after {
+  border-width: 0 4px 5px 4px;
+  border-color: transparent transparent rgba(255,255,255, 0.7) transparent;
+}
+
+.sc-header .se-app-selector-content:hover,
+.sc-header .se-app-selector-toggle:focus ~ .se-app-selector-content {
+  opacity: 1;
+  visibility:visible;
+  top: 42px;
+}
