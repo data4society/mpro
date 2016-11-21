@@ -1,3 +1,6 @@
+let Err = require('substance').SubstanceError
+let Promise = require('bluebird')
+
 let Database = require('./packages/common/Database')
 let Configurator = require('./packages/common/ServerConfigurator')
 let StorePackage = require('./packages/store/package')
@@ -38,6 +41,17 @@ db.reset() // Clear the database, set up the schema
     let ruleStore = configurator.getStore('rule')
     return ruleStore.seed()
   }).then(function() {
+    return new Promise(function(resolve, reject) {
+      db.connection.seed.variableSeed(function(err) {
+        if (err) {
+          reject(new Err('Variables seed error', {
+            cause: err
+          }))
+        }
+        resolve()
+      })
+    })
+  }).then(function() {  
     console.log('Done seeding.') // eslint-disable-line
     db.connection.end()
   })
