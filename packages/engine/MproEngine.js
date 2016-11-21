@@ -1,5 +1,6 @@
 let Err = require('substance').SubstanceError
-let Promise = require("bluebird")
+let Promise = require('bluebird')
+let map = require('lodash/map')
 
 /*
   Implements the MPro Engine API.
@@ -14,6 +15,41 @@ class MproEngine {
     this.ruleStore = config.ruleStore
     this.classStore = config.classStore
     this.userStore = config.userStore
+  }
+
+  /*
+    Global app config
+  */
+  getConfig() {
+    return new Promise(function(resolve, reject) {
+      this.db.run('SELECT json FROM variables WHERE name = $1', ['last_config'], function(err, res) {
+        if(err) {
+          return reject(new Err('Engine.ReadConfigError', {
+            cause: err
+          }))
+        }
+
+        let configData = res[0]['json']['value']
+        let config = map(configData, function(app) {
+          return {
+            appId: app.app_id,
+            name: app.app_name,
+            description: app.app_desc,
+            rubrics: app.rubrication || false,
+            entities: app.markup || false,
+            default: false,
+            configurator: false
+          }
+        })
+
+        // Debug
+        config[0].default = true
+        config[1].configurator = true
+
+        resolve(config)
+      
+      })
+    }.bind(this))
   }
 
   /*

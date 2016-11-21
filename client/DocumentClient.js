@@ -34,6 +34,10 @@ class MproDocumentClient extends DocumentClient {
     }
   }
 
+  getConfig(cb) {
+    request('GET', '/api/config', null, cb)
+  }
+
   listDocuments(filters, options, cb) {
     // TODO: send filters and options to server
     let filtersRequest = encodeURIComponent(JSON.stringify(filters));

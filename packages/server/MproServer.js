@@ -15,6 +15,7 @@ class MproServer {
     Attach this server to an express instance
   */
   bind(app) {
+    app.get(this.path + '/config', this._getConfig.bind(this))
     app.get(this.path + '/rubrics', this._listRubrics.bind(this))
     app.get(this.path + '/classes', this._listClasses.bind(this))
     app.get(this.path + '/facets', this._listFacets.bind(this))
@@ -41,6 +42,14 @@ class MproServer {
     app.get(this.path + '/rules/:id', this._getRule.bind(this))
     app.put(this.path + '/rules/:id', this._updateRule.bind(this))
     app.delete(this.path + '/rules/:id', this._removeRule.bind(this))
+  }
+
+  _getConfig(req, res, next) {
+    this.engine.getConfig().then(function(result) {
+      res.json(result)
+    }).catch(function(err) {
+      return next(err)
+    })
   }
 
   /*
