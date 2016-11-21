@@ -47,9 +47,7 @@ class Header extends Component {
 
   renderAppSelector($$) {
     let appsConfig = this.context.config.apps
-    let currentAppConfig = find(appsConfig, function(app) {
-      return this.props.app === app.appId
-    }.bind(this))
+    let currentAppConfig = appsConfig[this.props.app]
 
     let el = $$('div').addClass('se-app-selector')
 

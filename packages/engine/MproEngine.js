@@ -1,6 +1,6 @@
 let Err = require('substance').SubstanceError
 let Promise = require('bluebird')
-let map = require('lodash/map')
+let each = require('lodash/each')
 
 /*
   Implements the MPro Engine API.
@@ -30,8 +30,9 @@ class MproEngine {
         }
 
         let configData = res[0]['json']['value']
-        let config = map(configData, function(app) {
-          return {
+        let config = {}
+        each(configData, function(app, id) {
+          config[id] = {
             appId: app.app_id,
             name: app.app_name,
             description: app.app_desc,
@@ -43,8 +44,8 @@ class MproEngine {
         })
 
         // Debug
-        config[0].default = true
-        config[1].configurator = true
+        config['fctest'].default = true
+        config['fmrtest'].configurator = true
 
         resolve(config)
       
