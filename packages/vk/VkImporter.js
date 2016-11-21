@@ -87,7 +87,7 @@ class VkImporter extends HTMLImporter {
         id: 'meta',
         type: 'meta',
         title: '',
-        source: source.guid,
+        source: source.url,
         published: published.toJSON(),
         rubrics: source.rubric_ids,
         entities: entities,
