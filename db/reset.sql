@@ -12,6 +12,7 @@ drop table if exists "documents";
 drop table if exists "rubrics";
 drop table if exists "sessions";
 drop table if exists "users";
+drop table if exists "variables";
 
 CREATE TABLE "users" (
   user_id varchar(40) UNIQUE PRIMARY KEY,
@@ -135,4 +136,9 @@ CREATE TABLE "sessions" (
   session_token varchar(40) UNIQUE PRIMARY KEY,
   owner varchar(40) REFERENCES users,
   created timestamp
+);
+
+CREATE TABLE "variables" (
+  name varchar(40) UNIQUE PRIMARY KEY,
+  json jsonb
 );
