@@ -43,6 +43,7 @@ class DocumentStore {
     let record = {
       document_id: props.document_id,
       guid: props.guid,
+      url: props.url,
       training: props.training || false,
       title: props.title,
       schema_name: props.schema_name || props.schemaName,
@@ -57,7 +58,8 @@ class DocumentStore {
       source: props.source,
       meta: props.meta || {title: props.title, rubrics: [], entities: []},
       content: props.content,
-      info: props.info
+      info: props.info,
+      app_id: props.app_id
     }
 
     this.documentExists(record.document_id, function(err, exists) {

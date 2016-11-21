@@ -38,12 +38,15 @@ CREATE TABLE "documents" (
   rubric_ids varchar(40)[],
   entity_ids varchar(40)[],
   markup jsonb,
-  type varchar(255)
+  type varchar(255),
+  url text,
+  app_id varchar(255)
 );
 
 CREATE TABLE "records" (
   document_id varchar(40) UNIQUE PRIMARY KEY,
   guid varchar(255) UNIQUE,
+  url text,
   title varchar(255),
   schema_name varchar(40),
   schema_version varchar(40),
@@ -60,6 +63,7 @@ CREATE TABLE "records" (
   content jsonb,
   meta jsonb,
   info jsonb,
+  app_id varchar(255),
   tsv tsvector
 );
 
