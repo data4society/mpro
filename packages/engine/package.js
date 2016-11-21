@@ -60,6 +60,7 @@ module.exports = {
 
     let sourceEngine = new SourceEngine({
       configurator: config,
+      engine: mproEngine,
       documentStore: config.getStore('document'),
       ruleStore: config.getStore('rule'),
       sourceStore: config.getStore('source')

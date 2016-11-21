@@ -17,6 +17,7 @@ class SourceEngine {
     this.gap = config.gap || 1
     // How many records could be converted simultaneously
     this.concurrency = config.concurrency || 5
+    this.engine = config.engine
     this.sourceStore = config.sourceStore
     this.documentStore = config.documentStore
     this.ruleStore = config.ruleStore
@@ -131,15 +132,17 @@ class SourceEngine {
     @param {String} sourceId source id
     @returns {Promise}
   */
-  validateSource(source) {
+  validateSource(source, config) {
     let errMsg
 
     return new Promise(function(resolve, reject) {
-      if(isEmpty(source.doc_source)) {
+      if (isEmpty(config)) {
+        errMsg = 'No config specified for given app'
+      } else if(isEmpty(source.doc_source)) {
         errMsg = 'Document source body is empty'
       } else if (isEmpty(source.meta)) {
         errMsg = 'Document source meta is empty'
-      } else if (isEmpty(source.rubric_ids) && source.type !== 'tng') {
+      } else if (isEmpty(source.rubric_ids) && config.rubrication) {
         errMsg = 'Document source has no rubrics'
       } else if (!this.configurator.getConfigurator('mpro-' + source.type)) {
         errMsg = 'Unknown type of document source: ' + source.type
@@ -167,13 +170,18 @@ class SourceEngine {
   convert(sourceId) {
     let doc = {}
     let docSource = {}
+    let appConfig = {}
 
     return this.sourceStore.getSource(sourceId)
       .then(function(source) {
-        return this.validateSource(source)
+        docSource = source
+        return this.engine.getConfig()
+      }.bind(this))
+      .then(function(config) {
+        appConfig = config[docSource.app_id]
+        return this.validateSource(docSource, config)
       }.bind(this))
       .then(function(source) {
-        docSource = source
         let recordBody = source.doc_source
         let type = source.type
         let importer = this.configurator.getConfigurator('mpro-' + type).createImporter('html')
@@ -193,13 +201,14 @@ class SourceEngine {
         if(docSource.type !== 'tng') {
           doc.set(['meta', 'collections'], collections)
         }
-        let data = converter.exportDocument(doc)
+        let data = converter.exportDocument(doc, appConfig)
         let schema = doc.schema
         let training = docSource.type === 'tng' ? true: false
         let meta = doc.get('meta')
         let document = {
           title: meta.title,
           guid: docSource.guid,
+          url: docSource.url,
           schema_name: schema.name,
           schema_version: schema.version,
           published: meta.published,
@@ -211,7 +220,8 @@ class SourceEngine {
           entities: meta.entities,
           source: sourceId,
           content: data,
-          meta: meta
+          meta: meta,
+          app_id: docSource.app_id
         }
 
         return new Promise(function(resolve, reject) {
