@@ -28,7 +28,7 @@ class Configurator extends AbstractFeedLoader {
 
   getInitialState() {
     return {
-      filters: {'training': true, 'rubrics @>': []},
+      filters: {'training': true, app_id: this.props.app, 'rubrics @>': []},
       perPage: 10,
       order: 'created',
       direction: 'desc',

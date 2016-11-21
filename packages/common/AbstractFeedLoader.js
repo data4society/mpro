@@ -37,6 +37,13 @@ class AbstractFeedLoader extends Component {
     }
   }
 
+  // willReceiveProps(props) {
+  //   if(this.props.app !== props.app) {
+  //     this._loadRubrics()
+  //     this._loadDocuments()
+  //   }
+  // }
+
   /*
     Initial state of component, contains:
     - filters: default filters (e.g. not show training documents)
@@ -51,7 +58,7 @@ class AbstractFeedLoader extends Component {
   */
   getInitialState() {
     return {
-      filters: {'training': false, 'rubrics @>': []},
+      filters: {'training': false, app_id: this.props.app, 'rubrics @>': []},
       perPage: 10,
       order: 'created',
       direction: 'desc',
