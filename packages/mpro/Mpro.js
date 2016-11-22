@@ -81,12 +81,12 @@ class Mpro extends AbstractApplication {
       this.navigate({
         page: 'configurator',
         app: appId
-      }, {replace: true})
+      })
     } else {
       this.navigate({
         page: 'inbox',
         app: appId
-      }, {replace: true})
+      })
     }
   }
 

@@ -3,7 +3,7 @@ import UserSettings from './UserSettings'
 import EnterName from './EnterName'
 
 export default {
-  name: 'reports',
+  name: 'welcome',
   configure: function(config) {
     config.addPage('welcome', Welcome)
     config.addPage('user-settings', UserSettings)

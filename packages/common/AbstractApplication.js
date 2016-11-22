@@ -68,9 +68,10 @@ class AbstractApplication extends ResponsiveApplication {
       // Add current app to route
 
       if(!route.app) route.app = this.state.appId
-      
+
       this.extendState({
-        route: route
+        route: route,
+        userSession: userSession
       })
 
       this.router.writeRoute(route, opts)
@@ -79,14 +80,14 @@ class AbstractApplication extends ResponsiveApplication {
 
   _onRouteChanged(route) {
     // console.log('NotesApp._onRouteChanged', route);
-    //this.navigate(route, {replace: true})
+    this.navigate(route, {replace: true})
   }
 
   _getPageProps() {
     let props = cloneDeep(this.state.route)
     delete props.page
     props.mobile = this.state.mobile
-    props.userSession = this.state.userSession
+    //props.userSession = this.state.userSession
     
     return props
   }
@@ -123,9 +124,9 @@ class AbstractApplication extends ResponsiveApplication {
     Returns login key either session token of logged in user.
   */
   _getLoginData(route) {
-    var loginKey = route.loginKey
-    var storedToken = this._getSessionToken()
-    var loginData
+    let loginKey = route.loginKey
+    let storedToken = this._getSessionToken()
+    let loginData
 
     if (loginKey) {
       loginData = {loginKey: loginKey}

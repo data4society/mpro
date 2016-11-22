@@ -70,7 +70,7 @@ class Header extends Component {
     let list = $$('ul').addClass('se-app-selector-content')
     each(appsConfig, function(app) {
       list.append(
-        $$('li').append($$('a').attr({href: '#'}).append(app.name))
+        $$('li').append($$('span').append(app.name))
           .on('click', this._onAppSwitch.bind(this, app.appId))
       )
     }.bind(this))

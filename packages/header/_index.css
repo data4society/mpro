@@ -138,7 +138,7 @@
 }
 
 .sc-header .se-app-selector-text,
-.sc-header .se-app-selector-content a {
+.sc-header .se-app-selector-content span {
   padding: 0px 15px;
   color: rgba(255,255,255, 0.7);
   line-height: 40px;
@@ -183,11 +183,12 @@
   width: 200px;
 }
 
-.sc-header .se-app-selector-content a {
+.sc-header .se-app-selector-content span {
   display: block;
+  cursor: pointer;
 }
 
-.sc-header .se-app-selector-content a:hover {
+.sc-header .se-app-selector-content span:hover {
   background: #e8e8e8;
   color: #565656;
 }
