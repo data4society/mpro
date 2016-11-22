@@ -197,6 +197,10 @@ class MproDocumentClient extends DocumentClient {
     this.request('PUT', '/api/users/' + userId, data, cb)
   }
 
+  requestNewPassword(userId, cb) {
+    this.request('GET', '/api/users/reset/' + userId, null, cb)
+  }
+
   /*
     Get users from the server
   */

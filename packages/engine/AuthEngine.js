@@ -53,6 +53,29 @@ class AuthEngine {
     }.bind(this))
   }
 
+  requestNewPassword(userId) {
+    let userStore = this.userStore
+    let password = generatePassword()
+    let updatedUser = {}
+    return new Promise(function(resolve, reject) {
+      bcrypt.hash(password, 10, function(err, bcryptedPassword) {
+        if(err) return reject(err)
+        updatedUser.password = bcryptedPassword
+        return userStore.updateUser(userId, updatedUser).bind(this)
+          .then(function(user) {
+            updatedUser = user
+            return this._sendPasswordReset(user, password)
+          }.bind(this))
+          .then(function(info) {
+            resolve(updatedUser)
+          })
+          .catch(function(err) {
+            reject(err)
+          })
+      }.bind(this))
+    }.bind(this))
+  }
+
   /*
     Authenticate based on either sessionToken
   */
@@ -97,6 +120,13 @@ class AuthEngine {
   */
   _sendInvitation(user, password) {
     return this.mailer.invite({email: user.email, password: password})
+  }
+
+   /*
+    Send a password reset notification via email
+  */
+  _sendPasswordReset(user, password) {
+    return this.mailer.reset({email: user.email, password: password})
   }
 
   /*

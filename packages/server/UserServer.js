@@ -18,6 +18,7 @@ class UserServer {
     // users api
     app.post(this.path, this.authEngine.hasSuperAccess.bind(this.authEngine), this._createUser.bind(this))
     app.get(this.path, this.authEngine.hasSuperAccess.bind(this.authEngine), this._listUsers.bind(this))
+    app.get(this.path + '/reset/:id', this.authEngine.hasSuperAccess.bind(this.authEngine), this._resetUserPassword.bind(this))
     app.put(this.path + '/:id', this.authEngine.hasSuperAccess.bind(this.authEngine), this._updateUser.bind(this))
   }
 
@@ -59,6 +60,17 @@ class UserServer {
 
       res.json(results)
     })
+  }
+
+  _resetUserPassword(req, res, next) {
+    let userId = req.params.id;
+
+    return this.authEngine.requestNewPassword(userId)
+      .then(function(user) {
+        res.json(user)
+      }).catch(function(err) {
+        return next(err)
+      })
   }
 }
 

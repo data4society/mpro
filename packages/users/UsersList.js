@@ -116,6 +116,10 @@ class UsersList extends Component {
           $$('i').addClass('fa ' + superCheckboxIcon)
         ).on('click', this._toggleAccess.bind(this, item.user_id, 'super'))
 
+        let resetPwd = $$('button').addClass('sc-button sm-style-outline se-reset-pwd')
+          .append('Reset')
+          .on('click', this._resetPwd.bind(this, item.user_id))
+
         let created = moment(item.created).format("DD.MM.YYYY HH:mm")
         
         grid.append(
@@ -123,7 +127,8 @@ class UsersList extends Component {
             $$(Grid.Cell, {columns: 3}).append('#'+item.user_id),
             $$(Grid.Cell, {columns: 2}).append(item.email),
             $$(Grid.Cell, {columns: 3}).append(item.name || 'Anonymous'),
-            $$(Grid.Cell, {columns: 2}).append(created),
+            $$(Grid.Cell, {columns: 1}).append(created),
+            $$(Grid.Cell, {columns: 1}).append(resetPwd),
             $$(Grid.Cell, {columns: 1}).append(accessCheckbox),
             $$(Grid.Cell, {columns: 1}).append(superCheckbox)
           ).ref(item.user_id)
@@ -172,6 +177,22 @@ class UsersList extends Component {
 
       //this.refs[userId].extendProps({user: result})
       this._loadUsers()
+    }.bind(this))
+  }
+
+  _resetPwd(userId) {
+    let documentClient = this.context.documentClient
+    documentClient.requestNewPassword(userId, function(err) {
+      if (err) {
+        this.setState({
+          error: new Err('UserList.UpdateError', {
+            message: 'User could not be updated.',
+            cause: err
+          })
+        })
+        console.error('ERROR', err)
+        return
+      }
     }.bind(this))
   }
 

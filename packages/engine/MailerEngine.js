@@ -38,6 +38,25 @@ MPro Team`
 
     return this.sendPlain(email, 'Welcome to MPRO', tpl)
   }
+
+  reset(data) {
+    let app = config.get('app')
+    let email = data.email
+    let password = data.password
+    let endpoint = app.protocol + '://' + app.host
+
+    let tpl = `Hey fellow!
+We've changed a password for you.
+
+Please login at ${endpoint} using these credentials:
+Login: ${email}
+Password: ${password}
+
+Sincerely your, 
+MPro Team`
+
+    return this.sendPlain(email, 'MPro password reset', tpl)
+  }
 }
 
 module.exports = MailerEngine
