@@ -77,7 +77,17 @@ class Mpro extends AbstractApplication {
   }
 
   _switchApp(appId) {
-    this.extendState({appId: appId})
+    if(this.config.apps[appId].configurator) {
+      this.navigate({
+        page: 'configurator',
+        app: appId
+      }, {replace: true})
+    } else {
+      this.navigate({
+        page: 'inbox',
+        app: appId
+      }, {replace: true})
+    }
   }
 
   _home() {

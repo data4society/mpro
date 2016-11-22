@@ -77,7 +77,7 @@ class Inbox extends AbstractFeedLoader {
 
   updateUrl(documentId) {
     let urlHelper = this.context.urlHelper
-    urlHelper.writeRoute({page: 'inbox', documentId: documentId})
+    urlHelper.writeRoute({page: 'inbox', documentId: documentId, app: this.props.app})
   }
 
   _loadMore() {

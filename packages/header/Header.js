@@ -1,11 +1,12 @@
 import { Component } from 'substance'
 import LoginStatus from './LoginStatus'
 import each from 'lodash/each'
-import find from 'lodash/find'
 
 class Header extends Component {
 
   render($$) {
+    let appsConfig = this.context.config.apps
+    let currentAppConfig = appsConfig[this.props.app]
     let authenticationClient = this.context.authenticationClient
     let el = $$('div').addClass('sc-header')
 
@@ -13,13 +14,23 @@ class Header extends Component {
 
     let actionEls = []
 
-    let actions = {
-      'inbox': this.getLabel('inbox-menu'),
-      'collections': this.getLabel('collections-menu'),
-      'configurator': this.getLabel('configurator-menu'),
-      'import': this.getLabel('import-menu'),
-      'resources': this.getLabel('configurator-resources'),
-      'users': this.getLabel('configurator-users')
+    let actions = {}
+
+    if(currentAppConfig.configurator) {
+      actions.configurator = this.getLabel('configurator-menu')
+      actions.import = this.getLabel('import-menu')
+      actions.users = this.getLabel('configurator-users')
+    } else {
+      actions.inbox = this.getLabel('inbox-menu')
+
+      if(currentAppConfig.rubrics && currentAppConfig.entities) {
+        actions.collections = this.getLabel('collections-menu')
+      }
+      if(currentAppConfig.entities) {
+        actions.resources = this.getLabel('configurator-resources')
+      }
+
+      actions.users = this.getLabel('configurator-users')
     }
 
     each(actions, function(label, actionName) {

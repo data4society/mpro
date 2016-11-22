@@ -151,7 +151,7 @@ class Configurator extends AbstractFeedLoader {
 
   updateUrl(documentId) {
     let urlHelper = this.context.urlHelper
-    urlHelper.writeRoute({page: 'configurator', documentId: documentId})
+    urlHelper.writeRoute({page: 'configurator', documentId: documentId, app: this.props.app})
   }
 
   _loadMore() {

@@ -66,6 +66,7 @@ class AbstractApplication extends ResponsiveApplication {
       route = this._onAuthentication(route, userSession)
 
       // Add current app to route
+
       if(!route.app) route.app = this.state.appId
       
       this.extendState({
@@ -77,8 +78,13 @@ class AbstractApplication extends ResponsiveApplication {
     }.bind(this))
   }
 
+  _onRouteChanged(route) {
+    // console.log('NotesApp._onRouteChanged', route);
+    //this.navigate(route, {replace: true})
+  }
+
   _getPageProps() {
-    var props = cloneDeep(this.state.route)
+    let props = cloneDeep(this.state.route)
     delete props.page
     props.mobile = this.state.mobile
     props.userSession = this.state.userSession
