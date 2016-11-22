@@ -18,6 +18,7 @@ class Loader extends Component {
     super(...args)
     
     let appConfig = this.context.config
+    let authenticationClient = this.context.authenticationClient
 
     this.conn = new WebSocketConnection({
       wsUrl: appConfig.wsUrl || 'ws://' + appConfig.host + ':' + appConfig.port
@@ -26,12 +27,12 @@ class Loader extends Component {
     this.collabClient = new CollabClient({
       connection: this.conn,
       enhanceMessage: function(message) {
-        let userSession = this.props.userSession
+        let userSession = authenticationClient.getSession()
         if (userSession) {
           message.sessionToken = userSession.sessionToken
         }
         return message
-      }.bind(this)
+      }
     })
 
     this.collabClient.on('disconnected', this._onCollabClientDisconnected, this)

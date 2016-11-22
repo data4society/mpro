@@ -5,7 +5,9 @@ class EnterName extends Component {
   render($$) {
     let Notification = this.getComponent('notification')
     let el = $$('div').addClass('sc-enter-name')
-    let userName = this.props.userSession.user.name
+    let authenticationClient = this.context.authenticationClient
+    let userSession = authenticationClient.getSession()
+    let userName = userSession.user.name
 
     let header = this.renderHeader($$)
 
@@ -74,7 +76,7 @@ class EnterName extends Component {
   _updateUserName() {
     let name = this.refs.name.val()
     let authenticationClient = this.context.authenticationClient
-    let userSession = this.props.userSession
+    let userSession = authenticationClient.getSession()
 
     if (!name) {
       this.setState({

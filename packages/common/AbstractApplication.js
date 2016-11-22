@@ -70,8 +70,7 @@ class AbstractApplication extends ResponsiveApplication {
       if(!route.app) route.app = this.state.appId
       
       this.extendState({
-        route: route,
-        userSession: userSession
+        route: route
       })
 
       this.router.writeRoute(route, opts)
