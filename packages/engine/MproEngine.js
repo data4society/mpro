@@ -43,10 +43,6 @@ class MproEngine {
           }
         })
 
-        // Debug
-        config['fctest'].default = true
-        config['fmrtest'].configurator = true
-
         resolve(config)
       
       })
