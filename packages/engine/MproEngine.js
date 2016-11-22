@@ -37,9 +37,9 @@ class MproEngine {
             name: app.app_name,
             description: app.app_desc,
             rubrics: app.rubrication || false,
-            entities: app.markup || false,
-            default: false,
-            configurator: false
+            entities: app.markup ? true : false,
+            default: app.default || false,
+            configurator: app.configurator || false
           }
         })
 
