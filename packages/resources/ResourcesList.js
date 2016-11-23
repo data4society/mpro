@@ -102,15 +102,19 @@ class ResourcesList extends Component {
       items.forEach(function(item) {
         let created = moment(item.created).format("DD.MM.YYYY HH:mm")
         let edited = moment(item.edited).format("DD.MM.YYYY HH:mm")
+        let labels = Array.isArray(item.labels) ? item.labels.join(', ') : ''
+        let externalData = typeof item.external_data === 'object' ? JSON.stringify(item.external_data, null, 2) : ''
         
         grid.append(
           $$(Grid.Row, {entity: item}).ref(item.entity_id).append(
             $$(Grid.Cell, {columns: 3}).append('#'+item.entity_id),
             $$(Grid.Cell, {columns: 2}).append(item.name),
-            $$(Grid.Cell, {columns: 2}).append(item.entity_class),
+            $$(Grid.Cell, {columns: 1}).append(item.entity_class),
             $$(Grid.Cell, {columns: 2}).append(created),
-            $$(Grid.Cell, {columns: 2}).append(edited),
-            $$(Grid.Cell, {columns: 1}).append(item.author)
+            //$$(Grid.Cell, {columns: 2}).append(edited),
+            $$(Grid.Cell, {columns: 2}).append(labels),
+            $$(Grid.Cell, {columns: 2}).append(externalData)
+            //$$(Grid.Cell, {columns: 1}).append(item.author)
           ).ref(item.entity_id).on('click', this._openEditor.bind(this, item))
         )
       }.bind(this))
@@ -226,7 +230,8 @@ class ResourcesList extends Component {
       {
         limit: perPage, 
         offset: perPage * (page - 1),
-        order: order + ' ' + direction
+        order: order + ' ' + direction,
+        columns: ['entity_id', 'name', 'created', 'edited', 'author', 'entity_class', 'labels', 'external_data']
       }, function(err, results) {
         if (err) {
           this.setState({
