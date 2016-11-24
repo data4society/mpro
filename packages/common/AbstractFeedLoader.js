@@ -37,12 +37,12 @@ class AbstractFeedLoader extends Component {
     }
   }
 
-  // willReceiveProps(props) {
-  //   if(this.props.app !== props.app) {
-  //     this._loadRubrics()
-  //     this._loadDocuments()
-  //   }
-  // }
+  willReceiveProps(props) {
+    if(this.props.app !== props.app) {
+      this._loadRubrics()
+      this._loadDocuments()
+    }
+  }
 
   /*
     Initial state of component, contains:
