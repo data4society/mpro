@@ -29,7 +29,8 @@ class RubricSelector extends Component {
     let rubrics = this.props.rubrics
     let isSelected = node.selected
     let hasSelectedChildren = rubrics.hasSelectedChildren(node.id)
-    let isExpanded = node.expanded || isSelected || hasSelectedChildren
+    //let isExpanded = node.expanded || isSelected || hasSelectedChildren
+    let isExpanded = true
     let childNodes = rubrics.getChildren(node.id)
     let hideExpand = isEmpty(childNodes)
     let childrenEls = []

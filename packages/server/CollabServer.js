@@ -53,6 +53,7 @@ class MproCollabServer extends CollabServer {
         let entities = meta.entities
         let collections = meta.collections
         let accepted
+        let moderated
 
         if (message.change) {
           // Update the title if necessary
@@ -87,6 +88,12 @@ class MproCollabServer extends CollabServer {
             }
           })
 
+          change.ops.forEach(function(op) {
+            if(op.path[0] === 'meta' && op.path[1] === 'moderated') {
+              moderated = op.val
+            }
+          })
+
           message.change.info = {
             userId: req.session.userId,
             updatedAt: updatedAt
@@ -102,6 +109,10 @@ class MproCollabServer extends CollabServer {
 
         if(!isUndefined(accepted)) {
           extend(meta, {accepted: accepted})
+        }
+
+        if(!isUndefined(moderated)) {
+          extend(meta, {moderated: moderated})
         }
         // commit and connect method take optional documentInfo argument
         message.documentInfo = {

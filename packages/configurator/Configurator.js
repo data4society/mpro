@@ -1,5 +1,6 @@
-import filter from 'lodash/filter'
+import clone from 'lodash/clone'
 import concat from 'lodash/concat'
+import filter from 'lodash/filter'
 import ListScrollPane from '../common/ListScrollPane'
 import DoubleSplitPane from '../common/DoubleSplitPane'
 import AbstractFeedLoader from '../common/AbstractFeedLoader'
@@ -167,6 +168,57 @@ class Configurator extends AbstractFeedLoader {
 
   _connectSession(session) {
     this.refs.collaborators.extendProps(session)
+  }
+
+  /*
+    Loads documents
+  */
+  _loadDocuments(newState) {
+    let state = newState || this.state
+    let documentClient = this.context.documentClient
+    let perPage = state.perPage
+    let order = state.order
+    let direction = state.direction
+    let pagination = state.pagination
+    let items = []
+
+    let filters = clone(state.filters)
+
+    if(filters['rubrics @>'].length === 0) {
+      filters['rubrics'] = '{}'
+    } else {
+      delete filters['rubrics']
+    }
+
+    documentClient.listDocuments(
+      filters,
+      { 
+        limit: perPage, 
+        offset: state.documentItems.length,
+        order: order + ' ' + direction
+      }, 
+      function(err, documents) {
+        if (err) {
+          console.error(err)
+          this.setState({
+            error: new Error('Documents loading failed')
+          })
+          return
+        }
+
+        if(pagination) {
+          items = concat(state.documentItems, documents.records)
+        } else {
+          items = documents.records
+        }
+
+        this.extendState({
+          documentItems: items,
+          totalItems: documents.total,
+          lastQueryTime: new Date()
+        })
+      }.bind(this)
+    )
   }
 }
 

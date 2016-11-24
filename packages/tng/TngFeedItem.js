@@ -28,6 +28,12 @@ class TngFeedItem extends FeedItem {
       el.addClass('sm-not-accepted')
     }
 
+    if(meta.moderated) {
+      el.addClass('sm-moderated')
+    } else {
+      el.addClass('sm-not-moderated')
+    }
+
     el.append(
       rubrics,
       source

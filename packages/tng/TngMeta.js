@@ -14,7 +14,8 @@ TngMeta.type = 'meta'
     - rubrics Array of rubric references attached to the document
     - entities Array of entity references attached to the document
     - source_type Type of source record
-    - accepted Indicates ready state for training machine learning models
+    - accepted Indicates ready state for moderation
+    - moderated Indicates ready state for training machine learning models
 */
 
 TngMeta.define({
@@ -23,7 +24,8 @@ TngMeta.define({
   rubrics: { type: ['id'], default: [] },
   entities: { type: ['id'], default: [] },
   source_type: { type: 'string', default: '' },
-  accepted: { type: 'boolean', default: false }
+  accepted: { type: 'boolean', default: false },
+  moderated: { type: 'boolean', default: false }
 })
 
 export default TngMeta

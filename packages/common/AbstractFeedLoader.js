@@ -81,7 +81,7 @@ class AbstractFeedLoader extends Component {
     let documentClient = this.context.documentClient
     let filters = state.filters
 
-    documentClient.listRubrics(filters, {limit: 300}, function(err, result) {
+    documentClient.listRubrics(filters, {limit: 300, order: "name desc"}, function(err, result) {
       if (err) {
         console.error(err)
         this.setState({

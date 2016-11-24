@@ -60,16 +60,12 @@ class Editor extends ProseEditor {
   documentSessionUpdated(update) {
     if(!isUndefined(update.change)) {
       let accepted = this.doc.get(['meta', 'accepted'])
-      if(update.change.updated['meta,accepted'] === true) {
-        if(accepted) {
+      let moderated = this.doc.get(['meta', 'moderated'])
+
+      if(update.change.updated['meta,moderated'] === true) {
+        if(moderated && accepted) {
           this._exportDocument()
-        } 
-      } else if (accepted) {
-        let surface = this.surfaceManager.getFocusedSurface()
-        surface.transaction(function(tx, args) {
-          tx.set(['meta', 'accepted'], false)
-          return args
-        })
+        }
       }
     }
 
@@ -101,9 +97,10 @@ class Editor extends ProseEditor {
     documentClient.updateSource(documentId, sourceData, function(err) {
       if(err) {
         console.error(err);
-        let surface = this.surfaceManager.getFocusedSurface()
+        let surface = this.surfaceManager.getSurface('body')
         surface.transaction(function(tx, args) {
-          tx.set(['meta', 'accepted'], false)
+          tx.set(['meta', 'accepted'], true)
+          tx.set(['meta', 'moderated'], true)
           return args
         })
       }
