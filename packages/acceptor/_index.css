@@ -1,3 +1,8 @@
+.sc-toolbar .sm-target-acceptors {
+  float: right;
+  margin-right: 10px;
+}
+
 .se-tool-acceptor button,
 .se-tool-moderator button {
   background: #cc8282!important;
