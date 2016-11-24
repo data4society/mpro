@@ -39,6 +39,9 @@ class AbstractFeedLoader extends Component {
 
   willReceiveProps(props) {
     if(this.props.app !== props.app) {
+      let state = this.getInitialState()
+      state.filters.app_id = props.app
+      this.setState(state)
       this._loadRubrics()
       this._loadDocuments()
     }
