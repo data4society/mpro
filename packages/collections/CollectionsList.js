@@ -134,7 +134,10 @@ class CollectionsList extends Component {
       collection_id: uuid(),
       name: 'New collection',
       description: 'No description available',
-      author: user.user_id
+      author: user.user_id,
+      private: true,
+      public: true,
+      app_id: this.props.app
     }
 
     dataClient.createCollection(collection, function(err, col) {
@@ -159,6 +162,8 @@ class CollectionsList extends Component {
     }.bind(this))
     list[activeIndex].name = updated.name
     list[activeIndex].description = updated.description
+    list[activeIndex].private = updated.private
+    list[activeIndex].public = updated.public
 
     let collectionId = list[activeIndex].collection_id
     let dataClient = this.context.documentClient
@@ -207,8 +212,8 @@ class CollectionsList extends Component {
     let dataClient = this.context.documentClient
     let items = []
 
-    dataClient.listCollections({}, {
-      limit: perPage, 
+    dataClient.listCollections({app_id: this.props.app}, {
+      limit: perPage,
       offset: list.length,
       order: order + ' ' + direction
     }, function(err, collections) {

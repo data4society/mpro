@@ -75,7 +75,7 @@ class Collections extends AbstractFeedLoader {
     el.append(
       header,
       $$(DoubleSplitPane, {splitType: 'vertical', sizeA: '300px', sizeB: '38%'}).append(
-        $$(CollectionsList, {collectionId: this.state.collectionId}),
+        $$(CollectionsList, {collectionId: this.state.collectionId, app: this.props.app}),
         $$(ListScrollPane, {
           scrollbarType: 'substance',
           scrollbarPosition: 'left'
@@ -86,7 +86,8 @@ class Collections extends AbstractFeedLoader {
           documentId: this.state.documentId,
           rubrics: this.state.rubrics,
           mode: 'viewer',
-          userSession: authenticationClient.getSession()
+          userSession: authenticationClient.getSession(),
+          app: this.props.app
         }).ref('loader')
       )
     )

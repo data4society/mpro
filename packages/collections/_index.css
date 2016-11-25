@@ -79,3 +79,12 @@
   text-align: center;
   padding: 10px;
 }
+
+.sc-collection-editor > .se-collection-private,
+.sc-collection-editor > .se-collection-public {
+  cursor: pointer;
+}
+.sc-collection-editor > .se-collection-private i,
+.sc-collection-editor > .se-collection-public i {
+  margin-left: 10px;
+}

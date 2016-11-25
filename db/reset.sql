@@ -82,7 +82,10 @@ CREATE TABLE "collections" (
   created timestamp,
   edited timestamp,
   author varchar(40) REFERENCES users,
-  description text
+  private boolean,
+  public boolean,
+  description text,
+  app_id varchar(255)
 );
 
 CREATE TABLE "rules" (

@@ -54,7 +54,8 @@ class Inbox extends AbstractFeedLoader {
           documentId: this.state.documentId,
           rubrics: this.state.rubrics,
           mode: 'viewer',
-          userSession: authenticationClient.getSession()
+          userSession: authenticationClient.getSession(),
+          app: this.props.app
         }).ref('loader')
       )
     )

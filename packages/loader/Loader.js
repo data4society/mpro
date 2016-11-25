@@ -184,7 +184,8 @@ class Loader extends Component {
           configurator: this.state.configurator,
           documentInfo: this.state.documentInfo,
           documentSession: this.state.session,
-          rubrics: this.props.rubrics
+          rubrics: this.props.rubrics,
+          app: this.props.app
         }).ref('documentViewer')
       )
     }

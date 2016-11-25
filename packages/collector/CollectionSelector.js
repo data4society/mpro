@@ -123,9 +123,10 @@ class CollectionSelector extends Component {
     let pagination = this.state.pagination
     let list = this.state.list
     let dataClient = this.context.documentClient
+    let controller = this.context.controller
     let items = []
 
-    dataClient.listCollections({}, {
+    dataClient.listCollections({private: true, app_id: controller.props.app}, {
       limit: perPage, 
       offset: list.length,
       order: order + ' ' + direction

@@ -1,6 +1,7 @@
 let Err = require('substance').SubstanceError
 let uuid = require('substance').uuid
 let isUndefined = require('lodash/isUndefined')
+let uniq = require('lodash/uniq')
 let map = require('lodash/map')
 let Promise = require('bluebird')
 
@@ -225,7 +226,7 @@ OR rubrics = '{}' AND entities::text[] <@ $2`
             cause: err
           }))
         }
-        result = map(result, 'collection_id')
+        result = uniq(map(result, 'collection_id'))
         resolve(result)
       })
     }.bind(this))

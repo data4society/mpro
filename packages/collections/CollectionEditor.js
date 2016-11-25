@@ -6,7 +6,9 @@ class CollectionsEditor extends Component {
   getInitialState() {
     return {
       name: this.props.name,
-      description: this.props.description
+      description: this.props.description,
+      public: this.props.public,
+      private: this.props.private
     }
   }
 
@@ -33,17 +35,53 @@ class CollectionsEditor extends Component {
       .ref('descriptionInput')
     )
 
+    let isPrivate = this.state.private
+    let selectedIcon = isPrivate ? 'checked' : 'unchecked'
+    let isPrivateInput = $$('div').addClass('se-collection-private').append(
+      'Private collection',
+      this.context.iconProvider.renderIcon($$, selectedIcon).addClass('selection')
+    ).on('click', this._switchPrivate)
+    if(isPrivate) isPrivateInput.addClass('sm-selected')
+
+    let isPublic = this.state.public
+    selectedIcon = isPublic ? 'checked' : 'unchecked'
+    let isPublicInput = $$('div').addClass('se-collection-public').append(
+      'Public collection',
+      this.context.iconProvider.renderIcon($$, selectedIcon).addClass('selection')
+    ).on('click', this._switchPublic)
+    if(isPublic) isPublicInput.addClass('sm-selected')
+
+
     el.append(
       nameInput,
       descriptionInput,
-      $$(RulesEditor, {collectionId: this.props.collection_id})
+      isPublicInput,
+      isPrivateInput
     )
+
+    if(!isPrivate) {
+      el.append(
+        $$(RulesEditor, {collectionId: this.props.collection_id})
+      )
+    }
 
     return el
   }
 
+  _switchPrivate() {
+    this.extendState({
+      private: !this.state.private
+    })
+  }
+
+  _switchPublic() {
+    this.extendState({
+      public: !this.state.public
+    })
+  }
+
   _commit() {
-    this.setState({
+    this.extendState({
       name: this.refs['nameInput'].val(),
       description: this.refs['descriptionInput'].val()
     })
