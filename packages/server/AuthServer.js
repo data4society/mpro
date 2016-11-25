@@ -16,7 +16,7 @@ class AuthServer {
   bind(app) {
     app.post(this.path + '/loginlink', this._requestLoginLink.bind(this))
     app.post(this.path + '/authenticate', this._authenticate.bind(this))
-    app.post(this.path + '/changename', this._changename.bind(this))
+    app.post(this.path + '/changename', this.engine.hasAccess.bind(this.engine), this._changename.bind(this))
   }
 
   /*

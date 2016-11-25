@@ -50,6 +50,7 @@ module.exports = {
     })
 
     let documentServer = new DocumentServer({
+      authEngine: authEngine,
       documentEngine: documentEngine,
       path: '/api/documents'
     })
@@ -66,6 +67,7 @@ module.exports = {
     })
 
     let mproServer = new MproServer({
+      authEngine: authEngine,
       mproEngine: mproEngine,
       importEngine: importEngine,
       sourceEngine: sourceEngine,

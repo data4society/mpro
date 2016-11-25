@@ -31,7 +31,7 @@ class AbstractFeedLoader extends Component {
   willUpdateState(state) {
     let oldFilters = this.state.filters
     let newFilters = state.filters
-    if(!isEqual(oldFilters, newFilters)) {
+    if(!isEqual(oldFilters, newFilters) && !state.error) {
       this._loadRubrics(state)
       this._loadDocuments(state)
     }

@@ -5,10 +5,11 @@ let isEmpty = require('lodash/isEmpty')
 */
 class MproServer {
   constructor(config) {
-    this.engine = config.mproEngine;
-    this.importEngine = config.importEngine;
-    this.sourceEngine = config.sourceEngine;
-    this.path = config.path;
+    this.authEngine = config.authEngine
+    this.engine = config.mproEngine
+    this.importEngine = config.importEngine
+    this.sourceEngine = config.sourceEngine
+    this.path = config.path
   }
 
   /*
@@ -16,32 +17,32 @@ class MproServer {
   */
   bind(app) {
     app.get(this.path + '/config', this._getConfig.bind(this))
-    app.get(this.path + '/rubrics', this._listRubrics.bind(this))
-    app.get(this.path + '/classes', this._listClasses.bind(this))
-    app.get(this.path + '/facets', this._listFacets.bind(this))
+    app.get(this.path + '/rubrics', this.authEngine.hasAccess.bind(this.authEngine), this._listRubrics.bind(this))
+    app.get(this.path + '/classes', this.authEngine.hasAccess.bind(this.authEngine), this._listClasses.bind(this))
+    app.get(this.path + '/facets', this.authEngine.hasAccess.bind(this.authEngine), this._listFacets.bind(this))
     app.get(this.path + '/import', this._import.bind(this))
-    app.put(this.path + '/sources/:id', this._updateSource.bind(this))
+    app.put(this.path + '/sources/:id', this.authEngine.hasAccess.bind(this.authEngine), this._updateSource.bind(this))
     // Convert all accepted documents
-    app.get(this.path + '/sources/training', this._convertTrainingDocs.bind(this))
+    app.get(this.path + '/sources/training', this.authEngine.hasAccess.bind(this.authEngine), this._convertTrainingDocs.bind(this))
     // Collections CRUD
-    app.post(this.path + '/collections', this._createCollection.bind(this))
-    app.get(this.path + '/collections', this._listCollections.bind(this))
-    app.get(this.path + '/collections/search', this._searchCollection.bind(this))
-    app.get(this.path + '/collections/:id', this._getCollection.bind(this))
-    app.put(this.path + '/collections/:id', this._updateCollection.bind(this))
+    app.post(this.path + '/collections', this.authEngine.hasAccess.bind(this.authEngine), this._createCollection.bind(this))
+    app.get(this.path + '/collections', this.authEngine.hasAccess.bind(this.authEngine), this._listCollections.bind(this))
+    app.get(this.path + '/collections/search', this.authEngine.hasAccess.bind(this.authEngine), this._searchCollection.bind(this))
+    app.get(this.path + '/collections/:id', this.authEngine.hasAccess.bind(this.authEngine), this._getCollection.bind(this))
+    app.put(this.path + '/collections/:id', this.authEngine.hasAccess.bind(this.authEngine), this._updateCollection.bind(this))
     // Entities CRUD
-    app.post(this.path + '/entities', this._createEntity.bind(this))
-    app.get(this.path + '/entities', this._listEntities.bind(this))
-    app.get(this.path + '/entities/search', this._searchEntity.bind(this))
-    app.get(this.path + '/entities/:id', this._getEntity.bind(this))
-    app.put(this.path + '/entities/:id', this._updateEntity.bind(this))
+    app.post(this.path + '/entities', this.authEngine.hasAccess.bind(this.authEngine), this._createEntity.bind(this))
+    app.get(this.path + '/entities', this.authEngine.hasAccess.bind(this.authEngine), this._listEntities.bind(this))
+    app.get(this.path + '/entities/search', this.authEngine.hasAccess.bind(this.authEngine), this._searchEntity.bind(this))
+    app.get(this.path + '/entities/:id', this.authEngine.hasAccess.bind(this.authEngine), this._getEntity.bind(this))
+    app.put(this.path + '/entities/:id', this.authEngine.hasAccess.bind(this.authEngine), this._updateEntity.bind(this))
     // Rules CRUD
-    app.post(this.path + '/rules', this._createRule.bind(this))
-    app.get(this.path + '/rules', this._listRules.bind(this))
-    app.get(this.path + '/rules/:id/reapply', this._reapplyRule.bind(this))
-    app.get(this.path + '/rules/:id', this._getRule.bind(this))
-    app.put(this.path + '/rules/:id', this._updateRule.bind(this))
-    app.delete(this.path + '/rules/:id', this._removeRule.bind(this))
+    app.post(this.path + '/rules', this.authEngine.hasAccess.bind(this.authEngine), this._createRule.bind(this))
+    app.get(this.path + '/rules', this.authEngine.hasAccess.bind(this.authEngine), this._listRules.bind(this))
+    app.get(this.path + '/rules/:id/reapply', this.authEngine.hasAccess.bind(this.authEngine), this._reapplyRule.bind(this))
+    app.get(this.path + '/rules/:id', this.authEngine.hasAccess.bind(this.authEngine), this._getRule.bind(this))
+    app.put(this.path + '/rules/:id', this.authEngine.hasAccess.bind(this.authEngine), this._updateRule.bind(this))
+    app.delete(this.path + '/rules/:id', this.authEngine.hasAccess.bind(this.authEngine), this._removeRule.bind(this))
   }
 
   _getConfig(req, res, next) {
