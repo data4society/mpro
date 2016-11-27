@@ -1,5 +1,6 @@
 -- Reset database:
 
+drop table if exists "apis";
 drop table if exists "changes";
 drop table if exists "rules";
 drop table if exists "collections";
@@ -148,4 +149,13 @@ CREATE TABLE "sessions" (
 CREATE TABLE "variables" (
   name varchar(40) UNIQUE PRIMARY KEY,
   json jsonb
+);
+
+CREATE TABLE "apis" (
+  key varchar(40) UNIQUE PRIMARY KEY,
+  api text,
+  param text,
+  format text,
+  live boolean,
+  app_id varchar(255)
 );

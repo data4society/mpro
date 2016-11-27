@@ -6,6 +6,7 @@ let ImportEngine = require('./ImportEngine')
 let MproEngine = require('./MproEngine')
 let SnapshotEngine = require('./MproSnapshotEngine')
 let SourceEngine = require('./SourceEngine')
+let PublicEngine = require('./PublicEngine')
 let MailerEngine = require('./MailerEngine')
 
 module.exports = {
@@ -65,6 +66,12 @@ module.exports = {
       ruleStore: config.getStore('rule'),
       sourceStore: config.getStore('source')
     })
+
+    let publicEngine = new PublicEngine({
+      db: db,
+      apiStore: config.getStore('api'),
+      documentStore: config.getStore('document')
+    })
     
     config.addEngine('auth', authEngine)
     config.addEngine('snapshot', snapshotEngine)
@@ -73,5 +80,6 @@ module.exports = {
     config.addEngine('mailer', mailer)
     config.addEngine('mpro', mproEngine)
     config.addEngine('source', sourceEngine)
+    config.addEngine('public', publicEngine)
   }
 }

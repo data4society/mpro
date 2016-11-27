@@ -41,6 +41,9 @@ db.reset() // Clear the database, set up the schema
     let ruleStore = configurator.getStore('rule')
     return ruleStore.seed()
   }).then(function() {
+    let apiStore = configurator.getStore('api')
+    return apiStore.seed()
+  }).then(function() {
     return new Promise(function(resolve, reject) {
       db.connection.seed.variableSeed(function(err) {
         if (err) {

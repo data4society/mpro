@@ -1,3 +1,4 @@
+let ApiStore = require('./ApiStore')
 let ChangeStore = require('./ChangeStore')
 let ClassStore = require('./ClassStore')
 let CollectionStore = require('./CollectionStore')
@@ -16,6 +17,7 @@ let UserStore = require('./UserStore')
 module.exports = {
   name: 'mpro-store',
   configure: function(config) {
+    config.addStore('api', ApiStore)
     config.addStore('change', ChangeStore)
     config.addStore('class', ClassStore)
     config.addStore('collection', CollectionStore)
