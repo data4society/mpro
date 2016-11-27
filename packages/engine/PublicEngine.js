@@ -18,6 +18,10 @@ class PublicEngine {
   handleApiRequest(key, query, options) {
     ///let app_id, format, api
     return this.apiStore.getApi(key).then(function(apiRecord) {
+      if(!apiRecord.live) {
+        return new Error("Access denied")
+      }
+
       if(apiRecord.api === 'collection_docs') {
         return this._collectionDocuments(query, apiRecord.app_id, options)
       } else if (apiRecord.api === 'entity_docs') {
