@@ -9,6 +9,7 @@ class MproEngine {
   constructor(config) {
     this.db = config.db
     this.config = config
+    this.apiStore = this.apiStore
     this.collectionStore = config.collectionStore
     this.entityStore = config.entityStore
     this.rubricStore = config.rubricStore
@@ -383,6 +384,60 @@ class MproEngine {
       .then(function(){
         console.log('Collection', collectionId, 'has been reapplyed')
       })
+  }
+
+  /* API manager API */
+
+  /*
+    Create public api
+
+    @param {Object} apiData new public api data
+    @returns {Promise}
+  */
+  createApi(apiData) {
+    return this.apiStore.createApi(apiData)
+  }
+
+  /*
+    Load public api
+
+    @param {String} key api key
+    @returns {Promise}
+  */
+  getApi(key) {
+    return this.apiStore.getApi(key)
+  }
+
+  /*
+    Update public api
+
+    @param {String} key api key
+    @param {Object} apiData public api data to update
+    @returns {Promise}
+  */
+  updateApi(key, apiData) {
+    return this.apiStore.updateApi(key, apiData)
+  }
+
+  /*
+    Remove collection
+
+    @param {String} key api key
+    @returns {Promise}
+  */
+  removeApi(key) {
+    return this.apiStore.deleteCollection(key)
+  }
+
+  /*
+    List public apis
+
+    @param {Object} filters filters
+    @param {Object} options options
+    @returns {Promise}
+  */
+  listApis(filters, options) {
+    return this.apiStore.listApis(filters, options)
   }
 
 }

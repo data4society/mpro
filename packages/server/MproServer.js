@@ -43,6 +43,12 @@ class MproServer {
     app.get(this.path + '/rules/:id', this.authEngine.hasAccess.bind(this.authEngine), this._getRule.bind(this))
     app.put(this.path + '/rules/:id', this.authEngine.hasAccess.bind(this.authEngine), this._updateRule.bind(this))
     app.delete(this.path + '/rules/:id', this.authEngine.hasAccess.bind(this.authEngine), this._removeRule.bind(this))
+    // Public APIs CRUD
+    app.post(this.path + '/apis', this.authEngine.hasAccess.bind(this.authEngine), this._createApi.bind(this))
+    app.get(this.path + '/apis', this.authEngine.hasAccess.bind(this.authEngine), this._listApis.bind(this))
+    app.get(this.path + '/apis/:key', this.authEngine.hasAccess.bind(this.authEngine), this._getApi.bind(this))
+    app.put(this.path + '/apis/:key', this.authEngine.hasAccess.bind(this.authEngine), this._updateApi.bind(this))
+    app.delete(this.path + '/apis/:key', this.authEngine.hasAccess.bind(this.authEngine), this._removeApi.bind(this))
   }
 
   _getConfig(req, res, next) {
@@ -353,6 +359,74 @@ class MproServer {
       return next(err)
     })
   }
+
+
+  /*
+    Create Public API
+  */
+  _createApi(req, res, next) {
+    let apiData = req.body
+    this.engine.createApi(apiData).then(function(api) {
+      res.json(api)
+    }).catch(function(err) {
+      return next(err)
+    })
+  }
+
+  /*
+    Get Public API
+  */
+  _getApi(req, res, next) {
+    let key = req.params.key
+    this.engine.getApi(key).then(function(api) {
+      res.json(api)
+    }).catch(function(err) {
+      return next(err)
+    })
+  }
+
+  /*
+    Update Public API
+  */
+  _updateApi(req, res, next) {
+    let key = req.params.key
+    let apiData = req.body
+    this.engine.updateApi(key, apiData).then(function() {
+      res.json(null)
+    }).catch(function(err) {
+      return next(err)
+    })
+  }
+
+  /*
+    Remove Public API
+  */
+  _removeApi(req, res, next) {
+    let key = req.params.key
+    this.engine.removeApi(key).then(function(api) {
+      res.json(api)
+    }).catch(function(err) {
+      return next(err)
+    })
+  }
+
+  /*
+    List Public APIs with given filters and options
+  */
+  _listApis(req, res, next) {
+    let filters = req.query.filters || {}
+    let options = req.query.options || {}
+
+    if(!isEmpty(filters)) filters = JSON.parse(filters)
+    if(!isEmpty(options)) options = JSON.parse(options)
+    
+    this.engine.listApis(filters, options).then(function(result) {
+      res.json(result)
+    }).catch(function(err) {
+      return next(err)
+    })
+  }
+
 }
 
 module.exports = MproServer
