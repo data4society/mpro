@@ -78,6 +78,10 @@ class MproDocumentClient extends DocumentClient {
     this.request('GET', '/api/import?file=' + file + '&classes=' + classes + '&importer=' + importer, null, cb)
   }
 
+  createSource(sourceData, cb) {
+    this.request('POST', '/api/sources', sourceData, cb)
+  }
+
   updateSource(documentId, sourceData, cb) {
     this.request('PUT', '/api/sources/' + documentId, sourceData, cb)
   }

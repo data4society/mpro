@@ -1,5 +1,6 @@
 let Err = require('substance').SubstanceError
 let DocumentEngine = require('substance').DocumentEngine
+let JSONConverter = require('substance').JSONConverter
 
 /*
   MPro Document Engine API.
@@ -22,10 +23,14 @@ class MproDocumentEngine extends DocumentEngine {
       }))
     }
 
+    let converter = new JSONConverter();
+    let doc = schemaConfig.createDocument()
+
     this.documentStore.createDocument({
       schemaName: schemaConfig.name,
       schemaVersion: schemaConfig.version,
       documentId: args.documentId,
+      content: converter.exportDocument(doc),
       version: 1, // we always start with version 1
       info: args.info
     }, function(err, docRecord) {

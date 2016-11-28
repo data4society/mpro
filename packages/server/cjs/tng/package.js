@@ -1,4 +1,5 @@
 let Article = require('../common/Article')
+let ArticleSeed = require('../common/ArticleSeed')
 let TngMeta = require('./TngMeta')
 
 let BlockquotePackage = require('substance').BlockquotePackage
@@ -18,6 +19,7 @@ module.exports = {
     })
 
     config.addNode(TngMeta)
+    config.addSeed(ArticleSeed)
 
     // Import Substance Core packages
     config.import(ParagraphPackage)

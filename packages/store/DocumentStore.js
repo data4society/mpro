@@ -21,7 +21,6 @@ class DocumentStore {
     @returns {Callback}
   */
   createDocument(props, cb) {
-
     if (!props.documentId) {
       // We generate a document_id ourselves
       props.document_id = uuid()
@@ -38,6 +37,8 @@ class DocumentStore {
       if(props.info.source_type) props.source_type = props.info.source_type
       if(props.info.schemaName) props.schema_name = props.info.schemaName
       if(props.info.schemaVersion) props.schema_version = props.info.schemaVersion
+      if(props.info.source) props.source = props.info.source
+      if(props.info.app_id) props.app_id = props.info.app_id
     }
 
     let record = {

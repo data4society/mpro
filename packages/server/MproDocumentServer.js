@@ -15,11 +15,11 @@ class MproDocumentServer extends DocumentServer {
   */
   bind(app) {
     app.post(this.path, this.authEngine.hasAccess.bind(this.authEngine), this._createDocument.bind(this))
-    app.get(this.path + '/:id', this.authEngine.hasAccess.bind(this.authEngine), this._getDocument.bind(this))
+    app.get(this.path + '/:id', this._getDocument.bind(this))
     app.delete(this.path + '/:id', this.authEngine.hasAccess.bind(this.authEngine), this._deleteDocument.bind(this))
 
     // MPro document specific routes
-    app.get(this.path, this.authEngine.hasAccess.bind(this.authEngine), this._listDocuments.bind(this))
+    app.get(this.path,  this._listDocuments.bind(this))
   }
 
   /*

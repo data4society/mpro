@@ -104,29 +104,41 @@ class Configurator extends AbstractFeedLoader {
     let user = authenticationClient.getUser()
     let userId = user.user_id
 
-    documentClient.createDocument({
-      schemaName: 'mpro-tng',
-      // TODO: Find a way not to do this statically
-      // Actually we should not provide the userId
-      // from the client here.
-      info: {
-        title: 'Untitled Article',
-        abstract: '',
-        source_type: 'mpro',
-        userId: userId,
-        training: true,
-        rubrics: [],
-        entities: [],
-        accepted: false
-      }
-    }, function(err, result) {
-      let documentItems = concat(result, this.state.documentItems)
-      let totalItems = parseInt(this.state.totalItems, 10) + 1
-      this.extendState({
-        documentItems: documentItems,
-        totalItems: totalItems
-      })
-      this._openDocument(result.documentId)
+    documentClient.createSource({
+      status: 1001,
+      published_date: new Date(),
+      rubric_ids: [],
+      stripped: '',
+      type: 'tng',
+      app_id: this.props.app
+    }, function(err, source) {
+      
+      documentClient.createDocument({
+        schemaName: 'mpro-tng',
+        // TODO: Find a way not to do this statically
+        // Actually we should not provide the userId
+        // from the client here.
+        info: {
+          title: 'Untitled Article',
+          abstract: '',
+          source_type: 'mpro',
+          userId: userId,
+          training: true,
+          rubrics: [],
+          entities: [],
+          accepted: false,
+          source: source.doc_id,
+          app_id: this.props.app
+        }
+      }, function(err, result) {
+        let documentItems = concat(result, this.state.documentItems)
+        let totalItems = parseInt(this.state.totalItems, 10) + 1
+        this.extendState({
+          documentItems: documentItems,
+          totalItems: totalItems
+        })
+        this._openDocument(result.documentId)
+      }.bind(this))
     }.bind(this))
   }
 

@@ -21,6 +21,8 @@ class MproServer {
     app.get(this.path + '/classes', this.authEngine.hasAccess.bind(this.authEngine), this._listClasses.bind(this))
     app.get(this.path + '/facets', this.authEngine.hasAccess.bind(this.authEngine), this._listFacets.bind(this))
     app.get(this.path + '/import', this._import.bind(this))
+
+    app.post(this.path + '/sources', this.authEngine.hasAccess.bind(this.authEngine), this._createSource.bind(this))
     app.put(this.path + '/sources/:id', this.authEngine.hasAccess.bind(this.authEngine), this._updateSource.bind(this))
     // Convert all accepted documents
     app.get(this.path + '/sources/training', this.authEngine.hasAccess.bind(this.authEngine), this._convertTrainingDocs.bind(this))
@@ -104,6 +106,15 @@ class MproServer {
     
     this.engine.listFacets(facets, training).then(function(result) {
       res.json(result)
+    }).catch(function(err) {
+      return next(err)
+    })
+  }
+
+  _createSource(req, res, next) {
+    let sourceData = req.body
+    this.sourceEngine.createSource(sourceData).then(function(source) {
+      res.json(source)
     }).catch(function(err) {
       return next(err)
     })

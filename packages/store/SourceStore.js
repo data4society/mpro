@@ -138,7 +138,7 @@ class SourceStore {
 
     let record = {
       doc_id: sourceData.doc_id,
-      guid: sourceData.guid,
+      guid: sourceData.doc_id,
       created: new Date(),
       title: sourceData.title,
       doc_source: sourceData.doc_source,
@@ -146,7 +146,8 @@ class SourceStore {
       status: sourceData.status,
       published_date: sourceData.published_date,
       rubric_ids: sourceData.rubric_ids,
-      type: sourceData.type
+      type: sourceData.type,
+      app_id: sourceData.app_id
     }
 
     return new Promise(function(resolve, reject) {

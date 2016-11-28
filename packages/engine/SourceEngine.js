@@ -246,6 +246,10 @@ class SourceEngine {
       })
   }
 
+  createSource(sourceData) {
+    return this.sourceStore.createSource(sourceData)
+  }
+
   updateSource(documentId, sourceData) {
     return this.getSourceId(documentId)
       .then(function(sourceId) {
