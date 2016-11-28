@@ -23,6 +23,7 @@ TngMeta.define({
   abstract: { type: 'string', default: '' },
   rubrics: { type: ['id'], default: [] },
   entities: { type: ['id'], default: [] },
+  source: { type: 'string', default: '' },
   source_type: { type: 'string', default: '' },
   accepted: { type: 'boolean', default: false },
   moderated: { type: 'boolean', default: false }

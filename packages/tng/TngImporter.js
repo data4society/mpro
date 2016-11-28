@@ -45,7 +45,7 @@ class TngImporter extends HTMLImporter {
     let meta = source.meta
 
     // Hack, should be replaced
-    let source_type = source.guid.indexOf('vk.com') > -1 ? 'vk' : 'article'
+    let source_type = source.url.indexOf('vk.com') > -1 ? 'vk' : 'article'
     let abstract = source.doc_source.substr(0, source.doc_source.indexOf('<br>'))
     abstract = this.truncate(abstract, 200, true)
 
@@ -58,6 +58,7 @@ class TngImporter extends HTMLImporter {
         type: 'meta',
         title: source.title || '',
         rubrics: source.rubric_ids,
+        source: source.url,
         source_type: source_type,
         entities: [],
         abstract: abstract,

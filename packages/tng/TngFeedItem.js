@@ -65,9 +65,12 @@ class TngFeedItem extends FeedItem {
       $$('div').addClass('se-source-name').append(
         meta.source_type
       ),
-      $$('div').addClass('se-source-url').append(
-        //meta.source.split('/')[2]
-      ),
+      $$('a').addClass('se-source-url')
+        .setAttribute('href', meta.source)
+        .setAttribute('target', '_blank')
+        .append(
+          meta.source_type
+        ),
       $$('div').addClass('se-source-date').html(
         moment(issue_date).format('DD.MM.YYYY HH:mm')
       )
