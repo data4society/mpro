@@ -30,6 +30,7 @@ class Header extends Component {
         actions.resources = this.getLabel('configurator-resources')
       }
 
+      actions.apis = this.getLabel('api-menu')
       actions.users = this.getLabel('configurator-users')
     }
 

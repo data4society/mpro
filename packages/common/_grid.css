@@ -19,6 +19,10 @@
   float: right;
 }
 
+.sc-list .se-intro.no-filters {
+  width: 100%;
+}
+
 .sc-list .se-list-not-empty {
   clear: both;
   overflow: scroll;

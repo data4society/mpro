@@ -9,7 +9,7 @@ class MproEngine {
   constructor(config) {
     this.db = config.db
     this.config = config
-    this.apiStore = this.apiStore
+    this.apiStore = config.apiStore
     this.collectionStore = config.collectionStore
     this.entityStore = config.entityStore
     this.rubricStore = config.rubricStore

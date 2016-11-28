@@ -71,8 +71,6 @@ class ApiStore {
     @returns {Promise}
   */
   updateApi(key, props) {
-    props.edited = new Date()
-
     return this.apiExists(key).bind(this)
       .then(function(exists) {
         if (!exists) {

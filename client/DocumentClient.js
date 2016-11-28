@@ -200,6 +200,36 @@ class MproDocumentClient extends DocumentClient {
   }
 
   /*
+    Create a public API
+  */
+  createApi(apiData, cb) {
+    this.request('POST', '/api/apis', apiData, cb)
+  }
+
+  /*
+    Update a public API
+  */
+  updateApi(key, apiData, cb) {
+    this.request('PUT', '/api/apis/' + key, apiData, cb)
+  }
+
+  /*
+    Delete a public API
+  */
+  removeApi(key, cb) {
+    this.request('DELETE', '/api/apis/' + key, null, cb)
+  }
+
+  /*
+    Get public APIs from the server
+  */
+  listApis(filters, options, cb) {
+    let filtersRequest = encodeURIComponent(JSON.stringify(filters))
+    let optionsRequest = encodeURIComponent(JSON.stringify(options))
+    this.request('GET', '/api/apis?filters=' + filtersRequest + '&options=' + optionsRequest, null, cb)
+  }
+
+  /*
     Create a user
   */
   createUser(data, cb) {

@@ -1,0 +1,118 @@
+.se-api-form-modal .se-body {
+  width: 500px; 
+}
+
+.sc-api-form {
+  padding: 10px;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+
+.sc-api-form .se-select,
+.sc-api-form .se-input {
+  margin-bottom: 20px;
+}
+
+.sc-api-form .se-switch {
+  margin-bottom: 10px;
+}
+
+.sc-apis .se-intro {
+  padding: 10px;
+}
+
+.sc-apis .se-intro .se-items-count {
+  float: right;
+}
+
+.sc-apis .se-row {
+  cursor: pointer;
+}
+
+.se-cell.se-cell-switcher {
+  padding: 8px 10px;
+}
+
+.se-switch {
+  margin: 0px auto;
+  position: relative; 
+  width: 90px;
+  -webkit-user-select:none; 
+  -moz-user-select:none; 
+  -ms-user-select: none;
+}
+.se-switch-checkbox {
+  display: none;
+}
+.se-switch-label {
+  display: block; 
+  overflow: hidden; 
+  cursor: pointer;
+  border: 1px solid #DDDDDD;
+  border-radius: 20px;
+}
+.se-switch-inner {
+  display: block; 
+  width: 200%; 
+  margin-left: -100%;
+  transition: margin 0.3s ease-in 0s;
+}
+.se-switch-inner:before, .se-switch-inner:after {
+  display: block; 
+  float: left; 
+  width: 50%; 
+  height: 30px; 
+  padding: 0; 
+  line-height: 30px;
+  font-size: 14px; 
+  color: white; 
+  font-family: Trebuchet, Arial, sans-serif; 
+  font-weight: bold;
+  box-sizing: border-box;
+}
+.se-switch-inner:before {
+  content: "LIVE";
+  padding-left: 10px;
+  background-color: #34C247; 
+  color: #FFFFFF;
+}
+.se-switch-inner:after {
+  content: "OFF";
+  padding-right: 10px;
+  background-color: #EEEEEE; 
+  color: #a9a9a9;
+  text-align: right;
+}
+.se-switch-switch {
+  -webkit-box-sizing: content-box;
+  -moz-box-sizing: content-box;
+  box-sizing: content-box;
+  display: block; 
+  width: 30px; 
+  margin: 0px;
+  background: #FFFFFF;
+  position: absolute; 
+  top: 0; 
+  bottom: 0;
+  right: 58px;
+  border: 1px solid #DDDDDD; 
+  border-radius: 20px;
+  transition: all 0.3s ease-in 0s; 
+}
+.se-switch-checkbox:checked + .se-switch-label .se-switch-inner {
+  margin-left: 0;
+}
+.se-switch-checkbox:checked + .se-switch-label .se-switch-switch {
+  right: 0px; 
+}
+
+.se-row.se-row-endpoint {
+  padding: 10px;
+  font-style: italic;
+  font-size: 13px;
+  width: 100%;
+  float: left;
+  border-bottom: none;
+}

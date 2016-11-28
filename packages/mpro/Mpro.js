@@ -33,6 +33,7 @@ class Mpro extends AbstractApplication {
       'switchApp': this._switchApp,
       'users': this._users,
       'resources': this._resources,
+      'apis': this._apis,
       'configurator': this._configurator,
       'collections': this._collections,
       'inbox': this._inbox,
@@ -106,6 +107,12 @@ class Mpro extends AbstractApplication {
   _resources() {
     this.navigate({
       page: 'resources'
+    })
+  }
+
+  _apis() {
+    this.navigate({
+      page: 'api'
     })
   }
 

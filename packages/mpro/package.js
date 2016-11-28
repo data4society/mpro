@@ -17,6 +17,7 @@ import ViewerPackage from '../viewer/package'
 import EditorPackage from '../editor/package'
 import NotificationPackage from '../notification/package'
 import CollaboratorsPackage from '../collaborators/package'
+import ApiPackage from '../apis/package'
 import ResourcesPackage from '../resources/package'
 import UsersPackage from '../users/package'
 import WelcomePackage from '../welcome/package'
@@ -63,6 +64,7 @@ export default {
     config.import(LoaderPackage)
     config.import(NotificationPackage)
     config.import(CollaboratorsPackage)
+    config.import(ApiPackage)
     config.import(ResourcesPackage)
     config.import(UsersPackage)
     config.import(WelcomePackage)
