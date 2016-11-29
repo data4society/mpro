@@ -48,12 +48,12 @@ class Feed extends Component {
   renderEmpty($$) {
     let el = $$('div').addClass('se-list-empty')
 
-    el.append(
-      $$('h1').html(
-        'Нет документов'
-      ),
-      $$('p').html('К сожалению по вашему запросу мы ничего не нашли')
-    )
+    // el.append(
+    //   $$('h1').html(
+    //     'Нет документов'
+    //   ),
+    //   $$('p').html('К сожалению по вашему запросу мы ничего не нашли')
+    // )
 
     return el
   }
