@@ -22,7 +22,7 @@ class Feed extends Component {
   getInitialState() {
     return {
       items: [],
-      perPage: 2,
+      perPage: 5,
       page: 1,
       pagination: false
     }
