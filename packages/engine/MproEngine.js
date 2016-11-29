@@ -32,13 +32,17 @@ class MproEngine {
 
         let configData = res[0]['json']['value']
         let config = {}
+
         each(configData, function(app, id) {
+          let rubrication = app.rubrication || app.manual_rubrication ? true : false
+          let entities = app.markup || app.manual_entities ? true : false
+
           config[id] = {
             appId: app.app_id,
             name: app.app_name,
             description: app.app_desc,
-            rubrics: app.rubrication || false,
-            entities: app.markup ? true : false,
+            rubrics: rubrication,
+            entities: entities,
             default: app.default || false,
             configurator: app.configurator || false
           }

@@ -142,7 +142,7 @@ class SourceEngine {
         errMsg = 'Document source body is empty'
       } else if (isEmpty(source.meta)) {
         errMsg = 'Document source meta is empty'
-      } else if (isEmpty(source.rubric_ids) && config.rubrication) {
+      } else if (isEmpty(source.rubric_ids) && config.rubrication && !config.manual_rubrication) {
         errMsg = 'Document source has no rubrics'
       } else if (!this.configurator.getConfigurator('mpro-' + source.type)) {
         errMsg = 'Unknown type of document source: ' + source.type
