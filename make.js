@@ -70,10 +70,11 @@ function buildApp(app) {
   }
 }
 
-b.task('client', ['clean', 'substance', 'assets'], buildMainApp('mpro'), buildApp('embed'))
+b.task('client', ['clean', 'substance', 'assets'], buildMainApp('mpro'))
+b.task('embed', buildApp('embed'))
 
 // build all
-b.task('default', ['client'])
+b.task('default', ['client', 'embed'])
 
 b.task('test:server', function() {
   // Cleanup
