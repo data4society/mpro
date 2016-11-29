@@ -1,4 +1,4 @@
-import MproPackage from '../packages/mpro/package'
+import MproPackage from '../../packages/mpro/package'
 import AuthenticationClient from './AuthenticationClient'
 import DocumentClient from './DocumentClient'
 import FileClient from './FileClient'

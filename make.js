@@ -18,14 +18,14 @@ b.task('substance', function() {
   b.copy('node_modules/substance/dist', './dist/substance')
 })
 
-function buildApp(app) {
+function buildMainApp(app) {
   return function() {
-    b.copy('client/index.html', './dist/')
-    b.copy('client/assets', './dist/assets/')
-    b.css('./client/app.css', 'dist/mpro.css', {variables: true})
+    b.copy('client/' + app + '/index.html', './dist/')
+    b.copy('client/' + app + '/assets', './dist/assets/')
+    b.css('./client/' + app + '/app.css', 'dist/mpro.css', {variables: true})
     b.css('./node_modules/substance/dist/substance-pagestyle.css', 'dist/mpro-pagestyle.css', {variables: true})
     b.css('./node_modules/substance/dist/substance-reset.css', 'dist/mpro-reset.css', {variables: true})
-    b.js('client/app.js', {
+    b.js('client/' + app + '/app.js', {
       // need buble if we want to minify later
       buble: true,
       external: ['substance'],
@@ -49,7 +49,30 @@ function buildApp(app) {
   }
 }
 
-b.task('client', ['clean', 'substance', 'assets'], buildApp('mpro'))
+function buildApp(app) {
+  return function() {
+    b.copy('client/' + app + '/index.html', './dist/' + app + '/')
+    b.copy('client/' + app + '/assets', './dist/' + app + '/assets/')
+    b.css('./client/' + app + '/app.css', 'dist/' + app + '/' + app + '.css', {variables: true})
+    // b.css('./node_modules/substance/dist/substance-pagestyle.css', 'dist/mpro-pagestyle.css', {variables: true})
+    // b.css('./node_modules/substance/dist/substance-reset.css', 'dist/mpro-reset.css', {variables: true})
+    b.js('client/' + app + '/app.js', {
+      // need buble if we want to minify later
+      buble: true,
+      external: ['substance'],
+      commonjs: { include: ['node_modules/lodash/**', 'node_modules/moment/moment.js'] },
+      dest: './dist/' + app + '/app.js',
+      format: 'umd',
+      moduleName: app
+    })
+    b.copy('./dist/' + app + '/app.js.map', './dist/' + app + '.js.map')
+    b.rm('./dist/' + app + '/app.js')
+    b.rm('./dist/' + app + '/app.js.map')
+  }
+}
+
+b.task('client', ['clean', 'substance', 'assets'], buildMainApp('mpro'))
+b.task('embed', buildApp('embed'))
 
 // build all
 b.task('default', ['client'])
