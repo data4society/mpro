@@ -1,0 +1,45 @@
+@import '../../node_modules/substance/packages/grid/_grid.css';
+@import '../../packages/common/_grid.css';
+
+body { overflow: hidden; }
+.sc-embed { position: absolute;
+  left: 0px; 
+  right: 0px;
+  bottom: 0px;
+  top: 0px; 
+}
+.se-row.se-source {
+  color: inherit;
+  cursor: pointer;
+  display: block;
+  border-bottom: solid 1px #DDDDDD;
+}
+.se-row.se-source:hover {
+  background: #eee;
+}
+.se-row.se-item-title { 
+  border-bottom: none; 
+  padding: 10px; 
+  font-size: 18px;
+}
+.se-row.se-item-abstract { 
+  border-bottom: none; 
+  font-style: italic;
+  padding: 10px;
+  font-size: 14px;
+}
+.se-item-published {
+  text-align: right;
+}
+.sc-pager button {
+  padding: 0px 20px;
+  text-align: center;
+  height: 40px;
+  font-size: 14px;
+  color: rgba(0, 0, 0, 0.75);
+  font-weight: 600;
+  display: inline-block;
+  border: 1px solid rgba(0, 0, 0, 0.75);
+  width: 100%;
+  margin-top: 10px;
+}

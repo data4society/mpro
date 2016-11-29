@@ -15,11 +15,15 @@ class PublicEngine {
     this.documentStore = config.documentStore
   }
 
-  handleApiRequest(key, query, options) {
+  handleApiRequest(key, query, format, options) {
     ///let app_id, format, api
     return this.apiStore.getApi(key).then(function(apiRecord) {
       if(!apiRecord.live) {
         return new Error("Access denied")
+      }
+
+      if(apiRecord.format === 'iframe' && !format) {
+        return apiRecord
       }
 
       if(apiRecord.api === 'collection_docs') {

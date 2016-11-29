@@ -14,7 +14,7 @@ class MproDocumentClient extends DocumentClient {
 
   request(method, url, data, cb) {
     let request = new XMLHttpRequest();
-    request.open(method, url, true) 
+    request.open(method, url, true)
     request.setRequestHeader('Content-Type', 'application/json; charset=UTF-8')
     request.setRequestHeader('x-access-token', this.authClient.getSessionToken())
     request.onload = function() {

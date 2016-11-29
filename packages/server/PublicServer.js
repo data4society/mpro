@@ -1,3 +1,4 @@
+let path = require('path')
 let Err = require('substance').SubstanceError
 let isEmpty = require('lodash/isEmpty')
 
@@ -20,17 +21,18 @@ class PublicServer {
   _apiRequest(req, res, next) {
     let key = req.params.key
     let query = req.query.query
+    let format = req.query.format
     let options = req.query.options || {}
 
     if(!isEmpty(options)) options = JSON.parse(options)
 
-    this.engine.handleApiRequest(key, query, options).then(function(resp) {
-      res.json(resp)
-      // if(resp.format === 'iframe') {
-
-      // } else {
-      //   res.json(resp.data)
-      // }
+    this.engine.handleApiRequest(key, query, format, options).then(function(resp) {
+      //res.json(resp)
+      if(resp.format === 'iframe') {
+        res.sendFile(path.join(__dirname + '/../../dist/embed/index.html'));
+      } else {
+        res.json(resp)
+      }
     }).catch(function(err) {
       return next(err)
     })
