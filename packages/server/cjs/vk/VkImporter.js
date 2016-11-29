@@ -90,6 +90,7 @@ class VkImporter extends HTMLImporter {
         title: '',
         source: source.url,
         published: published.toJSON(),
+        created: new Date().toJSON(),
         rubrics: source.rubric_ids,
         entities: entities,
         abstract: abstract,

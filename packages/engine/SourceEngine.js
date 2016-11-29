@@ -212,7 +212,7 @@ class SourceEngine {
           schema_name: schema.name,
           schema_version: schema.version,
           published: meta.published,
-          created: new Date().toJSON(), // should be parsed source.created someday
+          created: meta.created || new Date().toJSON(),
           edited: new Date().toJSON(),
           training: training,
           collections: meta.collections,

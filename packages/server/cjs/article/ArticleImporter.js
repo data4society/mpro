@@ -70,6 +70,7 @@ class ArticleImporter extends HTMLImporter {
         title: source.title,
         source: source.url,
         published: published.toJSON(),
+        created: new Date().toJSON(),
         rubrics: source.rubric_ids,
         entities: entities,
         abstract: meta.abstract,
