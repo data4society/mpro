@@ -31,6 +31,8 @@ class PublicServer {
       if(resp.format === 'iframe') {
         res.sendFile(path.join(__dirname + '/../../dist/embed/index.html'));
       } else {
+        res.header('Access-Control-Allow-Origin', '*')
+        res.header('Access-Control-Allow-Methods', 'GET')
         res.json(resp)
       }
     }).catch(function(err) {
