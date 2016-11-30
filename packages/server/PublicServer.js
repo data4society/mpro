@@ -15,6 +15,11 @@ class PublicServer {
     Attach this server to an express instance
   */
   bind(app) {
+    app.use(function(req, res, next) {
+      res.header("Access-Control-Allow-Origin", "*")
+      res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept")
+      next()
+    })
     app.get(this.path + '/:key', this._apiRequest.bind(this))
   }
 
@@ -31,9 +36,6 @@ class PublicServer {
       if(resp.format === 'iframe') {
         res.sendFile(path.join(__dirname + '/../../dist/embed/index.html'));
       } else {
-        res.header('Access-Control-Allow-Origin', '*')
-        res.header("Access-Control-Allow-Headers", "Cache-Control, Pragma, Origin, Authorization, Content-Type, X-Requested-With");
-        res.header("Access-Control-Allow-Methods", "GET, PUT, POST");
         res.json(resp)
       }
     }).catch(function(err) {
