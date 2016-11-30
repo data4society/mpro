@@ -1,0 +1,16 @@
+@import '../../node_modules/substance/dist/substance.next.css';
+@import '../../packages/common/_grid.css';
+
+body { overflow: hidden; }
+.sc-digest { 
+  position: absolute;
+  left: 0px; 
+  right: 0px;
+  bottom: 0px;
+  top: 0px; 
+  overflow: scroll;
+}
+
+.se-digest {
+  position: relative;
+}
