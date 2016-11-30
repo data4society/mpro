@@ -1,16 +1,149 @@
 @import '../../node_modules/substance/dist/substance.next.css';
 @import '../../packages/common/_grid.css';
 
-body { overflow: hidden; }
+body { 
+  overflow: hidden; 
+  background: #f2f2f2;
+}
 .sc-digest { 
   position: absolute;
   left: 0px; 
   right: 0px;
   bottom: 0px;
   top: 0px; 
-  overflow: scroll;
 }
 
 .se-digest {
   position: relative;
+}
+
+.sc-collections {
+  background-color: #fafafa;
+  height: 100%;
+  box-shadow: inset -4px 0 4px 0 rgba(25, 25, 25, 0.04);
+}
+
+.se-collection-node {
+  padding-left: 15px;
+  font-weight: 700;
+  font-size: 12px;
+  min-height: 25px;
+  display: block;
+  padding: 15px 20px;
+  position: relative;
+  line-height: 15px;
+  border-bottom: 1px solid rgba(121,121,121,0.1);
+  cursor: pointer;
+}
+
+.se-collection-node.se-active {
+  background: rgb(240, 78, 35);
+  color: #fff;
+}
+
+.se-collection-node .se-node-name {
+  line-height: 10px;
+  width: 180px;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  display: inline-block;
+}
+
+.se-collection-node .se-node-count {
+  position: absolute;
+  top: 6px;
+  right: 12px;
+  bottom: 0;
+  width: 34px;
+  line-height: 28px;
+  padding: 0 15px;
+  text-align: right;
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.se-row.se-source {
+  color: inherit;
+  cursor: pointer;
+  display: block;
+  border-bottom: solid 1px #DDDDDD;
+  background: #fff;
+  padding-right: 5px;
+  transition:all 0.3s ease;
+}
+.se-source .se-row {
+  border-bottom: none;
+}
+.se-source .se-row:hover {
+  background: none;
+}
+.se-row.se-source:hover {
+  /*box-shadow:
+          1px 0px rgb(240, 78, 35),
+          2px 0px rgb(240, 78, 35),
+          3px 0px rgb(240, 78, 35);
+  -webkit-transform: translateX(-3px);
+  transform: translateX(-3px);*/
+}
+.se-row.se-item-title { 
+  padding: 10px; 
+  font-size: 18px;
+}
+.se-row.se-item-abstract { 
+  font-style: italic;
+  padding: 10px;
+  font-size: 14px;
+}
+.se-row.se-item-entities {
+  padding: 0px 5px 5px;
+}
+.se-item-published {
+  text-align: right;
+}
+.sc-pager {
+  height: 75px;
+}
+.sc-pager button {
+  padding: 0px 20px;
+  text-align: center;
+  height: 40px;
+  font-size: 14px;
+  color: rgba(0, 0, 0, 0.75);
+  font-weight: 600;
+  display: inline-block;
+  border: 1px solid rgba(0, 0, 0, 0.75);
+  width: 100%;
+  margin-top: 10px;
+}
+span.se-item-entity {
+  display: inline-block;
+  padding: 6px 12px;
+  margin: 3px;
+  font-size: 10px;
+  font-weight: 400;
+  line-height: 10px;
+  text-align: center;
+  white-space: nowrap;
+  vertical-align: middle;
+  -ms-touch-action: manipulation;
+  touch-action: manipulation;
+  cursor: pointer;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  background-image: none;
+  border: 1px solid #eee;
+  border-radius: 4px;
+  transition:all 0.3s ease;
+}
+
+span.se-item-entity:hover {
+  border: 1px solid #000;
+}
+
+.se-digest .sc-scroll-pane.sm-substance-scrollbar.sm-scrollbar-position-right .sc-scrollbar {
+  right: -20px;
+  background: #FAFAFA;
+  box-shadow: inset 4px 0 4px 0 rgba(25, 25, 25, 0.04);
 }
