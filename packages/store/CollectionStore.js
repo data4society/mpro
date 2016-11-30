@@ -140,7 +140,7 @@ class CollectionStore {
 
     // Default limit for number of returned records
     if(!options.limit) options.limit = 100
-    if(!options.columns) options.columns = ['collection_id', 'name', 'created', 'edited', 'author', 'description', 'private', 'app_id', "(SELECT COUNT(*) from records WHERE \"collection_id\"::text=ANY(records.collections) AND training=FALSE) AS count"]
+    if(!options.columns) options.columns = ['collection_id', 'name', 'created', 'edited', 'author', 'description', 'private', 'public', 'app_id', "(SELECT COUNT(*) from records WHERE \"collection_id\"::text=ANY(records.collections) AND training=FALSE) AS count"]
 
     return new Promise(function(resolve, reject) {
       this.db.collections.count(filters, function(err, count) {
@@ -188,7 +188,7 @@ class CollectionStore {
 
         this.db.collections.find(
           query,
-          {columns: ['collection_id', 'name', 'created', 'edited', 'author', 'description', 'private', 'app_id', "(SELECT COUNT(*) from records WHERE \"collection_id\"=ANY(records.collections)) AS count"], limit: 10},
+          {columns: ['collection_id', 'name', 'created', 'edited', 'author', 'description', 'private', 'public', 'app_id', "(SELECT COUNT(*) from records WHERE \"collection_id\"=ANY(records.collections)) AS count"], limit: 10},
           function(err, collections) {
             if (err) {
               return reject(new Err('CollectionStore.ListError', {

@@ -136,7 +136,7 @@ class CollectionsList extends Component {
       description: 'No description available',
       author: user.user_id,
       private: true,
-      public: true,
+      public: false,
       app_id: this.props.app
     }
 

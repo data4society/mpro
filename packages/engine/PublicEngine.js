@@ -120,7 +120,7 @@ class PublicEngine {
         unnest(records.collections) AS collection,
         COUNT(*) OVER (PARTITION BY unnest(records.collections)) cnt
       FROM records WHERE $1 <@ collections AND app_id = $2
-    ) AS docs INNER JOIN collections ON (docs.collection = collections.collection_id::text);`
+    ) AS docs INNER JOIN collections ON (docs.collection = collections.collection_id::text) WHERE collections.public = true;`
 
     return new Promise(function(resolve, reject) {
 
