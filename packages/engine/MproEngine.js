@@ -330,19 +330,19 @@ class MproEngine {
       .then(function(rule) {
         collectionId = rule.collection_id
         let query = 'SELECT document_id, collections, meta, content from records WHERE '
-        let vars = []
+        let vars = [rule.app_id]
         if (rule.rubrics.length > 0 && rule.entities.length > 0) {
           vars.push(rule.rubrics)
           vars.push(rule.entities)
-          query += 'rubrics::text[] @> $1 AND entities::text[] @> $2'
+          query += 'app_id = $1 AND rubrics::text[] @> $2 AND entities::text[] @> $3'
         } else {
           if (rule.rubrics.length > 0) {
             vars.push(rule.rubrics)
-            query += 'rubrics::text[] @> $1' 
+            query += 'app_id = $1 AND rubrics::text[] @> $2' 
           }
           if (rule.entities.length > 0) {
             vars.push(rule.entities)
-            query += 'entities::text[] @> $1'
+            query += 'app_id = $1 AND entities::text[] @> $2'
           }
         }
         return new Promise(function(resolve, reject) {

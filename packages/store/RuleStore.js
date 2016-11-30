@@ -171,7 +171,8 @@ class RuleStore {
       rule_id: ruleData.rule_id,
       collection_id: ruleData.collection_id,
       rubrics: ruleData.rubrics,
-      entities: ruleData.entities
+      entities: ruleData.entities,
+      app_id: ruleData.app_id
     }
 
     return new Promise(function(resolve, reject) {

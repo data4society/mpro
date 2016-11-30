@@ -120,7 +120,8 @@ class CollectionsEditor extends Component {
       rule_id: uuid(),
       collection_id: this.props.collectionId,
       rubrics: [],
-      entities: []
+      entities: [],
+      app_id: this.props.app
     }
     dataClient.createRule(rule, function(err) {
       if (err) {

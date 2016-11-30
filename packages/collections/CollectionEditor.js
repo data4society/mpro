@@ -61,7 +61,7 @@ class CollectionsEditor extends Component {
 
     if(!isPrivate) {
       el.append(
-        $$(RulesEditor, {collectionId: this.props.collection_id})
+        $$(RulesEditor, {collectionId: this.props.collection_id, app: this.props.app_id})
       )
     }
 

@@ -132,7 +132,7 @@ class Collections extends AbstractFeedLoader {
 
   updateUrlCollection(collectionId) {
     let urlHelper = this.context.urlHelper
-    urlHelper.writeRoute({page: 'collections', collectionId: collectionId, documentId: this.state.documentId})
+    urlHelper.writeRoute({page: 'collections', collectionId: collectionId, app: this.props.app})
   }
 
   _loadMore() {
