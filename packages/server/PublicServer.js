@@ -32,7 +32,8 @@ class PublicServer {
         res.sendFile(path.join(__dirname + '/../../dist/embed/index.html'));
       } else {
         res.header('Access-Control-Allow-Origin', '*')
-        res.header('Access-Control-Allow-Methods', 'GET')
+        res.header("Access-Control-Allow-Headers", "Cache-Control, Pragma, Origin, Authorization, Content-Type, X-Requested-With");
+        res.header("Access-Control-Allow-Methods", "GET, PUT, POST");
         res.json(resp)
       }
     }).catch(function(err) {
