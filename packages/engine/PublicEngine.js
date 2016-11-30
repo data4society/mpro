@@ -48,10 +48,17 @@ class PublicEngine {
 
   _collectionDocuments(col_id, app, opts) {
     let filters = {
-      'collections @>': [col_id],
+      'collections &&': col_id.split(','),
       app_id: app
     }
-    let options = extend({}, opts, {columns: ['document_id', 'meta'], order: 'created desc'})
+    let columns = [
+      'document_id AS doc_id', 
+      "json_build_object('title', meta->>'title', 'abstract', meta->>'abstract', 'published', meta->>'published', 'source', meta->>'source') AS meta"
+    ]
+    if(opts.entities) {
+      columns.push("(SELECT array(SELECT json_build_object('name', name, 'id', entity_id) FROM unnest(entities) entity LEFT JOIN entities e on e.entity_id=entity)) AS entities")
+    }
+    let options = extend({}, opts, {columns: columns, order: 'created desc'})
     return new Promise(function(resolve, reject) {
       this.documentStore.listDocuments(filters, options, function(err, result) {
         if (err) return reject(err)
@@ -68,7 +75,19 @@ class PublicEngine {
     }
     let offset = opts.offset || 0
     let limit = opts.limit || 10
-    let sql = `SELECT r.document_id doc_id, r.meta meta, e.name, e.entity_id 
+
+    let columns = [
+      'r.document_id AS doc_id', 
+      "json_build_object('title', r.meta->>'title', 'abstract', r.meta->>'abstract', 'published', r.meta->>'published', 'source', r.meta->>'source') AS meta",
+      'e.name',
+      'e.entity_id'
+    ]
+    if(opts.entities) {
+      columns.push("(SELECT array(SELECT json_build_object('name', name, 'id', entity_id) FROM unnest(r.entities) entity LEFT JOIN entities e on e.entity_id=entity)) AS entities")
+    }
+    columns = columns.join(',')
+
+    let sql = `SELECT ${columns} 
       FROM records r 
       JOIN entities e
       ON entity_id = ANY(r.entities)
