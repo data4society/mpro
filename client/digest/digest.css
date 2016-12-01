@@ -13,43 +13,69 @@ body {
   top: 0px; 
 }
 
+.se-list-not-empty {
+  padding-bottom: 30px;
+}
+
 .se-digest {
   position: relative;
 }
 
-.sc-collections {
+.se-title {
+  padding-left: 15px;
+  font-weight: 700;
+  font-size: 15px;
+  min-height: 25px;
+  display: block;
+  padding: 10px 20px;
+  position: relative;
+  line-height: 15px;
+  border-bottom: 5px solid rgba(121,121,121,0.1);
   background-color: #fafafa;
+}
+
+.se-entities-list .se-title {
+  margin-top: 20px;
+}
+
+.sc-collections {
   height: 100%;
   box-shadow: inset -4px 0 4px 0 rgba(25, 25, 25, 0.04);
 }
 
-.se-collection-node {
+.se-collection-node,
+.se-entity-node {
   padding-left: 15px;
   font-weight: 700;
   font-size: 12px;
   min-height: 25px;
   display: block;
-  padding: 15px 20px;
+  padding: 10px 20px;
   position: relative;
   line-height: 15px;
   border-bottom: 1px solid rgba(121,121,121,0.1);
+  background-color: #fafafa;
   cursor: pointer;
 }
 
-.se-collection-node.se-active {
+.se-collection-node.se-active,
+.se-entity-node.se-active {
   background: rgb(240, 78, 35);
   color: #fff;
 }
 
-.se-collection-node .se-node-name {
-  line-height: 10px;
-  width: 180px;
+.se-collection-node .se-node-name,
+.se-entity-node .se-node-name {
+  line-height: 20px;
+  width: 220px;
   white-space: nowrap;
   text-overflow: ellipsis;
   display: inline-block;
+  overflow: hidden;
 }
 
-.se-collection-node .se-node-count {
+.se-collection-node .se-node-count,
+.se-entity-node .se-node-count {
   position: absolute;
   top: 6px;
   right: 12px;
@@ -102,6 +128,7 @@ body {
 }
 .sc-pager {
   height: 75px;
+  margin: 20px 10px 0px;
 }
 .sc-pager button {
   padding: 0px 20px;

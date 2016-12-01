@@ -18,6 +18,7 @@ class OIDigest extends Component {
 
   didMount() {
     this._loadCollections()
+    this._loadTopEntities()
   }
 
   didUpdate(oldProps, oldState) {
@@ -32,7 +33,9 @@ class OIDigest extends Component {
       collectionsKey: 'ed685693-c93a-3ee3-9879-2c5e906d920a',
       collectionDocsKey: 'a27aecc2-5c97-5347-7074-805af59808ae',
       entityDocsKey: 'ce0d823c-798a-f9e7-d98c-6b1812837214',
+      topEntitiesKey: '62bf1f46-c5fd-bb1e-c215-f962512da4f4',
       collections: [],
+      topEntities: [],
       activeCollection: '',
       activeEntity: {},
       perPage: 5,
@@ -71,7 +74,9 @@ class OIDigest extends Component {
   renderSideBar($$) {
     let el = $$('div').addClass('sc-collections')
     let collections = this.state.collections
+    let entities = this.state.topEntities
     
+    el.append($$('div').addClass('se-title').append('Темы:'))
     each(collections, function(collection) {
       let item = $$('div').addClass('se-collection-node').append(
         $$('span').addClass('se-node-name').append(collection.name),
@@ -85,6 +90,25 @@ class OIDigest extends Component {
 
       el.append(item)
     }.bind(this))
+
+
+    let entitiesEl = $$('div').addClass('se-entities-list')
+    entitiesEl.append($$('div').addClass('se-title').append('Упоминания:'))
+    each(entities, function(entity) {
+      let item = $$('div').addClass('se-entity-node').append(
+        $$('span').addClass('se-node-name').append(entity.name),
+        $$('span').addClass('se-node-count').append(entity.cnt)
+      ).ref(entity.id)
+      .on('click', this._entityFilter.bind(this, entity))
+
+      if(entity.id === this.state.activeEntity.id) {
+        item.addClass('se-active')
+      }
+
+      entitiesEl.append(item)
+    }.bind(this))
+
+    el.append(entitiesEl)
 
     return el
   }
@@ -213,6 +237,18 @@ class OIDigest extends Component {
         items: items,
         total: results.total
       })
+    }.bind(this))
+  }
+
+  _loadTopEntities() {
+    let url = this.state.endpoint + '/api/public/' + this.state.topEntitiesKey
+    request('GET', url, null, function(err, topEntities) {
+      if (err) {
+        console.error('ERROR', err)
+        return
+      }
+
+      this.extendState({topEntities: topEntities})
     }.bind(this))
   }
 
