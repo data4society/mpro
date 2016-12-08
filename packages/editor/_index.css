@@ -13,3 +13,7 @@
 .sc-document-editor  .sc-paragraph {
   padding-bottom: 10px;
 }
+
+.sc-document-editor .sc-scrollbar {
+  z-index: 10;
+}

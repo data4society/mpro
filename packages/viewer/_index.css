@@ -46,3 +46,7 @@
 .sc-document-viewer .sc-viewer-toolbar .sc-paragraph {
   padding-bottom: 10px;
 }
+
+.sc-document-viewer .sc-scrollbar {
+  z-index: 10;
+}
