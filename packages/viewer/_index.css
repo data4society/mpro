@@ -35,6 +35,10 @@
   font-size: 10px;
 }
 
+.sc-document-viewer .sc-toolbar .sc-tool-group.sm-target-annotations {
+  display: none;
+}
+
 .sc-document-viewer .sc-viewer-toolbar .se-scrollable {
   padding-right: 20px;
 }

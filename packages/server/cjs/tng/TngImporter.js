@@ -63,7 +63,8 @@ class TngImporter extends HTMLImporter {
         source_type: source_type,
         entities: [],
         abstract: abstract,
-        accepted: false
+        accepted: false,
+        moderated: false
       })
     }
   }

@@ -1,6 +1,7 @@
 .sc-toolbar .sm-target-acceptors {
-  float: right;
-  margin-right: 10px;
+  border-left: 1px solid #E0E4E4;
+  margin-left: 5px;
+  padding-left: 7px;
 }
 
 .se-tool-acceptor button,
