@@ -98,7 +98,9 @@ class VkImporter extends HTMLImporter {
           name: author_name,
           url: owner.owner_url
         },
-        attachments: attachments
+        attachments: attachments,
+        accepted: false,
+        moderated: false
       })
     }
   }

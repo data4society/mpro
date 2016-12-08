@@ -7,6 +7,7 @@ import { BlockquotePackage, EmphasisPackage, HeadingPackage, LinkPackage, Paragr
 
 import EntityPackage from '../entity/package'
 import RubricatorPackage from '../rubricator/package'
+import AcceptorPackage from '../acceptor/package'
 
 export default {
   name: 'vk',
@@ -28,9 +29,10 @@ export default {
     config.import(StrongPackage)
     config.import(LinkPackage)
 
-    // Import mpro specific packages    
+    // Import mpro specific packages
     config.import(EntityPackage)
     config.import(RubricatorPackage)
+    config.import(AcceptorPackage)
 
     config.addComponent('meta-summary', VkMetaComponent)
     config.addIcon('published', { 'fontawesome': 'fa-clock-o' });

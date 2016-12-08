@@ -32,7 +32,9 @@ VkMeta.define({
   abstract: { type: 'string', default: '' },
   post_type: { type: 'string', default: '' },
   author: { type: 'object', default: {} },
-  attachments: { type: ['object'], default: [] }
+  attachments: { type: ['object'], default: [] },
+  accepted: { type: 'boolean', default: false },
+  moderated: { type: 'boolean', default: false }
 })
 
 export default VkMeta

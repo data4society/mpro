@@ -30,7 +30,9 @@ ArticleMeta.define({
   published: { type: 'string', default: '' },
   created: { type: 'string', default: '' },
   abstract: { type: 'string', default: ''},
-  publisher: { type: 'string', default: ''}
+  publisher: { type: 'string', default: ''},
+  accepted: { type: 'boolean', default: false },
+  moderated: { type: 'boolean', default: false }
 })
 
 export default ArticleMeta

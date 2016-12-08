@@ -74,7 +74,9 @@ class ArticleImporter extends HTMLImporter {
         entities: entities,
         abstract: meta.abstract,
         cover: '',
-        publisher: publisher.name
+        publisher: publisher.name,
+        accepted: false,
+        moderated: false
       })
     }
   }

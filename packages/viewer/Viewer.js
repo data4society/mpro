@@ -1,5 +1,6 @@
 import { ContainerEditor, Layout, ProseEditor, ProseEditorOverlayTools, ScrollPane, SplitPane } from 'substance'
 import each from 'lodash/each'
+import isEqual from 'lodash/isEqual'
 import isUndefined from 'lodash/isUndefined'
 import uniq from 'lodash/uniq'
 
@@ -66,6 +67,11 @@ class Viewer extends ProseEditor {
     if(!isUndefined(update.change)) {
       let ops = update.change.ops
       let entityChange = false
+      let rubricsChange = false
+      let accepted = this.doc.get(['meta', 'accepted'])
+      let moderated = this.doc.get(['meta', 'moderated'])
+      let surface = this.surfaceManager.getSurface('body')
+
       each(ops, function(op) {
         if(op.val.type === 'entity') {
           entityChange = true
@@ -73,8 +79,37 @@ class Viewer extends ProseEditor {
         }
       })
 
+      each(ops, function(op) {
+        if(op.path[1] === 'rubrics') {
+          if(!isEqual(op.original, op.val)) {
+            rubricsChange = true
+          }
+          return
+        }
+      })
+
       if(entityChange) {
         this.updateEntitiesList()
+      }
+
+      if(update.change.updated['meta,accepted'] === true) {
+        if(accepted) {
+          this._exportDocument()
+        }
+      }
+
+      if(update.change.updated['meta,moderated'] === true) {
+        if(moderated && accepted) {
+          this._exportDocument()
+        }
+      }
+
+      if(rubricsChange) {
+        surface.transaction(function(tx, args) {
+          tx.set(['meta', 'accepted'], false)
+          tx.set(['meta', 'moderated'], false)
+          return args
+        })
       }
     }
 
@@ -100,6 +135,29 @@ class Viewer extends ProseEditor {
     surface.transaction(function(tx, args) {
       tx.set(['meta', 'entities'], entities)
       return args
+    })
+  }
+
+  _exportDocument() {
+    let documentId = this.documentSession.documentId
+    let documentClient = this.context.documentClient
+    let rubrics = this.doc.get(['meta', 'rubrics'])
+    let plain = []
+    each(this.doc.getNodes(), function(node) {
+      if (node.isText()) {
+        plain.push(node.getText())
+      }
+    })
+    plain = plain.join('\n')
+    let sourceData = {
+      rubric_ids: rubrics,
+      stripped: plain
+    }
+
+    documentClient.updateSource(documentId, sourceData, function(err) {
+      if(err) {
+        console.error(err);
+      }
     })
   }
 }

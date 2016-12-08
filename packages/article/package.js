@@ -8,6 +8,7 @@ import { BlockquotePackage, EmphasisPackage, HeadingPackage, LinkPackage, Paragr
 import CollectorPackage from '../collector/package'
 import EntityPackage from '../entity/package'
 import RubricatorPackage from '../rubricator/package'
+import AcceptorPackage from '../acceptor/package'
 
 export default {
   name: 'article',
@@ -32,6 +33,7 @@ export default {
     config.import(CollectorPackage)  
     config.import(EntityPackage)
     config.import(RubricatorPackage)
+    config.import(AcceptorPackage)
 
     config.addComponent('meta-summary', ArticleMetaComponent)
     config.addIcon('published', { 'fontawesome': 'fa-clock-o' })
