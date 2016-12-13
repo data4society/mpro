@@ -80,6 +80,7 @@ MproServer.Prototype = function() {
     var importer = req.query.importer;
 
     if(importer == 'opencorpora') {
+		res.json({status: 'ok'});
       this.importEngine.openCorporaImporter(file, classes).then(function(result) {
         if(!result) result = {status: 'ok'};
         res.json(result);

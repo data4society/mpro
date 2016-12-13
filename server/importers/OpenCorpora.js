@@ -25,9 +25,14 @@ var oc_spans = {"фамилия":"oc_span_last_name",
 	"иностранное_имя":"oc_span_foreign_name",
 	"должность":"oc_span_post",
 	"роль":"oc_span_role",
-	"статус":"oc_span_status"
+	"статус":"oc_span_status",
+	"дескриптор":"oc_span_descriptor",
+	"название":"oc_span_title",
+	"номер":"oc_span_number",
+	"гео._прилагательное":"oc_span_geo_adjective",
+	"аббревиатура":"oc_span_abbreivation"
 	};
-var oc_classes = {"Персона":"oc_class_person"};
+var oc_classes = {"Персона":"oc_class_person","Организация":"oc_class_org","Локация":"oc_class_loc","Объект_инфраструктуры":"oc_class_infrastructure","GPE":"oc_class_gpe"};
 
 /*
   Implements the Import Engine API.
@@ -52,7 +57,7 @@ ImportEngine.Prototype = function() {
     Run import
   */
   this.import = function(file, classes) {
-	console.log(classes);
+	//console.log(classes);
     file = path.join(__dirname, '../../uploads', file);
     var dir;
     return this.unzip(file)
@@ -100,7 +105,7 @@ ImportEngine.Prototype = function() {
             document: source.doc_id,
             entity_classes: entity_classes_arr,
 			name: new Date().toJSON() + " from Opencorpora",
-            type: 40
+            type: 51
           });
         }.bind(this)).then(function(markup) {
           // extract references and mentions
@@ -279,9 +284,12 @@ ImportEngine.Prototype = function() {
               reference_ids: ['c2824c0f8e13057db67b16915080c833', 'c2824c0f8e13057db67b16915080c834']
             }
           */
-
           var res = {};
+		if(objects){
+			  //console.log(objects);
           var lines = objects.split('\n');
+			  //console.log(lines);
+			  //console.log(lines.length);
           each(lines, function(line){
             var item = {};
             var segments = line.split(' ');
@@ -306,6 +314,7 @@ ImportEngine.Prototype = function() {
               }*/
             }
           }/*.bind(this)*/);
+		}
           results.objects = res;
           /*return readFile(dirPath + '/' + set + '.coref', 'utf8');
         }.bind(this)).then(function(coref) {
