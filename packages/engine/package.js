@@ -42,7 +42,7 @@ module.exports = {
     })
 
     let importEngine = new ImportEngine({
-      uploadPath: path.join(__dirname, 'uploads'),
+      uploadPath: path.join(__dirname, '../../uploads'),
       entityStore: config.getStore('entity'),
       markupStore: config.getStore('markup'),
       referenceStore: config.getStore('reference'),

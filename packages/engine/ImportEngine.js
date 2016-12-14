@@ -1,4 +1,4 @@
-//let OpenCorpora = require('./importers/OpenCorpora')
+let OpenCorpora = require('./importers/OpenCorpora')
 
 /*
   Implements the Import Engine API.
@@ -13,15 +13,15 @@ class ImportEngine {
     this.markupStore = config.markupStore
     this.referenceStore = config.referenceStore
 
-    //this.openCorpora = new OpenCorpora(config)
+    this.openCorpora = new OpenCorpora(config)
   }
 
   /*
     Import data from Open Corpora
   */
-  // openCorporaImporter(file, classes) {
-  //   return this.openCorpora.import(file, classes)
-  // }
+  openCorporaImporter(file) {
+    return this.openCorpora.import(file)
+  }
 }
 
 module.exports = ImportEngine
