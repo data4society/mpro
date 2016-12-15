@@ -67,7 +67,7 @@ class OpenCorpora {
       }).then(sets => {
         return Promise.map(sets, set => {
           return this.importSet(dir, set, oc_classes)
-        })
+        }, {concurrency: 5})
       }).then(() => {
         return this.removeUploadedSet(dir)
       }).catch(err => {
