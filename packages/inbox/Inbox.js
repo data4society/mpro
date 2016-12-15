@@ -43,7 +43,7 @@ class Inbox extends AbstractFeedLoader {
     el.append(
       header,
       $$(DoubleSplitPane, {splitType: 'vertical', sizeA: '300px', sizeB: '38%'}).append(
-        $$(Filters, {rubrics: this.state.rubrics}).ref('filters'),
+        $$(Filters, {rubrics: this.state.rubrics, counter: false}).ref('filters'),
         $$(ListScrollPane, {
           scrollbarType: 'substance',
           scrollbarPosition: 'left'

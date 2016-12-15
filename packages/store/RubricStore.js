@@ -194,11 +194,12 @@ class RubricStore {
   listRubrics(filters, options) {
     // Default limit for number of returned records
     if(!options.limit) options.limit = 100
+    let rubricFilters = options.counter ? {} : {counter:false};
 
     return new Promise(function(resolve, reject) {
 
       this.listFacets(filters, options).then(function(facets) {
-        this.db.rubrics.find({}, options, function(err, rubrics) {
+        this.db.rubrics.find(rubricFilters, options, function(err, rubrics) {
           if (err) {
             reject(new Err('RubricStore.ListError', {
               cause: err
@@ -226,6 +227,7 @@ class RubricStore {
   listFacets(filters, options) {
     let args = ArgTypes.findArgs(arguments, this)
     let where = isEmpty(args.conditions) ? {where: " "} : Where.forTable(args.conditions)
+    let counter = options.counter || false;
 
     let sql = 'SELECT rubric, cnt, rubrics.name FROM (\
       SELECT DISTINCT\
@@ -233,9 +235,13 @@ class RubricStore {
         COUNT(*) OVER (PARTITION BY unnest(records.rubrics)) cnt\
       FROM records' + where.where + ') AS docs INNER JOIN rubrics ON (docs.rubric = rubrics.rubric_id)'
 
+    if(!counter) {
+      sql += ' AND rubrics.counter = false'
+    }
+
     return new Promise(function(resolve, reject) {
 
-      this.db.run(sql, where.params, args.options, function(err, facets){
+      this.db.run(sql, where.params, args.options, function(err, facets) {
         if (err) {
           reject(new Err('RubricStore.FacetsError', {
             cause: err

@@ -45,7 +45,8 @@ class MproEngine {
             rubrics: rubrication,
             entities: entities,
             default: app.default || false,
-            configurator: app.configurator || false
+            configurator: app.configurator || false,
+            counterrubrics: app.counterrubrics || false
           }
         })
 

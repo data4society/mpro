@@ -151,6 +151,7 @@ CREATE TABLE "rubrics" (
   rubric_id varchar(40) UNIQUE PRIMARY KEY,
   name varchar(255),
   created timestamp,
+  counter boolean,
   parent_id varchar(40) REFERENCES rubrics,
   description text
 );
