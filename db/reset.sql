@@ -116,6 +116,9 @@ CREATE TABLE "entities" (
   tsv tsvector
 );
 
+-- Entities created time index
+CREATE INDEX entities_created_idx ON entities(created);
+
 CREATE TABLE "markups" (
   markup_id varchar(40) UNIQUE PRIMARY KEY,
   document varchar(40) REFERENCES documents,
