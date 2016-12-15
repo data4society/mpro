@@ -110,7 +110,7 @@ class ResourcesList extends Component {
             $$(Grid.Cell, {columns: 3}).append('#'+item.entity_id),
             $$(Grid.Cell, {columns: 2}).append(item.name),
             $$(Grid.Cell, {columns: 1}).append(item.entity_class),
-            $$(Grid.Cell, {columns: 2}).append(created),
+            $$(Grid.Cell, {columns: 1}).append(created),
             //$$(Grid.Cell, {columns: 1}).append(edited),
             $$(Grid.Cell, {columns: 2}).append(labels),
             $$(Grid.Cell, {columns: 2}).append(externalData),
