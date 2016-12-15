@@ -292,7 +292,7 @@ class OpenCorpora {
       return Promise.map(this.validateExtensions, ex => {
         let filePath = path.join(this.uploadPath, dir, set, set + '.' + ex)
         return exists(filePath, fs.F_OK)
-      })
+      }, {concurrency: 5})
     })
   }
 
