@@ -9,6 +9,7 @@ let extend = require('lodash/extend')
 
 let mv = Promise.promisify(require('mv'))
 let exists = Promise.promisify(fs.access)
+let readDir = Promise.promisify(fs.readdir)
 let readFile = Promise.promisify(fs.readFile)
 let removeDir = Promise.promisify(require('rimraf'))
 
@@ -64,6 +65,26 @@ class OpenCorpora {
         console.log('Starting import...')
         dir = res.dir
         return this.collectSets(res.dir, res.files)
+      }).then(sets => {
+        return Promise.map(sets, set => {
+          return this.importSet(dir, set, oc_classes)
+        }, {concurrency: 5})
+      }).then(() => {
+        return this.removeUploadedSet(dir)
+      }).catch(err => {
+        console.error(err)
+        return this.removeUploadedSet(dir)
+      })
+  }
+
+  /*
+    Run import
+  */
+  importDir(dir) {
+    return readDir('../../../uploads/' + dir)
+      .then(files => {
+        console.log('Starting import...')
+        return this.collectSets(dir, files)
       }).then(sets => {
         return Promise.map(sets, set => {
           return this.importSet(dir, set, oc_classes)

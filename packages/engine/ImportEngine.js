@@ -22,6 +22,10 @@ class ImportEngine {
   openCorporaImporter(file) {
     return this.openCorpora.import(file)
   }
+  
+  openCorporaImportDir(dir) {
+    return this.openCorpora.importDir(dir)
+  }
 }
 
 module.exports = ImportEngine

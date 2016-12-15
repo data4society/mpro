@@ -10,7 +10,7 @@ configurator.import(EnginePackage)
 
 let importEngine = configurator.getEngine('import')
 
-importEngine.openCorporaImporter(fileName)
+importEngine.openCorporaDir(fileName)
   .then(function() {
     console.log('Import has been finished')
     db.shutdown()
