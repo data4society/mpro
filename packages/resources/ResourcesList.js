@@ -63,7 +63,7 @@ class ResourcesList extends Component {
 
   renderIntro($$) {
     let totalItems = this.state.totalItems
-    let el = $$('div').addClass('se-intro no-filters')
+    let el = $$('div').addClass('se-intro')
 
     el.append(
       $$('div').addClass('se-items-count').append(
@@ -110,11 +110,11 @@ class ResourcesList extends Component {
             $$(Grid.Cell, {columns: 3}).append('#'+item.entity_id),
             $$(Grid.Cell, {columns: 2}).append(item.name),
             $$(Grid.Cell, {columns: 1}).append(item.entity_class),
-            $$(Grid.Cell, {columns: 2}).append(created),
-            //$$(Grid.Cell, {columns: 2}).append(edited),
+            //$$(Grid.Cell, {columns: 2}).append(created),
+            $$(Grid.Cell, {columns: 1}).append(edited),
             $$(Grid.Cell, {columns: 2}).append(labels),
-            $$(Grid.Cell, {columns: 2}).append(externalData)
-            //$$(Grid.Cell, {columns: 1}).append(item.author)
+            $$(Grid.Cell, {columns: 2}).append(externalData),
+            $$(Grid.Cell, {columns: 1}).append(item.count)
           ).ref(item.entity_id).on('click', this._openEditor.bind(this, item))
         )
       }.bind(this))
@@ -231,7 +231,17 @@ class ResourcesList extends Component {
         limit: perPage, 
         offset: perPage * (page - 1),
         order: order + ' ' + direction,
-        columns: ['entity_id', 'name', 'created', 'edited', 'author', 'entity_class', 'labels', 'external_data']
+        columns: [
+          'entity_id',
+          'name',
+          'created',
+          'edited',
+          'author',
+          'entity_class',
+          'labels',
+          'external_data',
+          "(SELECT COUNT(*) from records WHERE \"entity_id\"= ANY(records.entities)) AS count"
+        ]
       }, function(err, results) {
         if (err) {
           this.setState({
