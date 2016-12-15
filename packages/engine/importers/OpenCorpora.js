@@ -2,6 +2,7 @@ let fs = require('fs')
 let path = require('path')
 let Err = require('substance').SubstanceError
 let uuid = require('substance').uuid
+let ProgressBar = require('progress')
 let Promise = require('bluebird')
 let extract = require('extract-zip')
 let each = require('lodash/each')
@@ -81,11 +82,13 @@ class OpenCorpora {
     Run import
   */
   importDir(dir) {
-    return readDir('../../../uploads/' + dir)
+    let dirpath = path.join(__dirname, '../../../uploads', dir)
+    return readDir(dirpath)
       .then(files => {
-        console.log('Starting import...')
+        console.log('Starting set collecting...')
         return this.collectSets(dir, files)
       }).then(sets => {
+        console.log('Starting set importing...')
         return Promise.map(sets, set => {
           return this.importSet(dir, set, oc_classes)
         }, {concurrency: 5})
@@ -248,17 +251,25 @@ class OpenCorpora {
     set names as directories names 
   */
   collectSets(dir, files) {
+    let bar = new ProgressBar('  collecting sets [:bar] :percent :etas', {
+      complete: '=',
+      incomplete: ' ',
+      width: 20,
+      total: files.length
+    })
+
     return new Promise((resolve, reject) => {
       let sets = [];
       return Promise.map(files, file => {
         let setName = file.split('.')[0]
+        bar.tick(1)
         if(sets.indexOf(setName) === -1) sets.push(setName)
 
         let from = this.uploadPath + '/' + dir + '/' + file
         let to = this.uploadPath + '/' + dir + '/' + setName + '/' + file
 
         return mv(from, to, {mkdirp: true})
-      }).then(() => {
+      }, {concurrency: 5}).then(() => {
         return this.validateSets(dir, sets)
       }).then(function() {
         resolve(sets)
