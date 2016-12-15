@@ -61,6 +61,7 @@ class OpenCorpora {
     let dir
     return this.unzip(file)
       .then(res => {
+        console.log('Starting import...')
         dir = res.dir
         return this.collectSets(res.dir, res.files)
       }).then(sets => {

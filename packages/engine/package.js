@@ -42,6 +42,7 @@ module.exports = {
     })
 
     let importEngine = new ImportEngine({
+      gap: 5,
       uploadPath: path.join(__dirname, '../../uploads'),
       entityStore: config.getStore('entity'),
       markupStore: config.getStore('markup'),
