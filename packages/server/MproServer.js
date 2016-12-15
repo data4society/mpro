@@ -17,6 +17,7 @@ class MproServer {
   */
   bind(app) {
     app.get(this.path + '/config', this._getConfig.bind(this))
+    app.get(this.path + '/filters', this.authEngine.hasAccess.bind(this.authEngine), this._getFilterValues.bind(this))
     app.get(this.path + '/rubrics', this.authEngine.hasAccess.bind(this.authEngine), this._listRubrics.bind(this))
     app.get(this.path + '/classes', this.authEngine.hasAccess.bind(this.authEngine), this._listClasses.bind(this))
     app.get(this.path + '/facets', this.authEngine.hasAccess.bind(this.authEngine), this._listFacets.bind(this))
@@ -59,6 +60,20 @@ class MproServer {
     }).catch(function(err) {
       return next(err)
     })
+  }
+
+  _getFilterValues(req, res, next) {
+    let filters = req.query.filters || {}
+    let source = req.query.source
+
+    if(!isEmpty(filters)) filters = JSON.parse(filters)
+
+    this.engine.getFilterValues(filters, source)
+      .then(function(result) {
+        res.json(result)
+      }).catch(function(err) {
+        return next(err)
+      })
   }
 
   /*

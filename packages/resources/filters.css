@@ -2,6 +2,10 @@
   background: none;
 }
 
+.sc-list .sc-filters > * {
+  float: left;
+}
+
 .sc-filters .sc-input-filter {
   position: relative;
   width: 248px;
@@ -123,4 +127,16 @@
 .sc-filters .sc-input-filter input::-moz-focus-inner {
   padding: 0;
   border: 0;
+}
+
+.sc-filters .sc-field-select {
+  position: relative;
+  width: 248px;
+  height: 34px;
+  margin: 10px;
+  display: inline-block;
+}
+
+.sc-filters .sc-field-select select {
+  padding: 4px 1px 4px 8px;
 }

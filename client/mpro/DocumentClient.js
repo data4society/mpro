@@ -1,4 +1,4 @@
-import { DocumentClient, request } from 'substance'
+import { DocumentClient } from 'substance'
 
 /*
   HTTP client for talking with DocumentServer
@@ -254,6 +254,14 @@ class MproDocumentClient extends DocumentClient {
     let filtersRequest = encodeURIComponent(JSON.stringify(filters))
     let optionsRequest = encodeURIComponent(JSON.stringify(options))
     this.request('GET', '/api/users?filters=' + filtersRequest + '&options=' + optionsRequest, null, cb)
+  }
+
+  /*
+    Get distinct values for filters from the server
+  */
+  getFilterValues(filters, source, cb) {
+    let filtersRequest = encodeURIComponent(JSON.stringify(filters))
+    this.request('GET', '/api/filters?filters=' + filtersRequest + '&source=' + source, null, cb)
   }
 }
 

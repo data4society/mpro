@@ -1,6 +1,7 @@
 let Err = require('substance').SubstanceError
 let Promise = require('bluebird')
 let each = require('lodash/each')
+let map = require('lodash/map')
 
 /*
   Implements the MPro Engine API.
@@ -52,6 +53,29 @@ class MproEngine {
       
       })
     }.bind(this))
+  }
+
+  getFilterValues(filters, source) {
+    let results = {}
+    return Promise.map(filters, filter => {
+      let query = 'SELECT DISTINCT ' + filter + ' from ' + source;
+      return new Promise((resolve, reject) => {
+        this.db.run(query, function(err, values) {
+          if(err) {
+            return reject(new Err('Engine.GetFilterValuesError', {
+              cause: err
+            }))
+          }
+          results[filter] = map(values, function(val) { 
+            return val[filter] 
+          })
+          resolve()
+        })
+      })
+    }).then(function(){
+      return results
+    })
+
   }
 
   /*
