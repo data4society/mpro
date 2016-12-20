@@ -141,6 +141,7 @@ class Viewer extends ProseEditor {
   _exportDocument() {
     let documentId = this.documentSession.documentId
     let documentClient = this.context.documentClient
+    let entities = this.doc.get(['meta', 'entities'])
     let rubrics = this.doc.get(['meta', 'rubrics'])
     let plain = []
     each(this.doc.getNodes(), function(node) {
@@ -150,6 +151,7 @@ class Viewer extends ProseEditor {
     })
     plain = plain.join('\n')
     let sourceData = {
+      entity_ids: entities,
       rubric_ids: rubrics,
       stripped: plain
     }
