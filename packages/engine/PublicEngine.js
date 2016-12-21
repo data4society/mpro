@@ -53,7 +53,7 @@ class PublicEngine {
     }
     let columns = [
       'document_id AS doc_id', 
-      "json_build_object('title', meta->>'title', 'abstract', meta->>'abstract', 'published', meta->>'published', 'source', meta->>'source', 'publisher', r.meta->>'publisher') AS meta"
+      "json_build_object('title', meta->>'title', 'abstract', meta->>'abstract', 'published', meta->>'published', 'source', meta->>'source', 'publisher', meta->>'publisher') AS meta"
     ]
     if(opts.entities) {
       columns.push("(SELECT array(SELECT json_build_object('name', name, 'id', entity_id) FROM unnest(entities) entity LEFT JOIN entities e on e.entity_id=entity)) AS entities")
