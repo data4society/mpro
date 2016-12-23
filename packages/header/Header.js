@@ -28,6 +28,7 @@ class Header extends Component {
       }
       if(currentAppConfig.entities) {
         actions.resources = this.getLabel('configurator-resources')
+        actions.entities = this.getLabel('entities-menu')
       }
 
       actions.apis = this.getLabel('api-menu')
