@@ -1,8 +1,9 @@
 import { Component } from 'substance'
-import isEqual from 'lodash/isEqual'
-import extend from 'lodash/extend'
+import clone from 'lodash/clone'
 import concat from 'lodash/concat'
 import each from 'lodash/each'
+import extend from 'lodash/extend'
+import isEqual from 'lodash/isEqual'
 
 /*
   Abstract Feed Loader class.
@@ -14,12 +15,17 @@ class AbstractFeedLoader extends Component {
   constructor(...args) {
     super(...args)
     this.handleActions({
-      'updateFeedItem': this._updateFeedItem
+      'updateFeedItem': this._updateFeedItem,
+      'toggleEntityFacet': this._toggleEntityFacet,
+      'selectEntityFacets': this._selectEntityFacets,
+      'saveEntityFacets': this._saveEntityFacets,
+      'loadEntityFacets': this._loadEntityFacets
     })
   }
 
   didMount() {
     this._loadRubrics()
+    this._loadEntities()
     this._loadDocuments()
     //this.pollTimer = setInterval(this._pollDocuments.bind(this), 60000);
   }
@@ -31,9 +37,13 @@ class AbstractFeedLoader extends Component {
   willUpdateState(state) {
     let oldFilters = this.state.filters
     let newFilters = state.filters
+
     if(!isEqual(oldFilters, newFilters) && !state.error) {
       this._loadRubrics(state)
+      this._loadEntities(state)
       this._loadDocuments(state)
+    } else if (!isEqual(this.state.entitiesFacets, state.entitiesFacets) && !state.error) {
+      this._loadEntities(state)
     }
   }
 
@@ -60,8 +70,9 @@ class AbstractFeedLoader extends Component {
     - addNew: show button for adding a new document
   */
   getInitialState() {
+    let entities = this.props.entities ? this.props.entities.split(',') : []
     return {
-      filters: {'training': false, app_id: this.props.app, 'rubrics @>': []},
+      filters: {'training': false, app_id: this.props.app, 'rubrics @>': [], 'entities @>': entities},
       perPage: 10,
       order: 'created',
       direction: 'desc',
@@ -70,6 +81,8 @@ class AbstractFeedLoader extends Component {
       pagination: false,
       totalItems: 0,
       rubrics: {},
+      entities: {},
+      entitiesFacets: entities,
       addNew: false
     }
   }
@@ -108,6 +121,45 @@ class AbstractFeedLoader extends Component {
     }.bind(this))
   }
 
+  _loadEntities(newState) {
+    let state = newState || this.state
+    let documentClient = this.context.documentClient
+    let appsConfig = this.context.config.apps
+    let currentAppConfig = appsConfig[this.props.app]
+    if(currentAppConfig.entities && state.entitiesFacets.length > 0) {
+      let filters = state.filters
+      let entities = filters['entities @>']
+      let options = {
+        columns: [
+          'entity_id',
+          'name',
+          "(SELECT COUNT(*) from records WHERE entity_id = ANY(records.entities) AND '{" + entities.join(',') + "}' <@ records.entities AND '{" + filters['rubrics @>'].join(',') + "}' <@ records.rubrics AND app_id = '" + this.props.app + "') AS count"
+        ]
+      }
+
+      documentClient.listEntities({'entity_id': state.entitiesFacets}, options, (err, result) => {
+        if (err) {
+          console.error(err)
+          this.setState({
+            error: new Error('Rubrics loading failed')
+          })
+          return
+        }
+
+        let entitiesData = {}
+
+        each(result.records, entity => {
+          entitiesData[entity.entity_id] = entity
+          entitiesData[entity.entity_id].active = entities.indexOf(entity.entity_id) > -1
+        })
+
+        this.extendState({
+          entities: entitiesData
+        })
+      })
+    }
+  }
+
   /*
     Loads documents
   */
@@ -126,7 +178,7 @@ class AbstractFeedLoader extends Component {
       filters,
       { 
         limit: perPage, 
-        offset: state.documentItems.length,
+        offset: pagination ? state.documentItems.length : 0,
         order: order + ' ' + direction
       }, 
       function(err, documents) {
@@ -197,6 +249,67 @@ class AbstractFeedLoader extends Component {
       let document = extend({}, feedItem.props.document, {meta: meta})
       feedItem.extendProps({document: document, update: true})
     }
+  }
+
+  _toggleEntityFacet(entityId) {
+    let filters = clone(this.state.filters)
+    let entities = this.state.entities
+    let activeFacets = clone(filters['entities @>'])
+    entities[entityId].active = !entities[entityId].active
+    let facetIndex = activeFacets.indexOf(entityId)
+    if(facetIndex > -1) {
+      activeFacets.splice(facetIndex, 1)
+    } else {
+      activeFacets.push(entityId)
+    }
+    filters['entities @>'] = activeFacets  
+    this.extendState({
+      entities: entities,
+      filters: filters,
+      pagination: false
+    })
+  }
+
+  _selectEntityFacets(selectedEntities) {
+    let entitiesFacets = selectedEntities.id
+    let filters = clone(this.state.filters)
+    let activeFacets = clone(filters['entities @>'])
+    each(activeFacets, facet => {
+      let facetIndex = entitiesFacets.indexOf(facet)
+      if(facetIndex === -1) {
+        activeFacets.splice(facetIndex, 1)
+      }
+    })
+    filters['entities @>'] = activeFacets
+    let stateUpdate = {
+      entitiesFacets: entitiesFacets,
+      filters: filters,
+      pagination: false
+    }
+    if(entitiesFacets.length === 0) stateUpdate.entities = []
+    this.extendState(stateUpdate)
+  }
+
+  _saveEntityFacets() {
+    let app = this.props.app
+    let savedEntityFacets = window.localStorage.getItem('entityFacets')
+    let entityFacets = savedEntityFacets ? JSON.parse(savedEntityFacets) : {}
+    entityFacets[app] = this.state.entitiesFacets
+    window.localStorage.setItem('entityFacets', JSON.stringify(entityFacets))
+  }
+
+  _loadEntityFacets() {
+    let filters = clone(this.state.filters)
+    filters['entities @>'] = []
+    let app = this.props.app
+    let savedEntityFacets = window.localStorage.getItem('entityFacets')
+    let entityFacets = savedEntityFacets ? JSON.parse(savedEntityFacets) : {}
+    let stateUpdate = {
+      entitiesFacets: entityFacets[app] || [],
+      filters: filters,
+      pagination: false
+    }
+    this.extendState(stateUpdate)
   }
 
   /*

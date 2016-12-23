@@ -15,6 +15,14 @@ class MproRouter extends Router {
     })
   }
 
+  filterDocuments(entities, app) {
+    return '#' + Router.objectToRouteString({
+      page: 'inbox',
+      app: app,
+      entities: entities
+    })
+  }
+
   getRoute() {
     let routerString = this.getRouteString()
     return Router.routeStringToObject(routerString)
