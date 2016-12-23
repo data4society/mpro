@@ -64,7 +64,7 @@ class Facets extends Component {
 
     if(level === 1) {
       el.addClass('se-tree-title')
-      el.append($$('span').addClass('se-tree-node-name').append(node.name))
+      el.append($$('span').addClass('se-tree-node-name').append('Rubrics (' + node.name + ')'))
     } else {
       el.on('click', this._toggleFacet.bind(this, node.id))
       el.append($$('span').addClass('se-tree-node-name').append(node.name))

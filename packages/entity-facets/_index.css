@@ -1,0 +1,19 @@
+.sc-facets.sc-entity-facets .se-tree-node {
+  padding: 7px 20px;
+}
+
+.sc-facets.sc-entity-facets .se-tree-node.active {
+  background: #7b1838;
+}
+
+.sc-entity-facets .se-actions {
+  position: absolute;
+  right: 10px;
+  top: 6px;
+}
+
+.sc-entity-facets .se-actions i {
+  font-size: 15px;
+  padding: 2px 4px;
+  cursor: pointer;
+}

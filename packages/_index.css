@@ -3,6 +3,7 @@
 @import './collaborators/_index.css';
 @import './common/_index.css';
 @import './cover/_index.css';
+@import './entity-facets/_index.css';
 @import './facets/_index.css';
 @import './feed/_index.css';
 @import './filters/_index.css';
