@@ -153,7 +153,7 @@ class Viewer extends ProseEditor {
     let sourceData = {
       entity_ids: entities,
       rubric_ids: rubrics,
-      stripped: plain.replace(/\s/g,' ')
+      stripped: plain.replace(/\s/g,' ').replace(/&nbsp;/g,' ')
     }
 
     documentClient.updateSource(documentId, sourceData, function(err) {
