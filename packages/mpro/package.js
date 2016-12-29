@@ -3,6 +3,7 @@ import { BasePackage } from 'substance'
 import SubConfigurator from '../common/SubConfigurator'
 
 import FiltersPackage from '../filters/package'
+import AcceptorFilterPackage from '../acceptor-filter/package'
 import EntityFacetsPackage from '../entity-facets/package'
 import FacetsPackage from '../facets/package'
 import RubricsPackage from '../rubrics/package'
@@ -61,6 +62,7 @@ export default {
     config.import(SimplePagerPackage)
     config.import(RubricsPackage)
     config.import(FiltersPackage)
+    config.import(AcceptorFilterPackage)
     config.import(EntityFacetsPackage)
     config.import(FacetsPackage)
     config.import(LoaderPackage)

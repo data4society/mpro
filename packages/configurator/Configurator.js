@@ -43,6 +43,8 @@ class Configurator extends AbstractFeedLoader {
   }
 
   render($$) {
+    let appsConfig = this.context.config.apps
+    let currentAppConfig = appsConfig[this.props.app]
     let authenticationClient = this.context.authenticationClient
     let Header = this.getComponent('header')
     let Feed = this.getComponent('feed')
@@ -63,7 +65,11 @@ class Configurator extends AbstractFeedLoader {
     el.append(
       header,
       $$(DoubleSplitPane, {splitType: 'vertical', sizeA: '300px', sizeB: '38%'}).append(
-        $$(Filters, {rubrics: this.state.rubrics}).ref('filters'),
+        $$(Filters, {
+          rubrics: this.state.rubrics,
+          acceptor: currentAppConfig.configurator || currentAppConfig.counterrubrics,
+          filters: this.state.filters
+        }).ref('filters'),
         $$(ListScrollPane, {
           scrollbarType: 'substance',
           scrollbarPosition: 'left'
@@ -206,7 +212,7 @@ class Configurator extends AbstractFeedLoader {
       filters,
       { 
         limit: perPage, 
-        offset: state.documentItems.length,
+        offset: pagination ? state.documentItems.length : 0,
         order: order + ' ' + direction
       }, 
       function(err, documents) {

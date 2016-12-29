@@ -4,6 +4,7 @@ import concat from 'lodash/concat'
 import each from 'lodash/each'
 import extend from 'lodash/extend'
 import isEqual from 'lodash/isEqual'
+import isNull from 'lodash/isNull'
 
 /*
   Abstract Feed Loader class.
@@ -16,6 +17,7 @@ class AbstractFeedLoader extends Component {
     super(...args)
     this.handleActions({
       'updateFeedItem': this._updateFeedItem,
+      'toggleDataFilter': this._toggleDataFilter,
       'toggleEntityFacet': this._toggleEntityFacet,
       'selectEntityFacets': this._selectEntityFacets,
       'saveEntityFacets': this._saveEntityFacets,
@@ -269,6 +271,21 @@ class AbstractFeedLoader extends Component {
       pagination: false
     })
   }
+
+  _toggleDataFilter(prop, value) {
+    let filters = clone(this.state.filters)
+    let propName = 'meta->>' + prop
+    if(!isNull(value)) {
+      filters[propName] = value
+    } else {
+      delete filters[propName]
+    }
+
+    this.extendState({
+      filters: filters,
+      pagination: false
+    })
+  } 
 
   _selectEntityFacets(selectedEntities) {
     let entitiesFacets = selectedEntities.id

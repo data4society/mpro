@@ -27,6 +27,7 @@
 
 /* Configurator */
 @import './acceptor/_index.css';
+@import './acceptor-filter/_index.css';
 @import './configurator/_index.css';
 
 /* Collections */

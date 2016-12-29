@@ -1,0 +1,21 @@
+.se-filter-acceptor {
+  width: 32px;
+  display: inline-block;
+  padding-left: 12px;
+  margin-left: 5px;
+}
+
+.se-filter-acceptor button {
+  border: 1px solid #fff;
+  color: #fff;
+}
+
+.se-filter-acceptor.sm-on button {
+  background: #88cc82;
+  border: none;
+}
+
+.se-filter-acceptor.sm-off button {
+  background: #cc8282;
+  border: none;
+}
