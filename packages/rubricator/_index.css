@@ -12,10 +12,10 @@
 
 .sc-rubricator .se-tree-node {
   position: relative;
-  font-size: 14px;
+  font-size: 13px;
   text-transform: uppercase;
   border-bottom: 1px solid #E0E4E4;
-  padding: 20px;
+  padding: 10px;
   background: #fafafa;
   border-bottom: 1px solid #ddd;
   border-left: 4px solid transparent;
@@ -41,20 +41,20 @@
 .sc-rubricator .se-tree-node .selection {
   float: right;
   font-size: 23px;
-  padding: 17px 20px;
+  padding: 9px 20px;
   top: 0px;
   position: absolute;
   right: 0px;
 }
 
 .sc-rubricator .se-tree-node .selection.fa-square-o {
-  padding: 17px 23px;
+  padding: 9px 23px;
 }
 
 .sc-rubricator .se-tree-node .expansion {
   font-size: 23px;
   position: absolute;
-  top: 17px;
+  top: 7px;
 }
 
 .sc-rubricator .se-tree-node .help {
