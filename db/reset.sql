@@ -15,6 +15,7 @@ drop table if exists "rubrics";
 drop table if exists "sessions";
 drop table if exists "users";
 drop table if exists "variables";
+drop materialized view if exists "themed_records";
 
 CREATE TABLE "users" (
   user_id varchar(40) UNIQUE PRIMARY KEY,
@@ -175,3 +176,25 @@ CREATE TABLE "apis" (
   live boolean,
   app_id varchar(255)
 );
+
+CREATE MATERIALIZED VIEW "themed_records"
+AS
+  SELECT r.document_id,
+    r.title,
+    r.schema_name,
+    r.published,
+    r.created,
+    r.rubrics,
+    r.entities,
+    r.app_id,
+    r.meta,
+    t.theme_id,
+    t.title AS theme
+   FROM records r
+     LEFT JOIN documents d ON r.source = d.doc_id
+     LEFT JOIN themes t ON t.theme_id = d.theme_id;
+WITH NO DATA;
+
+CREATE INDEX themed_records_created ON themed_records_materialized_view USING btree (created);
+CREATE INDEX themed_records_theme_idx_created ON themed_records_materialized_view USING btree (theme_id, created DESC);
+CREATE INDEX themed_records_theme_idx ON themed_records_materialized_view USING btree (theme_id);
