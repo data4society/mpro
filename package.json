@@ -25,13 +25,13 @@
     "rimraf": "^2.5.2",
     "sanitize-html": "^1.11.4",
     "substance": "substance/substance#e445d6b7754b5f52ec1ed37e3114994a953cecb9",
-    "substance-cheerio": "^0.1.0",
-    "substance-test": "^0.3.1",
+    "substance-cheerio": "0.1.0",
+    "substance-test": "0.3.1",
     "ws": "^1.1.0"
   },
   "devDependencies": {
     "glob": "7.0.3",
-    "substance-bundler": "^0.5.1",
+    "substance-bundler": "0.5.1",
     "tap-spec": "^4.1.1",
     "tape": "^4.6.0",
     "through2": "^2.0.1"
