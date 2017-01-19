@@ -1,5 +1,6 @@
 let testModule = require('substance-test').module
 
+let Promise = require('bluebird')
 let Configurator = require('../../packages/common/ServerConfigurator')
 let Database = require('../../packages/common/Database')
 let StorePackage = require('../../packages/store/package')
@@ -22,6 +23,16 @@ function setup() {
     .then(function() {
       let userStore = configurator.getStore('user')
       return userStore.seed()
+    })
+    .then(function() {
+      return new Promise(function(resolve, reject) {
+        db.connection.seed.themeSeed(function(err) {
+          if (err) {
+            reject(new Error('Theme seed error'))
+          }
+          resolve()
+        })
+      })
     })
     .then(function() {
       sourceStore = configurator.getStore('source')
