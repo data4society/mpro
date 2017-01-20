@@ -1,6 +1,8 @@
 import ListScrollPane from '../common/ListScrollPane'
 import DoubleSplitPane from '../common/DoubleSplitPane'
 import AbstractFeedLoader from '../common/AbstractFeedLoader'
+import concat from 'lodash/concat'
+import extend from 'lodash/extend'
 
 /*
   Represents Inbox page.
@@ -17,8 +19,10 @@ class Inbox extends AbstractFeedLoader {
     this.handleActions({
       'loadMore': this._loadMore,
       'openDocument': this._openDocument,
+      'openTheme': this._openTheme,
       'notify': this._notify,
-      'connectSession': this._connectSession
+      'connectSession': this._connectSession,
+      'switchMode': this._switchMode
     })
   }
 
@@ -55,7 +59,7 @@ class Inbox extends AbstractFeedLoader {
           scrollbarType: 'substance',
           scrollbarPosition: 'left'
         }).append(
-          $$(Feed, this.state).ref('feed')
+          $$(Feed, extend({}, this.state, {modes: true})).ref('feed')
         ),
         $$(Loader, {
           documentId: this.state.documentId,
@@ -73,8 +77,8 @@ class Inbox extends AbstractFeedLoader {
   _openDocument(documentId) {
     let loader = this.refs.loader
     let feed = this.refs.feed
-
-    this.extendState({documentId: documentId})
+    let state = {documentId: documentId}
+    this.extendState(state)
     feed.setActiveItem(documentId)
     this.updateUrl(documentId)
     
@@ -83,9 +87,26 @@ class Inbox extends AbstractFeedLoader {
     })
   }
 
-  updateUrl(documentId) {
+  _openTheme(documentId, themeId) {
+    let loader = this.refs.loader
+    let feed = this.refs.feed
+
+    let state = {documentId: documentId}
+    if(themeId) state.themeId = themeId
+    this.extendState(state)
+    feed.setActiveItem(documentId)
+    this.updateUrl(documentId, themeId)
+    
+    loader.extendProps({
+      documentId: documentId
+    })
+  }
+
+  updateUrl(documentId, themeId) {
     let urlHelper = this.context.urlHelper
-    urlHelper.writeRoute({page: 'inbox', documentId: documentId, app: this.props.app})
+    let route = {page: 'inbox', documentId: documentId, app: this.props.app}
+    if(themeId) route.themeId = themeId
+    urlHelper.writeRoute(route)
   }
 
   _loadMore() {
@@ -95,12 +116,64 @@ class Inbox extends AbstractFeedLoader {
     this._loadDocuments()
   }
 
+  _switchMode(mode) {
+    this.extendState({
+      mode: mode
+    })
+  }
+
   _notify(msg) {
     this.refs.notification.extendProps(msg)
   }
 
   _connectSession(session) {
     this.refs.collaborators.extendProps(session)
+  }
+
+  /*
+    Loads documents
+  */
+  _loadDocuments(newState) {
+    let state = newState || this.state
+    let documentClient = this.context.documentClient
+    let perPage = state.perPage
+    let order = state.order
+    let direction = state.direction
+    let pagination = state.pagination
+    let listMethod = state.mode === 'themed' ? 'listThemedDocuments' : 'listDocuments'
+    let items = []
+
+    let filters = state.filters
+
+    documentClient[listMethod](
+      filters,
+      { 
+        limit: perPage, 
+        offset: pagination ? state.documentItems.length : 0,
+        order: order + ' ' + direction
+      }, 
+      function(err, documents) {
+        if (err) {
+          console.error(err)
+          this.setState({
+            error: new Error('Documents loading failed')
+          })
+          return
+        }
+
+        if(pagination) {
+          items = concat(state.documentItems, documents.records)
+        } else {
+          items = documents.records
+        }
+
+        this.extendState({
+          documentItems: items,
+          totalItems: documents.total,
+          lastQueryTime: new Date()
+        })
+      }.bind(this)
+    )
   }
 
 }

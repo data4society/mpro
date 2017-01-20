@@ -46,6 +46,8 @@ class AbstractFeedLoader extends Component {
       this._loadDocuments(state)
     } else if (!isEqual(this.state.entitiesFacets, state.entitiesFacets) && !state.error) {
       this._loadEntities(state)
+    } else if (!isEqual(this.state.mode, state.mode) && !state.error) {
+      this._loadDocuments(state)
     }
   }
 
