@@ -30,3 +30,20 @@
   margin-right: 10px;
   cursor: pointer;
 }
+
+.sc-feed .se-modes {
+  float: right;
+}
+
+.sc-feed .se-modes > button {
+  height: 23px;
+  padding: 4px;
+  margin-left: 4px;
+  border-color: #d5d7da;
+  color: #d5d7da;
+}
+
+.sc-feed .se-modes > button.sm-active {
+  border-color: #5F6773;
+  color: #5F6773;
+}
