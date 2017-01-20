@@ -1,8 +1,13 @@
 let Err = require('substance').SubstanceError
 let uuid = require('substance').uuid
 let each = require('lodash/each')
+let isEmpty = require('lodash/isEmpty')
 let isUndefined = require('lodash/isUndefined')
 let Promise = require("bluebird")
+
+// Massive internal libs
+let ArgTypes = require('../../node_modules/massive/lib/arg_types')
+let Where = require('../../node_modules/massive/lib/where')
 
 /*
   Implements the Document Store API.
@@ -271,6 +276,68 @@ class DocumentStore {
       this.db.records.find(filters, options, function(err, docs) {
         if (err) {
           return cb(new Err('DocumentStore.ListError', {
+            cause: err
+          }))
+        }
+
+        each(docs, function(doc) {
+          // Set documentId explictly as it will be used by Document Engine
+          doc.documentId = doc.document_id
+          // Set schemaName and schemaVersion explictly as it will be used by Snapshot Engine
+          doc.schemaName = doc.schema_name
+          doc.schemaVersion = doc.schema_version
+        })
+
+        output.records = docs
+        cb(null, output)
+      })
+    }.bind(this))
+  }
+
+  /*
+    List available themes with top documents using given filters and options
+
+    @param {Object} filters filters
+    @param {Object} options options
+    @param {Callback} cb callback
+    @returns {Callback}
+  */
+  listThemedDocuments(filters, options, cb) {
+    let output = {}
+
+    // Default limit for number of returned records
+    if(!options.limit) options.limit = 100
+    if(!options.offset) options.offset = 0
+
+    let args = ArgTypes.findArgs(arguments, this)
+    let where = isEmpty(args.conditions) ? {where: " "} : Where.forTable(args.conditions)
+
+    // if(!options.columns) {
+    //   options.columns = [
+    //     'document_id', 'guid', 'title', 'schema_name', 'schema_version', 'published', 'created', 'edited', 'edited_by', 'rubrics', 'meta'
+    //   ]
+    // }
+
+    this.db.records.count(filters, function(err, count) {
+      if (err) {
+        return cb(new Err('DocumentStore.ListError', {
+          cause: err
+        }))
+      }
+      output.total = count
+
+      let sql = `
+        SELECT * from
+        (SELECT DISTINCT ON (theme_id) *,
+        (SELECT COUNT(*) FROM themed_records a WHERE a.theme_id = t.theme_id) AS count
+        FROM themed_records t ${where.where}
+        ORDER BY theme_id, created DESC LIMIT ${args.options.limit} OFFSET ${args.options.offset}) as foo
+        ORDER BY created DESC;
+      `
+            
+      this.db.run(sql, where.params, function(err, docs) {
+        if (err) {
+          return cb(new Err('DocumentStore.ThemedListError', {
             cause: err
           }))
         }
