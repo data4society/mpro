@@ -197,6 +197,7 @@ AS
     r.rubrics,
     r.entities,
     r.app_id,
+    r.training,
     r.meta,
     t.theme_id,
     t.title AS theme
