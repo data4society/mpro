@@ -57,6 +57,13 @@ class MproDocumentClient extends DocumentClient {
     this.request('GET', '/api/documents?filters=' + filtersRequest + '&options=' + optionsRequest, null, cb)
   }
 
+  listThemedDocuments(filters, options, cb) {
+    // TODO: send filters and options to server
+    let filtersRequest = encodeURIComponent(JSON.stringify(filters));
+    let optionsRequest = encodeURIComponent(JSON.stringify(options));
+    this.request('GET', '/api/documents/themed?filters=' + filtersRequest + '&options=' + optionsRequest, null, cb)
+  }
+
   listRubrics(filters, options, cb) {
     let filtersRequest = encodeURIComponent(JSON.stringify(filters));
     let optionsRequest = encodeURIComponent(JSON.stringify(options));
