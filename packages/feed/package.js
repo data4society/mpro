@@ -50,5 +50,6 @@ export default {
     config.addIcon('vk', { 'fontawesome': 'fa-vk' })
     config.addIcon('plain-mode', { 'fontawesome': 'fa-list' })
     config.addIcon('themed-mode', { 'fontawesome': 'fa-outdent' })
+    config.addIcon('go-back', { 'fontawesome': 'fa-caret-square-o-left' })
   }
 }

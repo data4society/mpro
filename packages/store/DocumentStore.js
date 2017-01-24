@@ -318,9 +318,9 @@ class DocumentStore {
     //   ]
     // }
 
-    this.db.records.count(filters, function(err, count) {
+    this.db.themed_records.count(filters, function(err, count) {
       if (err) {
-        return cb(new Err('DocumentStore.ListError', {
+        return cb(new Err('DocumentStore.ListThemedError', {
           cause: err
         }))
       }
@@ -331,10 +331,19 @@ class DocumentStore {
         (SELECT DISTINCT ON (theme_id) *,
         (SELECT COUNT(*) FROM themed_records a WHERE a.theme_id = t.theme_id) AS count
         FROM themed_records t ${where.where}
-        ORDER BY theme_id, created DESC LIMIT ${args.options.limit} OFFSET ${args.options.offset}) as foo
+        ORDER BY theme_id, created DESC LIMIT ${args.options.limit} OFFSET ${args.options.offset}) as docs
         ORDER BY created DESC;
       `
-            
+
+      if(filters.theme_id) {
+        sql = `
+          SELECT *
+          FROM themed_records
+          ${where.where}
+          ORDER BY created DESC LIMIT ${args.options.limit} OFFSET ${args.options.offset}
+        `
+      }
+      console.log(sql)
       this.db.run(sql, where.params, function(err, docs) {
         if (err) {
           return cb(new Err('DocumentStore.ThemedListError', {

@@ -47,3 +47,11 @@
   border-color: #5F6773;
   color: #5F6773;
 }
+
+.sc-feed .se-go-back {
+  height: 23px;
+  padding: 4px 0px;
+  margin-right: 4px;
+  border: none;
+  float: left;
+}

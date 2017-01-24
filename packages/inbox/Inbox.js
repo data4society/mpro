@@ -20,6 +20,7 @@ class Inbox extends AbstractFeedLoader {
       'loadMore': this._loadMore,
       'openDocument': this._openDocument,
       'openTheme': this._openTheme,
+      'closeTheme': this._closeTheme,
       'notify': this._notify,
       'connectSession': this._connectSession,
       'switchMode': this._switchMode
@@ -91,15 +92,21 @@ class Inbox extends AbstractFeedLoader {
     let loader = this.refs.loader
     let feed = this.refs.feed
 
-    let state = {documentId: documentId}
-    if(themeId) state.themeId = themeId
-    this.extendState(state)
+    let filtersState = {}
+    if(themeId) filtersState.theme_id = themeId
+    filtersState = extend({}, this.state.filters, filtersState)
+    this.extendState({filters: filtersState})
     feed.setActiveItem(documentId)
     this.updateUrl(documentId, themeId)
-    
     loader.extendProps({
       documentId: documentId
     })
+  }
+
+  _closeTheme() {
+    let filtersState = this.state.filters
+    delete filtersState.theme_id
+    this.extendState({filters: filtersState})
   }
 
   updateUrl(documentId, themeId) {
@@ -117,6 +124,7 @@ class Inbox extends AbstractFeedLoader {
   }
 
   _switchMode(mode) {
+    this.updateUrl(this.props.documentId)
     this.extendState({
       mode: mode
     })
@@ -144,7 +152,7 @@ class Inbox extends AbstractFeedLoader {
     let items = []
 
     let filters = state.filters
-
+    if(state.mode !== 'themed') delete state.filters.theme_id
     documentClient[listMethod](
       filters,
       { 

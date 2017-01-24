@@ -57,6 +57,12 @@ class Feed extends Component {
     let label = this.getLabel('counter' + this._getNumEnding(totalItems))
     label = totalItems > 0 ? totalItems + ' ' + label : label
 
+    if(this.props.filters.theme_id) {
+      let goBackBtn = $$(Button, {style: 'default', icon: 'go-back'}).addClass('se-go-back')
+        .on('click', this.send.bind(this, 'closeTheme'))
+      el.append(goBackBtn)
+    }
+
     el.append(
       $$('div').addClass('se-document-count').append(
         label
