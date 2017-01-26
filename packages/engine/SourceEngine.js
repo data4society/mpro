@@ -17,6 +17,7 @@ class SourceEngine {
     this.gap = config.gap || 1
     // How many records could be converted simultaneously
     this.concurrency = config.concurrency || 5
+    this.db = config.db
     this.engine = config.engine
     this.sourceStore = config.sourceStore
     this.documentStore = config.documentStore
@@ -54,6 +55,18 @@ class SourceEngine {
         return Promise.map(data, function(sourceId) {
           return this.convert(sourceId)
         }.bind(this), {concurrency: this.concurrency})
+      }.bind(this))
+      .then(function(sources) {
+        return new Promise(function(resolve, reject) {
+          this.db.run('REFRESH MATERIALIZED VIEW themed_records', function(err) {
+            if (err) {
+              reject(new Err('Themed records view refreshing error', {
+                cause: err
+              }))
+            }
+            resolve(sources)
+          })
+        }.bind(this))
       }.bind(this))
       .then(function(sources) {
         if(sources.length > 0) {
