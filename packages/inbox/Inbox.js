@@ -27,6 +27,13 @@ class Inbox extends AbstractFeedLoader {
     })
   }
 
+  didMount() {
+    let theme = this.props.themeId
+    this._loadRubrics()
+    this._loadEntities()
+    this._loadDocuments(false, theme)
+  }
+
   render($$) {
     let authenticationClient = this.context.authenticationClient
     let appsConfig = this.context.config.apps
@@ -95,9 +102,9 @@ class Inbox extends AbstractFeedLoader {
     let filtersState = {}
     if(themeId) filtersState.theme_id = themeId
     filtersState = extend({}, this.state.filters, filtersState)
-    this.extendState({filters: filtersState})
+    this.extendState({filters: filtersState, pagination: false})
     feed.setActiveItem(documentId)
-    this.updateUrl(documentId, themeId)
+    this.updateUrl(documentId, themeId, 'themed')
     loader.extendProps({
       documentId: documentId
     })
@@ -111,10 +118,12 @@ class Inbox extends AbstractFeedLoader {
     this.extendState({filters: filters})
   }
 
-  updateUrl(documentId, themeId) {
+  updateUrl(documentId, themeId, mode) {
     let urlHelper = this.context.urlHelper
     let route = {page: 'inbox', documentId: documentId, app: this.props.app}
     if(themeId) route.themeId = themeId
+    mode = mode || this.props.mode
+    if(mode) route.mode = mode
     urlHelper.writeRoute(route)
   }
 
@@ -126,7 +135,7 @@ class Inbox extends AbstractFeedLoader {
   }
 
   _switchMode(mode) {
-    this.updateUrl(this.props.documentId)
+    this.updateUrl(this.props.documentId, false, mode)
     this.extendState({
       mode: mode
     })
@@ -143,7 +152,7 @@ class Inbox extends AbstractFeedLoader {
   /*
     Loads documents
   */
-  _loadDocuments(newState) {
+  _loadDocuments(newState, theme) {
     let state = newState || this.state
     let documentClient = this.context.documentClient
     let perPage = state.perPage
@@ -154,14 +163,15 @@ class Inbox extends AbstractFeedLoader {
     let items = []
 
     let filters = state.filters
-    if(state.mode !== 'themed') delete state.filters.theme_id
+    if(theme) filters.theme_id = theme
+    if(state.mode !== 'themed') delete filters.theme_id
     documentClient[listMethod](
       filters,
       { 
         limit: perPage, 
         offset: pagination ? state.documentItems.length : 0,
         order: order + ' ' + direction
-      }, 
+      },
       function(err, documents) {
         if (err) {
           console.error(err)

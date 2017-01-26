@@ -85,6 +85,7 @@ class AbstractFeedLoader extends Component {
       documentItems: [],
       pagination: false,
       totalItems: 0,
+      mode: this.props.mode,
       rubrics: {},
       entities: {},
       entitiesFacets: entities,
