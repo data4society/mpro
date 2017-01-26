@@ -105,8 +105,10 @@ class Inbox extends AbstractFeedLoader {
 
   _closeTheme() {
     let filtersState = this.state.filters
-    delete filtersState.theme_id
-    this.extendState({filters: filtersState})
+    let filters = extend({}, filtersState, {theme_id: undefined})
+    delete filters.theme_id
+    this.updateUrl(this.props.documentId)
+    this.extendState({filters: filters})
   }
 
   updateUrl(documentId, themeId) {

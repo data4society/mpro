@@ -318,13 +318,27 @@ class DocumentStore {
     //   ]
     // }
 
-    this.db.themed_records.count(filters, function(err, count) {
+    let countQuery = `
+      SELECT COUNT(*) FROM
+      (SELECT DISTINCT ON (theme_id) *
+      FROM themed_records t ${where.where}) AS docs
+    `
+
+    if(filters.theme_id) {
+      countQuery = `
+        SELECT COUNT(*)
+        FROM themed_records t ${where.where}
+      `
+    }
+
+    this.db.run(countQuery, where.params, function(err, count) {
       if (err) {
         return cb(new Err('DocumentStore.ListThemedError', {
           cause: err
         }))
       }
-      output.total = count
+
+      output.total = count[0].count
 
       let sql = `
         SELECT * from
@@ -343,7 +357,7 @@ class DocumentStore {
           ORDER BY created DESC LIMIT ${args.options.limit} OFFSET ${args.options.offset}
         `
       }
-      console.log(sql)
+
       this.db.run(sql, where.params, function(err, docs) {
         if (err) {
           return cb(new Err('DocumentStore.ThemedListError', {
