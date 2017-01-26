@@ -100,6 +100,18 @@ class MproDocumentEngine extends DocumentEngine {
   listDocuments(filters, options, cb) {
     this.documentStore.listDocuments(filters, options, cb);
   }
+
+  /*
+    List themes with top documents using given filters and options
+
+    @param {Object} filters filters
+    @param {Object} options options
+    @param {Callback} cb callback
+    @returns {Callback}
+  */
+  listThemedDocuments(filters, options, cb) {
+    this.documentStore.listThemedDocuments(filters, options, cb);
+  }
 }
 
 module.exports = MproDocumentEngine

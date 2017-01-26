@@ -57,6 +57,12 @@ class Feed extends Component {
     let label = this.getLabel('counter' + this._getNumEnding(totalItems))
     label = totalItems > 0 ? totalItems + ' ' + label : label
 
+    if(this.props.filters.theme_id) {
+      let goBackBtn = $$(Button, {style: 'default', icon: 'go-back'}).addClass('se-go-back')
+        .on('click', this.send.bind(this, 'closeTheme'))
+      el.append(goBackBtn)
+    }
+
     el.append(
       $$('div').addClass('se-document-count').append(
         label
@@ -67,6 +73,26 @@ class Feed extends Component {
       el.append(
         $$(Button, {label: 'new-document', style: 'default'}).addClass('se-new-document-button')
           .on('click', this.send.bind(this, 'newDocument'))
+      )
+    }
+
+    if(this.props.modes) {
+      let plainModeBtn = $$(Button, {style: 'default', icon: 'plain-mode'}).addClass('se-plain-mode')
+        .on('click', this.send.bind(this, 'switchMode', 'plain'))
+      let themedModeBtn = $$(Button, {style: 'default', icon: 'themed-mode'}).addClass('se-themed-mode')
+        .on('click', this.send.bind(this, 'switchMode', 'themed'))
+
+      if(this.props.mode === 'themed') {
+        themedModeBtn.addClass('sm-active')
+      } else {
+        plainModeBtn.addClass('sm-active')
+      }
+
+      el.append(
+        $$('div').addClass('se-modes').append(
+          plainModeBtn,
+          themedModeBtn
+        )
       )
     }
 
@@ -101,12 +127,15 @@ class Feed extends Component {
       documentItems.forEach(function(documentItem) {
         let schemaName = documentItem.schemaName
         let FeedItem = this.getComponent(schemaName + '-feed-item')
+        let FeedThemedItem = this.getComponent('feed-themed-item')
         let active = false
         if(documentItem.documentId === this.activeItem) {
           active = true
         }
+        let itemComp = this.props.mode === 'themed' && documentItem.count > 1 ? FeedThemedItem : FeedItem
+
         el.append(
-          $$(FeedItem, {
+          $$(itemComp, {
             document: documentItem,
             active: active,
             rubrics: this.props.rubrics

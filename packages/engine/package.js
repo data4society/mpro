@@ -62,6 +62,7 @@ module.exports = {
     })
 
     let sourceEngine = new SourceEngine({
+      db: db,
       configurator: config,
       engine: mproEngine,
       documentStore: config.getStore('document'),

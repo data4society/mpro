@@ -15,7 +15,8 @@ class MproDocumentServer extends DocumentServer {
   */
   bind(app) {
     app.post(this.path, this.authEngine.hasAccess.bind(this.authEngine), this._createDocument.bind(this))
-    app.get(this.path + '/:id', this.authEngine.hasAccess.bind(this.authEngine),this._getDocument.bind(this))
+    app.get(this.path + '/themed', /*this.authEngine.hasAccess.bind(this.authEngine),*/ this._listThemedDocuments.bind(this))
+    app.get(this.path + '/:id', this.authEngine.hasAccess.bind(this.authEngine), this._getDocument.bind(this))
     app.delete(this.path + '/:id', this.authEngine.hasAccess.bind(this.authEngine), this._deleteDocument.bind(this))
 
     // MPro document specific routes
@@ -33,6 +34,19 @@ class MproDocumentServer extends DocumentServer {
     if(!isEmpty(options)) options = JSON.parse(options)
 
     this.engine.listDocuments(filters, options, function(err, result) {
+      if (err) return next(err)
+      res.json(result)
+    })
+  }
+
+  _listThemedDocuments(req, res, next) {
+    let filters = req.query.filters || {}
+    let options = req.query.options || {}
+
+    if(!isEmpty(filters)) filters = JSON.parse(filters)
+    if(!isEmpty(options)) options = JSON.parse(options)
+
+    this.engine.listThemedDocuments(filters, options, function(err, result) {
       if (err) return next(err)
       res.json(result)
     })

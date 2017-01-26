@@ -26,6 +26,17 @@ db.reset() // Clear the database, set up the schema
     let rubricStore = configurator.getStore('rubric')
     return rubricStore.seed()
   }).then(function() {
+    return new Promise(function(resolve, reject) {
+      db.connection.seed.themeSeed(function(err) {
+        if (err) {
+          reject(new Err('Theme seed error', {
+            cause: err
+          }))
+        }
+        resolve()
+      })
+    })
+  }).then(function() {
     let sourceStore = configurator.getStore('source')
     return sourceStore.seed()
   }).then(function() {
@@ -48,6 +59,17 @@ db.reset() // Clear the database, set up the schema
       db.connection.seed.variableSeed(function(err) {
         if (err) {
           reject(new Err('Variables seed error', {
+            cause: err
+          }))
+        }
+        resolve()
+      })
+    })
+  }).then(function() {
+    return new Promise(function(resolve, reject) {
+      db.connection.run('REFRESH MATERIALIZED VIEW themed_records', function(err) {
+        if (err) {
+          reject(new Err('Themed records view refreshing error', {
             cause: err
           }))
         }

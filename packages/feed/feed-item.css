@@ -64,7 +64,19 @@
   font-size: 12px;
 }
 
+.sc-feed-item .se-more-topic {
+  font-size: 12px;
+  border: 1px solid rgba(90, 95, 101, 0.5);
+  border-radius: 3px;
+  padding: 10px 5px;
+  margin-top: 10px;
+}
+
+.sc-feed-item.active .se-more-topic {
+  border-color: rgba(253, 253, 253, 0.75);
+}
+
 .sc-feed-item .se-separator {
-  border-bottom: 1px rgba(90, 95, 101, 0.5) solid;
+  border-bottom: 1px solid rgba(90, 95, 101, 0.5);
   padding-bottom: 15px;
 }

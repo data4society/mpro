@@ -1,6 +1,8 @@
 import ListScrollPane from '../common/ListScrollPane'
 import DoubleSplitPane from '../common/DoubleSplitPane'
 import AbstractFeedLoader from '../common/AbstractFeedLoader'
+import concat from 'lodash/concat'
+import extend from 'lodash/extend'
 
 /*
   Represents Inbox page.
@@ -17,9 +19,19 @@ class Inbox extends AbstractFeedLoader {
     this.handleActions({
       'loadMore': this._loadMore,
       'openDocument': this._openDocument,
+      'openTheme': this._openTheme,
+      'closeTheme': this._closeTheme,
       'notify': this._notify,
-      'connectSession': this._connectSession
+      'connectSession': this._connectSession,
+      'switchMode': this._switchMode
     })
+  }
+
+  didMount() {
+    let theme = this.props.themeId
+    this._loadRubrics()
+    this._loadEntities()
+    this._loadDocuments(false, theme)
   }
 
   render($$) {
@@ -55,7 +67,7 @@ class Inbox extends AbstractFeedLoader {
           scrollbarType: 'substance',
           scrollbarPosition: 'left'
         }).append(
-          $$(Feed, this.state).ref('feed')
+          $$(Feed, extend({}, this.state, {modes: true})).ref('feed')
         ),
         $$(Loader, {
           documentId: this.state.documentId,
@@ -73,8 +85,8 @@ class Inbox extends AbstractFeedLoader {
   _openDocument(documentId) {
     let loader = this.refs.loader
     let feed = this.refs.feed
-
-    this.extendState({documentId: documentId})
+    let state = {documentId: documentId}
+    this.extendState(state)
     feed.setActiveItem(documentId)
     this.updateUrl(documentId)
     
@@ -83,9 +95,36 @@ class Inbox extends AbstractFeedLoader {
     })
   }
 
-  updateUrl(documentId) {
+  _openTheme(documentId, themeId) {
+    let loader = this.refs.loader
+    let feed = this.refs.feed
+
+    let filtersState = {}
+    if(themeId) filtersState.theme_id = themeId
+    filtersState = extend({}, this.state.filters, filtersState)
+    this.extendState({filters: filtersState, pagination: false})
+    feed.setActiveItem(documentId)
+    this.updateUrl(documentId, themeId, 'themed')
+    loader.extendProps({
+      documentId: documentId
+    })
+  }
+
+  _closeTheme() {
+    let filtersState = this.state.filters
+    let filters = extend({}, filtersState, {theme_id: undefined})
+    delete filters.theme_id
+    this.updateUrl(this.props.documentId)
+    this.extendState({filters: filters})
+  }
+
+  updateUrl(documentId, themeId, mode) {
     let urlHelper = this.context.urlHelper
-    urlHelper.writeRoute({page: 'inbox', documentId: documentId, app: this.props.app})
+    let route = {page: 'inbox', documentId: documentId, app: this.props.app}
+    if(themeId) route.themeId = themeId
+    mode = mode || this.props.mode
+    if(mode) route.mode = mode
+    urlHelper.writeRoute(route)
   }
 
   _loadMore() {
@@ -95,12 +134,66 @@ class Inbox extends AbstractFeedLoader {
     this._loadDocuments()
   }
 
+  _switchMode(mode) {
+    this.updateUrl(this.props.documentId, false, mode)
+    this.extendState({
+      mode: mode
+    })
+  }
+
   _notify(msg) {
     this.refs.notification.extendProps(msg)
   }
 
   _connectSession(session) {
     this.refs.collaborators.extendProps(session)
+  }
+
+  /*
+    Loads documents
+  */
+  _loadDocuments(newState, theme) {
+    let state = newState || this.state
+    let documentClient = this.context.documentClient
+    let perPage = state.perPage
+    let order = state.order
+    let direction = state.direction
+    let pagination = state.pagination
+    let listMethod = state.mode === 'themed' ? 'listThemedDocuments' : 'listDocuments'
+    let items = []
+
+    let filters = state.filters
+    if(theme) filters.theme_id = theme
+    if(state.mode !== 'themed') delete filters.theme_id
+    documentClient[listMethod](
+      filters,
+      { 
+        limit: perPage, 
+        offset: pagination ? state.documentItems.length : 0,
+        order: order + ' ' + direction
+      },
+      function(err, documents) {
+        if (err) {
+          console.error(err)
+          this.setState({
+            error: new Error('Documents loading failed')
+          })
+          return
+        }
+
+        if(pagination) {
+          items = concat(state.documentItems, documents.records)
+        } else {
+          items = documents.records
+        }
+
+        this.extendState({
+          documentItems: items,
+          totalItems: documents.total,
+          lastQueryTime: new Date()
+        })
+      }.bind(this)
+    )
   }
 
 }

@@ -1,5 +1,6 @@
 -- Reset database:
 
+drop materialized view if exists "themed_records";
 drop table if exists "apis";
 drop table if exists "changes";
 drop table if exists "rules";
@@ -15,6 +16,7 @@ drop table if exists "rubrics";
 drop table if exists "sessions";
 drop table if exists "users";
 drop table if exists "variables";
+drop table if exists "themes";
 
 CREATE TABLE "users" (
   user_id varchar(40) UNIQUE PRIMARY KEY,
@@ -25,6 +27,14 @@ CREATE TABLE "users" (
   password varchar(255),
   access boolean,
   super boolean
+);
+
+CREATE TABLE "themes" (
+  theme_id varchar(40) UNIQUE PRIMARY KEY,
+  title varchar(511),
+  last_renew_time timestamp,
+  words jsonb,
+  app_id varchar(255)
 );
 
 CREATE TABLE "documents" (
@@ -42,6 +52,7 @@ CREATE TABLE "documents" (
   markup jsonb,
   type varchar(255),
   url text,
+  theme_id varchar(40) REFERENCES themes,
   app_id varchar(255)
 );
 
@@ -175,3 +186,26 @@ CREATE TABLE "apis" (
   live boolean,
   app_id varchar(255)
 );
+
+CREATE MATERIALIZED VIEW "themed_records"
+AS
+  SELECT r.document_id,
+    r.title,
+    r.schema_name,
+    r.published,
+    r.created,
+    r.rubrics,
+    r.entities,
+    r.app_id,
+    r.training,
+    r.meta,
+    t.theme_id,
+    t.title AS theme
+   FROM records r
+     LEFT JOIN documents d ON r.source = d.doc_id
+     LEFT JOIN themes t ON t.theme_id = d.theme_id
+WITH NO DATA;
+
+CREATE INDEX themed_records_created ON themed_records USING btree (created);
+CREATE INDEX themed_records_theme_idx_created ON themed_records USING btree (theme_id, created DESC);
+CREATE INDEX themed_records_theme_idx ON themed_records USING btree (theme_id);
