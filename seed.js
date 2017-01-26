@@ -69,7 +69,7 @@ db.reset() // Clear the database, set up the schema
     return new Promise(function(resolve, reject) {
       db.connection.run('REFRESH MATERIALIZED VIEW themed_records', function(err) {
         if (err) {
-          reject(new Err('Variables seed error', {
+          reject(new Err('Themed records view refreshing error', {
             cause: err
           }))
         }
