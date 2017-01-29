@@ -40,6 +40,7 @@ class OIDigest extends Component {
       activeEntity: {},
       perPage: 5,
       page: 1,
+      mode: 'documents',
       items: []
     }
   }
@@ -240,6 +241,10 @@ class OIDigest extends Component {
     }.bind(this))
   }
 
+  _loadEntities() {
+
+  }
+
   _loadTopEntities() {
     let url = this.state.endpoint + '/api/public/' + this.state.topEntitiesKey
     request('GET', url, null, function(err, topEntities) {
@@ -250,6 +255,10 @@ class OIDigest extends Component {
 
       this.extendState({topEntities: topEntities})
     }.bind(this))
+  }
+
+  _switchMode(mode) {
+    this.extendState({mode: mode})
   }
 
 }
