@@ -164,6 +164,13 @@ class PublicEngine {
     let offset = opts.offset || 0
     let limit = opts.limit || 10
     let collections = !isEmpty(value) ? JSON.parse('[' + value + ']') : [] 
+
+    let countSql = `SELECT COUNT(id) FROM (
+      SELECT DISTINCT
+        unnest(records.entities) AS id
+      FROM records WHERE $1 <@ collections AND app_id = $2
+    ) AS docs INNER JOIN entities e ON (id = e.entity_id)`;
+
     let sql = `SELECT id, cnt, e.name FROM (
       SELECT DISTINCT
         unnest(records.entities) AS id,
@@ -173,17 +180,31 @@ class PublicEngine {
 
     return new Promise(function(resolve, reject) {
 
-      this.db.run(sql, [collections, app_id], function(err, res) {
+      let result = {}
+      
+      this.db.run(countSql, [collections, app_id], function(err, total) {
         if(err) {
-          return reject(new Err('PublicEngine.CollectionsFacetsApi', {
+          return reject(new Err('PublicEngine.EntityFacetsApi', {
             cause: err
           }))
         }
 
-        resolve(res)
+        result.total = total[0].count
+
+        this.db.run(sql, [collections, app_id], function(err, res) {
+          if(err) {
+            return reject(new Err('PublicEngine.EntityFacetsApi', {
+              cause: err
+            }))
+          }
+
+          result.records = res
+
+          resolve(result)
+        
+        })
       
-      })
-      
+      }.bind(this))
     }.bind(this))
   }
 
