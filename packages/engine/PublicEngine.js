@@ -31,9 +31,9 @@ class PublicEngine {
       } else if (apiRecord.api === 'entity_docs') {
         return this._entityDocuments(apiRecord.param, query, apiRecord.app_id, options)
       } else if (apiRecord.api === 'collections_list') {
-        return this._collectionsFacets(query, apiRecord.app_id)
+        return this._collectionsFacets(query, apiRecord.app_id, options)
       } else if (apiRecord.api === 'entities_list') {
-        return this._entitiesFacets(query, apiRecord.app_id)
+        return this._entitiesFacets(query, apiRecord.app_id, options)
       } else if (apiRecord.api === 'get_document') {
         return this._getDocument(query, apiRecord.app_id)
       } else {
@@ -132,14 +132,17 @@ class PublicEngine {
     }.bind(this))
   }
 
-  _collectionsFacets(value, app_id) {
+  _collectionsFacets(value, app_id, opts) {
+    let offset = opts.offset || 0
+    let limit = opts.limit || 100
     let collections = !isEmpty(value) ? JSON.parse('[' + value + ']') : [] 
     let sql = `SELECT collection, cnt, collections.name FROM (
       SELECT DISTINCT
         unnest(records.collections) AS collection,
         COUNT(*) OVER (PARTITION BY unnest(records.collections)) cnt
       FROM records WHERE $1 <@ collections AND app_id = $2
-    ) AS docs INNER JOIN collections ON (docs.collection = collections.collection_id::text) WHERE collections.public = true AND app_id = $2;`
+    ) AS docs INNER JOIN collections ON (docs.collection = collections.collection_id::text) 
+    WHERE collections.public = true AND app_id = $2 OFFSET ${offset} LIMIT ${limit}`;
 
     return new Promise(function(resolve, reject) {
 
@@ -157,14 +160,16 @@ class PublicEngine {
     }.bind(this))
   }
 
-  _entitiesFacets(value, app_id) {
+  _entitiesFacets(value, app_id, opts) {
+    let offset = opts.offset || 0
+    let limit = opts.limit || 10
     let collections = !isEmpty(value) ? JSON.parse('[' + value + ']') : [] 
     let sql = `SELECT id, cnt, e.name FROM (
       SELECT DISTINCT
         unnest(records.entities) AS id,
       COUNT(*) OVER (PARTITION BY unnest(entities)) cnt
       FROM records WHERE $1 <@ collections AND app_id = $2
-    ) AS docs INNER JOIN entities e ON (id = e.entity_id) ORDER BY cnt DESC LIMIT 10;`
+    ) AS docs INNER JOIN entities e ON (id = e.entity_id) ORDER BY cnt DESC OFFSET ${offset} LIMIT ${limit}`;
 
     return new Promise(function(resolve, reject) {
 
