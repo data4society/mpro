@@ -4,6 +4,7 @@ import each from 'lodash/each'
 import isEqual from 'lodash/isEqual'
 import map from 'lodash/map'
 import moment from 'moment'
+import OIHeader from './OIHeader'
 import ListScrollPane from './ListScrollPane'
 import Pager from './Pager'
 
@@ -34,11 +35,12 @@ class OIDigest extends Component {
       collectionDocsKey: 'a27aecc2-5c97-5347-7074-805af59808ae',
       entityDocsKey: 'ce0d823c-798a-f9e7-d98c-6b1812837214',
       topEntitiesKey: '62bf1f46-c5fd-bb1e-c215-f962512da4f4',
+      title: 'Новости о политических преследованиях',
       collections: [],
       topEntities: [],
       activeCollection: '',
       activeEntity: {},
-      perPage: 5,
+      perPage: 10,
       page: 1,
       mode: 'documents',
       items: []
@@ -67,9 +69,35 @@ class OIDigest extends Component {
       ).addClass('se-digest')
     )
 
-    el.append(layout)
+    el.append(
+      $$(OIHeader),
+      this.renderHeader($$),
+      layout
+    )
 
     return el
+  }
+
+  renderHeader($$) {
+    let wrapper = $$('div').addClass('se-top-panel')
+    let el = $$('div').addClass('se-header-panel')
+
+    el.append(
+      $$('div').addClass('se-header-title').setInnerHTML(this.state.title)
+    )
+
+    if(this.state.total) {
+      el.append(
+        $$('div').addClass('se-header-stats').append(
+          this.state.total,
+          $$('i').addClass('fa fa-newspaper-o')
+        )
+      )
+    }
+
+    wrapper.append(el)
+
+    return wrapper
   }
 
   renderSideBar($$) {
@@ -137,7 +165,7 @@ class OIDigest extends Component {
         let sourceName = this._getSourceName(item.meta.source)
         grid.append(
           $$('a').attr({href: item.meta.source, target: '_blank', class: 'se-row se-source'}).ref(item.doc_id).append(
-            $$(Grid.Cell, {columns: 6}).append(sourceName),
+            $$(Grid.Cell, {columns: 6}).addClass('se-source-name').append(sourceName),
             $$(Grid.Cell, {columns: 6}).addClass('se-item-published').append(published),
             $$('div').addClass('se-divider'),
             $$(Grid.Row).addClass('se-item-title').append(item.meta.title),
@@ -172,7 +200,7 @@ class OIDigest extends Component {
 
   _entityFilter(entity, e) {
     e.preventDefault()
-    this.extendState({activeCollection: '', activeEntity: entity})
+    this.extendState({activeCollection: '', activeEntity: entity, title: 'Все новости о: <em>' + entity.name + '</em>'})
   }
 
   _loadMore() {
