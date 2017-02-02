@@ -270,7 +270,19 @@ class OIDigest extends Component {
   }
 
   _loadEntities() {
+    let options = {
 
+    }
+    let optionsRequest = encodeURIComponent(JSON.stringify(options))
+    let url = this.state.endpoint + '/api/public/' + this.state.topEntitiesKey + '?options=' + optionsRequest
+    request('GET', url, null, function(err, topEntities) {
+      if (err) {
+        console.error('ERROR', err)
+        return
+      }
+
+      this.extendState({topEntities: topEntities.records})
+    }.bind(this))
   }
 
   _loadTopEntities() {
@@ -281,7 +293,7 @@ class OIDigest extends Component {
         return
       }
 
-      this.extendState({topEntities: topEntities})
+      this.extendState({topEntities: topEntities.records})
     }.bind(this))
   }
 
