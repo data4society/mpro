@@ -53,7 +53,7 @@ class PublicEngine {
     }
 
     if(opts.entityFilters) {
-      filters.entities = opts.entityFilters
+      filters['entities @>'] = opts.entityFilters
     }
 
     let columns = [
