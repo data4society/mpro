@@ -51,6 +51,11 @@ class PublicEngine {
       'collections &&': col_id.split(','),
       app_id: app
     }
+
+    if(opts.entityFilters) {
+      filters.entities = opts.entityFilters
+    }
+
     let columns = [
       'document_id AS doc_id', 
       "json_build_object('title', meta->>'title', 'abstract', meta->>'abstract', 'published', meta->>'published', 'source', meta->>'source', 'publisher', meta->>'publisher') AS meta"
