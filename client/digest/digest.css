@@ -11,10 +11,36 @@
   font-style:normal;
 }
 
+@font-face{
+  font-family:'fontello';
+  src:url(https://ovdinfo.org/sites/all/themes/ovdinfo/css/fontello_n/font/fontello.eot?1);
+  src:url(https://ovdinfo.org/sites/all/themes/ovdinfo/css/fontello_n/font/fontello.eot?1#iefix) format('embedded-opentype'),
+      url(https://ovdinfo.org/sites/all/themes/ovdinfo/css/fontello_n/font/fontello.woff?1) format('woff'),
+      url(https://ovdinfo.org/sites/all/themes/ovdinfo/css/fontello_n/font/fontello.ttf?1) format('truetype'),
+      url(https://ovdinfo.org/sites/all/themes/ovdinfo/css/fontello_n/font/fontello.svg?1#fontello) format('svg');
+  font-weight:normal;
+  font-style:normal;
+}
+
 body { 
   overflow: hidden; 
   background: #f2f2f2;
   color: #2d2d2d;
+}
+
+.font-icon {
+  font-family: "fontello";
+  font-style: normal;
+  font-weight: normal !important;
+  speak: none;
+  display: inline-block;
+  text-decoration: inherit;
+  font-variant: normal;
+  text-transform: none;
+  line-height: 1em;
+  margin-right: 4px;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
 .sc-digest { 
@@ -30,9 +56,11 @@ body {
 /* Header */
 
 .sc-digest .sc-header {
+  position: relative;
   background: #2d2d2d;
   width: 100%;
   height: 75px;
+  z-index: 90;
 }
 
 .sc-digest .se-social {
@@ -40,7 +68,7 @@ body {
   padding-top: 9px;
   padding-bottom: 21px;
   padding-left: 20px;
-  padding-right: 20px;
+  padding-right: 16px;
   float: left;
 }
 
@@ -87,12 +115,12 @@ body {
 }
 
 .sc-digest .se-social .se-social-links {
-  padding: 5px 10px 5px 0px;
+  padding: 8px 10px 5px 0px;
 }
 
 .sc-digest .se-social-donate {
   float: right;
-  height: 45px;
+  height: 75px;
 }
 
 .sc-digest .se-social a {
@@ -104,6 +132,10 @@ body {
   padding: 0 6px;
   text-align: center;
   text-decoration: none;
+}
+
+.sc-digest .se-social a:hover {
+  color: #f04e23;
 }
 
 .sc-digest .se-social-donate .se-donate {
@@ -154,6 +186,37 @@ body {
   margin-left: 3px;
 }
 
+.sc-digest .se-header-about {
+  position: absolute;
+  right: 20px;
+  padding: 10px 0px;
+  width: 40px;
+  text-align: center;
+  font-weight: bold;
+  font-size: 20px;
+  cursor: pointer;
+}
+
+.sc-digest .se-header-about.sm-active {
+  background: #f2f2f2;
+}
+
+.sc-digest .se-about {
+  position: absolute;
+  left: 0px;
+  right: 0px;
+  top: 115px;
+  bottom: 0px;
+  background: #f2f2f2;
+  z-index: 99;
+}
+
+.sc-digest .se-about .se-content {
+  margin: 10px auto;
+  max-width: 960px;
+  white-space: pre-wrap;
+}
+
 .sc-digest .se-spinner {
   height: 100%;
 }
@@ -167,6 +230,16 @@ body {
   bottom: 0;
 }
 
+.sc-digest .se-no-results {
+  position: absolute;
+  margin: auto;
+  top: 0;
+  left: 300px;
+  right: 0;
+  bottom: 0;
+  height: 30px;
+  text-align: center;
+}
 
 /* Layout */
 
@@ -180,6 +253,7 @@ body {
 }
 
 .se-list-not-empty {
+  margin-bottom: 10px;
 }
 
 .se-digest {
@@ -202,6 +276,17 @@ body {
 
 .se-entities-list .se-title {
   margin-top: 20px;
+}
+
+.se-expand-mentions {
+  float: right;
+  color: #2d2d2d;
+  font-size: 12px;
+  cursor: pointer;
+}
+
+.se-expand-mentions i {
+  margin-left: 3px;
 }
 
 .sc-collections {

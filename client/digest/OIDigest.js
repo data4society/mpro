@@ -66,16 +66,29 @@ class OIDigest extends Component {
       noPadding: false
     })
 
+    let total = this.state.total
+    let docsPanel
+
+    if(total > 0) {
+      docsPanel = $$(ListScrollPane, {
+        scrollbarType: 'substance',
+        scrollbarPosition: 'right'
+      }).append(this.renderContent($$))
+    } else if (total === '0') {
+      docsPanel = $$('div').addClass('se-no-results').append(
+        'К сожалению по вашему запросу не найдено новостей'
+      )
+    } else {
+      docsPanel = this.renderSpinner($$)
+    }
+
     layout.append(
       $$(SplitPane, {
         sizeA: '300px',
         splitType: 'vertical'
       }).append(
         this.renderSideBar($$),
-        $$(ListScrollPane, {
-          scrollbarType: 'substance', // defaults to native
-          scrollbarPosition: 'right' // defaults to right
-        }).append(this.renderContent($$))
+        docsPanel
       ).addClass('se-digest')
     )
 
@@ -84,6 +97,10 @@ class OIDigest extends Component {
       this.renderHeader($$),
       layout
     )
+
+    if(this.state.about) {
+      el.append(this.renderAbout($$))
+    }
 
     return el
   }
@@ -96,6 +113,12 @@ class OIDigest extends Component {
       $$('div').addClass('se-header-title').setInnerHTML(this.state.title)
     )
 
+    let aboutBtn = $$('div').addClass('se-header-about').append(
+      $$('i').addClass('fa fa-question-circle-o')
+    ).on('click', this._toggleAboutSection)
+
+    if(this.state.about) aboutBtn.addClass('sm-active')
+
     if(this.state.total) {
       el.append(
         $$('div').addClass('se-header-stats').append(
@@ -104,6 +127,8 @@ class OIDigest extends Component {
         )
       )
     }
+
+    el.append(aboutBtn)
 
     wrapper.append(el)
 
@@ -134,14 +159,19 @@ class OIDigest extends Component {
     let entitiesEl = $$('div').addClass('se-entities-list')
     entitiesEl.append(
       $$('div').addClass('se-title')
-        .append('Упоминания:')
-        .on('click', this._switchMode.bind(this, 'entities'))
+        .append(
+          'Упоминания:',
+          $$('span').addClass('se-expand-mentions').append(
+            'все',
+            $$('i').addClass('fa fa-expand')
+          ).on('click', this._switchMode.bind(this, 'entities'))
+        )
     )
     each(entities, function(entity) {
       let item = $$('div').addClass('se-entity-node').append(
         $$('span').addClass('se-node-name').append(entity.name),
         $$('span').addClass('se-node-count').append(entity.cnt)
-      ).on('click', this._entityFilter.bind(this, entity))
+      ).on('click', this._entityFilter.bind(this, entity, false))
 
       if(entity.id === this.state.activeEntity.id) {
         item.addClass('se-active')
@@ -170,7 +200,7 @@ class OIDigest extends Component {
               let entityItem = $$('span')
                 .addClass('se-item-entity')
                 .append(entity.name)
-                .on('click', this._entityFilter.bind(this, entity))
+                .on('click', this._entityFilter.bind(this, entity, true))
 
               entities.append(entityItem)
             }
@@ -194,7 +224,7 @@ class OIDigest extends Component {
             $$(Grid.Row).addClass('se-row se-entity-list-item').ref(item.id).append(
               $$(Grid.Cell, {columns: 11}).addClass('se-entity-name').append(item.name),
               $$(Grid.Cell, {columns: 1}).addClass('se-entity-counter').append(item.cnt)
-            ).on('click', this._entityFilter.bind(this, item))
+            ).on('click', this._entityFilter.bind(this, item, false))
           )
         })
       }
@@ -205,16 +235,26 @@ class OIDigest extends Component {
       }
     }
 
-    if(items.length === 0) {
-      el.append(this.renderSpinner($$))
-    }
-    
     return el
   }
 
   renderSpinner($$) {
     let el = $$('div').addClass('se-spinner')
     el.append($$('img').attr({src: '/digest/assets/loader.gif'}))
+    return el
+  }
+
+  renderAbout($$) {
+    let el = $$('div').addClass('se-about')
+    let content = `One morning, when Gregor Samsa woke from troubled dreams, he found himself transformed in his bed into a horrible vermin. He lay on his armour-like back, and if he lifted his head a little he could see his brown belly, slightly domed and divided by arches into stiff sections.
+
+The bedding was hardly able to cover it and seemed ready to slide off any moment. His many legs, pitifully thin compared with the size of the rest of him, waved about helplessly as he looked. "What's happened to me? " he thought. It wasn't a dream. His room, a proper human room although a little too small, lay peacefully between its four familiar walls. A collection of textile samples lay spread out on the table - Samsa was a travelling salesman - and above it there hung a picture that he had recently cut out of an illustrated magazine and housed
+    `
+
+    el.append(
+      $$('div').addClass('se-content').append(content)
+    )
+
     return el
   }
 
@@ -230,15 +270,30 @@ class OIDigest extends Component {
 
   _collectionFilter(colId) {
     let activeCollection = this.state.activeCollection !== colId ? colId : ''
-    this.extendState({activeCollection: activeCollection, mode: 'documents', items: [], total: 0})
+    let colNode
+    each(this.state.collections, col => {
+      if(col.collection === colId) {
+        colNode = col
+        return
+      }
+    })
+    let state = {activeCollection: activeCollection, activeEntity: {}, title: 'Новости по теме: <em>' + colNode.name + '</em>', mode: 'documents', items: [], total: null}
+    if(this.state.activeCollection === colId) state.title = 'Новости о политических преследованиях'
+    this.extendState(state)
   }
 
-  _entityFilter(entity, e) {
+  _entityFilter(entity, force, e) {
     e.preventDefault()
     if(!isEqual(this.state.activeEntity, entity)) {
-      this.extendState({activeEntity: entity, title: 'Все новости о: <em>' + entity.name + '</em>', mode: 'documents', items: [], total: 0})
+      let state = {activeEntity: entity, mode: 'documents', items: [], total: null}
+      if(this.state.mode === 'entities') state.activeCollection = ''
+      if(!this.state.activeCollection || force) state.title = 'Все новости о: <em>' + entity.name + '</em>'
+      if(force) state.activeCollection = ''
+      this.extendState(state)
     } else {
-      this.extendState({activeEntity: {}, items: [], total: 0})
+      let state = {activeEntity: {}, items: [], total: null}
+      if(!this.state.activeCollection) state.title = 'Новости о политических преследованиях'
+      this.extendState(state)
     }
   }
 
@@ -357,7 +412,12 @@ class OIDigest extends Component {
   }
 
   _switchMode(mode) {
-    this.extendState({mode: mode, items: [], total: 0})
+    this.extendState({mode: mode, items: [], total: null})
+  }
+
+  _toggleAboutSection() {
+    let showAbout = !this.state.about
+    this.extendState({about: showAbout})
   }
 
 }
