@@ -26,6 +26,16 @@ class OIDigest extends Component {
     if(!isEqual(this.state.collections, oldState.collections) || this.state.activeCollection !== oldState.activeCollection || !isEqual(this.state.activeEntity, oldState.activeEntity)) {
       this._loadDocuments()
     }
+    if(this.state.activeCollection !== oldState.activeCollection) {
+      this._loadTopEntities()
+    }
+    if(!isEqual(this.state.mode, oldState.mode)) {
+      if(this.state.mode === 'documents') {
+        this._loadDocuments()
+      } else if (this.state.mode === 'entities') {
+        this._loadEntities()
+      }
+    }
   }
 
   getInitialState() {
@@ -122,13 +132,16 @@ class OIDigest extends Component {
 
 
     let entitiesEl = $$('div').addClass('se-entities-list')
-    entitiesEl.append($$('div').addClass('se-title').append('Упоминания:'))
+    entitiesEl.append(
+      $$('div').addClass('se-title')
+        .append('Упоминания:')
+        .on('click', this._switchMode.bind(this, 'entities'))
+    )
     each(entities, function(entity) {
       let item = $$('div').addClass('se-entity-node').append(
         $$('span').addClass('se-node-name').append(entity.name),
         $$('span').addClass('se-node-count').append(entity.cnt)
-      ).ref(entity.id)
-      .on('click', this._entityFilter.bind(this, entity))
+      ).on('click', this._entityFilter.bind(this, entity))
 
       if(entity.id === this.state.activeEntity.id) {
         item.addClass('se-active')
@@ -149,37 +162,59 @@ class OIDigest extends Component {
     let grid = $$(Grid)
 
     if (items) {
-      items.forEach(function(item) {
-        let entities = $$(Grid.Row).addClass('se-item-entities')
-        item.entities.forEach(function(entity) {
-          if(entity.name !== '') {
-            let entityItem = $$('span')
-              .addClass('se-item-entity')
-              .append(entity.name)
-              .on('click', this._entityFilter.bind(this, entity))
+      if(this.state.mode === 'documents') {
+        items.forEach(function(item) {
+          let entities = $$(Grid.Row).addClass('se-item-entities')
+          item.entities.forEach(function(entity) {
+            if(entity.name !== '') {
+              let entityItem = $$('span')
+                .addClass('se-item-entity')
+                .append(entity.name)
+                .on('click', this._entityFilter.bind(this, entity))
 
-            entities.append(entityItem)
-          }
-        }.bind(this))
-        let published = moment(item.meta.published).format('DD.MM.YYYY')
-        let sourceName = this._getSourceName(item.meta.source)
-        grid.append(
-          $$('a').attr({href: item.meta.source, target: '_blank', class: 'se-row se-source'}).ref(item.doc_id).append(
-            $$(Grid.Cell, {columns: 6}).addClass('se-source-name').append(sourceName),
-            $$(Grid.Cell, {columns: 6}).addClass('se-item-published').append(published),
-            $$('div').addClass('se-divider'),
-            $$(Grid.Row).addClass('se-item-title').append(item.meta.title),
-            $$(Grid.Row).addClass('se-item-abstract').append(item.meta.abstract),
-            entities
+              entities.append(entityItem)
+            }
+          }.bind(this))
+          let published = moment(item.meta.published).format('DD.MM.YYYY')
+          let sourceName = this._getSourceName(item.meta.source)
+          grid.append(
+            $$('a').attr({href: item.meta.source, target: '_blank', class: 'se-row se-source'}).ref(item.doc_id).append(
+              $$(Grid.Cell, {columns: 6}).addClass('se-source-name').append(sourceName),
+              $$(Grid.Cell, {columns: 6}).addClass('se-item-published').append(published),
+              $$('div').addClass('se-divider'),
+              $$(Grid.Row).addClass('se-item-title').append(item.meta.title),
+              $$(Grid.Row).addClass('se-item-abstract').append(item.meta.abstract),
+              entities
+            )
           )
-        )
-      }.bind(this))
+        }.bind(this))
+      } else if (this.state.mode === 'entities') {
+        items.forEach(item => {
+          grid.append(
+            $$(Grid.Row).addClass('se-row se-entity-list-item').ref(item.id).append(
+              $$(Grid.Cell, {columns: 11}).addClass('se-entity-name').append(item.name),
+              $$(Grid.Cell, {columns: 1}).addClass('se-entity-counter').append(item.cnt)
+            ).on('click', this._entityFilter.bind(this, item))
+          )
+        })
+      }
 
       el.append(grid)
       if(items.length < total) {
         el.append($$(Pager, {total: total, loaded: items.length}))
       }
     }
+
+    if(items.length === 0) {
+      el.append(this.renderSpinner($$))
+    }
+    
+    return el
+  }
+
+  renderSpinner($$) {
+    let el = $$('div').addClass('se-spinner')
+    el.append($$('img').attr({src: '/digest/assets/loader.gif'}))
     return el
   }
 
@@ -195,16 +230,24 @@ class OIDigest extends Component {
 
   _collectionFilter(colId) {
     let activeCollection = this.state.activeCollection !== colId ? colId : ''
-    this.extendState({activeCollection: activeCollection, activeEntity: {}})
+    this.extendState({activeCollection: activeCollection, mode: 'documents', items: [], total: 0})
   }
 
   _entityFilter(entity, e) {
     e.preventDefault()
-    this.extendState({activeCollection: '', activeEntity: entity, title: 'Все новости о: <em>' + entity.name + '</em>'})
+    if(!isEqual(this.state.activeEntity, entity)) {
+      this.extendState({activeEntity: entity, title: 'Все новости о: <em>' + entity.name + '</em>', mode: 'documents', items: [], total: 0})
+    } else {
+      this.extendState({activeEntity: {}, items: [], total: 0})
+    }
   }
 
   _loadMore() {
-    this._loadDocuments(true)
+    if(this.state.mode === 'documents') {
+      this._loadDocuments(true)
+    } else if(this.state.mode === 'entities') {
+      this._loadEntities(true)
+    }
   }
 
   _loadCollections() {
@@ -269,24 +312,39 @@ class OIDigest extends Component {
     }.bind(this))
   }
 
-  _loadEntities() {
+  _loadEntities(pagination) {
+    let perPage = this.state.perPage
+    
     let options = {
-
+      limit: perPage, 
+      offset: pagination ? this.state.items.length : 0
     }
     let optionsRequest = encodeURIComponent(JSON.stringify(options))
     let url = this.state.endpoint + '/api/public/' + this.state.topEntitiesKey + '?options=' + optionsRequest
-    request('GET', url, null, function(err, topEntities) {
+
+    request('GET', url, null, function(err, results) {
       if (err) {
         console.error('ERROR', err)
         return
       }
 
-      this.extendState({topEntities: topEntities.records})
+      let items
+      if(pagination) {
+        items = concat(this.state.items, results.records)
+      } else {
+        items = results.records
+      }
+
+      this.extendState({
+        items: items,
+        total: results.total
+      })
     }.bind(this))
   }
 
   _loadTopEntities() {
     let url = this.state.endpoint + '/api/public/' + this.state.topEntitiesKey
+    if(this.state.activeCollection) url += '?query="' + this.state.activeCollection + '"'
     request('GET', url, null, function(err, topEntities) {
       if (err) {
         console.error('ERROR', err)
@@ -298,7 +356,7 @@ class OIDigest extends Component {
   }
 
   _switchMode(mode) {
-    this.extendState({mode: mode})
+    this.extendState({mode: mode, items: [], total: 0})
   }
 
 }
