@@ -271,6 +271,10 @@ class OIDigest extends Component {
       entities: true
     }
 
+    if(this.state.activeEntity.id) {
+      options.entityFilters = [this.state.activeEntity.id]
+    }
+
     let optionsRequest = encodeURIComponent(JSON.stringify(options))
 
     let query
@@ -279,15 +283,12 @@ class OIDigest extends Component {
     if(this.state.activeCollection) {
       key = this.state.collectionDocsKey
       query = this.state.activeCollection
-    } else if (!this.state.activeEntity.id) {
+    } else {
       let colIds = map(this.state.collections, function(c) {
         return c.collection
       })
       query = colIds.join(',')
       key = this.state.collectionDocsKey
-    } else {
-      key = this.state.entityDocsKey
-      query = this.state.activeEntity.id
     }
 
     let url = this.state.endpoint + '/api/public/' + key + '/?query=' + query + '&options=' + optionsRequest
