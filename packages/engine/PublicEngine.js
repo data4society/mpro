@@ -57,8 +57,8 @@ class PublicEngine {
     }
 
     if(opts.dateFilter) {
-      filters['published >='] = opts.dateFilter[0]
-      filters['published <='] = opts.dateFilter.length > 1 ? opts.dateFilter[1] : opts.dateFilter[0]
+      filters['published >='] = opts.dateFilter[0] + ' 00:00:00'
+      filters['published <='] = (opts.dateFilter.length > 1 ? opts.dateFilter[1] : opts.dateFilter[0]) + ' 23:59:59'
     }
 
     let columns = [
@@ -148,8 +148,8 @@ class PublicEngine {
     let collections = !isEmpty(value) ? JSON.parse('[' + value + ']') : []
     let dateFilter = ''
     if(opts.dateFilter) {
-      dateFilter = 'AND published >= ' + opts.dateFilter[0] + ' AND published <= '
-      dateFilter += opts.dateFilter.length > 1 ? opts.dateFilter[1] : opts.dateFilter[0]
+      dateFilter = 'AND published >= ' + opts.dateFilter[0] + ' 00:00:00 AND published <= '
+      dateFilter += (opts.dateFilter.length > 1 ? opts.dateFilter[1] : opts.dateFilter[0]) + ' 23:59:59'
     }
     let sql = `SELECT collection, cnt, collections.name FROM (
       SELECT DISTINCT
