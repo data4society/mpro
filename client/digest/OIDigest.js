@@ -36,6 +36,21 @@ class OIDigest extends Component {
         this._loadEntities()
       }
     }
+
+    if(!isEqual(this.state.dates, oldState.dates)) {
+      this._loadDocuments()
+    }
+
+    if(this.refs.dateFilter) {
+      let el = this.refs.dateFilter.el.el
+      el.flatpickr({
+        mode: 'range',
+        wrap: true,
+        clickOpens: false,
+        defaultDate: this.state.dates,
+        onChange: this._changeDateFilter.bind(this)
+      })
+    }
   }
 
   getInitialState() {
@@ -53,7 +68,8 @@ class OIDigest extends Component {
       perPage: 10,
       page: 1,
       mode: 'documents',
-      items: []
+      items: [],
+      dates: null
     }
   }
 
@@ -113,9 +129,20 @@ class OIDigest extends Component {
       $$('div').addClass('se-header-title').setInnerHTML(this.state.title)
     )
 
+    if(this.state.dates) {
+      let dates = this.state.dates[0]
+      if(this.state.dates.length > 1) dates += ' - ' + this.state.dates[1]
+      el.append($$('div').addClass('se-header-dates').append(dates))
+    }
+
     let aboutBtn = $$('div').addClass('se-header-about').append(
       $$('i').addClass('fa fa-question-circle-o')
     ).on('click', this._toggleAboutSection)
+
+    let dateFilter = $$('div').addClass('se-date-filter').append(
+      $$('input').attr({'data-input': true}),
+      $$('span').attr({'data-toggle': true}).append($$('i').addClass('fa fa-calendar-o'))
+    ).ref('dateFilter')
 
     if(this.state.about) aboutBtn.addClass('sm-active')
 
@@ -128,7 +155,10 @@ class OIDigest extends Component {
       )
     }
 
-    el.append(aboutBtn)
+    el.append(
+      dateFilter,
+      aboutBtn
+    )
 
     wrapper.append(el)
 
@@ -330,6 +360,10 @@ The bedding was hardly able to cover it and seemed ready to slide off any moment
       options.entityFilters = [this.state.activeEntity.id]
     }
 
+    if(this.state.dates) {
+      options.dateFilter = this.state.dates
+    }
+
     let optionsRequest = encodeURIComponent(JSON.stringify(options))
 
     let query
@@ -418,6 +452,21 @@ The bedding was hardly able to cover it and seemed ready to slide off any moment
   _toggleAboutSection() {
     let showAbout = !this.state.about
     this.extendState({about: showAbout})
+  }
+
+  _changeDateFilter(selectedDates, dateStr, instance) {
+    let dates = []
+    if(selectedDates.length > 1) {
+      instance.close()
+      dates.push(moment(selectedDates[0]).format('YYYY-MM-DD'))
+      if(selectedDates[0].toString() !== selectedDates[1].toString()) {
+        dates.push(moment(selectedDates[1]).format('YYYY-MM-DD'))
+      }
+
+      this.extendState({mode: 'documents', items: [], total: null, dates: dates})
+    } else {
+      dates.push(moment(selectedDates[0]).format('YYYY-MM-DD'))
+    }
   }
 
 }

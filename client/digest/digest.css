@@ -186,6 +186,25 @@ body {
   margin-left: 3px;
 }
 
+.sc-digest .se-date-filter {
+  position: absolute;
+  right: 50px;
+  padding: 5px 0px;
+  width: 40px;
+  text-align: center;
+  font-weight: bold;
+  font-size: 18px;
+  cursor: pointer;
+}
+
+.sc-digest .se-date-filter input {
+  width: 0px;
+  height: 0px;
+  border: none;
+  position: relative;
+  left: 30px;
+}
+
 .sc-digest .se-header-about {
   position: absolute;
   right: 20px;
