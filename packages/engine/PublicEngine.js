@@ -148,16 +148,16 @@ class PublicEngine {
     let collections = !isEmpty(value) ? JSON.parse('[' + value + ']') : []
     let dateFilter = ''
     if(opts.dateFilter) {
-      dateFilter = 'AND published >= ' + opts.dateFilter[0] + ' 00:00:00 AND published <= '
-      dateFilter += (opts.dateFilter.length > 1 ? opts.dateFilter[1] : opts.dateFilter[0]) + ' 23:59:59'
+      dateFilter = 'AND published >= \'' + opts.dateFilter[0] + ' 00:00:00\' AND published <= \''
+      dateFilter += (opts.dateFilter.length > 1 ? opts.dateFilter[1] : opts.dateFilter[0]) + ' 23:59:59\''
     }
     let sql = `SELECT collection, cnt, collections.name FROM (
       SELECT DISTINCT
         unnest(records.collections) AS collection,
         COUNT(*) OVER (PARTITION BY unnest(records.collections)) cnt
-      FROM records WHERE $1 <@ collections AND app_id = $2
+      FROM records WHERE $1 <@ collections AND app_id = $2 ${dateFilter}
     ) AS docs INNER JOIN collections ON (docs.collection = collections.collection_id::text) 
-    WHERE collections.public = true AND app_id = $2 ${dateFilter} OFFSET ${offset} LIMIT ${limit}`;
+    WHERE collections.public = true AND app_id = $2 OFFSET ${offset} LIMIT ${limit}`;
 
     return new Promise(function(resolve, reject) {
 
@@ -180,17 +180,23 @@ class PublicEngine {
     let limit = opts.limit || 10
     let collections = !isEmpty(value) ? JSON.parse('[' + value + ']') : [] 
 
+    let dateFilter = ''
+    if(opts.dateFilter) {
+      dateFilter = 'AND published >= \'' + opts.dateFilter[0] + ' 00:00:00\' AND published <= \''
+      dateFilter += (opts.dateFilter.length > 1 ? opts.dateFilter[1] : opts.dateFilter[0]) + ' 23:59:59\''
+    }
+
     let countSql = `SELECT COUNT(id) FROM (
       SELECT DISTINCT
         unnest(records.entities) AS id
-      FROM records WHERE $1 <@ collections AND app_id = $2
+      FROM records WHERE $1 <@ collections AND app_id = $2 ${dateFilter}
     ) AS docs INNER JOIN entities e ON (id = e.entity_id)`;
 
     let sql = `SELECT id, cnt, e.name FROM (
       SELECT DISTINCT
         unnest(records.entities) AS id,
       COUNT(*) OVER (PARTITION BY unnest(entities)) cnt
-      FROM records WHERE $1 <@ collections AND app_id = $2
+      FROM records WHERE $1 <@ collections AND app_id = $2 ${dateFilter}
     ) AS docs INNER JOIN entities e ON (id = e.entity_id) ORDER BY cnt DESC OFFSET ${offset} LIMIT ${limit}`;
 
     return new Promise(function(resolve, reject) {
