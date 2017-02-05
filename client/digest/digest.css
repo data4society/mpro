@@ -176,6 +176,15 @@ body {
   padding: 8px 0px;
 }
 
+.sc-digest .se-clear-entity-filter {
+  padding: 13px 8px;
+  display: block;
+  float: left;
+  font-size: 10px;
+  line-height: 17px;
+  cursor: pointer;
+}
+
 .sc-digest .se-header-dates {
   float: left;
   padding: 10px;

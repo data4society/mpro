@@ -39,6 +39,7 @@ class OIDigest extends Component {
 
     if(!isEqual(this.state.dates, oldState.dates)) {
       this._loadCollections()
+      this._loadTopEntities()
     }
 
     if(this.refs.dateFilter) {
@@ -128,6 +129,13 @@ class OIDigest extends Component {
     el.append(
       $$('div').addClass('se-header-title').setInnerHTML(this.state.title)
     )
+
+    if(this.state.activeEntity.id && !this.state.activeCollection) {
+      el.append(
+        $$('span').addClass('se-clear-entity-filter').append('☓')
+          .on('click', this._resetEntityFilter)
+      )
+    }
 
     if(this.state.dates) {
       let dates = this.state.dates[0]
@@ -447,8 +455,20 @@ The bedding was hardly able to cover it and seemed ready to slide off any moment
   }
 
   _loadTopEntities() {
+    let options = {}
+
+    if(this.state.dates) {
+      options.dateFilter = this.state.dates
+    }
+
+    let optionsRequest = encodeURIComponent(JSON.stringify(options))
+
     let url = this.state.endpoint + '/api/public/' + this.state.topEntitiesKey
-    if(this.state.activeCollection) url += '?query="' + this.state.activeCollection + '"'
+    if(this.state.activeCollection) {
+      url += '?query="' + this.state.activeCollection + '"&options=' + optionsRequest
+    } else {
+      url += '?options=' + optionsRequest
+    }
     request('GET', url, null, function(err, topEntities) {
       if (err) {
         console.error('ERROR', err)
@@ -481,6 +501,22 @@ The bedding was hardly able to cover it and seemed ready to slide off any moment
     } else {
       dates.push(moment(selectedDates[0]).format('YYYY-MM-DD'))
     }
+  }
+
+  _resetEntityFilter() {
+    let activeCollection = this.state.activeCollection
+    let title = 'Новости о политических преследованиях'
+    if(activeCollection) {
+      let colNode
+      each(this.state.collections, col => {
+        if(col.collection === activeCollection) {
+          colNode = col
+          return
+        }
+      })
+      title = 'Новости по теме: <em>' + colNode.name + '</em>'
+    }
+    this.extendState({mode: 'documents', items: [], total: null, activeEntity: {}, title: title})
   }
 
   _resetDateFilter() {
