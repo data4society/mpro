@@ -38,7 +38,7 @@ class OIDigest extends Component {
     }
 
     if(!isEqual(this.state.dates, oldState.dates)) {
-      this._loadDocuments()
+      this._loadCollections()
     }
 
     if(this.refs.dateFilter) {
@@ -132,7 +132,13 @@ class OIDigest extends Component {
     if(this.state.dates) {
       let dates = this.state.dates[0]
       if(this.state.dates.length > 1) dates += ' - ' + this.state.dates[1]
-      el.append($$('div').addClass('se-header-dates').append(dates))
+      el.append(
+        $$('div').addClass('se-header-dates').append(
+          dates,
+          $$('i').addClass('fa fa-calendar-times-o')
+            .on('click', this._resetDateFilter)
+        )
+      )
     }
 
     let aboutBtn = $$('div').addClass('se-header-about').append(
@@ -141,7 +147,7 @@ class OIDigest extends Component {
 
     let dateFilter = $$('div').addClass('se-date-filter').append(
       $$('input').attr({'data-input': true}),
-      $$('span').attr({'data-toggle': true}).append($$('i').addClass('fa fa-calendar-o'))
+      $$('span').attr({'data-toggle': true}).append($$('i').addClass('fa fa-calendar'))
     ).ref('dateFilter')
 
     if(this.state.about) aboutBtn.addClass('sm-active')
@@ -336,7 +342,15 @@ The bedding was hardly able to cover it and seemed ready to slide off any moment
   }
 
   _loadCollections() {
-    let url = this.state.endpoint + '/api/public/' + this.state.collectionsKey
+    let options = {}
+
+    if(this.state.dates) {
+      options.dateFilter = this.state.dates
+    }
+
+    let optionsRequest = encodeURIComponent(JSON.stringify(options))
+
+    let url = this.state.endpoint + '/api/public/' + this.state.collectionsKey + '?options=' + optionsRequest
     request('GET', url, null, function(err, collections) {
       if (err) {
         console.error('ERROR', err)
@@ -467,6 +481,10 @@ The bedding was hardly able to cover it and seemed ready to slide off any moment
     } else {
       dates.push(moment(selectedDates[0]).format('YYYY-MM-DD'))
     }
+  }
+
+  _resetDateFilter() {
+    this.extendState({mode: 'documents', items: [], total: null, dates: null})
   }
 
 }
