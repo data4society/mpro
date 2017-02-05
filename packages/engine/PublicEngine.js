@@ -56,6 +56,11 @@ class PublicEngine {
       filters['entities @>'] = opts.entityFilters
     }
 
+    if(opts.dateFilter) {
+      filters['published >='] = opts.dateFilter[0]
+      filters['published <='] = opts.dateFilter.length > 1 ? opts.dateFilter[1] : opts.dateFilter[0]
+    }
+
     let columns = [
       'document_id AS doc_id', 
       "json_build_object('title', meta->>'title', 'abstract', meta->>'abstract', 'published', meta->>'published', 'source', meta->>'source', 'publisher', meta->>'publisher') AS meta"
@@ -140,14 +145,19 @@ class PublicEngine {
   _collectionsFacets(value, app_id, opts) {
     let offset = opts.offset || 0
     let limit = opts.limit || 100
-    let collections = !isEmpty(value) ? JSON.parse('[' + value + ']') : [] 
+    let collections = !isEmpty(value) ? JSON.parse('[' + value + ']') : []
+    let dateFilter = ''
+    if(opts.dateFilter) {
+      dateFilter = 'AND published >= ' + opts.dateFilter[0] + ' AND published <= '
+      dateFilter += opts.dateFilter.length > 1 ? opts.dateFilter[1] : opts.dateFilter[0]
+    }
     let sql = `SELECT collection, cnt, collections.name FROM (
       SELECT DISTINCT
         unnest(records.collections) AS collection,
         COUNT(*) OVER (PARTITION BY unnest(records.collections)) cnt
       FROM records WHERE $1 <@ collections AND app_id = $2
     ) AS docs INNER JOIN collections ON (docs.collection = collections.collection_id::text) 
-    WHERE collections.public = true AND app_id = $2 OFFSET ${offset} LIMIT ${limit}`;
+    WHERE collections.public = true AND app_id = $2 ${dateFilter} OFFSET ${offset} LIMIT ${limit}`;
 
     return new Promise(function(resolve, reject) {
 
