@@ -29,6 +29,7 @@ class Summary extends Component {
     let document = this.context.doc
     let rubrics = this.props.rubrics
     let selectedRubrics = document.get(['meta', 'rubrics'])
+    let probability = document.get(['meta', 'probability'])
     let rubricsList = []
 
     let el = $$('div').addClass('se-rubrics')
@@ -39,6 +40,7 @@ class Summary extends Component {
         name: rubrics.get([id, 'name']),
         root: rubrics.getRootParent(id).name
       }
+      if(probability[id]) item.name += ' (' + parseFloat(probability[id]).toFixed(3) + ')'
       rubricsList.push(item)
     })
 
