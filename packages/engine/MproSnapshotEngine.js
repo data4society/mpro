@@ -1,6 +1,7 @@
 let SnapshotEngine = require('substance').SnapshotEngine
 let JSONConverter = require('substance').JSONConverter
 let Err = require('substance').SubstanceError
+let each = require('lodash/each')
 
 let converter = new JSONConverter()
 
@@ -76,7 +77,8 @@ class MproSnapshotEngine extends SnapshotEngine {
         let snapshot = {
           documentId: documentId,
           version: version,
-          data: converter.exportDocument(doc)
+          data: converter.exportDocument(doc),
+          fullText: this._getFullText(doc)
         }
         cb(null, snapshot)
       }.bind(this))
@@ -97,6 +99,20 @@ class MproSnapshotEngine extends SnapshotEngine {
     }
     let doc = subConfig.createArticle()
     return doc
+  }
+
+  /*
+    Get plain text version of document
+  */
+  _getFullText(doc) {
+    let body = doc.get('body')
+    let fullText = ''
+
+    each(body.nodes, function(nodeId) {
+      fullText += '\r\n' + doc.get(nodeId).content
+    })
+
+    return fullText
   }
 }
 

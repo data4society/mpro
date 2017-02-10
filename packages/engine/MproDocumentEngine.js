@@ -31,6 +31,7 @@ class MproDocumentEngine extends DocumentEngine {
       schemaVersion: schemaConfig.version,
       documentId: args.documentId,
       content: converter.exportDocument(doc),
+      full_text: '',
       version: 1, // we always start with version 1
       info: args.info
     }, function(err, docRecord) {
@@ -111,6 +112,38 @@ class MproDocumentEngine extends DocumentEngine {
   */
   listThemedDocuments(filters, options, cb) {
     this.documentStore.listThemedDocuments(filters, options, cb);
+  }
+
+  /*
+    Add change to a given documentId
+
+    args: documentId, change [, documentInfo]
+  */
+  addChange(args, cb) {
+    this.documentExists(args.documentId, function(err, exists) {
+      if (err || !exists) {
+        return cb(new Err('ReadError', {
+          message: !exists ? 'Document does not exist' : null,
+          cause: err
+        }))
+      }
+      this.changeStore.addChange(args, function(err, newVersion) {
+        if (err) return cb(err);
+        // We write the new version to the document store.
+        this.documentStore.updateDocument(args.documentId, {
+          version: newVersion,
+          // Store custom documentInfo
+          info: args.documentInfo
+        }, function(err) {
+          if (err) return cb(err)
+          this.snapshotEngine.requestSnapshot(args.documentId, newVersion, function() {
+            // no matter if errored or not we will complete the addChange
+            // successfully
+            cb(null, newVersion)
+          })
+        }.bind(this))
+      }.bind(this))
+    }.bind(this))
   }
 }
 

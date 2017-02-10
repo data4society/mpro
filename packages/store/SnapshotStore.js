@@ -60,7 +60,8 @@ class SnapshotStore {
     let record = {
       document_id: args.documentId,
       version: args.version,
-      content: args.data
+      content: args.data,
+      full_text: args.fullText
     }
 
     this.db.records.save(record, function(err, doc) {
