@@ -1,7 +1,6 @@
 -- Reset database:
 
 drop materialized view if exists "themed_records";
-drop function if exists records_search_trigger();
 drop table if exists "apis";
 drop table if exists "changes";
 drop table if exists "rules";
@@ -18,6 +17,7 @@ drop table if exists "sessions";
 drop table if exists "users";
 drop table if exists "variables";
 drop table if exists "themes";
+drop function if exists records_search_trigger();
 
 CREATE TABLE "users" (
   user_id varchar(40) UNIQUE PRIMARY KEY,
