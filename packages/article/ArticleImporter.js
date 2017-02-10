@@ -72,6 +72,7 @@ class ArticleImporter extends HTMLImporter {
         created: new Date().toJSON(),
         rubrics: source.rubric_ids,
         entities: entities,
+        probability: meta.rubric_probabilities || {},
         abstract: meta.abstract,
         cover: '',
         publisher: publisher.name,

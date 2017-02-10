@@ -23,6 +23,7 @@ ArticleMeta.type = 'meta'
 ArticleMeta.define({
   title: { type: 'string', default: 'Untitled article'},
   rubrics: { type: ['id'], default: [] },
+  probability: { type: 'object', default: {} },
   entities: { type: ['id'], default: [] },
   collections: { type: ['id'], default: [] },
   cover: { type: 'string', default: ''},

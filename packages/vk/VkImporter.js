@@ -92,6 +92,7 @@ class VkImporter extends HTMLImporter {
         created: new Date().toJSON(),
         rubrics: source.rubric_ids,
         entities: entities,
+        probability: meta.rubric_probabilities || {},
         abstract: abstract,
         post_type: meta.vk_post_type,
         author: {

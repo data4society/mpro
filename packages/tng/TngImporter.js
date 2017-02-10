@@ -58,6 +58,7 @@ class TngImporter extends HTMLImporter {
         type: 'meta',
         title: source.title || '',
         rubrics: source.rubric_ids,
+        probability: meta.rubric_probabilities || {},
         source: source.url,
         source_type: source_type,
         entities: [],
