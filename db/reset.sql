@@ -1,6 +1,7 @@
 -- Reset database:
 
 drop materialized view if exists "themed_records";
+drop function if exists records_search_trigger();
 drop table if exists "apis";
 drop table if exists "changes";
 drop table if exists "rules";
@@ -77,8 +78,25 @@ CREATE TABLE "records" (
   meta jsonb,
   info jsonb,
   app_id varchar(255),
+  full_text text,
   tsv tsvector
 );
+
+-- Records search index
+CREATE INDEX tsv_records_idx ON records USING gin(tsv);
+
+CREATE FUNCTION records_search_trigger() RETURNS trigger AS $$
+begin
+  new.tsv :=
+    setweight(to_tsvector('russian', COALESCE(new.title,'')), 'A') || 
+    setweight(to_tsvector('russian', COALESCE(new.meta->>'abstract','')),'B') ||
+    setweight(to_tsvector('russian', COALESCE(new."full_text",'')),'C');
+  return new;
+end
+$$ LANGUAGE plpgsql;
+
+CREATE TRIGGER tsvectorrecordsupdate BEFORE INSERT OR UPDATE
+ON records FOR EACH ROW EXECUTE PROCEDURE records_search_trigger();
 
 CREATE TABLE "changes" (
   document_id varchar(40) REFERENCES records,
