@@ -6,7 +6,7 @@ import moment from 'moment'
 class FeedItem extends Component {
 
   shouldRerender(props) {
-    if(props.update) {
+    if(props.update || !isEmpty(props.rubrics) && isEmpty(this.props.rubrics)) {
       return true
     }
     return false
