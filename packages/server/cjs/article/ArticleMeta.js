@@ -25,6 +25,7 @@ ArticleMeta.define({
   rubrics: { type: ['id'], default: [] },
   entities: { type: ['id'], default: [] },
   collections: { type: ['id'], default: [] },
+  probability: { type: 'object', default: {} },
   cover: { type: 'string', default: ''},
   source: { type: 'string', default: ''},
   published: { type: 'string', default: '' },
