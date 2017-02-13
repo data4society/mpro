@@ -15,10 +15,12 @@ class Summary extends Component {
     }
     
     let rubricsList = this.renderRubricsList($$)
+    let probabilityList = this.renderProbabilityList($$)
 
     el.append(
       $$(MetaSummary),
       rubricsList,
+      probabilityList,
       $$('div').addClass('se-separator')
     )
 
@@ -29,7 +31,6 @@ class Summary extends Component {
     let document = this.context.doc
     let rubrics = this.props.rubrics
     let selectedRubrics = document.get(['meta', 'rubrics'])
-    let probability = document.get(['meta', 'probability'])
     let rubricsList = []
 
     let el = $$('div').addClass('se-rubrics')
@@ -40,7 +41,6 @@ class Summary extends Component {
         name: rubrics.get([id, 'name']),
         root: rubrics.getRootParent(id).name
       }
-      if(probability[id]) item.name += ' (' + parseFloat(probability[id]).toFixed(3) + ')'
       rubricsList.push(item)
     })
 
@@ -61,6 +61,40 @@ class Summary extends Component {
       })
     } else {
       listEl.append(this.getLabel('no-rubrics'))
+    }
+
+    el.append(listEl)
+    return el
+  }
+
+  renderProbabilityList($$) {
+    let document = this.context.doc
+    let rubrics = this.props.rubrics
+    let probability = document.get(['meta', 'probability'])
+    let probabilityList = []
+
+    let el = $$('div').addClass('se-rubrics')
+    if(isEmpty(probability) || isEmpty(rubrics)) return el
+
+    probability = map(probability, (val, prop) => {
+      return { id: prop, value: val }
+    })
+
+    probability = probability.sort((a, b) => { return a.value - b.value })
+
+    each(probability, function(p) {
+      let item = rubrics.get([p.id, 'name']) + ': ' + parseFloat(p.value).toFixed(3)
+      probabilityList.push(item)
+    })
+
+    el.append(this.context.iconProvider.renderIcon($$, 'probability'))
+
+    let listEl = $$('div').addClass('sm-item')
+
+    if(probabilityList.length > 0) {
+      listEl.append(
+        $$('div').addClass('sm-leaf-item').append(probabilityList.join(', '))
+      )
     }
 
     el.append(listEl)
