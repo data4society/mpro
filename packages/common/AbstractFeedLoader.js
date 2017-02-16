@@ -3,6 +3,7 @@ import clone from 'lodash/clone'
 import concat from 'lodash/concat'
 import each from 'lodash/each'
 import extend from 'lodash/extend'
+import isEmpty from 'lodash/isEmpty'
 import isEqual from 'lodash/isEqual'
 import isNull from 'lodash/isNull'
 
@@ -18,6 +19,7 @@ class AbstractFeedLoader extends Component {
     this.handleActions({
       'updateFeedItem': this._updateFeedItem,
       'toggleDataFilter': this._toggleDataFilter,
+      'toggleFtsFilter': this._toggleFtsFilter,
       'toggleEntityFacet': this._toggleEntityFacet,
       'selectEntityFacets': this._selectEntityFacets,
       'saveEntityFacets': this._saveEntityFacets,
@@ -289,7 +291,21 @@ class AbstractFeedLoader extends Component {
       filters: filters,
       pagination: false
     })
-  } 
+  }
+
+  _toggleFtsFilter(value) {
+    let filters = clone(this.state.filters)
+    if(!isEmpty(value)) {
+      filters.fts = value
+    } else {
+      delete filters.fts
+    }
+
+    this.extendState({
+      filters: filters,
+      pagination: false
+    })
+  }
 
   _selectEntityFacets(selectedEntities) {
     let entitiesFacets = selectedEntities.id
