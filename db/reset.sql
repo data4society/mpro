@@ -217,6 +217,7 @@ AS
     r.app_id,
     r.training,
     r.meta,
+    r.tsv,
     t.theme_id,
     t.title AS theme
    FROM records r
