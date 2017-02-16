@@ -83,6 +83,7 @@ class DocumentStore {
 
       this.db.records.insert(record, function(err, doc) {
         if (err) {
+          console.log(record.guid)
           return cb(new Err('DocumentStore.CreateError', {
             cause: err
           }))
@@ -256,42 +257,94 @@ class DocumentStore {
   */
   listDocuments(filters, options, cb) {
     let output = {}
+    let isTextSearch = filters.fts ? true : false
 
     // Default limit for number of returned records
     if(!options.limit) options.limit = 100
+    if(!options.offset) options.offset = 0
+
     if(!options.columns) {
       options.columns = [
         'document_id', 'guid', 'title', 'schema_name', 'schema_version', 'published', 'created', 'edited', 'edited_by', 'rubrics', 'meta'
       ]
     }
 
-    this.db.records.count(filters, function(err, count) {
-      if (err) {
-        return cb(new Err('DocumentStore.ListError', {
-          cause: err
-        }))
-      }
-      output.total = count
-      
-      this.db.records.find(filters, options, function(err, docs) {
+    if(isTextSearch) {
+      let searchQuery = "'" + filters.fts + "'"
+      let language = filters.language || "'russian'"
+      delete filters.fts
+      delete filters.language
+
+      let args = ArgTypes.findArgs(arguments, this)
+      let where = isEmpty(args.conditions) ? {where: " "} : Where.forTable(args.conditions)
+
+      let whereQuery = where.where ? where.where + ' \nAND (tsv @@ q)' : '\nWHERE (tsv @@ q)'
+
+      let countQuery = `SELECT COUNT(*) FROM records, plainto_tsquery(${language}, ${searchQuery}) AS q ${whereQuery}`
+
+      let query = `
+        SELECT document_id, guid, title, schema_name, schema_version, published, created, edited, edited_by, rubrics, meta, ts_rank_cd(records.tsv, q) AS rank 
+        FROM records, plainto_tsquery(${language}, ${searchQuery}) AS q ${whereQuery} 
+        ORDER BY rank DESC limit ${options.limit} offset ${options.offset}
+      `
+
+      this.db.run(countQuery, where.params, function(err, count) {
+        if (err) {
+          return cb(new Err('DocumentStore.ListDocumentsError', {
+            cause: err
+          }))
+        }
+
+        output.total = count[0].count
+
+        this.db.run(query, where.params, function(err, docs) {
+          if (err) {
+            return cb(new Err('DocumentStore.ListDocumentsError', {
+              cause: err
+            }))
+          }
+
+          each(docs, function(doc) {
+            // Set documentId explictly as it will be used by Document Engine
+            doc.documentId = doc.document_id
+            // Set schemaName and schemaVersion explictly as it will be used by Snapshot Engine
+            doc.schemaName = doc.schema_name
+            doc.schemaVersion = doc.schema_version
+          })
+
+          output.records = docs
+          cb(null, output)
+        })
+      }.bind(this))
+    } else {
+      this.db.records.count(filters, function(err, count) {
         if (err) {
           return cb(new Err('DocumentStore.ListError', {
             cause: err
           }))
         }
+        output.total = count
+        
+        this.db.records.find(filters, options, function(err, docs) {
+          if (err) {
+            return cb(new Err('DocumentStore.ListError', {
+              cause: err
+            }))
+          }
 
-        each(docs, function(doc) {
-          // Set documentId explictly as it will be used by Document Engine
-          doc.documentId = doc.document_id
-          // Set schemaName and schemaVersion explictly as it will be used by Snapshot Engine
-          doc.schemaName = doc.schema_name
-          doc.schemaVersion = doc.schema_version
+          each(docs, function(doc) {
+            // Set documentId explictly as it will be used by Document Engine
+            doc.documentId = doc.document_id
+            // Set schemaName and schemaVersion explictly as it will be used by Snapshot Engine
+            doc.schemaName = doc.schema_name
+            doc.schemaVersion = doc.schema_version
+          })
+
+          output.records = docs
+          cb(null, output)
         })
-
-        output.records = docs
-        cb(null, output)
-      })
-    }.bind(this))
+      }.bind(this))
+    }
   }
 
   /*
@@ -304,6 +357,15 @@ class DocumentStore {
   */
   listThemedDocuments(filters, options, cb) {
     let output = {}
+    let isTextSearch = filters.fts ? true : false
+    let searchQuery, language
+
+    if(isTextSearch) {
+      searchQuery = "'" + filters.fts + "'"
+      language = filters.language || "'russian'"
+      delete filters.fts
+      delete filters.language
+    }
 
     // Default limit for number of returned records
     if(!options.limit) options.limit = 100
@@ -311,6 +373,7 @@ class DocumentStore {
 
     let args = ArgTypes.findArgs(arguments, this)
     let where = isEmpty(args.conditions) ? {where: " "} : Where.forTable(args.conditions)
+    let whereQuery = where.where ? where.where + ' \nAND (tsv @@ q)' : '\nWHERE (tsv @@ q)'
 
     // if(!options.columns) {
     //   options.columns = [
@@ -324,10 +387,43 @@ class DocumentStore {
       FROM themed_records t ${where.where}) AS docs
     `
 
+    let sql = `
+      SELECT * from
+      (SELECT DISTINCT ON (theme_id) *,
+      (SELECT COUNT(*) FROM themed_records a WHERE a.theme_id = t.theme_id) AS count
+      FROM themed_records t ${where.where}
+      ORDER BY theme_id, created DESC LIMIT ${args.options.limit} OFFSET ${args.options.offset}) as docs
+      ORDER BY created DESC;
+    `
+
     if(filters.theme_id) {
       countQuery = `
         SELECT COUNT(*)
         FROM themed_records t ${where.where}
+      `
+
+      sql = `
+          SELECT *
+          FROM themed_records
+          ${where.where}
+          ORDER BY created DESC LIMIT ${args.options.limit} OFFSET ${args.options.offset}
+        `
+    }
+
+    if(isTextSearch) {
+      countQuery = `
+        SELECT COUNT(*) FROM
+        (SELECT DISTINCT ON (theme_id) *
+        FROM themed_records t, plainto_tsquery(${language}, ${searchQuery}) AS q ${whereQuery}) AS docs
+      `
+
+      sql = `
+        SELECT * from
+        (SELECT DISTINCT ON (theme_id) *,
+        (SELECT COUNT(*) FROM themed_records a WHERE a.theme_id = t.theme_id) AS count
+        FROM themed_records t, plainto_tsquery(${language}, ${searchQuery}) AS q ${whereQuery}
+        ORDER BY theme_id, created DESC LIMIT ${args.options.limit} OFFSET ${args.options.offset}) as docs
+        ORDER BY created DESC;
       `
     }
 
@@ -339,24 +435,6 @@ class DocumentStore {
       }
 
       output.total = count[0].count
-
-      let sql = `
-        SELECT * from
-        (SELECT DISTINCT ON (theme_id) *,
-        (SELECT COUNT(*) FROM themed_records a WHERE a.theme_id = t.theme_id) AS count
-        FROM themed_records t ${where.where}
-        ORDER BY theme_id, created DESC LIMIT ${args.options.limit} OFFSET ${args.options.offset}) as docs
-        ORDER BY created DESC;
-      `
-
-      if(filters.theme_id) {
-        sql = `
-          SELECT *
-          FROM themed_records
-          ${where.where}
-          ORDER BY created DESC LIMIT ${args.options.limit} OFFSET ${args.options.offset}
-        `
-      }
 
       this.db.run(sql, where.params, function(err, docs) {
         if (err) {

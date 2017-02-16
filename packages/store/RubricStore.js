@@ -225,15 +225,36 @@ class RubricStore {
   */
   // eslint-disable-next-line
   listFacets(filters, options) {
+    let containsTextSearch = filters.fts ? true : false
+    let searchQuery, language
+
+    if(containsTextSearch) {
+      searchQuery = "'" + filters.fts + "'"
+      language = filters.language || "'russian'"
+      delete filters.fts
+      delete filters.language
+    }
+
     let args = ArgTypes.findArgs(arguments, this)
     let where = isEmpty(args.conditions) ? {where: " "} : Where.forTable(args.conditions)
     let counter = options.counter || false;
+
+    let whereQuery = where.where 
+    if(containsTextSearch) whereQuery = where.where ? where.where + ' \nAND (tsv @@ q)' : '\nWHERE (tsv @@ q)'
 
     let sql = 'SELECT rubric, cnt, rubrics.name FROM (\
       SELECT DISTINCT\
         unnest(records.rubrics) AS rubric,\
         COUNT(*) OVER (PARTITION BY unnest(records.rubrics)) cnt\
-      FROM records' + where.where + ') AS docs INNER JOIN rubrics ON (docs.rubric = rubrics.rubric_id)'
+      FROM records' + whereQuery + ') AS docs INNER JOIN rubrics ON (docs.rubric = rubrics.rubric_id)'
+
+    if(containsTextSearch) {
+      sql = `SELECT rubric, cnt, rubrics.name FROM (\
+      SELECT DISTINCT\
+        unnest(records.rubrics) AS rubric,\
+        COUNT(*) OVER (PARTITION BY unnest(records.rubrics)) cnt\
+      FROM records, plainto_tsquery(${language}, ${searchQuery}) AS q ${whereQuery}) AS docs INNER JOIN rubrics ON (docs.rubric = rubrics.rubric_id)`
+    }
 
     if(!counter) {
       sql += ' AND rubrics.counter = false'
