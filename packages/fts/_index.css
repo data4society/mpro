@@ -1,0 +1,36 @@
+.sc-fts-filter {
+  padding: 5px 18px;
+  border-bottom: 1px solid rgba(121,121,121,0.1);
+}
+
+.sc-fts-filter input {
+  width: 100%;
+  background: transparent;
+  border: none;
+  color: #fff;
+  font-size: 14px;
+  font-weight: 200;
+}
+
+.sc-fts-filter input::-webkit-input-placeholder { /* Chrome/Opera/Safari */
+  color: #fff;
+}
+.sc-fts-filter input::-moz-placeholder { /* Firefox 19+ */
+  color: #fff;
+}
+.sc-fts-filter input:-ms-input-placeholder { /* IE 10+ */
+  color: #fff;
+}
+.sc-fts-filter input:-moz-placeholder { /* Firefox 18- */
+  color: #fff;
+}
+
+.sc-fts-filter i {
+  color: #fff;
+  float: right;
+  position: absolute;
+  right: 15px;
+  top: 14px;
+  font-size: 14px;
+  cursor: pointer;
+}
