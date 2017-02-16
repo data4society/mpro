@@ -6,6 +6,7 @@ import FiltersPackage from '../filters/package'
 import AcceptorFilterPackage from '../acceptor-filter/package'
 import EntityFacetsPackage from '../entity-facets/package'
 import FacetsPackage from '../facets/package'
+import FtsPackage from '../fts/package'
 import RubricsPackage from '../rubrics/package'
 import HeaderPackage from '../header/package'
 import FeedPackage from '../feed/package'
@@ -65,6 +66,7 @@ export default {
     config.import(AcceptorFilterPackage)
     config.import(EntityFacetsPackage)
     config.import(FacetsPackage)
+    config.import(FtsPackage)
     config.import(LoaderPackage)
     config.import(NotificationPackage)
     config.import(CollaboratorsPackage)

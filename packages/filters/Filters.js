@@ -5,9 +5,14 @@ class Filters extends Component {
   render($$) {
     let filters = this.props.filters
     let Facets = this.getComponent('facets')
-    
+    let FtsFilter = this.getComponent('fts-filter')
+
     let el = $$('div').addClass('sc-filters')
-    // console.log(config)
+    
+    el.append(
+      $$(FtsFilter, {value: filters.fts})
+    )
+
     if(this.props.acceptor) {
       let AcceptorFilter = this.getComponent('acceptor-filter')
       el.append(

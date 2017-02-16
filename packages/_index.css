@@ -8,6 +8,7 @@
 @import './feed/_index.css';
 @import './filters/_index.css';
 @import './forms/_index.css';
+@import './fts/_index.css';
 @import './header/_index.css';
 @import './loader/_index.css';
 @import './notification/_index.css';
