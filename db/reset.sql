@@ -84,6 +84,7 @@ CREATE TABLE "records" (
 
 -- Records search index
 CREATE INDEX tsv_records_idx ON records USING gin(tsv);
+CREATE INDEX records_published_idx ON records(published);
 
 CREATE FUNCTION records_search_trigger() RETURNS trigger AS $$
 begin
