@@ -5,5 +5,5 @@ substanceGlobals.DEBUG_RENDERING = true
 
 window.onload = function() {
   window.app = OIDigest.mount({
-  }, document.body)
+  }, document.getElementById('digest-app'))
 }
