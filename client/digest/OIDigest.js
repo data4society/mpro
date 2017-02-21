@@ -40,6 +40,7 @@ class OIDigest extends Component {
     if(!isEqual(this.state.dates, oldState.dates)) {
       this._loadCollections()
       this._loadTopEntities()
+      this._loadDocuments()
     }
 
     if(this.refs.dateFilter) {
