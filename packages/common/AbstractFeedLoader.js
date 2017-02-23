@@ -141,7 +141,7 @@ class AbstractFeedLoader extends Component {
         columns: [
           'entity_id',
           'name',
-          "(SELECT COUNT(*) from records WHERE entity_id = ANY(records.entities) AND '{" + entities.join(',') + "}' <@ records.entities AND '{" + filters['rubrics @>'].join(',') + "}' <@ records.rubrics AND app_id = '" + this.props.app + "') AS count"
+          "(SELECT COUNT(*) from records WHERE entity_id::text = ANY(records.entities) AND '{" + entities.join(',') + "}' <@ records.entities AND '{" + filters['rubrics @>'].join(',') + "}' <@ records.rubrics AND app_id = '" + this.props.app + "') AS count"
         ]
       }
 
