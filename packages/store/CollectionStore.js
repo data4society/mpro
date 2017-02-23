@@ -140,7 +140,7 @@ class CollectionStore {
 
     // Default limit for number of returned records
     if(!options.limit) options.limit = 100
-    if(!options.columns) options.columns = ['collection_id', 'name', 'created', 'edited', 'author', 'description', 'private', 'public', 'app_id', "(SELECT COUNT(*) from records WHERE \"collection_id\"::text=ANY(records.collections) AND training=FALSE) AS count"]
+    if(!options.columns) options.columns = ['collection_id', 'name', 'created', 'edited', 'author', 'description', 'private', 'public', 'app_id', "(SELECT COUNT(*) from records WHERE records.collections @> ARRAY[\"collection_id\"::varchar] AND training=FALSE) AS count"]
 
     return new Promise(function(resolve, reject) {
       this.db.collections.count(filters, function(err, count) {

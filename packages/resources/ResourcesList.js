@@ -240,7 +240,7 @@ class ResourcesList extends Component {
           'entity_class',
           'labels',
           'external_data',
-          "(SELECT COUNT(*) from records WHERE entity_id = ANY(records.entities)) AS count"
+          "(SELECT COUNT(*) from records WHERE records.entities @> ARRAY[\"entity_id\"::varchar]) AS count"
         ]
       }, function(err, results) {
         if (err) {

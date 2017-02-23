@@ -215,7 +215,7 @@ class EntitiesList extends Component {
           'entity_class',
           'labels',
           'external_data',
-          "(SELECT COUNT(*) from records WHERE entity_id = ANY(records.entities) AND app_id = '" + this.props.app + "') AS count"
+          "(SELECT COUNT(*) from records WHERE records.entities @> ARRAY[\"entity_id\"::varchar] AND app_id = '" + this.props.app + "') AS count"
         ]
       }, function(err, results) {
         if (err) {
