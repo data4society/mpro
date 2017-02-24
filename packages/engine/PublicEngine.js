@@ -155,7 +155,7 @@ class PublicEngine {
       SELECT DISTINCT
         unnest(records.collections) AS collection,
         COUNT(*) OVER (PARTITION BY unnest(records.collections)) cnt
-      FROM records WHERE collections @> $1::varchar[] $1 <@ collections AND app_id = $2 ${dateFilter}
+      FROM records WHERE collections @> $1::varchar[] AND app_id = $2 ${dateFilter}
     ) AS docs INNER JOIN collections ON (docs.collection = collections.collection_id::text) 
     WHERE collections.public = true AND app_id = $2 OFFSET ${offset} LIMIT ${limit}`;
 
