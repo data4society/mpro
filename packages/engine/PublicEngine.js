@@ -66,7 +66,7 @@ class PublicEngine {
       "json_build_object('title', meta->>'title', 'abstract', meta->>'abstract', 'published', meta->>'published', 'source', meta->>'source', 'publisher', meta->>'publisher') AS meta"
     ]
     if(opts.entities) {
-      columns.push("(SELECT array(SELECT json_build_object('name', name, 'id', entity_id) FROM unnest(entities) entity LEFT JOIN entities e on e.entity_id=entity)) AS entities")
+      columns.push("(SELECT array(SELECT json_build_object('name', name, 'id', entity_id) FROM unnest(entities) entity LEFT JOIN entities e on e.entity_id::varchar = entity)) AS entities")
     }
     let options = extend({}, opts, {columns: columns, order: 'created desc'})
     return new Promise(function(resolve, reject) {
@@ -190,14 +190,14 @@ class PublicEngine {
       SELECT DISTINCT
         unnest(records.entities) AS id
       FROM records WHERE $1::varchar[] <@ collections AND app_id = $2 ${dateFilter}
-    ) AS docs INNER JOIN entities e ON (id::varchar = e.entity_id)`;
+    ) AS docs INNER JOIN entities e ON (id = e.entity_id::varchar)`;
 
     let sql = `SELECT id, cnt, e.name FROM (
       SELECT DISTINCT
         unnest(records.entities) AS id,
       COUNT(*) OVER (PARTITION BY unnest(entities)) cnt
       FROM records WHERE $1::varchar[] <@ collections AND app_id = $2 ${dateFilter}
-    ) AS docs INNER JOIN entities e ON (id::varchar = e.entity_id) ORDER BY cnt DESC OFFSET ${offset} LIMIT ${limit}`;
+    ) AS docs INNER JOIN entities e ON (id = e.entity_id::varchar) ORDER BY cnt DESC OFFSET ${offset} LIMIT ${limit}`;
 
     return new Promise(function(resolve, reject) {
 
