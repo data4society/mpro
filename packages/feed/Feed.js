@@ -76,6 +76,13 @@ class Feed extends Component {
       )
     }
 
+    if(this.props.collectionId) {
+      el.append(
+        $$(Button, {label: 'edit-collection', style: 'default', icon: 'collection-edit'}).addClass('se-edit-collection')
+          .on('click', this.send.bind(this, 'editCollection', this.props.collectionId))
+      )
+    }
+
     if(this.props.modes) {
       let plainModeBtn = $$(Button, {style: 'default', icon: 'plain-mode'}).addClass('se-plain-mode')
         .on('click', this.send.bind(this, 'switchMode', 'plain'))

@@ -14,3 +14,9 @@
   opacity: 0.4;
   cursor: default;
 }
+
+.sc-button .se-label {
+  float: right;
+  line-height: 14px;
+  margin-left: 6px;
+}

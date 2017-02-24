@@ -20,6 +20,7 @@ class Collections extends AbstractFeedLoader {
     this.handleActions({
       'loadMore': this._loadMore,
       'openCollection': this._openCollection,
+      'editCollection': this._editCollection,
       'openDocument': this._openDocument,
       'notify': this._notify,
       'connectSession': this._connectSession
@@ -75,7 +76,7 @@ class Collections extends AbstractFeedLoader {
     el.append(
       header,
       $$(DoubleSplitPane, {splitType: 'vertical', sizeA: '300px', sizeB: '38%'}).append(
-        $$(CollectionsList, {collectionId: this.state.collectionId, app: this.props.app}),
+        $$(CollectionsList, {collectionId: this.state.collectionId, app: this.props.app}).ref('collecton-list'),
         $$(ListScrollPane, {
           scrollbarType: 'substance',
           scrollbarPosition: 'left'
@@ -123,6 +124,11 @@ class Collections extends AbstractFeedLoader {
     })
 
     this.updateUrlCollection(collectionId)
+  }
+
+  _editCollection() {
+    let list = this.refs['collecton-list']
+    list._editCollection()
   }
 
   updateUrl(documentId) {

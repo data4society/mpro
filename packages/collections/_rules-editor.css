@@ -2,3 +2,27 @@
   text-align: left;
   cursor: pointer;
 }
+
+.sc-rules-editor .se-add-rule {
+  padding: 0px 4px;
+  height: 24px;
+  font-size: 12px;
+  line-height: 12px;
+  font-weight: normal;
+}
+
+.sc-rules-editor .se-add-rule .se-label {
+  line-height: 12px;
+}
+
+.sc-rules-editor .se-rule-control {
+  padding: 0px 4px;
+  height: 20px;
+  font-size: 12px;
+  margin-bottom: 5px;
+  font-weight: normal;
+}
+
+.sc-rules-editor .se-cell.sm-sets {
+  white-space: pre;
+}

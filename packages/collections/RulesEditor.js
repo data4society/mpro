@@ -1,6 +1,7 @@
-import { Component, Grid, uuid } from 'substance'
+import { Button, Component, Grid, uuid } from 'substance'
 import EntitySelector from './EntitySelector'
 import RubricSelector from './RubricSelector'
+import isEmpty from 'lodash/isEmpty'
 
 class CollectionsEditor extends Component {
   constructor(...args) {
@@ -50,23 +51,44 @@ class CollectionsEditor extends Component {
         $$(Grid.Cell, {columns: 5}).append($$('strong').append('rubrics')),
         $$(Grid.Cell, {columns: 5}).append($$('strong').append('entities')),
         $$(Grid.Cell, {columns: 2}).append(
-          this.context.iconProvider.renderIcon($$, 'collection-add'),
-          $$('span').append(' Add rule')
-        ).on('click', this._createRule.bind(this))
+          $$(Button, {label: 'add-rule', style: 'default', icon: 'rule-add'})
+            .addClass('se-add-rule')
+            .attr({title: this.getLabel('add-rule-description')})
+            .on('click', this._createRule.bind(this))
+        )
       ).ref('header')
     )
 
-    rules.forEach(function(rule, id) {    
+    rules.forEach(function(rule, id) {
+      let rubrics = rule.rubrics_names.join(' && ')
+      if(isEmpty(rubrics)) {
+        rubrics = '+ Add rubrics set'
+      } else {
+        rubrics += ' \r\n + Add other rubrics'
+      }
+      let entities = rule.entities_names.join(' && ')
+      if(isEmpty(entities)) {
+        entities = '+ Add entities set'
+      } else {
+        entities += ' \r\n + Add other entities'
+      }
+
       grid.append(
         $$(Grid.Row).append(
-          $$(Grid.Cell, {columns: 5}).append(rule.rubrics_names.join(' && '))
+          $$(Grid.Cell, {columns: 5}).addClass('sm-sets').append(rubrics)
             .on('click', this._editRubrics.bind(this, id)),
-          $$(Grid.Cell, {columns: 5}).append(rule.entities_names.join(' && '))
+          $$(Grid.Cell, {columns: 5}).addClass('sm-sets').append(entities)
             .on('click', this._editEntities.bind(this, id)),
-          $$(Grid.Cell, {columns: 1}).append(this.context.iconProvider.renderIcon($$, 'rule-remove'))
-            .on('click', this._removeRule.bind(this, id)),
-          $$(Grid.Cell, {columns: 1}).append(this.context.iconProvider.renderIcon($$, 'rule-reapply'))
-            .on('click', this._reapplyRule.bind(this, id))
+          $$(Grid.Cell, {columns: 2}).append(
+            $$(Button, {label: 'remove-rule', style: 'default', icon: 'rule-remove'})
+              .addClass('se-rule-control')
+              .attr({title: this.getLabel('remove-rule-description')})
+              .on('click', this._removeRule.bind(this, id)),
+            $$(Button, {label: 'reapply-rule', style: 'default', icon: 'rule-reapply'})
+              .addClass('se-rule-control')
+              .attr({title: this.getLabel('reapply-rule-description')})
+              .on('click', this._reapplyRule.bind(this, id))
+          )
         ).ref(rule.rule_id)
       )
     }.bind(this))

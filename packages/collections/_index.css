@@ -80,11 +80,31 @@
   padding: 10px;
 }
 
-.sc-collection-editor > .se-collection-private,
-.sc-collection-editor > .se-collection-public {
+.sc-collection-editor .se-collection-options .sc-button {
   cursor: pointer;
+  padding: 8px;
+  margin: 0px 5px;
 }
-.sc-collection-editor > .se-collection-private i,
-.sc-collection-editor > .se-collection-public i {
+.sc-collection-editor .se-collection-options .sc-button i {
   margin-left: 10px;
+}
+
+.sc-button.se-edit-collection,
+.sc-button.se-add-collection {
+  float: right;
+  height: 24px;
+  font-size: 12px;
+  line-height: 12px;
+  padding: 0px 10px;
+}
+
+.se-edit-collection .se-label,
+.se-add-collection .se-label {
+  line-height: 12px;
+}
+
+.sc-button.se-add-collection {
+  color: rgba(255, 255, 255, 0.75);
+  border-color: rgba(255, 255, 255, 0.75);
+  font-weight: normal;
 }

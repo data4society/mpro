@@ -37,7 +37,7 @@ class CollectionsEditor extends Component {
 
     let isPrivate = this.state.private
     let selectedIcon = isPrivate ? 'checked' : 'unchecked'
-    let isPrivateInput = $$('div').addClass('se-collection-private').append(
+    let isPrivateInput = $$('div').addClass('se-collection-private sc-button sm-style-default').append(
       'Private collection',
       this.context.iconProvider.renderIcon($$, selectedIcon).addClass('selection')
     ).on('click', this._switchPrivate)
@@ -45,7 +45,7 @@ class CollectionsEditor extends Component {
 
     let isPublic = this.state.public
     selectedIcon = isPublic ? 'checked' : 'unchecked'
-    let isPublicInput = $$('div').addClass('se-collection-public').append(
+    let isPublicInput = $$('div').addClass('se-collection-public sc-button sm-style-default').append(
       'Public collection',
       this.context.iconProvider.renderIcon($$, selectedIcon).addClass('selection')
     ).on('click', this._switchPublic)
@@ -55,8 +55,10 @@ class CollectionsEditor extends Component {
     el.append(
       nameInput,
       descriptionInput,
-      isPublicInput,
-      isPrivateInput
+      $$('div').addClass('se-collection-options').append(
+        isPublicInput,
+        isPrivateInput
+      )
     )
 
     if(!isPrivate) {

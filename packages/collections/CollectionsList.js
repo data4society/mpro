@@ -1,9 +1,10 @@
-import { Component, Input, Modal, uuid } from 'substance'
+import { Button, Component, Input, Modal, uuid } from 'substance'
 import each from 'lodash/each'
 import concat from 'lodash/concat'
 import findIndex from 'lodash/findIndex'
 import isEmpty from 'lodash/isEmpty'
 import CollectionEditor from './CollectionEditor'
+import CollectionItem from './CollectionItem'
 
 class CollectionsList extends Component {
   constructor(...args) {
@@ -18,7 +19,7 @@ class CollectionsList extends Component {
   getInitialState() {
     return {
       list: [],
-      active: this.props.collectionId,
+      //active: this.props.collectionId,
       perPage: 30,
       pagination: true,
       totalItems: 0,
@@ -40,7 +41,7 @@ class CollectionsList extends Component {
 
     if(this.state.edit) {
       let activeIndex = findIndex(this.state.list, function(item) {
-        return item.collection_id === this.state.active
+        return item.collection_id === this.props.collectionId
       }.bind(this))
 
       el.append(
@@ -70,9 +71,7 @@ class CollectionsList extends Component {
           this.state.totalItems + ' collections'
         ),
         $$('span').addClass('se-collections-actions').append(
-          this.context.iconProvider.renderIcon($$, 'collection-edit')
-            .on('click', this._editCollection),
-          this.context.iconProvider.renderIcon($$, 'collection-add')
+          $$(Button, {label: 'add-collection', style: 'default', icon: 'collection-add'}).addClass('se-add-collection')
             .on('click', this._createCollection)
         )
       )
@@ -80,21 +79,10 @@ class CollectionsList extends Component {
     
     if(!isEmpty(collections)) {
       each(collections, function(col) {
-        let isSelected = this.state.active === col.collection_id
-        let item = $$('div').addClass('se-collection-item')
-          .ref(col.collection_id)
-
-        if(isSelected) {
-          item.addClass('sm-selected')
-        } else {
-          item.on('click', this._selectCollection.bind(this, col.collection_id))
-        }
-        item.append(
-          $$('span').addClass('se-collection-item-name').append(col.name),
-          $$('span').addClass('se-collection-counter').append(col.count),
-          $$('span').addClass('se-collection-item-description').append(col.description)
+        let isSelected = this.props.collectionId === col.collection_id
+        el.append(
+          $$(CollectionItem, {collection: col, active: isSelected}).ref(col.collection_id)
         )
-        el.append(item)
       }.bind(this))
 
     }
@@ -121,7 +109,7 @@ class CollectionsList extends Component {
   }
 
   _editCollection() {
-    if(this.state.active) {
+    if(this.props.collectionId) {
       this.extendState({edit: true})
     }
   }
@@ -158,7 +146,7 @@ class CollectionsList extends Component {
     let updated = this.refs['editor'].state
     let list = this.state.list
     let activeIndex = findIndex(list, function(item) {
-      return item.collection_id === this.state.active
+      return item.collection_id === this.props.collectionId
     }.bind(this))
     list[activeIndex].name = updated.name
     list[activeIndex].description = updated.description
