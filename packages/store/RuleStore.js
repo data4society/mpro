@@ -214,14 +214,14 @@ class RuleStore {
     @param {Array} entities entities
     @returns {Promise}
   */
-  matchCollections(rubrics, entities) {
+  matchCollections(rubrics, entities, app_id) {
     let query = `SELECT DISTINCT collection_id from rules WHERE 
-rubrics::text[] <@ $1 AND entities::text[] <@ $2
-OR rubrics::text[] <@ $1 AND entities = '{}'
-OR rubrics = '{}' AND entities::text[] <@ $2`
+rubrics::text[] <@ $1 AND entities::text[] <@ $2 AND app_id = $3
+OR rubrics::text[] <@ $1 AND entities = '{}' AND app_id = $3
+OR rubrics = '{}' AND entities::text[] <@ $2 AND app_id = $3`
 
     return new Promise(function(resolve, reject) {
-      this.db.run(query, [rubrics, entities], function(err, result) {
+      this.db.run(query, [rubrics, entities, app_id], function(err, result) {
         if(err) {
           return reject(new Err('RuleStore.MatchCollections', {
             cause: err

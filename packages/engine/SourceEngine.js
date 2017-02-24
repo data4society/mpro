@@ -208,7 +208,7 @@ class SourceEngine {
         doc = importer.importDocument(recordBody, source)
         let meta = doc.get('meta')
 
-        return this.ruleStore.matchCollections(meta.rubrics, meta.entities)
+        return this.ruleStore.matchCollections(meta.rubrics, meta.entities, source.app_id)
       }.bind(this))
       .then(function(collections) {
         if(docSource.type !== 'tng') {
