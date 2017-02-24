@@ -100,7 +100,7 @@ class PublicEngine {
     let sql = `SELECT ${columns} 
       FROM records r 
       JOIN entities e
-      ON entity_id = ANY(r.entities)
+      ON r.entities @> ARRAY["entity_id"::varchar]
       WHERE ${prop} = '${value}'
       AND r.app_id = '${app}'
       OFFSET ${offset}
@@ -109,7 +109,7 @@ class PublicEngine {
     let countSql = `SELECT COUNT(r.document_id)
       FROM records r 
       JOIN entities e
-      ON entity_id = ANY(r.entities)
+      ON r.entities @> ARRAY["entity_id"::varchar]
       WHERE ${prop} = '${value}'
       AND r.app_id = '${app}'`;
 
@@ -155,7 +155,7 @@ class PublicEngine {
       SELECT DISTINCT
         unnest(records.collections) AS collection,
         COUNT(*) OVER (PARTITION BY unnest(records.collections)) cnt
-      FROM records WHERE $1 <@ collections AND app_id = $2 ${dateFilter}
+      FROM records WHERE collections @> $1::varchar[] $1 <@ collections AND app_id = $2 ${dateFilter}
     ) AS docs INNER JOIN collections ON (docs.collection = collections.collection_id::text) 
     WHERE collections.public = true AND app_id = $2 OFFSET ${offset} LIMIT ${limit}`;
 
@@ -189,15 +189,15 @@ class PublicEngine {
     let countSql = `SELECT COUNT(id) FROM (
       SELECT DISTINCT
         unnest(records.entities) AS id
-      FROM records WHERE $1 <@ collections AND app_id = $2 ${dateFilter}
-    ) AS docs INNER JOIN entities e ON (id = e.entity_id)`;
+      FROM records WHERE $1::varchar[] <@ collections AND app_id = $2 ${dateFilter}
+    ) AS docs INNER JOIN entities e ON (id::varchar = e.entity_id)`;
 
     let sql = `SELECT id, cnt, e.name FROM (
       SELECT DISTINCT
         unnest(records.entities) AS id,
       COUNT(*) OVER (PARTITION BY unnest(entities)) cnt
-      FROM records WHERE $1 <@ collections AND app_id = $2 ${dateFilter}
-    ) AS docs INNER JOIN entities e ON (id = e.entity_id) ORDER BY cnt DESC OFFSET ${offset} LIMIT ${limit}`;
+      FROM records WHERE $1::varchar[] <@ collections AND app_id = $2 ${dateFilter}
+    ) AS docs INNER JOIN entities e ON (id::varchar = e.entity_id) ORDER BY cnt DESC OFFSET ${offset} LIMIT ${limit}`;
 
     return new Promise(function(resolve, reject) {
 
