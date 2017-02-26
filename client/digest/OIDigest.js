@@ -189,7 +189,9 @@ class OIDigest extends Component {
       let item = $$('div').addClass('se-collection-node').append(
         $$('span').addClass('se-node-name').append(collection.name),
         $$('span').addClass('se-node-count').append(collection.cnt)
-      ).ref(collection.collection)
+      )
+      .attr({title: collection.description})
+      .ref(collection.collection)
       .on('click', this._collectionFilter.bind(this, collection.collection))
 
       if(collection.collection === this.state.activeCollection) {
