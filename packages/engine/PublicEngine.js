@@ -151,7 +151,7 @@ class PublicEngine {
       dateFilter = 'AND published >= \'' + opts.dateFilter[0] + ' 00:00:00\' AND published <= \''
       dateFilter += (opts.dateFilter.length > 1 ? opts.dateFilter[1] : opts.dateFilter[0]) + ' 23:59:59\''
     }
-    let sql = `SELECT collection, cnt, collections.name, collection.description FROM (
+    let sql = `SELECT collection, cnt, collections.name, collections.description FROM (
       SELECT DISTINCT
         unnest(records.collections) AS collection,
         COUNT(*) OVER (PARTITION BY unnest(records.collections)) cnt
