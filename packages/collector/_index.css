@@ -16,6 +16,7 @@
 
 .sc-collector > .se-collection-node {
   color: rgba(0,0,0,0.75);
+  cursor: pointer;
 }
 
 .sc-collector > .se-collection-node > .sm-selection {
@@ -48,4 +49,20 @@
   border-top: 1px solid #e6e8eb;
   margin-top: 5px;
   height: 30px;
+}
+
+.sc-collector > .sc-pager > button > .se-label {
+  float: none;
+}
+
+.sc-collector .se-new-collection {
+  height: 20px;
+  padding: 0px 15px;
+  margin: 5px 15px;
+  font-weight: normal;
+}
+
+.sc-collection-editor .se-collection-save {
+  display: block;
+  margin: 10px auto 20px;
 }

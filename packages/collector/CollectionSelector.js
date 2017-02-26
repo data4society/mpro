@@ -1,4 +1,4 @@
-import { Component, Input } from 'substance'
+import { Button, Component, Input } from 'substance'
 import each from 'lodash/each'
 import concat from 'lodash/concat'
 import isEmpty from 'lodash/isEmpty'
@@ -43,17 +43,24 @@ class CollectionSelector extends Component {
       .ref('searchInput')
     )
 
-    el.append(searchInput)
+    let newCollectionBtn = $$(Button, {icon: 'collector-add-new', label: 'collector-add-new', style: 'default'})
+      .addClass('se-new-collection')
+      .on('click', this._addCollection)
+
+    el.append(
+      searchInput,
+      newCollectionBtn
+    )
     
     if(!isEmpty(collections)) {
       each(collections, function(col) {
         let isSelected = selected.indexOf(col.collection_id) > -1
         let node = $$('div').addClass('se-collection-node').ref(col.collection_id)
+          .on('click', this._selectNode.bind(this, col.collection_id))
         let selectedIcon = isSelected ? 'checked' : 'unchecked'
         if(isSelected) node.addClass('sm-selected')
         node.append(
-          this.context.iconProvider.renderIcon($$, selectedIcon).addClass('sm-selection')
-            .on('click', this._selectNode.bind(this, col.collection_id)),
+          this.context.iconProvider.renderIcon($$, selectedIcon).addClass('sm-selection'),
           $$('span').addClass('se-collection-node-name').append(col.name),
           $$('span').addClass('se-collection-node-description').append(col.description)
         )
@@ -88,6 +95,10 @@ class CollectionSelector extends Component {
       selected: selected
     })
     this.send('listChanged', selected)
+  }
+
+  _addCollection() {
+    this.send('addCollection')
   }
 
   _searchCollections() {

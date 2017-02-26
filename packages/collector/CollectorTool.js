@@ -1,5 +1,6 @@
-import { Tool } from 'substance'
+import { Modal, Tool } from 'substance'
 import extend from 'lodash/extend'
+import CollectionEditor from './CollectionEditor'
 import CollectionSelector from './CollectionSelector'
 
 /*
@@ -11,7 +12,10 @@ class CollectorTool extends Tool {
     super(...args)
 
     this.handleActions({
-      'listChanged': this._onListChanged
+      'listChanged': this._onListChanged,
+      'addCollection': this._showCollectionModal,
+      'saveCollection': this._saveCollection,
+      'closeModal': this._onModalClose
     })
   }
 
@@ -20,6 +24,7 @@ class CollectorTool extends Tool {
     let collectionsMeta = doc.get(['meta','collections'])
     return {
       openDropDown: false,
+      showModal: false,
       selected: collectionsMeta
     }
   }
@@ -60,6 +65,16 @@ class CollectorTool extends Tool {
       )
     }
 
+    if(this.state.showModal) {
+      el.append(
+        $$(Modal, {
+          width: 'medium'
+        }).append(
+          $$(CollectionEditor).ref('editor')
+        )
+      )
+    }
+
     return el
   }
 
@@ -73,11 +88,31 @@ class CollectorTool extends Tool {
     } else {
       this.extendProps({icon: 'collector-active'})
     }
-    this.extendState({openDropDown: !openDropDown})
+    this.extendState({openDropDown: !openDropDown, showModal: false})
   }
 
   _onListChanged(collections) {
     this.extendState({selected: collections})
+  }
+
+  _showCollectionModal() {
+    this.extendState({showModal: true})
+  }
+
+  _saveCollection(col) {
+    let collections = this.state.selected
+    collections.unshift(col.collection_id)
+    this.extendState({selected: collections, showModal: false})
+    let selector = this.refs.selector
+    let list = selector.state.list
+    list.unshift(col)
+    let total = parseInt(selector.state.totalItems, 10) + 1
+    selector.extendState({list: list, totalItems: total, selected: collections})
+  }
+
+  _onModalClose() {
+    let showModal = this.state.showModal
+    this.extendState({showModal: !showModal})
   }
 
   performAction(collections) {
