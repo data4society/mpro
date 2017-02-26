@@ -62,7 +62,7 @@ class OIDigest extends Component {
       collectionDocsKey: 'a27aecc2-5c97-5347-7074-805af59808ae',
       entityDocsKey: 'ce0d823c-798a-f9e7-d98c-6b1812837214',
       topEntitiesKey: '62bf1f46-c5fd-bb1e-c215-f962512da4f4',
-      title: 'Новости о политических преследованиях',
+      title: 'Все новости',
       collections: [],
       topEntities: [],
       activeCollection: '',
@@ -110,8 +110,14 @@ class OIDigest extends Component {
       ).addClass('se-digest')
     )
 
+    let aboutBtnIcon = this.state.about ? 'fa-times' : 'fa-info-circle'
+    let aboutBtn = $$('div').addClass('se-header-about').append(
+      $$('i').addClass('fa ' + aboutBtnIcon)
+    ).on('click', this._toggleAboutSection)
+
     el.append(
       $$(OIHeader),
+      aboutBtn,
       this.renderHeader($$),
       layout
     )
@@ -128,7 +134,7 @@ class OIDigest extends Component {
     let el = $$('div').addClass('se-header-panel')
 
     el.append(
-      $$('div').addClass('se-header-title').setInnerHTML(this.state.title)
+      $$('div').addClass('se-header-title').setInnerHTML(this.state.title)   
     )
 
     if(this.state.activeEntity.id && !this.state.activeCollection) {
@@ -150,17 +156,6 @@ class OIDigest extends Component {
       )
     }
 
-    let aboutBtn = $$('div').addClass('se-header-about').append(
-      $$('i').addClass('fa fa-question-circle-o')
-    ).on('click', this._toggleAboutSection)
-
-    let dateFilter = $$('div').addClass('se-date-filter').append(
-      $$('input').attr({'data-input': true}),
-      $$('span').attr({'data-toggle': true}).append($$('i').addClass('fa fa-calendar'))
-    ).ref('dateFilter')
-
-    if(this.state.about) aboutBtn.addClass('sm-active')
-
     if(this.state.total) {
       el.append(
         $$('div').addClass('se-header-stats').append(
@@ -170,9 +165,13 @@ class OIDigest extends Component {
       )
     }
 
+    let dateFilter = $$('div').addClass('se-date-filter').append(
+      $$('input').attr({'data-input': true}),
+      $$('span').attr({'data-toggle': true}).append($$('i').addClass('fa fa-calendar'))
+    ).ref('dateFilter')
+
     el.append(
-      dateFilter,
-      aboutBtn
+      dateFilter
     )
 
     wrapper.append(el)
@@ -212,6 +211,7 @@ class OIDigest extends Component {
           ).on('click', this._switchMode.bind(this, 'entities'))
         )
     )
+    let entitiesNodesEl = $$('div').addClass('se-entities-nodes')
     each(entities, function(entity) {
       let item = $$('div').addClass('se-entity-node').append(
         $$('span').addClass('se-node-name').append(entity.name),
@@ -222,8 +222,10 @@ class OIDigest extends Component {
         item.addClass('se-active')
       }
 
-      entitiesEl.append(item)
+      entitiesNodesEl.append(item)
     }.bind(this))
+
+    entitiesEl.append(entitiesNodesEl)
 
     el.append(entitiesEl)
 
@@ -253,12 +255,12 @@ class OIDigest extends Component {
           let published = moment(item.meta.published).format('DD.MM.YYYY')
           let sourceName = this._getSourceName(item.meta.source)
           grid.append(
-            $$('a').attr({href: item.meta.source, target: '_blank', class: 'se-row se-source'}).ref(item.doc_id).append(
+            $$(Grid.Row).addClass('se-source').ref(item.doc_id).append(
               $$(Grid.Cell, {columns: 6}).addClass('se-source-name').append(sourceName),
               $$(Grid.Cell, {columns: 6}).addClass('se-item-published').append(published),
               $$('div').addClass('se-divider'),
-              $$(Grid.Row).addClass('se-item-title').append(item.meta.title),
-              $$(Grid.Row).addClass('se-item-abstract').append(item.meta.abstract),
+              $$('a').addClass('se-row se-item-title').attr({href: item.meta.source, target: '_blank'}).append(item.meta.title),
+              $$('a').addClass('se-row se-item-abstract').attr({href: item.meta.source, target: '_blank'}).append(item.meta.abstract),
               entities
             )
           )
@@ -291,13 +293,41 @@ class OIDigest extends Component {
 
   renderAbout($$) {
     let el = $$('div').addClass('se-about')
-    let content = `One morning, when Gregor Samsa woke from troubled dreams, he found himself transformed in his bed into a horrible vermin. He lay on his armour-like back, and if he lifted his head a little he could see his brown belly, slightly domed and divided by arches into stiff sections.
+    let content = `Медиа-радар&nbsp;&#151; это&nbsp;автоматический мониторинг СМИ. Мы&nbsp;автоматически ищем в&nbsp;русскоязычных СМИ&nbsp;публикации, в&nbsp;которых описываются нарушения прав человека в&nbsp;России, собираем их&nbsp;вместе и&nbsp;выделяем в&nbsp;них самую важную информацию&nbsp;&#151; имена людей, упоминавшихся в&nbsp;новостях, географические данные, название организаций и&nbsp;статьи уголовного и&nbsp;административных кодексов. 
 
-The bedding was hardly able to cover it and seemed ready to slide off any moment. His many legs, pitifully thin compared with the size of the rest of him, waved about helplessly as he looked. "What's happened to me? " he thought. It wasn't a dream. His room, a proper human room although a little too small, lay peacefully between its four familiar walls. A collection of textile samples lay spread out on the table - Samsa was a travelling salesman - and above it there hung a picture that he had recently cut out of an illustrated magazine and housed
+<h3>Зачем нужен Медиа-радар?</h3>ОВД-Инфо специализируется на&nbsp;информации о&nbsp;политических преследованиях и&nbsp;нарушении права на&nbsp;свободу собраний, и&nbsp;про все&nbsp;подобные случаи мы&nbsp;пишем довольно подробные новости. К&nbsp;сожалению, в&nbsp;России ежедневно происходит множество других случаев нарушений прав человека, и&nbsp;писать про&nbsp;ОВД-Инфо не&nbsp;может. Наш&nbsp;автоматический мониторинг СМИ&nbsp;позволяет восполнить лакуны нашей собственной новостной ленты и&nbsp;погрузить читателя в&nbsp;более широкий контекст нарушения гражданских прав. 
+
+<h3>Для кого Медиа-радар?</h3>Прежде всего&nbsp;&#151; для&nbsp;профессиональной аудитории: иметь возможность оперативно знакомиться с&nbsp;хорошо структурированной информацией о&nbsp;нарушениях прав человека будет полезно для&nbsp;правозащитников, журналистов и&nbsp;юристов. Но&nbsp;мы надеемся, что&nbsp;Медиа-радар станет удобным новостным агрегатором для&nbsp;всех наших читателей.
+
+<h3>Как работает Медиа-радар?</h3>Мы&nbsp;собираем новости автоматически из&nbsp;5000 источников&nbsp;&#151; это, прежде всего, российские СМИ&nbsp;и сайты государственных органов. Все&nbsp;новости проходят рубрикацию&nbsp;&#151; этот алгоритм основан на&nbsp;машинном обучении: редакция ОВД-Инфо обучила машину, чтобы она&nbsp;научилась различать те&nbsp;тексты, в&nbsp;которых упоминаются нарушения прав человека, от&nbsp;всех прочих новостных заметок. После этого из&nbsp;одобренных машиной текстов извлекаются данные&nbsp;&#151; этот алгоритм также основан на&nbsp;машинном обучении с&nbsp;применением нейронной сети. Технология, которую мы&nbsp;используем, создана нашими друзьями и&nbsp;партнерами из&nbsp;Data for&nbsp;Society, и&nbsp;находится в&nbsp;пока в&nbsp;режиме тестирования. Из-за того, что&nbsp;поиск и&nbsp;отбор новостей осуществляется в&nbsp;автоматическом режиме, иногда в&nbsp;подборку той&nbsp;или иной тематики могут попадать новости, не&nbsp;содержащие информации о&nbsp;нарушениях прав человека: мы&nbsp;работаем над&nbsp;этим и&nbsp;будем благодарны, если вы&nbsp;будете <a href="mailto:info@ovdinfo.org">сообщать нам</a> о&nbsp;таких случаях.  
+
+<h3>О чем&nbsp;Медиа-радар?</h3>На&nbsp;данный момент мы&nbsp;агрегируем новости из&nbsp;русскоязычных СМИ&nbsp;по шести тематикам:
+
+<em>ЛГБТ</em>&nbsp;&#151; нарушение прав людей с&nbsp;альтернативной сексуальной ориентацией. В&nbsp;эту рубрику попадают новости про&nbsp;преследования ЛГБТ, возбуждение административных и&nbsp;уголовных дел&nbsp;за так&nbsp;называемую &laquo;пропаганду гомосексуализма&raquo;, срывы ЛГБТ-мероприятий, угрозы и&nbsp;диффамация. 
+
+<em>Искусство</em>&nbsp;&#151; нарушение права на&nbsp;свободное художественное высказывание. В&nbsp;эту рубрику попадают новости про&nbsp;различные случаи цензуры со&nbsp;стороны государства, а&nbsp;также про&nbsp;попытки навязать цензуры со&nbsp;стороны радикальных активистких группировок. 
+
+<em>Насилие</em>&nbsp;&#151; применение насилия по&nbsp;отношению к&nbsp;активистам, политикам и&nbsp;журналистам. В&nbsp;эту рубрику попадают случаи насилия вне&nbsp;зависимости от&nbsp;того, кто&nbsp;применяет насилия&nbsp;&#151; мы&nbsp;считаем, что&nbsp;любое насилие&nbsp;&#151; ответственность государства. В&nbsp;том случае, если насилие применяют не&nbsp;сотрудники государственных органов, именно государство должно обеспечить безопасность граждан и&nbsp;расследовать соответствующие преступления. 
+
+<em>Отчисления и&nbsp;увольнения</em>&nbsp;&#151; случаи внесудебного давления на&nbsp;активистов со&nbsp;стороны работодателя или&nbsp;ВУЗа. 
+
+<em>Угрозы</em>&nbsp;&#151; угрозы применения насилия по&nbsp;отношению к&nbsp;активистам, политикам, журналистам. В&nbsp;эту рубрику попадают новости про&nbsp;угрозы как&nbsp;со стороны сотрудников государственных органов, так&nbsp;и со&nbsp;стороны неизвестных лиц. Мы&nbsp;считаем, что&nbsp;любые угрозы по&nbsp;отношению к&nbsp;активистам&nbsp;&#151; ответственность государства: именно государство должно обеспечить безопасность граждан и&nbsp;расследовать соответствующие преступления.  
+
+<em>Интернет</em>&nbsp;&#151; нарушение права на&nbsp;свободу высказывания в&nbsp;Интернете. В&nbsp;эту рубрику попадают новости про&nbsp;блокировки, возбуждения административных и&nbsp;уголовных дел&nbsp;за посты и&nbsp;репосты и&nbsp;другие случаи давления.
+
+<h3>Кто это&nbsp;делает?</h3>Проект &laquo;Медиа-радар: нарушения прав человека&raquo; реализуется <a href="https://ovdinfo.org/about" target="_blank">независимым правозащитным медиа-проектом ОВД-Инфо</a>. 
+
+Программные решения: команда Data for&nbsp;Society
+Концепция: Григорий Охотин, Даниил Бейлинсон
+Программирование: Даниил Бейлинсон
+
+Связаться с&nbsp;командой можно по&nbsp;е-мейлу <a href="mailto:info@ovdinfo.org">info@ovdinfo.org</a> или&nbsp;через форму обратной связи&nbsp;&#151; мы&nbsp;всегда будем рады вашим письмам. 
+<div class="se-copyright"><a href="http://creativecommons.org/licenses/by/3.0/deed.en_US" rel="license"><img alt="Creative Commons License" src="//i.creativecommons.org/l/by/3.0/88x31.png" style="border-width:0"></a>
+<div class="se-copyright-content">ОВД-Инфо &laquo;Медиа-радар: нарушения прав человека&raquo; (digest.ovdinfo.org) лицензировано в&nbsp;соответствии с&nbsp;Creative Commons Attribution&nbsp;3.0 Unported License.</div></div>
     `
 
     el.append(
-      $$('div').addClass('se-content').append(content)
+      $$('div').addClass('se-content').setInnerHTML(content)
     )
 
     return el
@@ -323,7 +353,7 @@ The bedding was hardly able to cover it and seemed ready to slide off any moment
       }
     })
     let state = {activeCollection: activeCollection, activeEntity: {}, title: 'Новости по теме: <em>' + colNode.name + '</em>', mode: 'documents', items: [], total: null}
-    if(this.state.activeCollection === colId) state.title = 'Новости о политических преследованиях'
+    if(this.state.activeCollection === colId) state.title = 'Все новости'
     this.extendState(state)
   }
 
@@ -337,7 +367,7 @@ The bedding was hardly able to cover it and seemed ready to slide off any moment
       this.extendState(state)
     } else {
       let state = {activeEntity: {}, items: [], total: null}
-      if(!this.state.activeCollection) state.title = 'Новости о политических преследованиях'
+      if(!this.state.activeCollection) state.title = 'Все новости'
       this.extendState(state)
     }
   }
@@ -498,7 +528,7 @@ The bedding was hardly able to cover it and seemed ready to slide off any moment
         dates.push(moment(selectedDates[1]).format('YYYY-MM-DD'))
       }
 
-      this.extendState({mode: 'documents', items: [], total: null, dates: dates})
+      this.extendState({mode: 'documents', items: [], total: null, dates: dates, about: false})
     } else {
       dates.push(moment(selectedDates[0]).format('YYYY-MM-DD'))
     }
@@ -506,7 +536,7 @@ The bedding was hardly able to cover it and seemed ready to slide off any moment
 
   _resetEntityFilter() {
     let activeCollection = this.state.activeCollection
-    let title = 'Новости о политических преследованиях'
+    let title = 'Все новости'
     if(activeCollection) {
       let colNode
       each(this.state.collections, col => {

@@ -10,7 +10,7 @@ class OIHeader extends Component {
         $$('img').attr({src: '/digest/assets/logo-oi.png'})
       ),
       $$('div').addClass('se-slogan').append(
-        $$('a').attr({href: '/'}).append('Дайджест политических преследований')
+        $$('a').attr({href: '/'}).append('Медиа-радар Мониторинг СМИ')
       )
     )
 
