@@ -435,6 +435,7 @@ body h3 {
 
 .se-row.se-source,
 .se-row.se-entity-list-item {
+  width: 640px;
   color: inherit;
   display: block;
   border-bottom: solid 1px #DDDDDD;
