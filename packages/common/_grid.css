@@ -35,3 +35,7 @@
 .sc-list .se-list-not-empty {
   padding: 10px;
 }
+
+.sc-split-pane > .se-pane {
+  min-height: 0;
+}

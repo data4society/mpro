@@ -77,12 +77,6 @@ class OIDigest extends Component {
 
   render($$) {
     let el = $$('div').addClass('sc-digest sc-container')
-    
-    let layout = $$(Layout, {
-      width: 'large',
-      textAlign: 'left',
-      noPadding: false
-    })
 
     let total = this.state.total
     let docsPanel
@@ -100,14 +94,25 @@ class OIDigest extends Component {
       docsPanel = this.renderSpinner($$)
     }
 
-    layout.append(
-      $$(SplitPane, {
-        sizeA: '300px',
-        splitType: 'vertical'
-      }).append(
-        this.renderSideBar($$),
-        docsPanel
-      ).addClass('se-digest')
+    let header = $$('div').addClass('se-header-wrapper').append(
+      $$(OIHeader),
+      this.renderHeader($$)
+    )
+
+    let content = $$(SplitPane, {
+      sizeA: '300px',
+      splitType: 'vertical'
+    }).append(
+      this.renderSideBar($$),
+      docsPanel
+    ).addClass('se-digest')
+
+    let page = $$(SplitPane, {
+      sizeA: '115px',
+      splitType: 'horizontal'
+    }).append(
+      header,
+      content
     )
 
     let aboutBtnIcon = this.state.about ? 'fa-times' : 'fa-info-circle'
@@ -116,10 +121,8 @@ class OIDigest extends Component {
     ).on('click', this._toggleAboutSection)
 
     el.append(
-      $$(OIHeader),
-      aboutBtn,
-      this.renderHeader($$),
-      layout
+      page,
+      aboutBtn
     )
 
     if(this.state.about) {

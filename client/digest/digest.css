@@ -224,6 +224,8 @@ body h3 {
 }
 
 .sc-digest .se-date-filter {
+  position: relative;
+  right: -20px;
   padding: 5px 0px;
   width: 24px;
   text-align: center;
@@ -342,6 +344,8 @@ body h3 {
 
 .se-digest {
   position: relative;
+  width: 960px;
+  margin: 0px auto;
 }
 
 .se-title {
@@ -380,7 +384,6 @@ body h3 {
   box-shadow: inset -4px 0 4px 0 rgba(25, 25, 25, 0.04);
   padding-top: 10px;
   overflow: auto;
-  overflow: -moz-scrollbars-none;
   -ms-overflow-style: -ms-autohiding-scrollbar;
 }
 
@@ -435,7 +438,6 @@ body h3 {
 
 .se-row.se-source,
 .se-row.se-entity-list-item {
-  width: 640px;
   color: inherit;
   display: block;
   border-bottom: solid 1px #DDDDDD;
@@ -490,16 +492,15 @@ body h3 {
   margin: 10px;
 }
 .sc-pager button {
-  padding: 0px 20px;
   text-align: center;
   height: 40px;
   font-size: 14px;
-  color: rgba(0, 0, 0, 0.75);
-  font-weight: 600;
+  color: rgba(39, 39, 39, 0.75);
   display: inline-block;
-  border: 1px solid rgba(0, 0, 0, 0.75);
+  border: 1px solid rgba(80, 80, 80, 0.75);
   width: 100%;
   margin-top: 10px;
+  background: rgba(255, 255, 255, 0.3);
 }
 span.se-item-entity {
   display: inline-block;
