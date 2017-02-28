@@ -532,6 +532,12 @@ span.se-item-entity:hover {
   right: -20px;
   background: #FAFAFA;
   box-shadow: inset 4px 0 4px 0 rgba(25, 25, 25, 0.04);
+  z-index: 1;
+}
+
+.sc-scroll-pane.sm-substance-scrollbar.sm-firefox .se-scrollable {
+  margin-right: -20px;
+  padding-right: 20px;
 }
 
 .se-copyright a {
