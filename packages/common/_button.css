@@ -16,7 +16,7 @@
 }
 
 .sc-button .se-label {
-  float: right;
+  display: inline-block;
   line-height: 14px;
   margin-left: 6px;
 }
