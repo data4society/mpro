@@ -97,11 +97,14 @@ class PublicEngine {
     }
     columns = columns.join(',')
 
+    let monthFilter = ''
+    if(opts.lastmonth) monthFilter = "AND published > current_date - interval '1' month"
+
     let sql = `SELECT ${columns} 
       FROM records r 
       JOIN entities e
       ON r.entities @> ARRAY["entity_id"::varchar]
-      WHERE ${prop} = '${value}'
+      WHERE ${prop} = '${value}' ${monthFilter}
       AND r.app_id = '${app}'
       OFFSET ${offset}
       LIMIT ${limit}`;
