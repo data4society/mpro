@@ -8,6 +8,7 @@ class Header extends Component {
     let appsConfig = this.context.config.apps
     let currentAppConfig = appsConfig[this.props.app]
     let authenticationClient = this.context.authenticationClient
+    let user = authenticationClient.getUser()
     let el = $$('div').addClass('sc-header')
 
     el.append(this.renderAppSelector($$))
@@ -23,16 +24,20 @@ class Header extends Component {
     } else {
       actions.inbox = this.getLabel('inbox-menu')
 
-      if(currentAppConfig.rubrics && currentAppConfig.entities) {
+      if(currentAppConfig.rubrics && currentAppConfig.entities && user.super) {
         actions.collections = this.getLabel('collections-menu')
       }
       if(currentAppConfig.entities) {
-        actions.resources = this.getLabel('configurator-resources')
+        if(user.super) {
+          actions.resources = this.getLabel('configurator-resources')
+        }
         actions.entities = this.getLabel('entities-menu')
       }
 
-      actions.apis = this.getLabel('api-menu')
-      actions.users = this.getLabel('configurator-users')
+      if(user.super) {
+        actions.apis = this.getLabel('api-menu')
+        actions.users = this.getLabel('configurator-users')
+      }
     }
 
     each(actions, function(label, actionName) {
@@ -51,7 +56,7 @@ class Header extends Component {
     el.append(
       $$('div').addClass('se-actions').append(actionEls),
       $$(LoginStatus, {
-        user: authenticationClient.getUser()
+        user: user
       }),
       $$('div').addClass('se-content').append(content)
     )
