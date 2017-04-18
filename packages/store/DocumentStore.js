@@ -287,6 +287,7 @@ class DocumentStore {
         FROM records, plainto_tsquery(${language}, ${searchQuery}) AS q ${whereQuery} 
         ORDER BY rank DESC limit ${options.limit} offset ${options.offset}
       `
+      console.log(query)
 
       this.db.run(countQuery, where.params, function(err, count) {
         if (err) {

@@ -78,7 +78,8 @@ class ArticleImporter extends HTMLImporter {
         cover: '',
         publisher: publisher.name,
         accepted: false,
-        moderated: false
+        moderated: false,
+        negative: false
       })
     }
   }

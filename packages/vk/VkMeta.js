@@ -35,7 +35,8 @@ VkMeta.define({
   author: { type: 'object', default: {} },
   attachments: { type: ['object'], default: [] },
   accepted: { type: 'boolean', default: false },
-  moderated: { type: 'boolean', default: false }
+  moderated: { type: 'boolean', default: false },
+  negative: { type: 'boolean', default: false }
 })
 
 export default VkMeta

@@ -18,7 +18,8 @@ class Filters extends Component {
       el.append(
         $$(AcceptorFilter, {
           accepted: filters['meta->>accepted'],
-          moderated: filters['meta->>moderated']
+          moderated: filters['meta->>moderated'],
+          negative: filters['meta->>negative']
         })
       )
     }

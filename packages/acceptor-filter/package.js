@@ -7,5 +7,6 @@ export default {
 
     config.addIcon('acceptor', { 'fontawesome': 'fa-check' })
     config.addIcon('moderator', { 'fontawesome': 'fa-user-secret' })
+    config.addIcon('negative', { 'fontawesome': 'fa-trash' })
   }
 }

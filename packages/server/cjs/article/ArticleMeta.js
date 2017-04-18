@@ -33,7 +33,8 @@ ArticleMeta.define({
   abstract: { type: 'string', default: ''},
   publisher: { type: 'string', default: ''},
   accepted: { type: 'boolean', default: false },
-  moderated: { type: 'boolean', default: false }
+  moderated: { type: 'boolean', default: false },
+  negative: { type: 'boolean', default: false }
 })
 
 module.exports = ArticleMeta

@@ -61,6 +61,7 @@ class Editor extends ProseEditor {
     if(!isUndefined(update.change)) {
       let accepted = this.doc.get(['meta', 'accepted'])
       let moderated = this.doc.get(['meta', 'moderated'])
+      let negative = this.doc.get(['meta', 'negative'])
 
       if(update.change.updated['meta,accepted'] === true) {
         if(accepted) {
@@ -74,11 +75,18 @@ class Editor extends ProseEditor {
         }
       }
 
+      if(update.change.updated['meta,negative'] === true) {
+        if(negative) {
+          this._exportDocument()
+        }
+      }
+
       if(update.change.updated['meta,rubrics'] === true) {
         let surface = this.surfaceManager.getSurface('body')
         surface.transaction(function(tx, args) {
           tx.set(['meta', 'accepted'], false)
           tx.set(['meta', 'moderated'], false)
+          tx.set(['meta', 'negative'], false)
           return args
         })
       }

@@ -102,7 +102,8 @@ class VkImporter extends HTMLImporter {
         },
         attachments: attachments,
         accepted: false,
-        moderated: false
+        moderated: false,
+        negative: false
       })
     }
   }

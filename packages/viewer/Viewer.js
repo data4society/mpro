@@ -70,6 +70,7 @@ class Viewer extends ProseEditor {
       let rubricsChange = false
       let accepted = this.doc.get(['meta', 'accepted'])
       let moderated = this.doc.get(['meta', 'moderated'])
+      let negative = this.doc.get(['meta', 'negative'])
       let surface = this.surfaceManager.getSurface('body')
 
       each(ops, function(op) {
@@ -104,10 +105,17 @@ class Viewer extends ProseEditor {
         }
       }
 
+      if(update.change.updated['meta,negative'] === true) {
+        if(negative) {
+          this._exportDocument()
+        }
+      }
+
       if(rubricsChange) {
         surface.transaction(function(tx, args) {
           tx.set(['meta', 'accepted'], false)
           tx.set(['meta', 'moderated'], false)
+          tx.set(['meta', 'negative'], false)
           return args
         })
       }

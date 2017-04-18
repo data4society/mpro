@@ -4,7 +4,8 @@ class AcceptorFilter extends Component {
   getInitialState() {
     return {
       accepted: this.props.accepted === undefined ? null : this.props.accepted,
-      moderated: this.props.moderated === undefined ? null : this.props.moderated
+      moderated: this.props.moderated === undefined ? null : this.props.moderated,
+      negative: this.props.negative === undefined ? null : this.props.negative
     }
   }
 
@@ -39,9 +40,21 @@ class AcceptorFilter extends Component {
       moderator.addClass('sm-off')
     }
 
+    let negative = $$('div').addClass('se-filter-acceptor').append(
+      $$(Button, {style: 'outline', icon: 'negative'})
+        .on('click', this._toggleValue.bind(this, 'negative'))
+    )
+
+    if(this.state.negative === true) {
+      negative.addClass('sm-on')
+    } else if (this.state.negative === false) {
+      negative.addClass('sm-off')
+    }
+
     el.append(
       acceptor,
-      moderator
+      moderator,
+      negative
     )
 
     return el
