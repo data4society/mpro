@@ -100,11 +100,14 @@ class PublicEngine {
     let monthFilter = ''
     if(opts.lastmonth) monthFilter = "AND published > current_date - interval '1' month"
 
+    let weekFilter = ''
+    if(opts.weekmonth) weekFilter = "AND published > current_date - interval '1' week"
+
     let sql = `SELECT ${columns} 
       FROM records r 
       JOIN entities e
       ON r.entities @> ARRAY["entity_id"::varchar]
-      WHERE ${prop} = '${value}' ${monthFilter}
+      WHERE ${prop} = '${value}' ${monthFilter} ${weekFilter}
       AND r.app_id = '${app}'
       OFFSET ${offset}
       LIMIT ${limit}`;
