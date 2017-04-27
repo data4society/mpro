@@ -81,7 +81,7 @@ class AbstractFeedLoader extends Component {
     return {
       filters: {'training': false, app_id: this.props.app, 'rubrics @>': [], 'entities @>': entities},
       perPage: 10,
-      order: 'created',
+      order: 'published',
       direction: 'desc',
       documentId: this.props.documentId,
       documentItems: [],
