@@ -98,16 +98,19 @@ class PublicEngine {
     columns = columns.join(',')
 
     let monthFilter = ''
-    if(opts.lastmonth) monthFilter = "AND published > current_date - interval '1' month"
+    if(opts.lastmonth) monthFilter = "AND published > current_date - interval '1 month'"
 
     let weekFilter = ''
-    if(opts.weekmonth) weekFilter = "AND published > current_date - interval '1' week"
+    if(opts.lastweek) weekFilter = "AND published > current_date - interval '7 days'"
+
+    let daysFilter = ''
+    if(opts.daysfilter && opts.days) daysFilter = "AND published > current_date - interval '" + opts.days + " days'"
 
     let sql = `SELECT ${columns} 
       FROM records r 
       JOIN entities e
       ON r.entities @> ARRAY["entity_id"::varchar]
-      WHERE ${prop} = '${value}' ${monthFilter} ${weekFilter}
+      WHERE ${prop} = '${value}' ${monthFilter}${weekFilter}${daysFilter}
       AND r.app_id = '${app}'
       OFFSET ${offset}
       LIMIT ${limit}`;
