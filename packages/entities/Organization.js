@@ -22,7 +22,8 @@ Organization.type = 'org'
 Organization.define({
   name: { type: 'string', default: '', field: { type: "text", dataType: "text", placeholder: "Enter organization name" }},
   jurisdiction: { type: ['string'], default: [], field: { type: "reference", multiple: true, placeholder: "Enter parent organizations", restrictions: {"entity_class": "org"}}},
-  location: { type: ['string'], default: [], field: { type: "reference", multiple: true, placeholder: "Enter organization locations", restrictions: {"entity_class": "location"}}}
+  location: { type: ['string'], default: [], field: { type: "reference", multiple: true, placeholder: "Enter organization locations", restrictions: {"entity_class": "location"}}},
+  org_type: { type: 'string', default: '', field: { type: "select", options: ['ОВД', 'тюрьма', 'суд', 'неизвестно', 'прочее'], placeholder: "Pick an organization type" }}
 })
 
 export default Organization
