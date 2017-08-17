@@ -28,7 +28,14 @@ class RequestLogin extends Component {
       $$(Button, {
         disabled: Boolean(this.state.loading), // disable button when in loading state
         label: 'login'
-      }).on('click', this._login)
+      }).on('click', this._login),
+      $$('a').attr({href: '/api/auth/google'})
+        .append(
+          $$(Button, {
+            disabled: Boolean(this.state.loading), // disable button when in loading state
+            label: 'Login via Google'
+          })
+        )
     )
 
     if (this.state.notification) {

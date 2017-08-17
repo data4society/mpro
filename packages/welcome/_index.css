@@ -49,6 +49,7 @@
   font-weight: 600;
   display: inline-block;
   border-radius: 3px;
+  margin: 0px 3px;
 }
 
 .sc-welcome .sc-request-login input::-webkit-input-placeholder {
