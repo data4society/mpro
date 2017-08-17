@@ -209,6 +209,31 @@ class AuthEngine {
   }
 
   /*
+    Authenicate based on Google OAuth
+  */
+  _authenticateViaGoogle(email) {
+    let sessionStore = this.sessionStore
+    let userStore = this.userStore
+    let self = this
+
+    return new Promise(function(resolve, reject) {
+      userStore.getUserByEmail(email).then(function(user) {
+        return self._checkAccess(user)
+      }).then(function(user) {
+        return sessionStore.createSession({userId: user.user_id})
+      }).then(function(newSession) {
+        return self._enrichSession(newSession)
+      }).then(function(richSession) {
+        resolve(richSession)
+      }).catch(function(err) {
+        reject(new Err('GoogleAuthenticationError', {
+          cause: err
+        }))
+      })
+    })
+  }
+
+  /*
     Authenicate based on password
   */
   _authenticateWithPassword(email, password) {

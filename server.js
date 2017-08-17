@@ -1,8 +1,11 @@
 let http = require('http')
 let path = require('path')
+let appConfig = require('config')
 let express = require('express')
 let app = express()
 let bodyParser = require('body-parser')
+let passport = require('passport')
+let GoogleStrategy = require('passport-google-oauth20').Strategy
 let WebSocketServer = require('ws').Server
 
 let httpServer = http.createServer()
@@ -13,6 +16,20 @@ let wss = new WebSocketServer({ server: httpServer })
 */
 app.use(bodyParser.json({limit: '3mb'}))
 app.use(bodyParser.urlencoded({ extended: true, limit: '3mb', parameterLimit: 3000 }))
+
+/*
+  OAuth
+*/
+passport.use(new GoogleStrategy({
+  clientID: appConfig.get('oauth.google.clientID'),
+  clientSecret: appConfig.get('oauth.google.clientSecret'),
+  callbackURL: appConfig.get('server.appUrl') + '/api/auth/google/callback'
+},
+function(accessToken, refreshToken, profile, cb) {
+  let email = profile.emails[0].value
+  return cb(null, email)
+}
+))
 
 /*
   Config

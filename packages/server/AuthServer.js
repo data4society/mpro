@@ -1,3 +1,5 @@
+let passport = require('passport')
+
 /*
   Implements a simple AuthenticationServer we may want to
   reuse for other Substance projects.
@@ -17,6 +19,8 @@ class AuthServer {
     app.post(this.path + '/loginlink', this._requestLoginLink.bind(this))
     app.post(this.path + '/authenticate', this._authenticate.bind(this))
     app.post(this.path + '/changename', this.engine.hasAccess.bind(this.engine), this._changename.bind(this))
+    app.get(this.path + '/google', passport.authenticate('google', { scope: ['email'] }))
+    app.get(this.path + '/google/callback', passport.authenticate('google', { session: false }), this._googleAuth.bind(this))
   }
 
   /*
@@ -46,6 +50,16 @@ class AuthServer {
     })
   }
 
+  /*
+    Authenticate based on Google OAuth
+  */
+  _googleAuth(req, res) {
+    this.engine._authenticateViaGoogle(req.user).then(function(session) {
+      res.redirect('/#token=' + session.sessionToken)
+    }).catch(function() {
+      res.redirect('/')
+    })
+  }
 
   /*
     Change user name
