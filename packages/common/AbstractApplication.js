@@ -125,6 +125,7 @@ class AbstractApplication extends ResponsiveApplication {
   */
   _getLoginData(route) {
     let loginKey = route.loginKey
+    let token = route.token
     let storedToken = this._getSessionToken()
     let loginData
 
@@ -132,6 +133,9 @@ class AbstractApplication extends ResponsiveApplication {
       loginData = {loginKey: loginKey}
     } else if (storedToken && !this.state.userSession) {
       loginData = {sessionToken: storedToken}
+    } else if (token) {
+      this._setSessionToken(token)
+      loginData = {sessionToken: token}
     }
     return loginData
   }
