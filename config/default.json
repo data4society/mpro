@@ -11,12 +11,7 @@
     "wsUrl": "ws://localhost:5000",
     "appUrl": "http://localhost:5000"
   },
-  "oauth": {
-    "google": {
-      "clientID": "",
-      "clientSecret": ""
-    }
-  },
+  "oauth": false,
   "mail": {
     "transport": "",
     "sender": ""

@@ -265,7 +265,7 @@ class DocumentStore {
 
     if(!options.columns) {
       options.columns = [
-        'document_id', 'guid', 'title', 'schema_name', 'schema_version', 'published', 'created', 'edited', 'edited_by', 'rubrics', 'meta'
+        'document_id', 'guid', 'title', 'schema_name', 'schema_version', "published at time zone 'UTC' AS published", 'created', 'edited', 'edited_by', 'rubrics', 'meta'
       ]
     }
 
@@ -283,11 +283,10 @@ class DocumentStore {
       let countQuery = `SELECT COUNT(*) FROM records, plainto_tsquery(${language}, ${searchQuery}) AS q ${whereQuery}`
 
       let query = `
-        SELECT document_id, guid, title, schema_name, schema_version, published, created, edited, edited_by, rubrics, meta, ts_rank_cd(records.tsv, q) AS rank 
+        SELECT document_id, guid, title, schema_name, schema_version, published at time zone 'UTC' AS published, created, edited, edited_by, rubrics, meta, ts_rank_cd(records.tsv, q) AS rank 
         FROM records, plainto_tsquery(${language}, ${searchQuery}) AS q ${whereQuery} 
         ORDER BY rank DESC limit ${options.limit} offset ${options.offset}
       `
-      console.log(query)
 
       this.db.run(countQuery, where.params, function(err, count) {
         if (err) {
@@ -389,7 +388,8 @@ class DocumentStore {
     `
 
     let sql = `
-      SELECT * from
+      SELECT document_id, title, schema_name, published at time zone 'UTC' AS published, created, rubrics, meta, theme_id, theme, app_id, training, count
+      FROM
       (SELECT DISTINCT ON (theme_id) *,
       (SELECT COUNT(*) FROM themed_records a WHERE a.theme_id = t.theme_id) AS count
       FROM themed_records t ${where.where}
@@ -404,7 +404,7 @@ class DocumentStore {
       `
 
       sql = `
-          SELECT *
+          SELECT document_id, title, schema_name, published at time zone 'UTC' AS published, created, rubrics, meta, theme_id, theme, app_id, training
           FROM themed_records
           ${where.where}
           ORDER BY created DESC LIMIT ${args.options.limit} OFFSET ${args.options.offset}
@@ -419,7 +419,8 @@ class DocumentStore {
       `
 
       sql = `
-        SELECT * from
+        SELECT document_id, title, schema_name, published at time zone 'UTC' AS published, created, rubrics, meta, theme_id, theme, app_id, training, count
+        FROM
         (SELECT DISTINCT ON (theme_id) *,
         (SELECT COUNT(*) FROM themed_records a WHERE a.theme_id = t.theme_id) AS count
         FROM themed_records t, plainto_tsquery(${language}, ${searchQuery}) AS q ${whereQuery}

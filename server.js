@@ -20,16 +20,18 @@ app.use(bodyParser.urlencoded({ extended: true, limit: '3mb', parameterLimit: 30
 /*
   OAuth
 */
-passport.use(new GoogleStrategy({
-  clientID: appConfig.get('oauth.google.clientID'),
-  clientSecret: appConfig.get('oauth.google.clientSecret'),
-  callbackURL: appConfig.get('server.appUrl') + '/api/auth/google/callback'
-},
-function(accessToken, refreshToken, profile, cb) {
-  let email = profile.emails[0].value
-  return cb(null, email)
+if(appConfig.get('oauth')) {
+  passport.use(new GoogleStrategy({
+    clientID: appConfig.get('oauth.google.clientID'),
+    clientSecret: appConfig.get('oauth.google.clientSecret'),
+    callbackURL: appConfig.get('server.appUrl') + '/api/auth/google/callback'
+  },
+  function(accessToken, refreshToken, profile, cb) {
+    let email = profile.emails[0].value
+    return cb(null, email)
+  }
+  ))
 }
-))
 
 /*
   Config
