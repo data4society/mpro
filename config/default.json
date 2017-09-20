@@ -8,6 +8,7 @@
     "port": 5000,
     "host": "localhost",
     "protocol": "http",
+    "fastartUrl": "https://localhost:4000",
     "wsUrl": "ws://localhost:5000",
     "appUrl": "http://localhost:5000"
   },
