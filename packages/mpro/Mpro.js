@@ -10,7 +10,7 @@ import forEach from 'lodash/forEach'
 class Mpro extends AbstractApplication {
   constructor(...args) {
     super(...args)
-  
+
     let configurator = this.props.configurator
 
     this.config = configurator.getAppConfig()
@@ -37,6 +37,7 @@ class Mpro extends AbstractApplication {
       'apis': this._apis,
       'configurator': this._configurator,
       'collections': this._collections,
+      'rubrics': this._rubrics,
       'inbox': this._inbox,
       'home': this._home
     })
@@ -132,6 +133,12 @@ class Mpro extends AbstractApplication {
   _collections() {
     this.navigate({
       page: 'collections'
+    })
+  }
+
+  _rubrics() {
+    this.navigate({
+      page: 'rubrics'
     })
   }
 

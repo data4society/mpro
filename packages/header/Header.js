@@ -34,6 +34,8 @@ class Header extends Component {
         actions.entities = this.getLabel('entities-menu')
       }
 
+      actions.rubrics = this.getLabel('rubrics-menu')
+
       if(user.super) {
         actions.apis = this.getLabel('api-menu')
         actions.users = this.getLabel('configurator-users')
