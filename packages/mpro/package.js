@@ -24,6 +24,7 @@ import ApiPackage from '../apis/package'
 import ResourcesPackage from '../resources/package'
 import UsersPackage from '../users/package'
 import WelcomePackage from '../welcome/package'
+import FastartPackage from '../fastart/package'
 
 // Article configurator
 // Holds article schema
@@ -74,7 +75,8 @@ export default {
     config.import(ResourcesPackage)
     config.import(UsersPackage)
     config.import(WelcomePackage)
-    
+    config.import(FastartPackage)
+
     // Default configuration for available modes
     config.addConfigurator('viewer-mpro-article', articleViewerConfigurator)
     config.addConfigurator('viewer-mpro-vk', vkViewerConfigurator)
