@@ -26,6 +26,26 @@ class FastartClient {
       request.send()
     }
   }
+
+  createRubric(newRubric, cb) {
+    this.request('POST', this.config.httpUrl + '/rubrics', newRubric, cb)
+  }
+
+  getRubric(rubricId, cb) {
+    this.request('GET', this.config.httpUrl + '/rubrics/' + rubricId, null, cb)
+  }
+
+  updateRubric(rubricId, rubricData, cb) {
+    this.request('PUT', this.config.httpUrl + '/rubrics/' + rubricId, rubricData, cb)
+  }
+
+  deleteRubric(rubricId, cb) {
+    this.request('DELETE', this.config.httpUrl + '/rubrics/' + rubricId, null, cb)
+  }
+
+  listRubrics(cb) {
+    this.request('GET', this.config.httpUrl + '/rubrics', null, cb)
+  }
 }
 
 function isJson(str) {
