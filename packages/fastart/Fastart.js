@@ -3,7 +3,8 @@ import { Component, SplitPane } from 'substance'
 class Fastart extends Component {
 
   didMount() {
-    this._loadRubrics()
+    this._loadActiveRubrics()
+    this._loadLearningRubrics()
   }
 
   getInitialState() {
@@ -59,16 +60,15 @@ class Fastart extends Component {
   }
 
   _loadLearningRubrics() {
-    let filters = this.state.filters
-    let documentClient = this.context.documentClient
-    documentClient.listRubrics(filters, {limit: 100, order: "name asc"}, (err, result) => {
+    let fastartClient = this.context.fastartClient
+    fastartClient.listRubrics((err, result) => {
       if (err) {
         console.error(err)
         return
       }
 
       this.extendState({
-        activeRubrics: result
+        learningRubrics: result
       })
     })
   }
