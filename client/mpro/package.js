@@ -1,9 +1,10 @@
 import MproPackage from '../../packages/mpro/package'
 import AuthenticationClient from './AuthenticationClient'
 import DocumentClient from './DocumentClient'
+import FastartClient from './FastartClient'
 import FileClient from './FileClient'
 
-let appConfig = 'MPROCONFIG' 
+let appConfig = 'MPROCONFIG'
 appConfig = JSON.parse(appConfig)
 
 export default {
@@ -23,5 +24,8 @@ export default {
     // Define File Client
     config.setFileServerUrl(appConfig.protocol + '://'+appConfig.host+':'+appConfig.port+'/api/files/')
     config.setFileClient(FileClient)
+    // Define FastartClient
+    config.setFastartServerUrl(appConfig.fastartUrl)
+    config.setFastartClient(FastartClient)
   }
 }

@@ -17,6 +17,7 @@ class Mpro extends AbstractApplication {
     this.configurator = configurator
     this.authenticationClient = configurator.getAuthenticationClient()
     this.documentClient = configurator.getDocumentClient(this.authenticationClient)
+    this.fastartClient = configurator.getFastartClient()
     this.fileClient = configurator.getFileClient(this.authenticationClient)
     this.componentRegistry = configurator.getComponentRegistry()
     this.iconProvider = configurator.getIconProvider()
@@ -49,6 +50,7 @@ class Mpro extends AbstractApplication {
       configurator: this.configurator,
       authenticationClient: this.authenticationClient,
       documentClient: this.documentClient,
+      fastartClient: this.fastartClient,
       fileClient: this.fileClient,
       urlHelper: this.router,
       componentRegistry: this.componentRegistry,
@@ -151,7 +153,7 @@ class Mpro extends AbstractApplication {
   _loadAppsConfig() {
     this.documentClient.getConfig(function(err, config) {
       if(err) {
-        console.log(error)
+        console.error(err)
       }
       extend(this.config, {apps: config})
       if(!this.state.appId) {
