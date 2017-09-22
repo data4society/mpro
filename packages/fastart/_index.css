@@ -61,7 +61,7 @@
   background: #e8942c;
 }
 
-.sc-fastart .se-rubrics-list .se-tree-node.active {
+.sc-fastart .se-rubrics-list .se-tree-node.se-active {
   background: #4a7b18;
 }
 
@@ -72,4 +72,33 @@
   font-weight: 200;
   cursor: default;
   color: #fff;
+}
+
+.sc-fastart .se-learning-doc {
+  position: relative;
+  max-width: 700px;
+  padding: 20px;
+}
+
+.sc-fastart .se-learning-doc .se-title {
+  font-size: 20px;
+  margin-bottom: 10px;
+}
+
+.sc-fastart .se-learning-doc .se-controls {
+  position: absolute;
+  top: 20px;
+  right: -80px;
+}
+
+.sc-fastart .se-learning-doc .se-controls i {
+  display: block;
+  font-size: 50px;
+  margin: 10px 10px 40px;
+  cursor: pointer;
+  opacity: 0.7;
+}
+
+.sc-fastart .se-learning-doc .se-controls i:hover {
+  opacity: 1;
 }

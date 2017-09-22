@@ -19,6 +19,12 @@ class Fastart extends Component {
     }
   }
 
+  willUpdateState(newState) {
+    if(this.state.rubric !== newState.rubric) {
+      this._loadRubric(newState.rubric)
+    }
+  }
+
   render($$) {
     let Header = this.getComponent('header')
     let el = $$('div').addClass('sc-fastart')
@@ -45,13 +51,13 @@ class Fastart extends Component {
     )
     el.append(learningRubricsTitle)
     learningRubrics.forEach(rubric => {
-      el.append(
-        $$('div').addClass('se-tree-node').append(
-          $$('span').addClass('se-tree-node-name').append(rubric.name),
-          $$('span').addClass('se-tree-node-status se-status-' + rubric.status.toLowerCase())
-            .append(rubric.status.toLowerCase())
-        ).on('click', this._openRubric.bind(this, rubric.rubric_id))
-      )
+      let node = $$('div').addClass('se-tree-node').append(
+        $$('span').addClass('se-tree-node-name').append(rubric.name),
+        $$('span').addClass('se-tree-node-status se-status-' + rubric.status.toLowerCase())
+          .append(rubric.status.toLowerCase())
+      ).ref(rubric.rubric_id).on('click', this._openRubric.bind(this, rubric.rubric_id))
+      if(rubric.rubric_id === this.state.rubric) node.addClass('se-active')
+      el.append(node)
     })
 
     let activeRubricsTitle = $$('div').addClass('se-tree-node se-tree-title').append(
@@ -59,11 +65,11 @@ class Fastart extends Component {
     )
     el.append(activeRubricsTitle)
     activeRubrics.forEach(rubric => {
-      el.append(
-        $$('div').addClass('se-tree-node').append(
-          $$('span').addClass('se-tree-node-name').append(rubric.name)
-        ).on('click', this._openRubric.bind(this, rubric.rubric_id))
-      )
+      let node = $$('div').addClass('se-tree-node').append(
+        $$('span').addClass('se-tree-node-name').append(rubric.name)
+      ).ref(rubric.rubric_id).on('click', this._openRubric.bind(this, rubric.rubric_id))
+      if(rubric.rubric_id === this.state.rubric) node.addClass('se-active')
+      el.append(node)
     })
 
     return el
@@ -75,8 +81,6 @@ class Fastart extends Component {
     let data = this.state.rubricData
     let type = this.state.rubricType
 
-    el.append('test')
-
     if(!rubric) {
       el.append('Click on rubric')
     } else {
@@ -86,7 +90,9 @@ class Fastart extends Component {
         if(type === 'active') {
           el.append('Active rubric')
         } else if (type === 'learning') {
-          el.append('Learning rubric')
+          el.append(
+            this._renderDoc($$, data)
+          )
         }
       }
     }
@@ -94,16 +100,31 @@ class Fastart extends Component {
     return el
   }
 
+  _renderDoc($$, data) {
+    let el = $$('div').addClass('se-learning-doc')
+
+    el.append(
+      $$('div').addClass('se-title').append(data.doc.title),
+      $$('div').addClass('se-abstract').append(data.doc.abstract),
+      $$('div').addClass('se-controls').append(
+        $$('i').addClass('fa fa-thumbs-up').attr('title', 'Yes!')
+          .on('click', this._nextStep.bind(this, 1)),
+        $$('i').addClass('fa fa-thumbs-down').attr('title', 'No!')
+          .on('click', this._nextStep.bind(this, 2)),
+        $$('i').addClass('fa fa-hand-o-right').attr('title', 'Skip')
+          .on('click', this._nextStep.bind(this, 0))
+      )
+    )
+
+    return el
+  }
+
   _openRubric(id) {
-    this._loadRubric(id)
+    this.extendState({rubric: id})
   }
 
   _loadRubric(id) {
     this._loadActiveRubric(id, (err, activeRubric) => {
-      if(err) {
-        console.error(err)
-        return
-      }
       if(activeRubric) {
         this.extendState({rubricData: activeRubric, rubricType: 'active'})
       } else {
@@ -112,7 +133,7 @@ class Fastart extends Component {
             console.error(err)
             return
           }
-          this.extendState({rubricData: learningRubric, rubricType: 'learning'})
+          this.extendState({rubricData: learningRubric.response, rubricType: 'learning'})
         })
       }
     })
@@ -125,7 +146,7 @@ class Fastart extends Component {
 
   _loadLearningRubric(id, cb) {
     let fastartClient = this.context.fastartClient
-    fastartClient.listRubrics(id, cb)
+    fastartClient.getRubric(id, cb)
   }
 
   _loadActiveRubrics() {
@@ -156,6 +177,30 @@ class Fastart extends Component {
           learningRubrics: result.response
         })
       }
+    })
+  }
+
+  _nextStep(answer) {
+    let rubricId = this.state.rubric
+    let rubricData = this.state.rubricData
+    let docId = rubricData.doc.doc_id
+    let answerData = {
+      doc_id: docId,
+      answer: answer
+    }
+    let fastartClient = this.context.fastartClient
+    fastartClient.sendAnswer(rubricId, answerData, err => {
+      if (err) {
+        console.error(err)
+        return
+      }
+      this._loadLearningRubric(rubricId, (err, result) => {
+        if (err) {
+          console.error(err)
+          return
+        }
+        this.extendState({rubricData: result.response})
+      })
     })
   }
 }
