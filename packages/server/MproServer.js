@@ -18,7 +18,6 @@ class MproServer {
   bind(app) {
     app.get(this.path + '/config', this._getConfig.bind(this))
     app.get(this.path + '/filters', this.authEngine.hasAccess.bind(this.authEngine), this._getFilterValues.bind(this))
-    app.get(this.path + '/rubrics', this.authEngine.hasAccess.bind(this.authEngine), this._listRubrics.bind(this))
     app.get(this.path + '/classes', this.authEngine.hasAccess.bind(this.authEngine), this._listClasses.bind(this))
     app.get(this.path + '/facets', this.authEngine.hasAccess.bind(this.authEngine), this._listFacets.bind(this))
     app.get(this.path + '/import', this._import.bind(this))
@@ -39,6 +38,11 @@ class MproServer {
     app.get(this.path + '/entities/search', this.authEngine.hasAccess.bind(this.authEngine), this._searchEntity.bind(this))
     app.get(this.path + '/entities/:id', this.authEngine.hasAccess.bind(this.authEngine), this._getEntity.bind(this))
     app.put(this.path + '/entities/:id', this.authEngine.hasAccess.bind(this.authEngine), this._updateEntity.bind(this))
+    // Rubrics CRUD
+    app.post(this.path + '/rubrics', this.authEngine.hasAccess.bind(this.authEngine), this._createRubric.bind(this))
+    app.get(this.path + '/rubrics', this.authEngine.hasAccess.bind(this.authEngine), this._listRubrics.bind(this))
+    app.get(this.path + '/rubrics/:id', this.authEngine.hasAccess.bind(this.authEngine), this._getRubric.bind(this))
+    app.put(this.path + '/rubrics/:id', this.authEngine.hasAccess.bind(this.authEngine), this._updateRubric.bind(this))
     // Rules CRUD
     app.post(this.path + '/rules', this.authEngine.hasAccess.bind(this.authEngine), this._createRule.bind(this))
     app.get(this.path + '/rules', this.authEngine.hasAccess.bind(this.authEngine), this._listRules.bind(this))
@@ -77,23 +81,6 @@ class MproServer {
   }
 
   /*
-    List rubrics with given filters and options
-  */
-  _listRubrics(req, res, next) {
-    let filters = req.query.filters || {}
-    let options = req.query.options || {}
-
-    if(!isEmpty(filters)) filters = JSON.parse(filters)
-    if(!isEmpty(options)) options = JSON.parse(options)
-    
-    this.engine.listRubrics(filters, options).then(function(result) {
-      res.json(result)
-    }).catch(function(err) {
-      return next(err)
-    })
-  }
-
-  /*
     List entity classes with given filters and options
   */
   _listClasses(req, res, next) {
@@ -102,7 +89,7 @@ class MproServer {
 
     if(!isEmpty(filters)) filters = JSON.parse(filters)
     if(!isEmpty(options)) options = JSON.parse(options)
-    
+
     this.engine.listClasses(filters, options).then(function(result) {
       res.json(result)
     }).catch(function(err) {
@@ -118,7 +105,7 @@ class MproServer {
     let training = req.query.training || false
 
     if(!isEmpty(facets)) facets = JSON.parse(facets)
-    
+
     this.engine.listFacets(facets, training).then(function(result) {
       res.json(result)
     }).catch(function(err) {
@@ -220,7 +207,7 @@ class MproServer {
 
     if(!isEmpty(filters)) filters = JSON.parse(filters)
     if(!isEmpty(options)) options = JSON.parse(options)
-    
+
     this.engine.listEntities(filters, options).then(function(result) {
       res.json(result)
     }).catch(function(err) {
@@ -236,6 +223,60 @@ class MproServer {
     let restrictions = JSON.parse(req.query.restrictions)
     this.engine.findEntity(pattern, restrictions).then(function(results) {
       res.json(results)
+    }).catch(function(err) {
+      return next(err)
+    })
+  }
+
+  /*
+    Create Rubric
+  */
+  _createRubric(req, res, next) {
+    let rubricData = req.body
+    this.engine.createRubric(rubricData).then(function(rubric) {
+      res.json(rubric)
+    }).catch(function(err) {
+      return next(err)
+    })
+  }
+
+  /*
+    Get Rubric
+  */
+  _getRubric(req, res, next) {
+    let rubricId = req.params.id
+    this.engine.getRubric(rubricId).then(function(result) {
+      res.json(result)
+    }).catch(function(err) {
+      return next(err)
+    })
+  }
+
+  /*
+    Update Rubric
+  */
+  _updateRubric(req, res, next) {
+    let rubricId = req.params.id
+    let rubricData = req.body
+    this.engine.updateRubric(rubricId, rubricData).then(function() {
+      res.json(null)
+    }).catch(function(err) {
+      return next(err)
+    })
+  }
+
+  /*
+    List rubrics with given filters and options
+  */
+  _listRubrics(req, res, next) {
+    let filters = req.query.filters || {}
+    let options = req.query.options || {}
+
+    if(!isEmpty(filters)) filters = JSON.parse(filters)
+    if(!isEmpty(options)) options = JSON.parse(options)
+
+    this.engine.listRubrics(filters, options).then(function(result) {
+      res.json(result)
     }).catch(function(err) {
       return next(err)
     })
@@ -287,7 +328,7 @@ class MproServer {
 
     if(!isEmpty(filters)) filters = JSON.parse(filters)
     if(!isEmpty(options)) options = JSON.parse(options)
-    
+
     this.engine.listCollections(filters, options).then(function(result) {
       res.json(result)
     }).catch(function(err) {
@@ -366,7 +407,7 @@ class MproServer {
 
     if(!isEmpty(filters)) filters = JSON.parse(filters)
     if(!isEmpty(options)) options = JSON.parse(options)
-    
+
     this.engine.listRules(filters, options).then(function(result) {
       res.json(result)
     }).catch(function(err) {
@@ -445,7 +486,7 @@ class MproServer {
 
     if(!isEmpty(filters)) filters = JSON.parse(filters)
     if(!isEmpty(options)) options = JSON.parse(options)
-    
+
     this.engine.listApis(filters, options).then(function(result) {
       res.json(result)
     }).catch(function(err) {
