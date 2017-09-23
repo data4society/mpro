@@ -50,6 +50,10 @@ class FastartClient {
   sendAnswer(rubricId, data, cb) {
     this.request('POST', this.config.httpUrl + '/rubrics/' + rubricId + '/answer', data, cb)
   }
+
+  getFullText(rubricId, cb) {
+    this.request('GET', this.config.httpUrl + '/rubrics/' + rubricId + '/fulltext', null, cb)
+  }
 }
 
 function isJson(str) {
