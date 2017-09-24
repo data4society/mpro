@@ -33,3 +33,6 @@
 
 /* Collections */
 @import './collections/_index.css';
+
+/* Fast Start */
+@import './fastart/_index.css';

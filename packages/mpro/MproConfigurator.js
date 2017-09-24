@@ -50,6 +50,14 @@ class MproConfigurator extends Configurator {
   }
 
   /*
+    Set Fastart Server url
+  */
+  setFastartServerUrl(url) {
+    console.log(url)
+    this.config.fastartServerUrl = url
+  }
+
+  /*
     Set File Client class
   */
   setFileClient(fileClient) {
@@ -92,6 +100,21 @@ class MproConfigurator extends Configurator {
   getFileClient(authClient) {
     let FileClientClass = this.config.fileClient
     return new FileClientClass({httpUrl: this.config.fileServerUrl, authClient: authClient})
+  }
+
+  /*
+    Set Fastart Client class
+  */
+  setFastartClient(FastartClientClass) {
+    this.config.FastartClientClass = FastartClientClass
+  }
+
+  /*
+    Get Fastart Client instance
+  */
+  getFastartClient() {
+    let FastartClientClass = this.config.FastartClientClass
+    return new FastartClientClass({httpUrl: this.config.fastartServerUrl})
   }
 
   /*

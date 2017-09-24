@@ -64,12 +64,6 @@ class MproDocumentClient extends DocumentClient {
     this.request('GET', '/api/documents/themed?filters=' + filtersRequest + '&options=' + optionsRequest, null, cb)
   }
 
-  listRubrics(filters, options, cb) {
-    let filtersRequest = encodeURIComponent(JSON.stringify(filters));
-    let optionsRequest = encodeURIComponent(JSON.stringify(options));
-    this.request('GET', '/api/rubrics?filters=' + filtersRequest + '&options=' + optionsRequest, null, cb)
-  }
-
   listClasses(filters, options, cb) {
     let filtersRequest = encodeURIComponent(JSON.stringify(filters))
     let optionsRequest = encodeURIComponent(JSON.stringify(options))
@@ -129,6 +123,36 @@ class MproDocumentClient extends DocumentClient {
   findEntities(value, restrictions, cb) {
     let restrictionsRequest = encodeURIComponent(JSON.stringify(restrictions))
     this.request('GET', '/api/entities/search?value=' + value + '&restrictions=' + restrictionsRequest, null, cb)
+  }
+
+  /*
+    Create a rubric
+  */
+  createRubric(rubricData, cb) {
+    this.request('POST', '/api/rubrics', rubricData, cb)
+  }
+
+  /*
+    Read a rubric
+  */
+  getRubric(rubricId, cb) {
+    this.request('GET', '/api/rubrics/' + rubricId, null, cb)
+  }
+
+  /*
+    Update a rubric
+  */
+  updateRubric(rubricId, rubricData, cb) {
+    this.request('PUT', '/api/rubrics/' + rubricId, rubricData, cb)
+  }
+
+  /*
+    Get rubrics from the server
+  */
+  listRubrics(filters, options, cb) {
+    let filtersRequest = encodeURIComponent(JSON.stringify(filters));
+    let optionsRequest = encodeURIComponent(JSON.stringify(options));
+    this.request('GET', '/api/rubrics?filters=' + filtersRequest + '&options=' + optionsRequest, null, cb)
   }
 
   /*

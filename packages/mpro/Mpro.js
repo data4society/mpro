@@ -10,13 +10,14 @@ import forEach from 'lodash/forEach'
 class Mpro extends AbstractApplication {
   constructor(...args) {
     super(...args)
-  
+
     let configurator = this.props.configurator
 
     this.config = configurator.getAppConfig()
     this.configurator = configurator
     this.authenticationClient = configurator.getAuthenticationClient()
     this.documentClient = configurator.getDocumentClient(this.authenticationClient)
+    this.fastartClient = configurator.getFastartClient()
     this.fileClient = configurator.getFileClient(this.authenticationClient)
     this.componentRegistry = configurator.getComponentRegistry()
     this.iconProvider = configurator.getIconProvider()
@@ -37,6 +38,7 @@ class Mpro extends AbstractApplication {
       'apis': this._apis,
       'configurator': this._configurator,
       'collections': this._collections,
+      'rubrics': this._rubrics,
       'inbox': this._inbox,
       'home': this._home
     })
@@ -48,6 +50,7 @@ class Mpro extends AbstractApplication {
       configurator: this.configurator,
       authenticationClient: this.authenticationClient,
       documentClient: this.documentClient,
+      fastartClient: this.fastartClient,
       fileClient: this.fileClient,
       urlHelper: this.router,
       componentRegistry: this.componentRegistry,
@@ -135,6 +138,12 @@ class Mpro extends AbstractApplication {
     })
   }
 
+  _rubrics() {
+    this.navigate({
+      page: 'rubrics'
+    })
+  }
+
   _inbox() {
     this.navigate({
       page: 'inbox'
@@ -144,7 +153,7 @@ class Mpro extends AbstractApplication {
   _loadAppsConfig() {
     this.documentClient.getConfig(function(err, config) {
       if(err) {
-        console.log(error)
+        console.error(err)
       }
       extend(this.config, {apps: config})
       if(!this.state.appId) {

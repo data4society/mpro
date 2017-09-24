@@ -51,7 +51,7 @@ class MproEngine {
         })
 
         resolve(config)
-      
+
       })
     }.bind(this))
   }
@@ -67,8 +67,8 @@ class MproEngine {
               cause: err
             }))
           }
-          results[filter] = map(values, function(val) { 
-            return val[filter] 
+          results[filter] = map(values, function(val) {
+            return val[filter]
           })
           resolve()
         })
@@ -77,25 +77,6 @@ class MproEngine {
       return results
     })
 
-  }
-
-  /*
-    List rubrics with given filters and options
-
-    @param {Object} filters filters
-    @param {Object} options options
-    @returns {Promise}
-  */
-  listRubrics(filters, options) {
-    return new Promise(function(resolve, reject) {
-      this.rubricStore.listRubrics(filters, options).then(function(results) {
-        resolve(results)
-      }).catch(function(err) {
-        reject(new Err('RubricsListError', {
-          cause: err
-        }))
-      })
-    }.bind(this))
   }
 
   /*
@@ -188,9 +169,61 @@ class MproEngine {
     return this.entityStore.findEntity(pattern, restrictions)
   }
 
+  /* Rubrics API */
+
+  /*
+    Create rubric
+
+    @param {Object} rubricData new rubric data
+    @returns {Promise}
+  */
+  createRubric(rubricData) {
+    return this.rubricStore.createRubric(rubricData)
+  }
+
+  /*
+    Load rubric
+
+    @param {String} rubricId rubric id
+    @returns {Promise}
+  */
+  getRubric(rubricId) {
+    return this.rubricStore.getRubric(rubricId)
+  }
+
+  /*
+    Update rubric
+
+    @param {String} rubricId rubric id
+    @param {Object} rubricData rubric data to update
+    @returns {Promise}
+  */
+  updateRubric(rubricId, rubricData) {
+    return this.rubricStore.updateRubric(rubricId, rubricData)
+  }
+
+  /*
+    List rubrics with given filters and options
+
+    @param {Object} filters filters
+    @param {Object} options options
+    @returns {Promise}
+  */
+  listRubrics(filters, options) {
+    return new Promise(function(resolve, reject) {
+      this.rubricStore.listRubrics(filters, options).then(function(results) {
+        resolve(results)
+      }).catch(function(err) {
+        reject(new Err('RubricsListError', {
+          cause: err
+        }))
+      })
+    }.bind(this))
+  }
+
   /* Users API */
 
-  /** 
+  /**
    * Updates User's record from json object
    *
    * @param {string} userId - The user_id of target user record
@@ -201,12 +234,12 @@ class MproEngine {
     return this.userStore.updateUser(userId, data)
   }
 
-  /** 
+  /**
    * List users with given filters and options
    *
    * @param {Object} filters filters
    * @param {Object} options options
-   * @param {callback} cb - The callback that handles the results 
+   * @param {callback} cb - The callback that handles the results
    */
 
   listUsers(filters, options, cb) {
@@ -363,7 +396,7 @@ class MproEngine {
         } else {
           if (rule.rubrics.length > 0) {
             vars.push(rule.rubrics)
-            query += 'app_id = $1 AND rubrics::text[] @> $2' 
+            query += 'app_id = $1 AND rubrics::text[] @> $2'
           }
           if (rule.entities.length > 0) {
             vars.push(rule.entities)
@@ -385,7 +418,7 @@ class MproEngine {
         return Promise.map(docs, function(doc) {
           if(doc.collections === null) doc.collections = []
           if(doc.collections.indexOf(collectionId) > -1) {
-            return false 
+            return false
           }
           doc.collections.push(collectionId)
           if(doc.meta.collections) {
@@ -393,7 +426,7 @@ class MproEngine {
           } else {
             doc.meta.collections = [collectionId]
           }
-          
+
           doc.content.nodes.forEach(function(node, id) {
             if(node.type === 'meta') doc.content.nodes[id] = doc.meta
           })
@@ -411,7 +444,7 @@ class MproEngine {
         }.bind(this), {concurrency: 10})
       }.bind(this))
       .then(function(){
-        console.log('Collection', collectionId, 'has been reapplyed')
+        console.info('Collection', collectionId, 'has been reapplyed')
       })
   }
 
