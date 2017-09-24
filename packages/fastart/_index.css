@@ -81,6 +81,11 @@
   color: #fff;
 }
 
+.sc-fastart .se-choose {
+  padding: 40px;
+  font-size: 30px;
+}
+
 .sc-fastart .se-learning-doc {
   position: absolute;
   top: 0px;
@@ -115,6 +120,14 @@
   background: #fff;
 }
 
+.sc-fastart .se-learning-doc .se-edit-mode {
+  position: absolute;
+  top: 5px;
+  right: 20px;
+  font-size: 10px;
+  cursor: pointer;
+}
+
 .sc-fastart .se-learning-doc .se-controls {
   position: fixed;
   top: 60px;
@@ -133,26 +146,40 @@
   opacity: 1;
 }
 
-.sc-fastart .se-create-rubric {
+.sc-fastart .se-edit-rubric {
   position: relative;
   max-width: 540px;
   padding: 20px;
 }
 
-.sc-fastart .se-create-rubric .sc-input {
+.sc-fastart .se-edit-rubric .sc-input {
   margin-bottom: 20px;
 }
 
-.sc-fastart .se-create-rubric .sc-input.se-input-query {
+.sc-fastart .se-edit-rubric .sc-input.se-input-query {
   margin-bottom: 10px;
 }
 
-.sc-fastart .se-create-rubric .se-label {
+.sc-fastart .se-edit-rubric .se-label {
   font-size: 10px;
   margin-bottom: 20px;
 }
 
-.sc-fastart .se-create-rubric .sc-button {
+.sc-fastart .se-edit-rubric .sc-button {
   display: block;
   margin: 0px auto;
+}
+
+.sc-fastart .se-edit-rubric .se-controls .sc-button {
+  display: initial;
+  margin: 0px;
+}
+
+.sc-fastart .se-edit-rubric .se-controls .se-button-save {
+  float: left;
+}
+
+.sc-fastart .se-edit-rubric .se-controls .se-button-delete {
+  float: right;
+  background: #ffb3b3;
 }
