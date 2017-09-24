@@ -87,7 +87,11 @@ class Fastart extends Component {
     let type = this.state.rubricType
 
     if(mode === 'list') {
-      el.append('Click on rubric')
+      el.append(
+        $$('div').addClass('se-choose').append(
+          'Click on rubric'
+        )
+      )
     } else {
       if(mode === 'create') {
         el.append(this._renderCreateRubric($$))
@@ -99,9 +103,9 @@ class Fastart extends Component {
         }
       } else if (mode === 'edit') {
         if(type === 'active') {
-          el.append('Edit active rubric')
+          el.append(this._renderEditRubric($$))
         } else if (type === 'learning') {
-          el.append('Edit learning rubric')
+          el.append(this._renderEditRubric($$))
         } else {
           el.append('Loading...')
         }
@@ -115,6 +119,8 @@ class Fastart extends Component {
     let el = $$('div').addClass('se-learning-doc')
 
     el.append(
+      $$('div').addClass('se-edit-mode').append('Edit rubric')
+        .on('click', this._editRubric.bind(this)),
       $$('div').addClass('se-title').append(data.doc.title),
       $$('div').addClass('se-abstract').append(data.doc.abstract)
     )
@@ -148,7 +154,7 @@ class Fastart extends Component {
   }
 
   _renderCreateRubric($$) {
-    let el = $$('div').addClass('se-create-rubric')
+    let el = $$('div').addClass('se-edit-rubric')
 
     el.append(
       $$('input').addClass('sc-input se-input-name')
@@ -171,6 +177,57 @@ class Fastart extends Component {
     return el
   }
 
+  _renderEditRubric($$) {
+    let type = this.state.rubricType
+    let data = this.state.rubricData
+
+    let el = $$('div').addClass('se-edit-rubric')
+
+    if(type === 'learning') {
+      el.append(
+        $$('input').addClass('sc-input se-input-name')
+          .attr('placeholder', 'Enter rubric name')
+          .val(data.name)
+          .ref('name'),
+        $$('textarea').addClass('sc-input se-input-description')
+          .attr('placeholder', 'Enter rubric description')
+          .val(data.desc)
+          .ref('description'),
+        $$('textarea').addClass('sc-input se-input-query')
+          .attr('placeholder', 'Enter rubric query')
+          .val(data.query)
+          .ref('query'),
+        $$('div').addClass('se-label').append(
+          'Use underscore between words in a sequence and space between words from matching document. Use a comma for separting queries.'
+        ),
+        $$('div').addClass('se-controls').append(
+          $$('button').addClass('sc-button sm-style-default se-button-save')
+            .append('Save')
+            .on('click', this._updateLearningRubric.bind(this)),
+          $$('button').addClass('sc-button sm-style-default se-button-delete')
+            .append('Delete')
+            .on('click', this._deleteLearningRubric.bind(this))
+        )
+      )
+    } else if (type === 'active') {
+      el.append(
+        $$('input').addClass('sc-input se-input-name')
+          .attr('placeholder', 'Enter rubric name')
+          .val(data.name)
+          .ref('name'),
+        $$('textarea').addClass('sc-input se-input-description')
+          .attr('placeholder', 'Enter rubric description')
+          .val(data.description)
+          .ref('description'),
+        $$('button').addClass('sc-button sm-style-default se-button-save')
+          .append('Save')
+          .on('click', this._updateActiveRubric.bind(this))
+      )
+    }
+
+    return el
+  }
+
   _addLearningRubric() {
     this.extendState({
       mode: 'create',
@@ -182,6 +239,10 @@ class Fastart extends Component {
 
   _openRubric(id) {
     this.extendState({rubric: id})
+  }
+
+  _editRubric() {
+    this.extendState({mode: 'edit'})
   }
 
   _loadRubric(id) {
@@ -200,14 +261,40 @@ class Fastart extends Component {
     })
   }
 
+  _updateActiveRubric() {
+    let rubricId = this.state.rubric
+    let data = {
+      name: this.refs.name.val(),
+      description: this.refs.description.val()
+    }
+
+    let documentClient = this.context.documentClient
+    documentClient.updateRubric(rubricId, data, err => {
+      if (err) {
+        console.error(err)
+        return
+      }
+
+      let activeRubrics = this.state.activeRubrics
+      let pos = activeRubrics.findIndex(item => {return item.rubric_id === rubricId})
+      let rubric = activeRubrics[pos]
+      rubric.name = data.name
+      rubric.description = data.description
+      activeRubrics[pos] = rubric
+
+      this.extendState({
+        mode: 'list',
+        activeRubrics: activeRubrics,
+        rubric: null,
+        rubricData: null,
+        rubricType: null
+      })
+    })
+  }
+
   _loadActiveRubric(id, cb) {
     let documentClient = this.context.documentClient
     documentClient.getRubric(id, cb)
-  }
-
-  _loadLearningRubric(id, cb) {
-    let fastartClient = this.context.fastartClient
-    fastartClient.getRubric(id, cb)
   }
 
   _loadActiveRubrics() {
@@ -225,37 +312,7 @@ class Fastart extends Component {
     })
   }
 
-  _loadLearningRubrics() {
-    let fastartClient = this.context.fastartClient
-    fastartClient.listRubrics((err, result) => {
-      if (err) {
-        console.error(err)
-        return
-      }
-
-      if(result.status === 'OK') {
-        this.extendState({
-          learningRubrics: result.response
-        })
-      }
-    })
-  }
-
-  _loadFullText() {
-    let rubricId = this.state.rubric
-    let fastartClient = this.context.fastartClient
-    fastartClient.getFullText(rubricId, (err, result) => {
-      if (err) {
-        console.error(err)
-        return
-      }
-
-      let fulltext = result.response
-      let data = this.state.rubricData
-      data.fulltext = fulltext
-      this.extendState({rubricData: data})
-    })
-  }
+  /* Learning Rubrics */
 
   _createLearningRubric() {
     let data = {
@@ -305,6 +362,113 @@ class Fastart extends Component {
     })
   }
 
+  _loadLearningRubric(id, cb) {
+    let fastartClient = this.context.fastartClient
+    fastartClient.getRubric(id, cb)
+  }
+
+  _updateLearningRubric() {
+    let rubricId = this.state.rubric
+    let rubricData = this.state.rubricData
+    let data = {
+      name: this.refs.name.val(),
+      desc: this.refs.description.val(),
+      query: this.refs.query.val()
+    }
+
+    let isValid = data.name && data.desc && data.query
+
+    if(!isValid) return window.alert('Please fill out all form!')
+
+    let fastartClient = this.context.fastartClient
+    fastartClient.updateRubric(rubricId, data, (err, result) => {
+      if (err) {
+        console.error(err)
+        return
+      }
+
+      let res = result.status
+
+      if(res !== 'OK') {
+        window.alert('Not enough documents for your query. Please try again!')
+      } else {
+        this._loadLearningRubric(rubricId, (err, result) => {
+          if (err) {
+            console.error(err)
+            return
+          }
+
+          let learningRubrics = this.state.learningRubrics
+          let pos = learningRubrics.findIndex(item => {return item.rubric_id === rubricId})
+          let rubric = learningRubrics[pos]
+          rubric.name = data.name
+          learningRubrics[pos] = rubric
+
+          this.extendState({
+            mode: 'docs',
+            learningRubrics: learningRubrics,
+            rubricData: result.response
+          })
+        })
+      }
+    })
+  }
+
+  _deleteLearningRubric() {
+    let rubricId = this.state.rubric
+    let fastartClient = this.context.fastartClient
+    fastartClient.deleteRubric(rubricId, err => {
+      if (err) {
+        console.error(err)
+        return
+      }
+
+      let learningRubrics = this.state.learningRubrics
+      let pos = learningRubrics.findIndex(item => {return item.rubric_id === rubricId})
+      learningRubrics.splice(pos, 1)
+
+      this.extendState({
+        mode: 'list',
+        rubric: null,
+        rubricData: null,
+        rubricType: null,
+        learningRubrics: learningRubrics
+      })
+    })
+  }
+
+  _loadLearningRubrics() {
+    let fastartClient = this.context.fastartClient
+    fastartClient.listRubrics((err, result) => {
+      if (err) {
+        console.error(err)
+        return
+      }
+
+      if(result.status === 'OK') {
+        this.extendState({
+          learningRubrics: result.response
+        })
+      }
+    })
+  }
+
+  _loadFullText() {
+    let rubricId = this.state.rubric
+    let fastartClient = this.context.fastartClient
+    fastartClient.getFullText(rubricId, (err, result) => {
+      if (err) {
+        console.error(err)
+        return
+      }
+
+      let fulltext = result.response
+      let data = this.state.rubricData
+      data.fulltext = fulltext
+      this.extendState({rubricData: data})
+    })
+  }
+
   _nextStep(answer) {
     let rubricId = this.state.rubric
     let rubricData = this.state.rubricData
@@ -324,7 +488,23 @@ class Fastart extends Component {
           console.error(err)
           return
         }
-        this.extendState({rubricData: result.response})
+        if(result.status === 'OK') {
+          this.extendState({rubricData: result.response})
+        } else {
+          let status = result.status
+
+          let learningRubrics = this.state.learningRubrics
+          let pos = learningRubrics.findIndex(item => {return item.rubric_id === rubricId})
+          learningRubrics[pos].status = status
+
+          this.extendState({
+            mode: 'list',
+            rubric: null,
+            rubricData: null,
+            rubricType: null,
+            learningRubrics: learningRubrics
+          })
+        }
       })
     })
   }
