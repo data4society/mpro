@@ -56,6 +56,11 @@
   cursor: pointer;
 }
 
+.sc-fastart .se-rubrics-list .se-node-status-complete,
+.sc-fastart .se-rubrics-list .se-node-status-learning {
+  cursor: default;
+}
+
 .sc-fastart .se-rubrics-list .se-tree-node-status.se-status-marking {
   background: #6161ff;
 }
@@ -144,6 +149,20 @@
 
 .sc-fastart .se-learning-doc .se-controls i:hover {
   opacity: 1;
+}
+
+.sc-fastart .se-learning-doc .se-controls .se-positive-left {
+  position: absolute;
+  top: 60px;
+  right: 25px;
+  font-size: 12px;
+}
+
+.sc-fastart .se-learning-doc .se-controls .se-negative-left {
+  position: absolute;
+  top: 155px;
+  right: 25px;
+  font-size: 12px;
 }
 
 .sc-fastart .se-edit-rubric {
