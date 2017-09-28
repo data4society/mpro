@@ -56,11 +56,16 @@ class Fastart extends Component {
     )
     el.append(learningRubricsTitle)
     learningRubrics.forEach(rubric => {
-      let node = $$('div').addClass('se-tree-node').append(
+      let node = $$('div').addClass('se-tree-node se-node-status-' + rubric.status.toLowerCase()).append(
         $$('span').addClass('se-tree-node-name').append(rubric.name),
         $$('span').addClass('se-tree-node-status se-status-' + rubric.status.toLowerCase())
           .append(rubric.status.toLowerCase())
-      ).ref(rubric.rubric_id).on('click', this._openRubric.bind(this, rubric.rubric_id))
+      ).ref(rubric.rubric_id)
+
+      if(rubric.status === 'Marking') {
+        node.on('click', this._openRubric.bind(this, rubric.rubric_id))
+      }
+
       if(rubric.rubric_id === this.state.rubric) node.addClass('se-active')
       el.append(node)
     })
@@ -143,8 +148,10 @@ class Fastart extends Component {
       $$('div').addClass('se-controls').append(
         $$('i').addClass('fa fa-thumbs-up').attr('title', 'Yes!')
           .on('click', this._nextStep.bind(this, 1)),
+        $$('span').addClass('se-positive-left').append(data.good_remaining.toString() + ' left'),
         $$('i').addClass('fa fa-thumbs-down').attr('title', 'No!')
           .on('click', this._nextStep.bind(this, 2)),
+        $$('span').addClass('se-negative-left').append(data.bad_remaining.toString() + ' left'),
         $$('i').addClass('fa fa-hand-o-right').attr('title', 'Skip')
           .on('click', this._nextStep.bind(this, 0))
       )
@@ -243,6 +250,10 @@ class Fastart extends Component {
 
   _editRubric() {
     this.extendState({mode: 'edit'})
+  }
+
+  _editLearningRubric(id) {
+    this.extendState({mode: 'edit', rubric: id})
   }
 
   _loadRubric(id) {
