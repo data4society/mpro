@@ -147,6 +147,7 @@ class Feed extends Component {
             active: active,
             rubrics: this.props.rubrics
           }).ref(documentItem.documentId)
+            .attr('data-id', documentItem.documentId)
         )
       }.bind(this))
     }

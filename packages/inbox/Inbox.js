@@ -72,7 +72,7 @@ class Inbox extends AbstractFeedLoader {
           scrollbarPosition: 'left'
         }).append(
           $$(Feed, extend({}, this.state, {modes: true})).ref('feed')
-        ),
+        ).ref('scroll-list'),
         $$(Loader, {
           documentId: this.state.documentId,
           rubrics: this.state.rubrics,
@@ -251,6 +251,8 @@ class Inbox extends AbstractFeedLoader {
       return false
     }
     this._openDocument(prevDocumentId)
+    const scrollPane = this.refs['scroll-list']
+    scrollPane.scrollTo(prevDocumentId)
   }
 
   _handleDownArrowKey() {
@@ -262,6 +264,8 @@ class Inbox extends AbstractFeedLoader {
       return this._loadMore()
     }
     this._openDocument(nextDocumentId)
+    const scrollPane = this.refs['scroll-list']
+    scrollPane.scrollTo(nextDocumentId)
   }
 
   _getNextDocumentId() {
