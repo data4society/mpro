@@ -80,7 +80,7 @@ class AbstractFeedLoader extends Component {
     let entities = this.props.entities ? this.props.entities.split(',') : []
     return {
       filters: {'training': false, app_id: this.props.app, 'rubrics @>': [], 'entities @>': entities},
-      perPage: 10,
+      perPage: 2,
       order: 'published',
       direction: 'desc',
       documentId: this.props.documentId,
@@ -116,7 +116,7 @@ class AbstractFeedLoader extends Component {
         })
         return
       }
-      
+
       let configurator = this.context.configurator
       let importer = configurator.createImporter('rubrics')
       let facets = state.filters['rubrics @>']
@@ -184,11 +184,11 @@ class AbstractFeedLoader extends Component {
 
     documentClient.listDocuments(
       filters,
-      { 
-        limit: perPage, 
+      {
+        limit: perPage,
         offset: pagination ? state.documentItems.length : 0,
         order: order + ' ' + direction
-      }, 
+      },
       function(err, documents) {
         if (err) {
           console.error(err)
@@ -228,7 +228,7 @@ class AbstractFeedLoader extends Component {
       filters,
       {
         order: order + ' ' + direction
-      }, 
+      },
       function(err, documents) {
         if (err) {
           console.error(err)
@@ -270,7 +270,7 @@ class AbstractFeedLoader extends Component {
     } else {
       activeFacets.push(entityId)
     }
-    filters['entities @>'] = activeFacets  
+    filters['entities @>'] = activeFacets
     this.extendState({
       entities: entities,
       filters: filters,

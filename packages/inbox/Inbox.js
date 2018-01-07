@@ -32,6 +32,7 @@ class Inbox extends AbstractFeedLoader {
     this._loadRubrics()
     this._loadEntities()
     this._loadDocuments(false, theme)
+    this.refs.keytrap.el.focus()
   }
 
   render($$) {
@@ -55,6 +56,9 @@ class Inbox extends AbstractFeedLoader {
     )
 
     el.append(
+      $$('textarea').addClass('se-keytrap').ref('keytrap')
+        .css({ position: 'absolute', width: 0, height: 0 })
+        .on('keydown', this._onKeyDown),
       header,
       $$(DoubleSplitPane, {splitType: 'vertical', sizeA: '300px', sizeB: '38%'}).append(
         $$(Filters, {
@@ -89,10 +93,12 @@ class Inbox extends AbstractFeedLoader {
     this.extendState(state)
     feed.setActiveItem(documentId)
     this.updateUrl(documentId)
-    
+
     loader.extendProps({
       documentId: documentId
     })
+
+    this.refs.keytrap.el.focus()
   }
 
   _openTheme(documentId, themeId) {
@@ -167,8 +173,8 @@ class Inbox extends AbstractFeedLoader {
     if(state.mode !== 'themed') delete filters.theme_id
     documentClient[listMethod](
       filters,
-      { 
-        limit: perPage, 
+      {
+        limit: perPage,
         offset: pagination ? state.documentItems.length : 0,
         order: order + ' ' + direction
       },
@@ -194,6 +200,92 @@ class Inbox extends AbstractFeedLoader {
         })
       }.bind(this)
     )
+  }
+
+  _onKeyDown(e) {
+    switch ( e.keyCode ) {
+      // handle up and down keys
+      case 38:
+        return this._handleUpArrowKey()
+      case 40:
+        return this._handleDownArrowKey()
+      default:
+        break
+    }
+
+    let handled = false
+    // handle accept combo
+    if ( (e.ctrlKey||e.metaKey) && e.keyCode === 83) {
+      let commandManager = this._getViewerCommandManager()
+      commandManager.executeCommand('acceptor')
+      handled = true
+    }
+    // handle negative accept combo
+    else if (e.keyCode === 69 && (event.metaKey||event.ctrlKey)) {
+      let commandManager = this._getViewerCommandManager()
+      commandManager.executeCommand('negative')
+      handled = true
+    }
+    // handle moderate accept combo
+    else if (e.keyCode === 86 && (event.metaKey||event.ctrlKey)) {
+      let commandManager = this._getViewerCommandManager()
+      commandManager.executeCommand('moderator')
+      handled = true
+    }
+
+    if (handled) {
+      e.preventDefault()
+      e.stopPropagation()
+    }
+  }
+
+  _getViewerCommandManager() {
+    const loader = this.refs.loader
+    const viewer = loader.getViewer()
+    return viewer.commandManager
+  }
+
+  _handleUpArrowKey() {
+    const prevDocumentId = this._getPrevDocumentId()
+    if(!prevDocumentId) {
+      return false
+    }
+    this._openDocument(prevDocumentId)
+  }
+
+  _handleDownArrowKey() {
+    const nextDocumentId = this._getNextDocumentId()
+    if(!nextDocumentId) {
+      if(parseInt(this.state.totalItems, 10) === this.state.documentItems.length) {
+        return false
+      }
+      return this._loadMore()
+    }
+    this._openDocument(nextDocumentId)
+  }
+
+  _getNextDocumentId() {
+    const documentItems = this.state.documentItems
+    const documentId = this.state.documentId
+    const currentIndex = documentItems.findIndex(i => {
+      return i.documentId === documentId
+    })
+    const nextItem = documentItems[currentIndex + 1]
+    return nextItem ? nextItem.documentId : false
+  }
+
+  _getPrevDocumentId() {
+    const documentItems = this.state.documentItems
+    const documentId = this.state.documentId
+    const currentIndex = documentItems.findIndex(i => {
+      return i.documentId === documentId
+    })
+    if(currentIndex > 0) {
+      const prevItem = documentItems[currentIndex - 1]
+      return prevItem ? prevItem.documentId : false
+    } else {
+      return false
+    }
   }
 
 }

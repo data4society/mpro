@@ -8,7 +8,7 @@ let converter = new JSONConverter()
 
 /*
   Loader class.
-  
+
   Used for retrieving document, configurator and
   initilise collaboration session.
 */
@@ -16,7 +16,7 @@ let converter = new JSONConverter()
 class Loader extends Component {
   constructor(...args) {
     super(...args)
-    
+
     let appConfig = this.context.config
     let authenticationClient = this.context.authenticationClient
 
@@ -191,6 +191,10 @@ class Loader extends Component {
     }
 
     return el
+  }
+
+  getViewer() {
+    return this.refs.documentViewer
   }
 }
 
