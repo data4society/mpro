@@ -80,7 +80,7 @@ class AbstractFeedLoader extends Component {
     let entities = this.props.entities ? this.props.entities.split(',') : []
     return {
       filters: {'training': false, app_id: this.props.app, 'rubrics @>': [], 'entities @>': entities},
-      perPage: 2,
+      perPage: 10,
       order: 'published',
       direction: 'desc',
       documentId: this.props.documentId,
