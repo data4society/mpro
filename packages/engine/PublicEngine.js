@@ -17,6 +17,7 @@ class PublicEngine {
 
   handleApiRequest(key, query, format, options) {
     ///let app_id, format, api
+
     return this.apiStore.getApi(key).then(function(apiRecord) {
       if(!apiRecord.live) {
         return new Error("Access denied")
@@ -25,6 +26,8 @@ class PublicEngine {
       if(apiRecord.format === 'iframe' && !format) {
         return apiRecord
       }
+
+      console.log(apiRecord.api)
 
       if(apiRecord.api === 'collection_docs') {
         return this._collectionDocuments(query, apiRecord.app_id, options)
@@ -48,8 +51,11 @@ class PublicEngine {
 
   _collectionDocuments(col_id, app, opts) {
     let filters = {
-      'collections &&': col_id.split(','),
       app_id: app
+    }
+
+    if(col_id) {
+      filters['collections &&'] = col_id.split(',') || []
     }
 
     if(opts.entityFilters) {
@@ -62,18 +68,37 @@ class PublicEngine {
     }
 
     let columns = [
-      'document_id AS doc_id', 
+      'document_id AS doc_id',
       "json_build_object('title', meta->>'title', 'abstract', meta->>'abstract', 'published', meta->>'published', 'source', meta->>'source', 'publisher', meta->>'publisher') AS meta"
     ]
     if(opts.entities) {
-      columns.push("(SELECT array(SELECT json_build_object('name', name, 'id', entity_id) FROM unnest(entities) entity LEFT JOIN entities e on e.entity_id::varchar = entity)) AS entities")
+      columns.push('entities')
+      // columns.push("(SELECT array(SELECT json_build_object('name', name, 'id', entity_id) FROM unnest(entities) entity LEFT JOIN entities e on e.entity_id::varchar = entity)) AS entities")
     }
     let options = extend({}, opts, {columns: columns, order: 'created desc'})
+
     return new Promise(function(resolve, reject) {
       this.documentStore.listDocuments(filters, options, function(err, result) {
         if (err) return reject(err)
-        resolve(result)
-      })
+        if(!opts.entities || result.records.length === 0) {
+          resolve(result)
+        } else {
+          let entity_ids = [...new Set(result.records.reduce((acc, item) => acc.concat(item.entities), []))] // eslint-disable-line
+          return this._getEntitiesList(entity_ids)
+            .then(entities => {
+              let entityMap = entities.reduce((acc,item) => {
+                acc[item.entity_id] = item
+                return acc
+              }, {})
+              result.records.forEach(item => {
+                let entityList = item.entities.map(i => entityMap[i])
+                item.entities = entityList
+              })
+
+              resolve(result)
+            })
+        }
+      }.bind(this))
     }.bind(this))
   }
 
@@ -87,7 +112,7 @@ class PublicEngine {
     let limit = opts.limit || 10
 
     let columns = [
-      'r.document_id AS doc_id', 
+      'r.document_id AS doc_id',
       "json_build_object('title', r.meta->>'title', 'abstract', r.meta->>'abstract', 'published', r.meta->>'published', 'source', r.meta->>'source', 'publisher', r.meta->>'publisher') AS meta",
       'e.name',
       'e.entity_id'
@@ -106,8 +131,8 @@ class PublicEngine {
     let daysFilter = ''
     if(opts.daysfilter && opts.days) daysFilter = "AND published > current_date - interval '" + opts.days + " days'"
 
-    let sql = `SELECT ${columns} 
-      FROM records r 
+    let sql = `SELECT ${columns}
+      FROM records r
       JOIN entities e
       ON r.entities @> ARRAY["entity_id"::varchar]
       WHERE ${prop} = '${value}' ${monthFilter}${weekFilter}${daysFilter}
@@ -116,7 +141,7 @@ class PublicEngine {
       LIMIT ${limit}`;
 
     let countSql = `SELECT COUNT(r.document_id)
-      FROM records r 
+      FROM records r
       JOIN entities e
       ON r.entities @> ARRAY["entity_id"::varchar]
       WHERE ${prop} = '${value}'
@@ -124,7 +149,7 @@ class PublicEngine {
 
     return new Promise(function(resolve, reject) {
       let result = {}
-      
+
       this.db.run(countSql, [], function(err, total) {
         if(err) {
           return reject(new Err('PublicEngine.EntityDocumentsApi', {
@@ -144,9 +169,9 @@ class PublicEngine {
           result.records = res
 
           resolve(result)
-        
+
         })
-      
+
       }.bind(this))
     }.bind(this))
   }
@@ -165,7 +190,7 @@ class PublicEngine {
         unnest(records.collections) AS collection,
         COUNT(*) OVER (PARTITION BY unnest(records.collections)) cnt
       FROM records WHERE collections @> $1::varchar[] AND app_id = $2 ${dateFilter}
-    ) AS docs INNER JOIN collections ON (docs.collection = collections.collection_id::text) 
+    ) AS docs INNER JOIN collections ON (docs.collection = collections.collection_id::text)
     WHERE collections.public = true AND app_id = $2 OFFSET ${offset} LIMIT ${limit}`;
 
     return new Promise(function(resolve, reject) {
@@ -178,16 +203,16 @@ class PublicEngine {
         }
 
         resolve(res)
-      
+
       })
-      
+
     }.bind(this))
   }
 
   _entitiesFacets(value, app_id, opts) {
     let offset = opts.offset || 0
     let limit = opts.limit || 10
-    let collections = !isEmpty(value) ? JSON.parse('[' + value + ']') : [] 
+    let collections = !isEmpty(value) ? JSON.parse('[' + value + ']') : []
 
     let dateFilter = ''
     if(opts.dateFilter) {
@@ -211,7 +236,7 @@ class PublicEngine {
     return new Promise(function(resolve, reject) {
 
       let result = {}
-      
+
       this.db.run(countSql, [collections, app_id], function(err, total) {
         if(err) {
           return reject(new Err('PublicEngine.EntityFacetsApi', {
@@ -231,9 +256,9 @@ class PublicEngine {
           result.records = res
 
           resolve(result)
-        
+
         })
-      
+
       }.bind(this))
     }.bind(this))
   }
@@ -245,6 +270,20 @@ class PublicEngine {
         if(isUndefined(result)) {
           return reject(new Err('PublicEngine.GetDocument', {
             message: 'There is no document with id ' + doc_id + ' in ' + app_id + ' app'
+          }))
+        }
+        resolve(result)
+      })
+    }.bind(this))
+  }
+
+  _getEntitiesList(entity_ids) {
+    return new Promise(function(resolve, reject) {
+      this.db.entities.find({entity_id: entity_ids}, {columns: ['entity_id', 'name']}, function(err, result) {
+        if (err) return reject(err)
+        if(isUndefined(result)) {
+          return reject(new Err('PublicEngine.GetEntitiesList', {
+            cause: err
           }))
         }
         resolve(result)
