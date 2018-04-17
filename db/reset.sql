@@ -85,13 +85,14 @@ CREATE TABLE "records" (
 -- Records search index
 CREATE INDEX tsv_records_idx ON records USING gin(tsv);
 CREATE INDEX records_published_idx ON records(published);
+CREATE INDEX records_created_idx ON records(created);
 CREATE INDEX records_collections_idx ON records USING gin(collections);
 CREATE INDEX records_entities_idx ON records USING gin(entities);
 
 CREATE FUNCTION records_search_trigger() RETURNS trigger AS $$
 begin
   new.tsv :=
-    setweight(to_tsvector('russian', COALESCE(new.title,'')), 'A') || 
+    setweight(to_tsvector('russian', COALESCE(new.title,'')), 'A') ||
     setweight(to_tsvector('russian', COALESCE(new.meta->>'abstract','')),'B') ||
     setweight(to_tsvector('russian', COALESCE(new."full_text",'')),'C');
   return new;
@@ -118,6 +119,7 @@ CREATE TABLE "collections" (
   author varchar(40) REFERENCES users,
   private boolean,
   public boolean,
+  accepted boolean,
   description text,
   app_id varchar(255)
 );

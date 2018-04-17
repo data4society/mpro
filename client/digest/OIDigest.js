@@ -1,4 +1,4 @@
-import { Component, Grid, Layout, SplitPane, request } from 'substance'
+import { Component, Grid, SplitPane, request } from 'substance'
 import concat from 'lodash/concat'
 import each from 'lodash/each'
 import isEqual from 'lodash/isEqual'
@@ -18,31 +18,32 @@ class OIDigest extends Component {
   }
 
   didMount() {
+    this._loadDocuments()
     this._loadCollections()
     this._loadTopEntities()
   }
 
   didUpdate(oldProps, oldState) {
-    if(!isEqual(this.state.collections, oldState.collections) || this.state.activeCollection !== oldState.activeCollection || !isEqual(this.state.activeEntity, oldState.activeEntity)) {
+    if(!isEqual(this.state.activeCollection, oldState.activeCollection) || !isEqual(this.state.activeEntity, oldState.activeEntity)) {
       this._loadDocuments()
     }
-    if(this.state.activeCollection !== oldState.activeCollection) {
-      this._loadTopEntities()
-    }
-    if(!isEqual(this.state.mode, oldState.mode)) {
-      if(this.state.mode === 'documents') {
-        this._loadDocuments()
-      } else if (this.state.mode === 'entities') {
-        this._loadEntities()
-      }
-    }
-
-    if(!isEqual(this.state.dates, oldState.dates)) {
-      this._loadCollections()
-      this._loadTopEntities()
-      this._loadDocuments()
-    }
-
+    // if(this.state.activeCollection !== oldState.activeCollection) {
+    //   this._loadTopEntities()
+    // }
+    // if(!isEqual(this.state.mode, oldState.mode)) {
+    //   if(this.state.mode === 'documents') {
+    //     this._loadDocuments()
+    //   } else if (this.state.mode === 'entities') {
+    //     this._loadEntities()
+    //   }
+    // }
+    //
+    // if(!isEqual(this.state.dates, oldState.dates)) {
+    //   this._loadCollections()
+    //   this._loadTopEntities()
+    //   this._loadDocuments()
+    // }
+    //
     if(this.refs.dateFilter) {
       let el = this.refs.dateFilter.el.el
       el.flatpickr({
@@ -57,7 +58,7 @@ class OIDigest extends Component {
 
   getInitialState() {
     return {
-      endpoint: 'https://mpro.ovdinfo.org',
+      endpoint: 'http://localhost:5000',
       collectionsKey: '93ba5954-e316-cccf-a7b2-825f534c071f',
       collectionDocsKey: 'd9de7254-c794-5471-d460-87015ddf2e56',
       entityDocsKey: '9b3f0254-e7b9-8310-f6d3-60c9c76d04ba',
@@ -71,7 +72,7 @@ class OIDigest extends Component {
       page: 1,
       mode: 'documents',
       items: [],
-      dates: null
+      dates: [moment().subtract(1, 'months').format('YYYY-MM-DD'), moment().format('YYYY-MM-DD')]
     }
   }
 
@@ -137,7 +138,7 @@ class OIDigest extends Component {
     let el = $$('div').addClass('se-header-panel')
 
     el.append(
-      $$('div').addClass('se-header-title').setInnerHTML(this.state.title)   
+      $$('div').addClass('se-header-title').setInnerHTML(this.state.title)
     )
 
     if(this.state.activeEntity.id && !this.state.activeCollection) {
@@ -186,16 +187,16 @@ class OIDigest extends Component {
     let el = $$('div').addClass('sc-collections')
     let collections = this.state.collections
     let entities = this.state.topEntities
-    
+
     el.append($$('div').addClass('se-title').append('Темы:'))
     each(collections, function(collection) {
       let item = $$('div').addClass('se-collection-node').append(
-        $$('span').addClass('se-node-name').append(collection.name),
-        $$('span').addClass('se-node-count').append(collection.cnt)
+        $$('div').addClass('se-node-name').append(collection.name),
+        $$('div').addClass('se-node-count').append(collection.cnt)
       )
-      .attr({title: collection.description})
-      .ref(collection.collection)
-      .on('click', this._collectionFilter.bind(this, collection.collection))
+        .attr({title: collection.description})
+        .ref(collection.collection)
+        .on('click', this._collectionFilter.bind(this, collection.collection))
 
       if(collection.collection === this.state.activeCollection) {
         item.addClass('se-active')
@@ -204,16 +205,19 @@ class OIDigest extends Component {
       el.append(item)
     }.bind(this))
 
+    if(collections.length === 0) {
+      el.append(this.renderSpinner($$))
+    }
 
     let entitiesEl = $$('div').addClass('se-entities-list')
     entitiesEl.append(
       $$('div').addClass('se-title')
         .append(
-          'Упоминания:',
-          $$('span').addClass('se-expand-mentions').append(
-            'все',
-            $$('i').addClass('fa fa-expand')
-          ).on('click', this._switchMode.bind(this, 'entities'))
+          'Упоминания за неделю:'
+          // $$('span').addClass('se-expand-mentions').append(
+          //   'все',
+          //   $$('i').addClass('fa fa-expand')
+          // ).on('click', this._switchMode.bind(this, 'entities'))
         )
     )
     let entitiesNodesEl = $$('div').addClass('se-entities-nodes')
@@ -231,6 +235,10 @@ class OIDigest extends Component {
     }.bind(this))
 
     entitiesEl.append(entitiesNodesEl)
+
+    if(entities.length === 0) {
+      entitiesEl.append(this.renderSpinner($$))
+    }
 
     el.append(entitiesEl)
 
@@ -291,42 +299,46 @@ class OIDigest extends Component {
   }
 
   renderSpinner($$) {
-    let el = $$('div').addClass('se-spinner')
-    el.append($$('img').attr({src: '/digest/assets/loader.gif'}))
+    let el = $$('div').addClass('se-spinner').append(
+      $$('div'),
+      $$('div')
+    )
+
+    //el.append($$('img').attr({src: '/digest/assets/loader.gif'}))
     return el
   }
 
   renderAbout($$) {
     let el = $$('div').addClass('se-about')
-    let content = `Медиа-радар&nbsp;&#151; это&nbsp;автоматический мониторинг СМИ. Мы&nbsp;автоматически ищем в&nbsp;русскоязычных СМИ&nbsp;публикации, в&nbsp;которых описываются нарушения прав человека в&nbsp;России, собираем их&nbsp;вместе и&nbsp;выделяем в&nbsp;них самую важную информацию&nbsp;&#151; имена людей, упоминавшихся в&nbsp;новостях, географические данные, название организаций и&nbsp;статьи уголовного и&nbsp;административных кодексов. 
+    let content = `Медиа-радар&nbsp;&#151; это&nbsp;автоматический мониторинг СМИ. Мы&nbsp;автоматически ищем в&nbsp;русскоязычных СМИ&nbsp;публикации, в&nbsp;которых описываются нарушения прав человека в&nbsp;России, собираем их&nbsp;вместе и&nbsp;выделяем в&nbsp;них самую важную информацию&nbsp;&#151; имена людей, упоминавшихся в&nbsp;новостях, географические данные, название организаций и&nbsp;статьи уголовного и&nbsp;административных кодексов.
 
-<h3>Зачем нужен Медиа-радар?</h3>ОВД-Инфо специализируется на&nbsp;информации о&nbsp;политических преследованиях и&nbsp;нарушении права на&nbsp;свободу собраний, и&nbsp;про все&nbsp;подобные случаи мы&nbsp;пишем довольно подробные новости. К&nbsp;сожалению, в&nbsp;России ежедневно происходит множество других случаев нарушений прав человека, и&nbsp;писать про&nbsp;ОВД-Инфо не&nbsp;может. Наш&nbsp;автоматический мониторинг СМИ&nbsp;позволяет восполнить лакуны нашей собственной новостной ленты и&nbsp;погрузить читателя в&nbsp;более широкий контекст нарушения гражданских прав. 
+<h3>Зачем нужен Медиа-радар?</h3>ОВД-Инфо специализируется на&nbsp;информации о&nbsp;политических преследованиях и&nbsp;нарушении права на&nbsp;свободу собраний, и&nbsp;про все&nbsp;подобные случаи мы&nbsp;пишем довольно подробные новости. К&nbsp;сожалению, в&nbsp;России ежедневно происходит множество других случаев нарушений прав человека, и&nbsp;писать про&nbsp;ОВД-Инфо не&nbsp;может. Наш&nbsp;автоматический мониторинг СМИ&nbsp;позволяет восполнить лакуны нашей собственной новостной ленты и&nbsp;погрузить читателя в&nbsp;более широкий контекст нарушения гражданских прав.
 
 <h3>Для кого Медиа-радар?</h3>Прежде всего&nbsp;&#151; для&nbsp;профессиональной аудитории: иметь возможность оперативно знакомиться с&nbsp;хорошо структурированной информацией о&nbsp;нарушениях прав человека будет полезно для&nbsp;правозащитников, журналистов и&nbsp;юристов. Но&nbsp;мы надеемся, что&nbsp;Медиа-радар станет удобным новостным агрегатором для&nbsp;всех наших читателей.
 
-<h3>Как работает Медиа-радар?</h3>Мы&nbsp;собираем новости автоматически из&nbsp;5000 источников&nbsp;&#151; это, прежде всего, российские СМИ&nbsp;и сайты государственных органов. Все&nbsp;новости проходят рубрикацию&nbsp;&#151; этот алгоритм основан на&nbsp;машинном обучении: редакция ОВД-Инфо обучила машину, чтобы она&nbsp;научилась различать те&nbsp;тексты, в&nbsp;которых упоминаются нарушения прав человека, от&nbsp;всех прочих новостных заметок. После этого из&nbsp;одобренных машиной текстов извлекаются данные&nbsp;&#151; этот алгоритм также основан на&nbsp;машинном обучении с&nbsp;применением нейронной сети. Технология, которую мы&nbsp;используем, создана нашими друзьями и&nbsp;партнерами из&nbsp;Data for&nbsp;Society, и&nbsp;находится в&nbsp;пока в&nbsp;режиме тестирования. Из-за того, что&nbsp;поиск и&nbsp;отбор новостей осуществляется в&nbsp;автоматическом режиме, иногда в&nbsp;подборку той&nbsp;или иной тематики могут попадать новости, не&nbsp;содержащие информации о&nbsp;нарушениях прав человека: мы&nbsp;работаем над&nbsp;этим и&nbsp;будем благодарны, если вы&nbsp;будете <a href="mailto:info@ovdinfo.org">сообщать нам</a> о&nbsp;таких случаях.  
+<h3>Как работает Медиа-радар?</h3>Мы&nbsp;собираем новости автоматически из&nbsp;5000 источников&nbsp;&#151; это, прежде всего, российские СМИ&nbsp;и сайты государственных органов. Все&nbsp;новости проходят рубрикацию&nbsp;&#151; этот алгоритм основан на&nbsp;машинном обучении: редакция ОВД-Инфо обучила машину, чтобы она&nbsp;научилась различать те&nbsp;тексты, в&nbsp;которых упоминаются нарушения прав человека, от&nbsp;всех прочих новостных заметок. После этого из&nbsp;одобренных машиной текстов извлекаются данные&nbsp;&#151; этот алгоритм также основан на&nbsp;машинном обучении с&nbsp;применением нейронной сети. Технология, которую мы&nbsp;используем, создана нашими друзьями и&nbsp;партнерами из&nbsp;Data for&nbsp;Society, и&nbsp;находится в&nbsp;пока в&nbsp;режиме тестирования. Из-за того, что&nbsp;поиск и&nbsp;отбор новостей осуществляется в&nbsp;автоматическом режиме, иногда в&nbsp;подборку той&nbsp;или иной тематики могут попадать новости, не&nbsp;содержащие информации о&nbsp;нарушениях прав человека: мы&nbsp;работаем над&nbsp;этим и&nbsp;будем благодарны, если вы&nbsp;будете <a href="mailto:info@ovdinfo.org">сообщать нам</a> о&nbsp;таких случаях.
 
 <h3>О чем&nbsp;Медиа-радар?</h3>На&nbsp;данный момент мы&nbsp;агрегируем новости из&nbsp;русскоязычных СМИ&nbsp;по шести тематикам:
 
-<em>ЛГБТ</em>&nbsp;&#151; нарушение прав людей с&nbsp;альтернативной сексуальной ориентацией. В&nbsp;эту рубрику попадают новости про&nbsp;преследования ЛГБТ, возбуждение административных и&nbsp;уголовных дел&nbsp;за так&nbsp;называемую &laquo;пропаганду гомосексуализма&raquo;, срывы ЛГБТ-мероприятий, угрозы и&nbsp;диффамация. 
+<em>ЛГБТ</em>&nbsp;&#151; нарушение прав людей с&nbsp;альтернативной сексуальной ориентацией. В&nbsp;эту рубрику попадают новости про&nbsp;преследования ЛГБТ, возбуждение административных и&nbsp;уголовных дел&nbsp;за так&nbsp;называемую &laquo;пропаганду гомосексуализма&raquo;, срывы ЛГБТ-мероприятий, угрозы и&nbsp;диффамация.
 
-<em>Искусство</em>&nbsp;&#151; нарушение права на&nbsp;свободное художественное высказывание. В&nbsp;эту рубрику попадают новости про&nbsp;различные случаи цензуры со&nbsp;стороны государства, а&nbsp;также про&nbsp;попытки навязать цензуры со&nbsp;стороны радикальных активистких группировок. 
+<em>Искусство</em>&nbsp;&#151; нарушение права на&nbsp;свободное художественное высказывание. В&nbsp;эту рубрику попадают новости про&nbsp;различные случаи цензуры со&nbsp;стороны государства, а&nbsp;также про&nbsp;попытки навязать цензуры со&nbsp;стороны радикальных активистких группировок.
 
-<em>Насилие</em>&nbsp;&#151; применение насилия по&nbsp;отношению к&nbsp;активистам, политикам и&nbsp;журналистам. В&nbsp;эту рубрику попадают случаи насилия вне&nbsp;зависимости от&nbsp;того, кто&nbsp;применяет насилия&nbsp;&#151; мы&nbsp;считаем, что&nbsp;любое насилие&nbsp;&#151; ответственность государства. В&nbsp;том случае, если насилие применяют не&nbsp;сотрудники государственных органов, именно государство должно обеспечить безопасность граждан и&nbsp;расследовать соответствующие преступления. 
+<em>Насилие</em>&nbsp;&#151; применение насилия по&nbsp;отношению к&nbsp;активистам, политикам и&nbsp;журналистам. В&nbsp;эту рубрику попадают случаи насилия вне&nbsp;зависимости от&nbsp;того, кто&nbsp;применяет насилия&nbsp;&#151; мы&nbsp;считаем, что&nbsp;любое насилие&nbsp;&#151; ответственность государства. В&nbsp;том случае, если насилие применяют не&nbsp;сотрудники государственных органов, именно государство должно обеспечить безопасность граждан и&nbsp;расследовать соответствующие преступления.
 
-<em>Отчисления и&nbsp;увольнения</em>&nbsp;&#151; случаи внесудебного давления на&nbsp;активистов со&nbsp;стороны работодателя или&nbsp;ВУЗа. 
+<em>Отчисления и&nbsp;увольнения</em>&nbsp;&#151; случаи внесудебного давления на&nbsp;активистов со&nbsp;стороны работодателя или&nbsp;ВУЗа.
 
-<em>Угрозы</em>&nbsp;&#151; угрозы применения насилия по&nbsp;отношению к&nbsp;активистам, политикам, журналистам. В&nbsp;эту рубрику попадают новости про&nbsp;угрозы как&nbsp;со стороны сотрудников государственных органов, так&nbsp;и со&nbsp;стороны неизвестных лиц. Мы&nbsp;считаем, что&nbsp;любые угрозы по&nbsp;отношению к&nbsp;активистам&nbsp;&#151; ответственность государства: именно государство должно обеспечить безопасность граждан и&nbsp;расследовать соответствующие преступления.  
+<em>Угрозы</em>&nbsp;&#151; угрозы применения насилия по&nbsp;отношению к&nbsp;активистам, политикам, журналистам. В&nbsp;эту рубрику попадают новости про&nbsp;угрозы как&nbsp;со стороны сотрудников государственных органов, так&nbsp;и со&nbsp;стороны неизвестных лиц. Мы&nbsp;считаем, что&nbsp;любые угрозы по&nbsp;отношению к&nbsp;активистам&nbsp;&#151; ответственность государства: именно государство должно обеспечить безопасность граждан и&nbsp;расследовать соответствующие преступления.
 
 <em>Интернет</em>&nbsp;&#151; нарушение права на&nbsp;свободу высказывания в&nbsp;Интернете. В&nbsp;эту рубрику попадают новости про&nbsp;блокировки, возбуждения административных и&nbsp;уголовных дел&nbsp;за посты и&nbsp;репосты и&nbsp;другие случаи давления.
 
-<h3>Кто это&nbsp;делает?</h3>Проект &laquo;Медиа-радар: нарушения прав человека&raquo; реализуется <a href="https://ovdinfo.org/about" target="_blank">независимым правозащитным медиа-проектом ОВД-Инфо</a>. 
+<h3>Кто это&nbsp;делает?</h3>Проект &laquo;Медиа-радар: нарушения прав человека&raquo; реализуется <a href="https://ovdinfo.org/about" target="_blank">независимым правозащитным медиа-проектом ОВД-Инфо</a>.
 
 Программные решения: команда Data for&nbsp;Society
 Концепция: Григорий Охотин, Даниил Бейлинсон
 Программирование: Даниил Бейлинсон
 
-Связаться с&nbsp;командой можно по&nbsp;е-мейлу <a href="mailto:info@ovdinfo.org">info@ovdinfo.org</a> или&nbsp;через форму обратной связи&nbsp;&#151; мы&nbsp;всегда будем рады вашим письмам. 
+Связаться с&nbsp;командой можно по&nbsp;е-мейлу <a href="mailto:info@ovdinfo.org">info@ovdinfo.org</a> или&nbsp;через форму обратной связи&nbsp;&#151; мы&nbsp;всегда будем рады вашим письмам.
 <div class="se-copyright"><a href="http://creativecommons.org/licenses/by/3.0/deed.en_US" rel="license"><img alt="Creative Commons License" src="//i.creativecommons.org/l/by/3.0/88x31.png" style="border-width:0"></a>
 <div class="se-copyright-content">ОВД-Инфо &laquo;Медиа-радар: нарушения прав человека&raquo; (digest.ovdinfo.org) лицензировано в&nbsp;соответствии с&nbsp;Creative Commons Attribution&nbsp;3.0 Unported License.</div></div>
     `
@@ -390,6 +402,7 @@ class OIDigest extends Component {
 
     if(this.state.dates) {
       options.dateFilter = this.state.dates
+      options.accepted = true
     }
 
     let optionsRequest = encodeURIComponent(JSON.stringify(options))
@@ -407,9 +420,9 @@ class OIDigest extends Component {
 
   _loadDocuments(pagination) {
     let perPage = this.state.perPage
-    
+
     let options = {
-      limit: perPage, 
+      limit: perPage,
       offset: pagination ? this.state.items.length : 0,
       entities: true
     }
@@ -439,7 +452,7 @@ class OIDigest extends Component {
     }
 
     let url = this.state.endpoint + '/api/public/' + key + '/?query=' + query + '&options=' + optionsRequest
-    
+
     request('GET', url, null, function(err, results) {
       if (err) {
         console.error('ERROR', err)
@@ -462,9 +475,9 @@ class OIDigest extends Component {
 
   _loadEntities(pagination) {
     let perPage = this.state.perPage
-    
+
     let options = {
-      limit: perPage, 
+      limit: perPage,
       offset: pagination ? this.state.items.length : 0
     }
     let optionsRequest = encodeURIComponent(JSON.stringify(options))
@@ -491,11 +504,14 @@ class OIDigest extends Component {
   }
 
   _loadTopEntities() {
-    let options = {}
-
-    if(this.state.dates) {
-      options.dateFilter = this.state.dates
+    let options = {
+      nocount: true,
+      dateFilter: [moment().subtract(1, 'week').format('YYYY-MM-DD'), moment().format('YYYY-MM-DD')]
     }
+
+    // if(this.state.dates) {
+    //   options.dateFilter = this.state.dates
+    // }
 
     let optionsRequest = encodeURIComponent(JSON.stringify(options))
 

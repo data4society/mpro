@@ -384,9 +384,14 @@ class MproEngine {
   */
   reapplyRule(ruleId) {
     let collectionId
+    let rule
     return this.ruleStore.getRule(ruleId)
-      .then(function(rule) {
+      .then(function(ruleRecord) {
+        rule = ruleRecord
         collectionId = rule.collection_id
+        return this.collectionStore.getCollection(collectionId)
+      }.bind(this))
+      .then(function(collection) {
         let query = 'SELECT document_id, collections, meta, content from records WHERE '
         let vars = [rule.app_id]
         if (rule.rubrics.length > 0 && rule.entities.length > 0) {
@@ -403,6 +408,11 @@ class MproEngine {
             query += 'app_id = $1 AND entities::text[] @> $2'
           }
         }
+
+        if(collection.accepted) {
+          query += ' meta->>\'aceepted\' = true'
+        }
+
         return new Promise(function(resolve, reject) {
           this.db.run(query, vars, function(err, res){
             if(err) {

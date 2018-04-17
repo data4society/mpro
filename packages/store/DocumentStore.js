@@ -140,9 +140,9 @@ class DocumentStore {
     @returns {Callback}
   */
   updateDocument(documentId, props, cb) {
-    
+
     if(props.info) {
-      // TODO: update here all meta properties from document 
+      // TODO: update here all meta properties from document
       // which could possibly updated
       if(!isUndefined(props.info.title)) props.title = props.info.title
       if(props.info.meta) props.meta = props.info.meta
@@ -215,7 +215,7 @@ class DocumentStore {
           }))
         }
         doc = doc[0]
-        
+
         // Set documentId explictly as it will be used by Document Engine
         doc.documentId = doc.document_id
         // Set schemaName and schemaVersion explictly as it will be used by Snapshot Engine
@@ -283,8 +283,8 @@ class DocumentStore {
       let countQuery = `SELECT COUNT(*) FROM records, plainto_tsquery(${language}, ${searchQuery}) AS q ${whereQuery}`
 
       let query = `
-        SELECT document_id, guid, title, schema_name, schema_version, published at time zone 'UTC' AS published, created, edited, edited_by, rubrics, meta, ts_rank_cd(records.tsv, q) AS rank 
-        FROM records, plainto_tsquery(${language}, ${searchQuery}) AS q ${whereQuery} 
+        SELECT document_id, guid, title, schema_name, schema_version, published at time zone 'UTC' AS published, created, edited, edited_by, rubrics, meta, ts_rank_cd(records.tsv, q) AS rank
+        FROM records, plainto_tsquery(${language}, ${searchQuery}) AS q ${whereQuery}
         ORDER BY rank DESC limit ${options.limit} offset ${options.offset}
       `
 
@@ -324,7 +324,7 @@ class DocumentStore {
           }))
         }
         output.total = count
-        
+
         this.db.records.find(filters, options, function(err, docs) {
           if (err) {
             return cb(new Err('DocumentStore.ListError', {

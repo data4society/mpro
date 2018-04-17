@@ -8,7 +8,8 @@ class CollectionsEditor extends Component {
       name: this.props.name,
       description: this.props.description,
       public: this.props.public,
-      private: this.props.private
+      private: this.props.private,
+      accepted: this.props.accepted
     }
   }
 
@@ -51,13 +52,22 @@ class CollectionsEditor extends Component {
     ).on('click', this._switchPublic)
     if(isPublic) isPublicInput.addClass('sm-selected')
 
+    let isAccepted = this.state.accepted
+    selectedIcon = isAccepted ? 'checked' : 'unchecked'
+    let isAcceptedInput = $$('div').addClass('se-collection-accepted sc-button sm-style-default').append(
+      'Accepted data',
+      this.context.iconProvider.renderIcon($$, selectedIcon).addClass('selection')
+    ).on('click', this._switchAccepted)
+    if(isAccepted) isAcceptedInput.addClass('sm-selected')
+
 
     el.append(
       nameInput,
       descriptionInput,
       $$('div').addClass('se-collection-options').append(
         isPublicInput,
-        isPrivateInput
+        isPrivateInput,
+        isAcceptedInput
       )
     )
 
@@ -79,6 +89,12 @@ class CollectionsEditor extends Component {
   _switchPublic() {
     this.extendState({
       public: !this.state.public
+    })
+  }
+
+  _switchAccepted() {
+    this.extendState({
+      accepted: !this.state.accepted
     })
   }
 
