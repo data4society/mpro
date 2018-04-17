@@ -27,8 +27,6 @@ class PublicEngine {
         return apiRecord
       }
 
-      console.log(apiRecord.api)
-
       if(apiRecord.api === 'collection_docs') {
         return this._collectionDocuments(query, apiRecord.app_id, options)
       } else if (apiRecord.api === 'entity_docs') {
@@ -147,18 +145,36 @@ class PublicEngine {
       WHERE ${prop} = '${value}'
       AND r.app_id = '${app}'`;
 
-    return new Promise(function(resolve, reject) {
-      let result = {}
+    if(opts.nocount) {
+      return new Promise(function(resolve, reject) {
+        let result = {}
 
-      this.db.run(countSql, [], function(err, total) {
-        if(err) {
-          return reject(new Err('PublicEngine.EntityDocumentsApi', {
-            cause: err
-          }))
-        }
+        this.db.run(countSql, [], function(err, total) {
+          if(err) {
+            return reject(new Err('PublicEngine.EntityDocumentsApi', {
+              cause: err
+            }))
+          }
 
-        result.total = total[0].count
+          result.total = total[0].count
 
+          this.db.run(sql, [], function(err, res) {
+            if(err) {
+              return reject(new Err('PublicEngine.EntityDocumentsApi', {
+                cause: err
+              }))
+            }
+
+            result.records = res
+
+            resolve(result)
+
+          })
+
+        }.bind(this))
+      }.bind(this))
+    } else {
+      return new Promise(function(resolve, reject) {
         this.db.run(sql, [], function(err, res) {
           if(err) {
             return reject(new Err('PublicEngine.EntityDocumentsApi', {
@@ -166,14 +182,11 @@ class PublicEngine {
             }))
           }
 
-          result.records = res
-
-          resolve(result)
-
+          resolve(res)
         })
 
       }.bind(this))
-    }.bind(this))
+    }
   }
 
   _collectionsFacets(value, app_id, opts) {
@@ -181,15 +194,19 @@ class PublicEngine {
     let limit = opts.limit || 100
     let collections = !isEmpty(value) ? JSON.parse('[' + value + ']') : []
     let dateFilter = ''
+    let acceptedCollections = ''
     if(opts.dateFilter) {
       dateFilter = 'AND published >= \'' + opts.dateFilter[0] + ' 00:00:00\' AND published <= \''
       dateFilter += (opts.dateFilter.length > 1 ? opts.dateFilter[1] : opts.dateFilter[0]) + ' 23:59:59\''
+    }
+    if(opts.accepted) {
+      acceptedCollections = 'AND meta->>\'accepted\' = \'true\''
     }
     let sql = `SELECT collection, cnt, collections.name, collections.description FROM (
       SELECT DISTINCT
         unnest(records.collections) AS collection,
         COUNT(*) OVER (PARTITION BY unnest(records.collections)) cnt
-      FROM records WHERE collections @> $1::varchar[] AND app_id = $2 ${dateFilter}
+      FROM records WHERE collections @> $1::varchar[] AND app_id = $2 ${dateFilter} ${acceptedCollections}
     ) AS docs INNER JOIN collections ON (docs.collection = collections.collection_id::text)
     WHERE collections.public = true AND app_id = $2 OFFSET ${offset} LIMIT ${limit}`;
 
@@ -231,7 +248,7 @@ class PublicEngine {
         unnest(records.entities) AS id,
       COUNT(*) OVER (PARTITION BY unnest(entities)) cnt
       FROM records WHERE $1::varchar[] <@ collections AND app_id = $2 ${dateFilter}
-    ) AS docs INNER JOIN entities e ON (id = e.entity_id::varchar) ORDER BY cnt DESC OFFSET ${offset} LIMIT ${limit}`;
+    ) AS docs LEFT JOIN entities e ON (id = e.entity_id::varchar) ORDER BY cnt DESC OFFSET ${offset} LIMIT ${limit}`;
 
     return new Promise(function(resolve, reject) {
 

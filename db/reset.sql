@@ -119,6 +119,7 @@ CREATE TABLE "collections" (
   author varchar(40) REFERENCES users,
   private boolean,
   public boolean,
+  accepted boolean,
   description text,
   app_id varchar(255)
 );

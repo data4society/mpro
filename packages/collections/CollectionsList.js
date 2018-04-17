@@ -36,7 +36,7 @@ class CollectionsList extends Component {
   render($$) {
     let el = $$('div').addClass('sc-collections-list')
 
-    let collections = this.state.list 
+    let collections = this.state.list
     let Pager = this.getComponent('pager')
 
     if(this.state.edit) {
@@ -50,7 +50,7 @@ class CollectionsList extends Component {
         }).append(
           $$(CollectionEditor, this.state.list[activeIndex]).ref('editor')
         )
-      ) 
+      )
     }
 
     let searchInput = $$('div').addClass('se-collections-search').append(
@@ -76,7 +76,7 @@ class CollectionsList extends Component {
         )
       )
     )
-    
+
     if(!isEmpty(collections)) {
       each(collections, function(col) {
         let isSelected = this.props.collectionId === col.collection_id
@@ -125,6 +125,7 @@ class CollectionsList extends Component {
       author: user.user_id,
       private: true,
       public: false,
+      accepted: false,
       app_id: this.props.app
     }
 
@@ -137,7 +138,7 @@ class CollectionsList extends Component {
       let list = this.state.list
       list.unshift(col)
       let total = parseInt(this.state.totalItems, 10) + 1
-      
+
       this.extendState({list: list, totalItems: total})
     }.bind(this))
   }
@@ -152,6 +153,7 @@ class CollectionsList extends Component {
     list[activeIndex].description = updated.description
     list[activeIndex].private = updated.private
     list[activeIndex].public = updated.public
+    list[activeIndex].accepted = updated.accepted
 
     let collectionId = list[activeIndex].collection_id
     let dataClient = this.context.documentClient
@@ -186,7 +188,7 @@ class CollectionsList extends Component {
         console.error(err)
         return
       }
-      
+
       this.extendState({list: collections.records, totalItems: collections.total, pagination: false})
     }.bind(this))
   }
@@ -215,10 +217,10 @@ class CollectionsList extends Component {
       } else {
         items = collections.records
       }
-      
+
       this.extendState({list: items, totalItems: collections.total})
     }.bind(this))
-  } 
+  }
 }
 
 export default CollectionsList

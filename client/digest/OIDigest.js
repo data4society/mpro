@@ -1,4 +1,4 @@
-import { Component, Grid, Layout, SplitPane, request } from 'substance'
+import { Component, Grid, SplitPane, request } from 'substance'
 import concat from 'lodash/concat'
 import each from 'lodash/each'
 import isEqual from 'lodash/isEqual'
@@ -72,7 +72,7 @@ class OIDigest extends Component {
       page: 1,
       mode: 'documents',
       items: [],
-      dates: null
+      dates: [moment().subtract(1, 'months').format('YYYY-MM-DD'), moment().format('YYYY-MM-DD')]
     }
   }
 
@@ -194,9 +194,9 @@ class OIDigest extends Component {
         $$('div').addClass('se-node-name').append(collection.name),
         $$('div').addClass('se-node-count').append(collection.cnt)
       )
-      .attr({title: collection.description})
-      .ref(collection.collection)
-      .on('click', this._collectionFilter.bind(this, collection.collection))
+        .attr({title: collection.description})
+        .ref(collection.collection)
+        .on('click', this._collectionFilter.bind(this, collection.collection))
 
       if(collection.collection === this.state.activeCollection) {
         item.addClass('se-active')
@@ -205,16 +205,19 @@ class OIDigest extends Component {
       el.append(item)
     }.bind(this))
 
+    if(collections.length === 0) {
+      el.append(this.renderSpinner($$))
+    }
 
     let entitiesEl = $$('div').addClass('se-entities-list')
     entitiesEl.append(
       $$('div').addClass('se-title')
         .append(
-          'Упоминания:',
-          $$('span').addClass('se-expand-mentions').append(
-            'все',
-            $$('i').addClass('fa fa-expand')
-          ).on('click', this._switchMode.bind(this, 'entities'))
+          'Упоминания за неделю:'
+          // $$('span').addClass('se-expand-mentions').append(
+          //   'все',
+          //   $$('i').addClass('fa fa-expand')
+          // ).on('click', this._switchMode.bind(this, 'entities'))
         )
     )
     let entitiesNodesEl = $$('div').addClass('se-entities-nodes')
@@ -232,6 +235,10 @@ class OIDigest extends Component {
     }.bind(this))
 
     entitiesEl.append(entitiesNodesEl)
+
+    if(entities.length === 0) {
+      entitiesEl.append(this.renderSpinner($$))
+    }
 
     el.append(entitiesEl)
 
@@ -292,8 +299,12 @@ class OIDigest extends Component {
   }
 
   renderSpinner($$) {
-    let el = $$('div').addClass('se-spinner')
-    el.append($$('img').attr({src: '/digest/assets/loader.gif'}))
+    let el = $$('div').addClass('se-spinner').append(
+      $$('div'),
+      $$('div')
+    )
+
+    //el.append($$('img').attr({src: '/digest/assets/loader.gif'}))
     return el
   }
 
@@ -391,6 +402,7 @@ class OIDigest extends Component {
 
     if(this.state.dates) {
       options.dateFilter = this.state.dates
+      options.accepted = true
     }
 
     let optionsRequest = encodeURIComponent(JSON.stringify(options))
@@ -492,11 +504,14 @@ class OIDigest extends Component {
   }
 
   _loadTopEntities() {
-    let options = {}
-
-    if(this.state.dates) {
-      options.dateFilter = this.state.dates
+    let options = {
+      nocount: true,
+      dateFilter: [moment().subtract(1, 'week').format('YYYY-MM-DD'), moment().format('YYYY-MM-DD')]
     }
+
+    // if(this.state.dates) {
+    //   options.dateFilter = this.state.dates
+    // }
 
     let optionsRequest = encodeURIComponent(JSON.stringify(options))
 
