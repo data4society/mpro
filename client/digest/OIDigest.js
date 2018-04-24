@@ -58,7 +58,7 @@ class OIDigest extends Component {
 
   getInitialState() {
     return {
-      endpoint: 'http://localhost:5000',
+      endpoint: 'https://mpro.ovdinfo.org',
       collectionsKey: '93ba5954-e316-cccf-a7b2-825f534c071f',
       collectionDocsKey: 'd9de7254-c794-5471-d460-87015ddf2e56',
       entityDocsKey: '9b3f0254-e7b9-8310-f6d3-60c9c76d04ba',
