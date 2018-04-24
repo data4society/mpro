@@ -79,7 +79,7 @@ class AbstractFeedLoader extends Component {
   getInitialState() {
     let entities = this.props.entities ? this.props.entities.split(',') : []
     return {
-      filters: {'training': false, app_id: this.props.app, 'rubrics @>': [], 'entities @>': entities},
+      filters: {'training': false, app_id: this.props.app, 'rubrics @>': [], 'entities @>': entities, 'created <=': new Date().toISOString() },
       perPage: 10,
       order: 'published',
       direction: 'desc',
