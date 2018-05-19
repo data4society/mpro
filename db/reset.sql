@@ -70,6 +70,8 @@ CREATE TABLE "records" (
   edited timestamp,
   edited_by varchar(40) REFERENCES users,
   training boolean,
+  accepted boolean,
+  negative boolean,
   rubrics varchar(40)[],
   entities varchar(40)[],
   collections varchar(40)[],
@@ -84,10 +86,11 @@ CREATE TABLE "records" (
 
 -- Records search index
 CREATE INDEX tsv_records_idx ON records USING gin(tsv);
-CREATE INDEX records_published_idx ON records(published);
 CREATE INDEX records_created_idx ON records(created);
 CREATE INDEX records_collections_idx ON records USING gin(collections);
 CREATE INDEX records_entities_idx ON records USING gin(entities);
+CREATE INDEX records_accepted ON records using gin((meta->'accepted'));
+CREATE INDEX records_negative ON records using gin((meta->'negative'));
 
 CREATE FUNCTION records_search_trigger() RETURNS trigger AS $$
 begin

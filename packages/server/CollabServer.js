@@ -133,7 +133,9 @@ class MproCollabServer extends CollabServer {
           meta: meta,
           rubrics: rubrics,
           entities: entities,
-          collections: collections
+          collections: collections,
+          accepted: accepted,
+          negative: negative
         }
         req.setEnhanced()
         this.next(req, res)

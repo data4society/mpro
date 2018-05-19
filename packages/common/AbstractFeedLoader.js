@@ -79,7 +79,15 @@ class AbstractFeedLoader extends Component {
   getInitialState() {
     let entities = this.props.entities ? this.props.entities.split(',') : []
     return {
-      filters: {'training': false, app_id: this.props.app, 'rubrics @>': [], 'entities @>': entities, 'created <=': new Date().toISOString() },
+      filters: {
+        'training': false,
+        app_id: this.props.app,
+        'rubrics @>': [],
+        'entities @>': entities,
+        'created <=': new Date().toISOString(),
+        'accepted': false,
+        'negative': false
+      },
       perPage: 10,
       order: 'published',
       direction: 'desc',
@@ -280,7 +288,12 @@ class AbstractFeedLoader extends Component {
 
   _toggleDataFilter(prop, value) {
     let filters = clone(this.state.filters)
-    let propName = 'meta->>' + prop
+    let propName
+    if(prop === 'accepted' || prop === 'negative') {
+      propName = prop
+    } else {
+      propName = 'meta->>' + prop
+    }
     if(!isNull(value)) {
       filters[propName] = value
     } else {

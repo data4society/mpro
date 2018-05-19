@@ -149,6 +149,8 @@ class DocumentStore {
       if(props.info.rubrics) props.rubrics = props.info.rubrics
       if(props.info.entities) props.entities = props.info.entities
       if(props.info.collections) props.collections = props.info.collections
+      if(props.info.accepted) props.accepted = props.info.accepted
+      if(props.info.negative) props.negative = props.info.negative
     }
 
     if(isUndefined(props.edited)) props.edited = new Date()
@@ -317,14 +319,18 @@ class DocumentStore {
         })
       }.bind(this))
     } else {
-      this.db.records.count(filters, function(err, count) {
+      let countFilters = {}
+      if(filters.app_id) countFilters.app_id = filters.app_id
+      if(filters['rubrics @>']) countFilters['rubrics @>'] = filters['rubrics @>']
+      if(filters['entities @>']) countFilters['entities @>'] = filters['entities @>']
+      if(!options.minimalCount) countFilters = filters
+      this.db.records.count(countFilters, function(err, count) {
         if (err) {
           return cb(new Err('DocumentStore.ListError', {
             cause: err
           }))
         }
         output.total = count
-
         this.db.records.find(filters, options, function(err, docs) {
           if (err) {
             return cb(new Err('DocumentStore.ListError', {
@@ -339,7 +345,6 @@ class DocumentStore {
             doc.schemaName = doc.schema_name
             doc.schemaVersion = doc.schema_version
           })
-
           output.records = docs
           cb(null, output)
         })

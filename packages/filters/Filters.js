@@ -8,7 +8,7 @@ class Filters extends Component {
     let FtsFilter = this.getComponent('fts-filter')
 
     let el = $$('div').addClass('sc-filters')
-    
+
     el.append(
       $$(FtsFilter, {value: filters.fts})
     )
@@ -17,9 +17,9 @@ class Filters extends Component {
       let AcceptorFilter = this.getComponent('acceptor-filter')
       el.append(
         $$(AcceptorFilter, {
-          accepted: filters['meta->>accepted'],
+          accepted: filters['accepted'],
           moderated: filters['meta->>moderated'],
-          negative: filters['meta->>negative']
+          negative: filters['negative']
         })
       )
     }

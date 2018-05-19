@@ -53,7 +53,6 @@ class MproConfigurator extends Configurator {
     Set Fastart Server url
   */
   setFastartServerUrl(url) {
-    console.log(url)
     this.config.fastartServerUrl = url
   }
 

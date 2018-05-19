@@ -176,7 +176,8 @@ class Inbox extends AbstractFeedLoader {
       {
         limit: perPage,
         offset: pagination ? state.documentItems.length : 0,
-        order: order + ' ' + direction
+        order: order + ' ' + direction,
+        minimalCount: true
       },
       function(err, documents) {
         if (err) {
