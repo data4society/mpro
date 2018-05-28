@@ -89,7 +89,7 @@ class AbstractFeedLoader extends Component {
         'negative': false
       },
       perPage: 10,
-      order: 'published',
+      order: 'created',
       direction: 'desc',
       documentId: this.props.documentId,
       documentItems: [],
