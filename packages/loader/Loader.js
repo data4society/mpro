@@ -135,7 +135,6 @@ class Loader extends Component {
       let configurator = this.getChildConfigurator(schemaName)
       let article = configurator.createArticle()
       let doc = converter.importDocument(article, docRecord.data)
-
       let session = new CollabSession(doc, {
         documentId: documentId,
         version: docRecord.version,

@@ -6,7 +6,8 @@
 
 .se-tool-acceptor button,
 .se-tool-moderator button,
-.se-tool-negative button {
+.se-tool-negative button,
+.se-tool-oiexpress button {
   background: #cc8282!important;
   border: none!important;
   color: #fff;
@@ -14,7 +15,8 @@
 
 .se-tool-acceptor.sm-accepted button,
 .se-tool-moderator.sm-moderated button,
-.se-tool-negative.sm-negative button {
+.se-tool-negative.sm-negative button,
+.se-tool-oiexpress.sm-oi-published button {
   background: #88cc82!important;
 }
 

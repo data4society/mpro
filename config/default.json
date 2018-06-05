@@ -2,7 +2,9 @@
   "app": {
     "protocol": "http",
     "host": "localhost",
-    "port": 5000
+    "port": 5000,
+    "express_endpoint": "",
+    "express_pass": ""
   },
   "server": {
     "port": 5000,

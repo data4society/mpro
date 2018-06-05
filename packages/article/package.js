@@ -29,8 +29,8 @@ export default {
     config.import(StrongPackage)
     config.import(LinkPackage)
 
-    // Import mpro specific packages  
-    config.import(CollectorPackage)  
+    // Import mpro specific packages
+    config.import(CollectorPackage)
     config.import(EntityPackage)
     config.import(RubricatorPackage)
     config.import(AcceptorPackage)
@@ -38,6 +38,7 @@ export default {
     config.addComponent('meta-summary', ArticleMetaComponent)
     config.addIcon('published', { 'fontawesome': 'fa-clock-o' })
     config.addIcon('source', { 'fontawesome': 'fa-chain' })
+    config.addIcon('oi-edit-link', { 'fontawesome': 'fa-newspaper-o' })
     config.addLabel('published-by', {
       en: 'Published by',
       ru: 'Опубликовано'

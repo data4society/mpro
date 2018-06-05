@@ -4,6 +4,8 @@ import ModeratorTool from './ModeratorTool'
 import ModeratorCommand from './ModeratorCommand'
 import NegativeTool from './NegativeTool'
 import NegativeCommand from './NegativeCommand'
+import OIExpressTool from './OIExpressTool'
+import OIExpressCommand from './OIExpressCommand'
 
 export default {
   name: 'acceptor',
@@ -19,5 +21,9 @@ export default {
     config.addTool('negative', NegativeTool, { target: 'acceptors' })
     config.addCommand('negative', NegativeCommand)
     config.addIcon('negative', { 'fontawesome': 'fa-trash' })
+
+    config.addTool('oi_express', OIExpressTool, { target: 'acceptors' })
+    config.addCommand('oi_express', OIExpressCommand)
+    config.addIcon('oi_express', { 'fontawesome': 'fa-newspaper-o' })
   }
 }

@@ -58,6 +58,9 @@ class DocumentStore {
       rubrics: props.rubrics || [],
       entities: props.entities || [],
       collections: props.collections || [],
+      accepted: props.accepted || false,
+      negative: props.negative || false,
+      oi_express: props.oi_express || false,
       published: props.published,
       created: props.created || new Date(),
       edited: props.edited || new Date(),
@@ -151,6 +154,7 @@ class DocumentStore {
       if(props.info.collections) props.collections = props.info.collections
       if(props.info.accepted) props.accepted = props.info.accepted
       if(props.info.negative) props.negative = props.info.negative
+      if(props.info.oi_express) props.oi_express = props.info.oi_express
     }
 
     if(isUndefined(props.edited)) props.edited = new Date()

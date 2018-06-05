@@ -33,6 +33,26 @@ class ArticleMetaComponent extends Component {
       source
     )
 
+    const oiEditLink = meta.oi_express_url
+
+    if(oiEditLink) {
+      let oiEditLinkEl = $$('div').addClass('se-oi-edit-link').append(
+        this.context.iconProvider.renderIcon($$, 'oi-edit-link'),
+        $$('div').addClass('sm-item').append(
+          $$('a').addClass('se-oi-edit-url')
+            .setAttribute('href', oiEditLink)
+            .setAttribute('target', '_blank')
+            .append(
+              oiEditLink
+            )
+        )
+      )
+
+      el.append(
+        oiEditLinkEl
+      )
+    }
+
     return el
   }
 }

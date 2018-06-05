@@ -21,6 +21,8 @@ export default {
     // Define Document Client
     config.setDocumentServerUrl(appConfig.protocol + '://'+appConfig.host+':'+appConfig.port+'/api/documents/')
     config.setDocumentClient(DocumentClient)
+    // Define OI express news connection
+    config.setOIExpressParams(appConfig.express_endpoint, appConfig.express_pass)
     // Define File Client
     config.setFileServerUrl(appConfig.protocol + '://'+appConfig.host+':'+appConfig.port+'/api/files/')
     config.setFileClient(FileClient)

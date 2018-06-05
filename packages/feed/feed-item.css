@@ -13,6 +13,10 @@
   color: inherit;
 }
 
+.sc-feed-item.active .se-oi-edit-link {
+  color: inherit;
+}
+
 .sc-feed-item .se-source-info {
   font-size: 14px;
   height: 20px;

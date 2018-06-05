@@ -43,6 +43,14 @@ class MproConfigurator extends Configurator {
   }
 
   /*
+    Set OI Express params
+  */
+  setOIExpressParams(url, pass) {
+    this.config.oiExpressUrl = url
+    this.config.oiExpressPass = pass
+  }
+
+  /*
     Set File Server url
   */
   setFileServerUrl(url) {
@@ -75,7 +83,14 @@ class MproConfigurator extends Configurator {
   */
   getDocumentClient(authClient) {
     let DocumentClientClass = this.config.DocumentClientClass
-    return new DocumentClientClass({httpUrl: this.config.documentServerUrl, authClient: authClient})
+    return new DocumentClientClass({
+      httpUrl: this.config.documentServerUrl,
+      authClient: authClient,
+      oiExpress: {
+        url: this.config.oiExpressUrl,
+        pass: this.config.oiExpressPass
+      }
+    })
   }
 
   /*

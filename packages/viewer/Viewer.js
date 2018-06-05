@@ -71,6 +71,7 @@ class Viewer extends ProseEditor {
       let accepted = this.doc.get(['meta', 'accepted'])
       let moderated = this.doc.get(['meta', 'moderated'])
       let negative = this.doc.get(['meta', 'negative'])
+      let oi_express = this.doc.get(['meta', 'oi_express'])
       let surface = this.surfaceManager.getSurface('body')
 
       each(ops, function(op) {
@@ -108,6 +109,12 @@ class Viewer extends ProseEditor {
       if(update.change.updated['meta,negative'] === true) {
         if(negative) {
           this._exportDocument()
+        }
+      }
+
+      if(update.change.updated['meta,oi_express'] === true) {
+        if(oi_express) {
+          this._exportOIExpress()
         }
       }
 
@@ -168,6 +175,33 @@ class Viewer extends ProseEditor {
       if(err) {
         console.error(err);
       }
+    })
+  }
+
+  _exportOIExpress() {
+    let documentClient = this.context.documentClient
+    let plain = []
+    each(this.doc.getNodes(), function(node) {
+      if (node.isText()) {
+        plain.push(node.getText())
+      }
+    })
+    plain = plain.join('\n')
+    let publishData = {
+      title: this.doc.get(['meta', 'title']),
+      text: plain.replace(/\s/g,' ').replace(/&nbsp;/g,' ')
+    }
+
+    documentClient.exportOIExpress(publishData, (err, data) => {
+      if(err) {
+        console.error(err)
+      }
+
+      const url = data.url
+      this.documentSession.transaction(tx => {
+        tx.set(['meta', 'oi_express_url'], url)
+      })
+      window.open(url, '_blank')
     })
   }
 }

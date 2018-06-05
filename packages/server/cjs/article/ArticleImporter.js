@@ -24,7 +24,7 @@ class ArticleImporter extends HTMLImporter {
 
     for (var i = 0; i < clean.length; i++) {
       clean[i] = clean[i].trim()
-      if (clean[i] === "") {         
+      if (clean[i] === "") {
         clean.splice(i, 1)
         i--
       }
@@ -79,7 +79,9 @@ class ArticleImporter extends HTMLImporter {
         publisher: publisher.name,
         accepted: false,
         moderated: false,
-        negative: false
+        negative: false,
+        oi_express: false,
+        oi_express_url: ''
       })
     }
   }

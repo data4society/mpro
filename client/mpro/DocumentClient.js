@@ -87,6 +87,36 @@ class MproDocumentClient extends DocumentClient {
     this.request('PUT', '/api/sources/' + documentId, sourceData, cb)
   }
 
+  exportOIExpress(data, cb) {
+    let request = new XMLHttpRequest();
+    let urlEncodedDataPairs = [];
+    let urlEncodedData = "";
+    request.open('POST', this.config.oiExpress.url)
+    request.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded')
+    request.onload = function() {
+      if (request.status >= 200 && request.status < 400) {
+        let res = request.responseText;
+        if(isJson(res)) res = JSON.parse(res);
+        cb(null, res);
+      } else {
+        return cb(new Error('Request failed. Returned status: ' + request.status))
+      }
+    }
+
+
+    if (data && this.config.oiExpress) {
+      data.pass = this.config.oiExpress.pass
+      for(let key in data) {
+        if(data[key]) {
+          urlEncodedDataPairs.push(encodeURIComponent(key) + '=' + encodeURIComponent(data[key]));
+        }
+      }
+      urlEncodedData = urlEncodedDataPairs.join('&').replace(/%20/g, '+')
+
+      request.send(urlEncodedData)
+    }
+  }
+
   /*
     Create an entity
   */

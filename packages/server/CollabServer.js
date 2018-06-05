@@ -55,6 +55,7 @@ class MproCollabServer extends CollabServer {
         let accepted
         let moderated
         let negative
+        let oi_express
 
         if (message.change) {
           // Update the title if necessary
@@ -101,6 +102,12 @@ class MproCollabServer extends CollabServer {
             }
           })
 
+          change.ops.forEach(function(op) {
+            if(op.path[0] === 'meta' && op.path[1] === 'oi_express') {
+              oi_express = op.val
+            }
+          })
+
           message.change.info = {
             userId: req.session.userId,
             updatedAt: updatedAt
@@ -125,6 +132,10 @@ class MproCollabServer extends CollabServer {
         if(!isUndefined(negative)) {
           extend(meta, {negative: negative})
         }
+
+        if(!isUndefined(oi_express)) {
+          extend(meta, {oi_express: oi_express})
+        }
         // commit and connect method take optional documentInfo argument
         message.documentInfo = {
           updatedAt: updatedAt,
@@ -135,7 +146,8 @@ class MproCollabServer extends CollabServer {
           entities: entities,
           collections: collections,
           accepted: accepted,
-          negative: negative
+          negative: negative,
+          oi_express: oi_express
         }
         req.setEnhanced()
         this.next(req, res)

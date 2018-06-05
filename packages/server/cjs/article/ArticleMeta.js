@@ -7,7 +7,7 @@ ArticleMeta.type = 'meta'
 /*
   Meta node.
   Holds metadata for Article documents.
-  
+
   Attributes
     - title Document's title
     - rubrics Array of rubric references attached to the document
@@ -34,7 +34,9 @@ ArticleMeta.define({
   publisher: { type: 'string', default: ''},
   accepted: { type: 'boolean', default: false },
   moderated: { type: 'boolean', default: false },
-  negative: { type: 'boolean', default: false }
+  negative: { type: 'boolean', default: false },
+  oi_express: { type: 'boolean', default: false },
+  oi_express_url: { type: 'string', default: '' }
 })
 
 module.exports = ArticleMeta
