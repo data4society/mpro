@@ -186,10 +186,10 @@ class Viewer extends ProseEditor {
         plain.push(node.getText())
       }
     })
-    plain = plain.join('\n')
+    plain = plain.join('</p><p>')
     let publishData = {
       title: this.doc.get(['meta', 'title']),
-      text: plain.replace(/\s/g,' ').replace(/&nbsp;/g,' ')
+      text: '<p>' + plain.replace(/\s/g,' ').replace(/&nbsp;/g,' ') + '</p>'
     }
 
     documentClient.exportOIExpress(publishData, (err, data) => {
