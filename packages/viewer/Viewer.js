@@ -189,6 +189,8 @@ class Viewer extends ProseEditor {
     plain = plain.join('</p><p>')
     let publishData = {
       title: this.doc.get(['meta', 'title']),
+      source: this.doc.get(['meta', 'source']),
+      publisher: this.doc.get(['meta', 'publisher']),
       text: '<p>' + plain.replace(/\s/g,' ').replace(/&nbsp;/g,' ') + '</p>'
     }
 
