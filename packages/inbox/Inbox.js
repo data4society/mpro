@@ -29,7 +29,7 @@ class Inbox extends AbstractFeedLoader {
 
   didMount() {
     let theme = this.props.themeId
-    this._loadRubrics()
+    //this._loadRubrics()
     this._loadEntities()
     this._loadDocuments(false, theme)
     this.refs.keytrap.el.focus()
