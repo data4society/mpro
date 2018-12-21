@@ -14,7 +14,7 @@ class SourceEngine {
   constructor(config) {
     // Gap between new conversion request
     // and end of old one (in minutes)
-    this.gap = config.gap || 1
+    this.gap = config.gap || 10
     // How many records could be converted simultaneously
     this.concurrency = config.concurrency || 5
     this.db = config.db
@@ -48,6 +48,7 @@ class SourceEngine {
     Conversion flow
   */
   requestConversion() {
+    console.log('Starting conversion...')
     this.getConversionData()
       .then(function(data){
         // Stop the timer
