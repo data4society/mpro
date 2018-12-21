@@ -57,18 +57,18 @@ class SourceEngine {
           return this.convert(sourceId)
         }.bind(this), {concurrency: this.concurrency})
       }.bind(this))
-      .then(function(sources) {
-        return new Promise(function(resolve, reject) {
-          this.db.run('REFRESH MATERIALIZED VIEW themed_records', function(err) {
-            if (err) {
-              reject(new Err('Themed records view refreshing error', {
-                cause: err
-              }))
-            }
-            resolve(sources)
-          })
-        }.bind(this))
-      }.bind(this))
+      // .then(function(sources) {
+      //   return new Promise(function(resolve, reject) {
+      //     this.db.run('REFRESH MATERIALIZED VIEW themed_records', function(err) {
+      //       if (err) {
+      //         reject(new Err('Themed records view refreshing error', {
+      //           cause: err
+      //         }))
+      //       }
+      //       resolve(sources)
+      //     })
+      //   }.bind(this))
+      // }.bind(this))
       .then(function(sources) {
         if(sources.length > 0) {
           let ids = map(sources, function(s) {return s.doc_id; })
