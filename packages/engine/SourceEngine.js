@@ -25,6 +25,8 @@ class SourceEngine {
     this.configurator = config.configurator
 
     this.scheduleConversion()
+    this.requestConversion()
+
   }
 
   /*
@@ -49,7 +51,7 @@ class SourceEngine {
   */
   requestConversion() {
     console.log('Starting conversion...')
-    let t0 = performance.now();
+    console.time('conversion');
     this.getConversionData()
       .then(function(data){
         // Stop the timer
@@ -71,8 +73,7 @@ class SourceEngine {
       //   }.bind(this))
       // }.bind(this))
       .then(function(sources) {
-        let t1 = performance.now();
-        console.log("Conversion took " + (t1 - t0) + " milliseconds.")
+        console.timeEnd('conversion');
         if(sources.length > 0) {
           let ids = map(sources, function(s) {return s.doc_id; })
           // eslint-disable-next-line
