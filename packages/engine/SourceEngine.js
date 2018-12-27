@@ -25,8 +25,6 @@ class SourceEngine {
     this.configurator = config.configurator
 
     this.scheduleConversion()
-    this.requestConversion()
-
   }
 
   /*
