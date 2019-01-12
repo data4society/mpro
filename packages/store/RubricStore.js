@@ -246,14 +246,14 @@ class RubricStore {
       SELECT DISTINCT\
         unnest(records.rubrics) AS rubric,\
         COUNT(*) OVER (PARTITION BY unnest(records.rubrics)) cnt\
-      FROM records' + whereQuery + ') AS docs INNER JOIN rubrics ON (docs.rubric = rubrics.rubric_id)'
+      FROM records' + whereQuery + ') AS docs INNER JOIN rubrics ON (docs.rubric = rubrics.rubric_id::text)'
 
     if(containsTextSearch) {
       sql = `SELECT rubric, cnt, rubrics.name FROM (\
       SELECT DISTINCT\
         unnest(records.rubrics) AS rubric,\
         COUNT(*) OVER (PARTITION BY unnest(records.rubrics)) cnt\
-      FROM records, plainto_tsquery(${language}, ${searchQuery}) AS q ${whereQuery}) AS docs INNER JOIN rubrics ON (docs.rubric = rubrics.rubric_id)`
+      FROM records, plainto_tsquery(${language}, ${searchQuery}) AS q ${whereQuery}) AS docs INNER JOIN rubrics ON (docs.rubric = rubrics.rubric_id::text)`
     }
 
     if(!counter) {
