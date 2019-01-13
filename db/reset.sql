@@ -59,9 +59,9 @@ CREATE TABLE "documents" (
 
 CREATE TABLE "records" (
   document_id varchar(40) UNIQUE PRIMARY KEY,
-  guid varchar(255) UNIQUE,
+  guid text,
   url text,
-  title varchar(255),
+  title text,
   schema_name varchar(40),
   schema_version varchar(40),
   version integer,
